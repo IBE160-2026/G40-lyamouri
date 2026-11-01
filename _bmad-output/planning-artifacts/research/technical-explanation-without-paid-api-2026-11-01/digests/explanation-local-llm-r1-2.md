@@ -1,0 +1,50 @@
+# Digest: local language model (Ollama) (round 1, assistant 2)
+
+Sources read (8): docs.ollama.com/quickstart; docs.ollama.com/capabilities/structured-outputs; docs.ollama.com/api/generate; ollama.com/library/llama3.2; ollama.com/library/gemma4; github.com/ollama/ollama/releases; docs.ollama.com/faq; github.com/ollama/ollama. One further web search (gemma 4 licence) was snippet-only and is not cited as a read source.
+Note: the fetch tool summarises pages through a small model; wording marked "page says" is as relayed by that tool, not verified against raw HTML.
+
+## Findings
+| # | claim | source URL | publisher | pub_date | accessed | confidence | class |
+|---|---|---|---|---|---|---|---|
+| 1 | The Ollama quickstart says to download Ollama from ollama.com/download "for macOS, Windows, or Linux", then open the app or use the terminal; it gives no separate macOS or Windows steps. | https://docs.ollama.com/quickstart | Ollama (vendor docs) | undated | 2026-11-01 | high | official-doc |
+| 2 | The GitHub README gives scripted installs: macOS `curl -fsSL https://ollama.com/install.sh \| sh` (or manual Ollama.dmg); Windows `irm https://ollama.com/install.ps1 \| iex` (or manual OllamaSetup.exe). | https://github.com/ollama/ollama | Ollama (GitHub README) | undated | 2026-11-01 | high | official-doc |
+| 3 | Models are fetched with `ollama pull <model>` (download only) or `ollama run <model>` (download and chat); the quickstart's example model is gemma4:e2b. | https://docs.ollama.com/quickstart | Ollama | undated | 2026-11-01 | high | official-doc |
+| 4 | Local models need no account or API key ("No API key required"); sign-in is only needed for Ollama's cloud models. | https://docs.ollama.com/quickstart | Ollama | undated | 2026-11-01 | high | official-doc |
+| 5 | The quickstart states "The model download is about 7.2 GB" for its example model gemma4:e2b and recommends 8 GB of available VRAM or unified memory on a Mac. | https://docs.ollama.com/quickstart | Ollama | undated | 2026-11-01 | high | official-doc |
+| 6 | The local HTTP API listens at http://localhost:11434; the FAQ says Ollama binds to 127.0.0.1 port 11434 by default. | https://docs.ollama.com/faq | Ollama | undated | 2026-11-01 | high | official-doc |
+| 7 | The generate endpoint is `POST http://localhost:11434/api/generate` with parameters model (required), prompt, stream (defaults to true), format ("json" or a JSON schema object) and options (seed, temperature, top_k, top_p, min_p, stop, num_ctx, num_predict). | https://docs.ollama.com/api/generate | Ollama | undated | 2026-11-01 | high | official-doc |
+| 8 | The generate response includes `response` (generated text), `done`, `done_reason` and timing/count fields (total_duration, load_duration, prompt_eval_duration, eval_count, eval_duration; durations in nanoseconds). | https://docs.ollama.com/api/generate | Ollama | undated | 2026-11-01 | high | official-doc |
+| 9 | A chat endpoint exists at `/api/chat` (the quickstart shows `curl http://localhost:11434/api/chat`); its full parameter reference was not read in this run. | https://docs.ollama.com/quickstart | Ollama | undated | 2026-11-01 | medium | official-doc |
+| 10 | The structured-outputs doc says the `format` parameter accepts "json" or a full JSON schema to constrain model responses; Python (Pydantic model_json_schema) and JavaScript (Zod z.toJSONSchema) examples are given, and it also works through the OpenAI-compatible API via `response_format`. | https://docs.ollama.com/capabilities/structured-outputs | Ollama | undated | 2026-11-01 | high | official-doc |
+| 11 | The structured-outputs doc advises to also pass the JSON schema as a string in the prompt, set temperature to 0 for more deterministic output, and validate the parsed response with Pydantic or Zod; it states Ollama's cloud does not support structured outputs. | https://docs.ollama.com/capabilities/structured-outputs | Ollama | undated | 2026-11-01 | high | official-doc |
+| 12 | The docs contain no quantified reliability figure for structured outputs (only the tips in row 11); the release page shows no structured-output release notes in the four latest releases. | https://docs.ollama.com/capabilities/structured-outputs ; https://github.com/ollama/ollama/releases | Ollama | undated | 2026-11-01 | medium | absence-of-evidence |
+| 13 | The latest Ollama release listed is v0.40.13 (28 October 2026), preceded by v0.40.12 (27 Oct), v0.40.11 (24 Oct) and v0.40.10 (23 Oct); the project releases several times a week, so pinning a version in a README is not meaningful beyond "current". | https://github.com/ollama/ollama/releases | Ollama (GitHub) | 2026-10-28 | 2026-11-01 | high | official-release |
+| 14 | The repository shows an "MIT license" link; licence terms text was not shown on the fetched page. | https://github.com/ollama/ollama | Ollama (GitHub) | undated | 2026-11-01 | medium | official-doc |
+| 15 | The FAQ says "Ollama runs locally. We don't see your prompts or data when you run locally"; cloud features can be disabled with OLLAMA_NO_CLOUD=1; the FAQ does not explicitly state offline operation. | https://docs.ollama.com/faq | Ollama | undated | 2026-11-01 | high | official-doc |
+| 16 | Models are stored by default in ~/.ollama/models (macOS) and C:\Users\%username%\.ollama\models (Windows); location can be changed with OLLAMA_MODELS. | https://docs.ollama.com/faq | Ollama | undated | 2026-11-01 | high | official-doc |
+| 17 | By default models stay in memory for 5 minutes after use (keep_alive); `ollama ps` lists loaded models, and "100% CPU" means the model is fully in system memory (CPU inference is supported). | https://docs.ollama.com/faq | Ollama | undated | 2026-11-01 | high | official-doc |
+| 18 | The FAQ gives no hardware requirement table ("refer to the GPU docs") and no load-time figures; the README gives no RAM guidance. | https://docs.ollama.com/faq ; https://github.com/ollama/ollama | Ollama | undated | 2026-11-01 | medium | absence-of-evidence |
+| 19 | Library page llama3.2: tags 1b (1.3GB) and 3b/latest (2.0GB), 128K context, text input; page says the 3B model is strong at instruction following and summarisation; page shows "Updated 2 years ago" and does not state a licence name. | https://ollama.com/library/llama3.2 | Ollama library | undated (shown "2 years ago") | 2026-11-01 | high | official-doc |
+| 20 | Library page gemma4: tags e2b (4.6GB-7.5GB), e4b/latest (6.6GB-9.5GB), 12b (7.7GB-8.0GB), 26b (16-19GB), 31b (19-20GB); 128K context for e2b/e4b; text and image input; page shows updated 1 month ago to 2 weeks ago. | https://ollama.com/library/gemma4 | Ollama library | undated (relative dates) | 2026-11-01 | high | official-doc |
+| 21 | Library page gemma4 parameter sizes: E2B is 2.3B effective (5.1B with embeddings), E4B is 4.5B effective (8B with embeddings); page says the small models are "specifically designed for efficient local execution on laptops and mobile devices"; no RAM figures and no licence stated on the page. | https://ollama.com/library/gemma4 | Ollama library | undated | 2026-11-01 | high | official-doc |
+| 22 | Search-result summaries (secondary blogs, e.g. the-decoder) say Gemma 4 is released under Apache 2.0; the official model card was not read, so this is unverified. | https://the-decoder.com/?p=33933 (via search snippet, not fetched) | the-decoder (secondary) | undated | 2026-11-01 | low | unverified-secondary |
+
+## Worked example(s) / formulas
+Minimal call shape (from rows 7, 10, 11; request JSON assembled from documented parameters, not run): POST http://localhost:11434/api/generate with body {model, prompt, stream:false, format:<JSON schema>, options:{temperature:0}}; read the `response` field and parse it as JSON. Not executed in this run.
+
+## Leads worth chasing
+- Design implication, inference not sourced: a numbers-from-code design could ask the model for text only (no figures) or for schema-constrained JSON where numeric fields are filled from the deterministic calculation and the model only writes the wording; then validate that no digits outside the supplied set appear. Check in a later round.
+- Model download size is the main reviewer cost: llama3.2:1b 1.3GB and 3b 2.0GB (row 19) versus the quickstart default 7.2GB (row 5). The llama3.2 page is "2 years ago" and fails the 12-month landscape bar; confirm a current small model (e.g. qwen3 small tags, phi, gemma4:e2b) on official model cards for licence and size.
+- Gemma 4 licence: read the official Google/Hugging Face/Kaggle model card to confirm Apache 2.0 (row 22 is unverified).
+- Llama 3.2 licence: read the Meta Llama 3.2 community licence (not stated on the Ollama page).
+- Release cadence (row 13) suggests behaviour of newer small models on Ollama changes quickly.
+- Alternatives needing no account: llama.cpp `llama-server` (OpenAI-compatible HTTP) and LM Studio (local server); not read this run.
+
+## Not found / could not verify
+- What the Ollama API returns when the requested model is not pulled (error code/message): the generate API page did not say. Needs the API errors doc or a test; relevant to failure-mode handling.
+- Any documented standard graceful-fallback pattern for an app when Ollama is absent; nothing found on the pages read. Health-check: FAQ names no dedicated endpoint (only `ollama ps` and the listening address).
+- Q3: typical RAM, CPU-only tokens/second, and developer reports on small-model quality for short summarisation and instruction following: no benchmark or community source read; only vendor library statements (rows 19, 21) and the 8 GB VRAM/unified memory recommendation (row 5).
+- Q6: llama.cpp server and LM Studio details: not read (source budget spent).
+- Licence of Llama 3.2 and of Gemma 4 from official model cards; Ollama's licence text beyond the "MIT license" link.
+- Whether Ollama works fully offline after model download: not explicitly stated in the FAQ (row 15), though it states local runs do not send prompts.
+- Full /api/chat parameter reference and Windows-specific installer behaviour (service start, system requirements).

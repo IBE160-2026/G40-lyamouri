@@ -1,0 +1,57 @@
+# Digest: candidate Python (Flask / FastAPI) + SQLite (round 1, assistant 1)
+
+Budget note: 8 distinct sources read (S1-S8), 10 tool calls. Two WebSearch calls (S-search) were used only for leads; their snippets are NOT cited as evidence below.
+Sources: S1 PyPI Flask; S2 PyPI fastapi; S3 FastAPI OAuth2/JWT docs; S4 Flask installation docs; S5 PyPI Flask-Login; S6 FastAPI SQL databases docs; S7 sqlite.org whentouse; S8 Flask tutorial "Define and Access the Database".
+
+## Findings
+| # | claim | source URL | publisher | pub_date | accessed | confidence | class |
+|---|-------|-----------|-----------|----------|----------|-----------|-------|
+| 1 | Latest Flask release is 3.1.3, released 2026-02-19; PyPI classifier is "5 - Production/Stable". | https://pypi.org/project/Flask/ | PyPI (Pallets) | 2026-02-19 (release) | 2026-11-01 | high | version / ecosystem |
+| 2 | Flask 3.1.3 requires Python >= 3.9; Flask docs (3.1.x) state "Flask supports Python 3.9 and newer" and recommend the latest Python. | https://pypi.org/project/Flask/ ; https://flask.palletsprojects.com/en/stable/installation/ | PyPI; Pallets docs | 2026-02-19; undated | 2026-11-01 | high | version |
+| 3 | Flask release cadence: 3.0.0 (2023-09-30), 3.0.3 (2024-04-07), 3.1.0 (2024-11-13), 3.1.1 (2025-05-13), 3.1.2 (2025-08-19), 3.1.3 (2026-02-19); no release listed in the ~8.5 months since 3.1.3 (as of 2026-11-01), i.e. slow, stable cadence. | https://pypi.org/project/Flask/ | PyPI | 2026-02-19 | 2026-11-01 | high | ecosystem |
+| 4 | Flask official docs give a clone-to-run path: python3 -m venv .venv; . .venv/bin/activate (Windows: .venv\Scripts\activate); pip install Flask. Flask installs Werkzeug, Jinja, MarkupSafe, ItsDangerous (signs the session cookie), Click, Blinker automatically. | https://flask.palletsprojects.com/en/stable/installation/ | Pallets (Flask docs 3.1.x) | undated | 2026-11-01 | high | setup |
+| 5 | Latest FastAPI release is 0.162.0 (2026-10-23); PyPI classifier is "4 - Beta"; Requires-Python >= 3.10 with classifiers for 3.10 through 3.14; still a 0.x version. | https://pypi.org/project/fastapi/ | PyPI | 2026-10-23 | 2026-11-01 | high | version / ecosystem |
+| 6 | FastAPI release cadence is very high: several patch releases per day during 2026-10-18 to 2026-10-23, with an earlier gap of about two months (0.141.0 on 2026-07-29), so frequent change is the norm. | https://pypi.org/project/fastapi/ | PyPI | 2026-10-23 | 2026-11-01 | medium (read from a summarised fetch, not full release table) | ecosystem |
+| 7 | FastAPI's PyPI page recommends installing "fastapi[standard]" (uv add, or pip install inside a virtual environment); plain "fastapi" omits extras. The standard extra pulls in uvicorn[standard], fastapi-cli (the "fastapi" command), httpx (for Starlette TestClient), jinja2 (default templates) and python-multipart (form parsing). | https://pypi.org/project/fastapi/ | PyPI | 2026-10-23 | 2026-11-01 | high | setup / testing |
+| 8 | FastAPI depends on Pydantic and Starlette; FastAPI's official OAuth2/JWT tutorial uses PyJWT (HS256, secret from openssl rand -hex 32) with a Bearer token, i.e. a token (API-style) login, not a server-side cookie session. | https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/ ; https://pypi.org/project/fastapi/ | FastAPI docs (Tiangolo); PyPI | undated; 2026-10-23 | 2026-11-01 | high | auth |
+| 9 | FastAPI docs recommend the "pwdlib" library for password hashing, install "pwdlib[argon2]", use PasswordHash.recommended() (Argon2), and verify against a dummy hash for unknown users to reduce username-enumeration timing differences. | https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/ | FastAPI docs | undated | 2026-11-01 | high | auth / change |
+| 10 | The same FastAPI page recommends passlib only for working with legacy/outdated hashes; it does not state passlib is deprecated (so the docs moved from passlib to pwdlib, a change to be aware of when reading older tutorials). | https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/ | FastAPI docs | undated | 2026-11-01 | medium (inference of "moved" is mine; page only says what is recommended now) | change |
+| 11 | Flask-Login latest release is 0.6.3 (2023-10-30); prior 0.6.2 (2022-07-25), 0.6.1 (2022-05-02), 0.6.0 (2022-03-30); classifier "4 - Beta"; Requires-Python >= 3.7; no deprecation notice on the PyPI page; so no release in about 3 years. | https://pypi.org/project/Flask-Login/ | PyPI | 2023-10-30 | 2026-11-01 | high | ecosystem / risk |
+| 12 | Flask tutorial uses the standard-library sqlite3 module (sqlite3.connect, sqlite3.Row), stores a connection per request in flask.g, and seeds/creates tables via schema.sql run by a custom "flask --app flaskr init-db" CLI command (executescript); the tutorial's schema has a user table with username and password columns. | https://flask.palletsprojects.com/en/stable/tutorial/database/ | Pallets (Flask docs 3.1.x) | undated | 2026-11-01 | high | database / setup |
+| 13 | Flask tutorial itself notes that with SQLite, concurrent writes happen sequentially and "small applications won't notice this". | https://flask.palletsprojects.com/en/stable/tutorial/database/ | Pallets | undated | 2026-11-01 | high | database |
+| 14 | FastAPI SQL docs use SQLModel (built on SQLAlchemy and Pydantic, by the same author as FastAPI) with SQLite via create_engine("sqlite:///database.db", connect_args={"check_same_thread": False}), create tables with SQLModel.metadata.create_all(engine) on startup, and a per-request Session dependency using yield. | https://fastapi.tiangolo.com/tutorial/sql-databases/ | FastAPI docs | undated | 2026-11-01 | high | database |
+| 15 | FastAPI SQL docs say SQLite is used "because it uses a single file and Python has integrated support", suggest a server database such as PostgreSQL for production, a migration script for production, and note SQLModel migration utilities wrapping Alembic are not yet there (use Alembic directly). | https://fastapi.tiangolo.com/tutorial/sql-databases/ | FastAPI docs | undated | 2026-11-01 | high | database |
+| 16 | SQLite's own guidance: fine for most low-to-medium traffic websites (under 100K hits/day is conservative), supports unlimited simultaneous readers but one writer at a time (writers queue; locks last a few dozen ms), size limit 281 TB; avoid when many clients write over a network. None of this constrains a single-user local demo. | https://www.sqlite.org/whentouse.html | SQLite.org | undated | 2026-11-01 | high | database |
+| 17 | Search aggregation found no standard benchmark measuring AI coding-assistant accuracy per web framework (Flask vs FastAPI); only vendor blogs/opinion (e.g. Reflex) and ad hoc tests surfaced, not read in full. | https://reflex.dev/blog/best-web-frameworks-ai-generated-code (search result only, not fetched) | Reflex (vendor) | undated | 2026-11-01 | low | AI-fit |
+
+## Worked example(s) / formulas
+Shortest documented clone-to-run (assembled by me from S4/S2/S8; not a single documented sequence):
+- Flask: python3 -m venv .venv ; . .venv/bin/activate ; pip install Flask (plus extra libs) ; flask --app <pkg> init-db (own seed command, S8) ; flask --app <pkg> run. (The "run" command is referenced in S8 as "the run command from the previous page"; its exact text was not retrieved.)
+- FastAPI: venv ; pip install "fastapi[standard]" (S2) ; "fastapi" CLI command ships with fastapi-cli (S2); exact "fastapi dev" invocation was not retrieved.
+Both need only free, local, open-source components (no key) per the pages read, apart from a self-generated JWT secret in the FastAPI tutorial (S3).
+
+## Comparison (my synthesis; each point tied to rows)
+- Setup simplicity: Flask slightly simpler (stable 3.1.x, Python >= 3.9, bundled Jinja templates and sqlite3 path; rows 2,4,12). FastAPI needs the [standard] extra and Python >= 3.10 (rows 5,7).
+- Login: FastAPI's official recipe is Bearer-token/JWT for APIs (row 8), which is more machinery for a server-rendered Jinja app; Flask has signed-cookie sessions built in (row 4, ItsDangerous signs the session cookie) and Flask-Login as the add-on (row 11 caveat: not released since 2023-10). No Werkzeug password-hash page was fetched (see Not found).
+- Database: both fine with SQLite (rows 12,14,16); Flask path can use plain sqlite3 with no ORM; FastAPI docs steer to SQLModel.
+- Ecosystem: Flask is Production/Stable with slow cadence (rows 1,3); FastAPI is still 0.x "Beta" with very frequent releases (rows 5,6), so more drift risk for a reviewer running the README months later.
+- Overall for these criteria: Flask appears to suit better for a server-rendered, small student app; FastAPI is a defensible alternative if an API plus JS front end is wanted. Evidence for "AI assistants handle X better" is not found (row 17).
+
+## Leads worth chasing (named entities, contradictions, opened questions)
+- Flask-Login last release 2023-10-30 (row 11) vs search-snippet claims of maintenance activity (GitHub push Aug 2025, Arch package Jan 2026; snippets only, unverified). Check github.com/pallets-eco/flask-login releases/issues, and whether 0.6.3 works with Flask 3.1 / Werkzeug current. Alternative: plain Flask session + Werkzeug generate_password_hash/check_password_hash (no extra dependency).
+- Flask docs page for Werkzeug password hashing: werkzeug.palletsprojects.com/en/stable/utils/ (generate_password_hash); and Flask tutorial "Blueprints and Views" (auth with hashing).
+- Flask testing docs: flask.palletsprojects.com/en/stable/testing/ ; Flask tutorial "Test Coverage" (pytest, app.test_client()); FastAPI testing docs: fastapi.tiangolo.com/tutorial/testing/ (TestClient needs httpx per row 7).
+- Chart.js: chartjs.org/docs/latest/getting-started/installation (CDN script tag, no build step expected; verify), vs Plotly/matplotlib alternatives.
+- AI-assistant fit: AIMultiple coding benchmarks and Reflex post appeared in search; neither opened. Stack Overflow Developer Survey / JetBrains Python survey for Flask vs FastAPI usage share (mainstream signal).
+- Per-company isolation: look for Flask/SQLAlchemy docs or OWASP guidance on tenant scoping (company_id filter on every query).
+
+## Not found / could not verify
+- Per-company data isolation pattern: no source read; not stated as fact. (Generic approach of a company_id column filtered on each query is my hypothesis only.)
+- Werkzeug password hashing (generate_password_hash) and Flask session-login documentation: not fetched (source budget spent).
+- Flask test client and FastAPI TestClient docs, pytest integration, testing a pure-Python forecasting module: not fetched. Only indirect evidence: FastAPI [standard] includes httpx for the TestClient (row 7).
+- Chart.js usage with Jinja templates / need for build step: not fetched.
+- Developer retrospectives (6-12 months of use) for Flask or FastAPI: not searched in depth, not found.
+- Credible measurement of AI assistants' quality on Flask vs FastAPI: not found (row 17; search only).
+- Supported-Python lists for Flask-Login and FastAPI beyond PyPI Requires-Python; the "fastapi dev" and "flask run" exact command text; FastAPI release page cadence details beyond the PyPI summary (page was truncated at 100000 of ~125000 characters, so later sections unread).
+- FastAPI SQL tutorial page also truncated (read 100000 of ~122000 chars); the "Testing a Database" recipe was not read.
+- Note: S3 and S6 fetches are summaries produced by the fetch tool's model; quoted phrases came from that summary.

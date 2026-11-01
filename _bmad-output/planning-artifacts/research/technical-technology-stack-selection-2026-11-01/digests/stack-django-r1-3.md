@@ -1,0 +1,51 @@
+# Digest: candidate Django + SQLite (round 1, assistant 3)
+
+Budget used: 8 distinct sources read (7 Django/Chart.js pages + none other; the web search snippet list was NOT used as a citation), 12 tool calls including the rules read and this write.
+
+## Findings
+| # | claim | source URL | publisher | pub_date | accessed | confidence | class |
+|---|---|---|---|---|---|---|---|
+| 1 | Latest stable Django is 6.1.2; the 6.0 series has latest release 6.0.9 and 5.2 LTS has latest release 5.2.18. | https://www.djangoproject.com/download/ | Django Software Foundation | undated (live page) | 2026-11-01 | high | version/compat |
+| 2 | Django 5.2 is an LTS: mainstream support ended 3 Dec 2025, extended (security-only) support ends Apr 2028. | https://www.djangoproject.com/download/ | Django Software Foundation | undated (live page) | 2026-11-01 | high | version/compat |
+| 3 | The next LTS, 6.2, is scheduled for April 2027 (mainstream support to Dec 2027, extended to Apr 2030); 6.1 is a non-LTS with mainstream support to Apr 2027 and extended support to Dec 2027. | https://www.djangoproject.com/download/ | Django Software Foundation | undated (live page) | 2026-11-01 | high | version/compat |
+| 4 | Release cadence: feature releases came roughly every eight months (A.B format); from 2028 feature releases switch to a YYYY version format released every January; patch releases are issued as needed for bug and security fixes. | https://www.djangoproject.com/download/ | Django Software Foundation | undated (live page) | 2026-11-01 | high | ecosystem |
+| 5 | Django 6.1 supports Python 3.12, 3.13, 3.14 and 3.15 (3.15 added in 6.1.3); Django 6.0 supports 3.12-3.14; Django 5.2 supports 3.10-3.14. Only the latest micro release of each Python version is officially supported. | https://docs.djangoproject.com/en/stable/faq/install/ | Django docs | undated (live page, 6.1 era) | 2026-11-01 | high | version/compat |
+| 6 | The 6.1 tutorial states it targets Python 3.12 or later. | https://docs.djangoproject.com/en/stable/intro/tutorial01/ | Django docs | undated (live page) | 2026-11-01 | high | version/compat |
+| 7 | Django uses SQLite by default, SQLite ships with Python so no separate database server is needed for development, and the built-in runserver is enough (no separate web server needed); PostgreSQL is recommended for production. | https://docs.djangoproject.com/en/stable/faq/install/ | Django docs | undated | 2026-11-01 | high | gate: local embedded DB |
+| 8 | Tutorial path to a running app: `python -m django --version` to check install, `django-admin startproject mysite djangotutorial`, `cd djangotutorial`, `python manage.py runserver`, then open http://127.0.0.1:8000/. The page does not mention a virtual environment and defers `migrate` to part 2 (runserver prints an unapplied-migrations warning). | https://docs.djangoproject.com/en/stable/intro/tutorial01/ | Django docs | undated | 2026-11-01 | high | setup |
+| 9 | Because tutorial01 omits virtualenv, the clone-to-running sequence for a README (venv, pip install, migrate, runserver, createsuperuser) is NOT shown on the pages I read; it is an inference from standard practice and needs a quick-install/tutorial02 source to confirm. | https://docs.djangoproject.com/en/stable/intro/tutorial01/ | Django docs | undated | 2026-11-01 | low | setup (gap) |
+| 10 | Default password hasher is PBKDF2 with SHA-256 (algorithm name pbkdf2_sha256), stored as `<algorithm>$<iterations>$<salt>$<hash>`; the docs say Django picks a reasonable iteration count and raises it each release, and do not state the number on that page. | https://docs.djangoproject.com/en/stable/topics/auth/passwords/ | Django docs (6.1) | undated | 2026-11-01 | high | gate: password hashing |
+| 11 | Argon2id is available as an option (Argon2PasswordHasher) by installing `django[argon2]` (equivalent to argon2-cffi) and listing it first in PASSWORD_HASHERS; it is not the default because it needs a third-party library. | https://docs.djangoproject.com/en/stable/topics/auth/passwords/ | Django docs (6.1) | undated | 2026-11-01 | high | gate: password hashing |
+| 12 | New passwords use the first hasher in PASSWORD_HASHERS; at login Django automatically rehashes a password stored with a non-preferred algorithm or changed parameters. Default list contains PBKDF2, PBKDF2SHA1, Argon2, BCryptSHA256 and Scrypt hashers. | https://docs.djangoproject.com/en/stable/topics/auth/passwords/ | Django docs (6.1) | undated | 2026-11-01 | high | gate: password hashing |
+| 13 | Django 6.1 requires SQLite 3.37.0 or later; the engine is `django.db.backends.sqlite3`. | https://docs.djangoproject.com/en/stable/ref/databases/ | Django docs (6.1) | undated | 2026-11-01 | high | version/compat |
+| 14 | SQLite limits relevant to a demo: concurrent writers can raise `OperationalError: database is locked` (mitigations: OPTIONS timeout, IMMEDIATE transaction_mode, short transactions); Decimal values are stored as REAL floats; select_for_update() has no effect; JSONField needs JSON1 (default on in SQLite 3.38+). None of these block a single-reviewer local demo. | https://docs.djangoproject.com/en/stable/ref/databases/ | Django docs (6.1) | undated | 2026-11-01 | high | risk |
+| 15 | The test runner is `./manage.py test`, which discovers `test*.py` files and can target a module, class or single method; tests are built on Python's unittest, with `django.test.TestCase` wrapping each test in a transaction for DB tests. | https://docs.djangoproject.com/en/stable/topics/testing/overview/ | Django docs (6.1) | undated | 2026-11-01 | high | testability |
+| 16 | With SQLite the test database is in-memory by default and is created fresh and destroyed per run, separate from the real database; `--keepdb` preserves it. | https://docs.djangoproject.com/en/stable/topics/testing/overview/ | Django docs (6.1) | undated | 2026-11-01 | high | testability |
+| 17 | The Django testing overview page does not mention pytest or pytest-django, and does not itself state that SimpleTestCase is the no-database base class (it only lists it); a forecasting module with no Django imports could be tested with plain unittest/pytest, but I found no source in this run stating that for Django specifically. | https://docs.djangoproject.com/en/stable/topics/testing/overview/ | Django docs (6.1) | undated | 2026-11-01 | medium | testability (gap) |
+| 18 | The `json_script` template filter (`{{ value|json_script:"id" }}`) outputs a Python object as JSON inside `<script id=... type="application/json">`, escaping <, > and & against XSS, and is compatible with strict CSP; JS reads it with `JSON.parse(document.getElementById('id').textContent)`. | https://docs.djangoproject.com/en/stable/ref/templates/builtins/ | Django docs (6.1) | undated | 2026-11-01 | high | charting |
+| 19 | Chart.js can be included with a single CDN script tag (`https://cdn.jsdelivr.net/npm/chart.js`) with no build step; the official getting-started example is a bar chart and the same code with `type: 'line'` gives a line chart (the page itself does not list chart types or license). | https://www.chartjs.org/docs/latest/getting-started/ | Chart.js docs | 2025-02-25 (page "last updated") | 2026-11-01 | medium | charting |
+| 20 | AI-assistant fit: the one search I ran returned no benchmark or statement measuring how well AI coding assistants handle Django specifically; only snippets noting Django dominates SWE-bench Verified (reported >40% of tasks) and an arXiv paper (2509.23261) on assistants favouring popular ecosystems. Snippets were not fetched, so they are leads, not evidence. | https://arxiv.org/pdf/2509.23261 | arXiv (search listing only, not read) | 2025 (per URL id) | 2026-11-01 | low | AI-fit (lead only) |
+
+## Worked example(s) / formulas
+Row 18 + 19 pattern (from sources, assembled by me): in a Django view pass `{"history": [...], "forecast": [...]}` to the template; render `{{ chart_data|json_script:"chart-data" }}`; load Chart.js via CDN; in JS `const d = JSON.parse(document.getElementById('chart-data').textContent); new Chart(ctx, {type:'line', data:{labels:d.labels, datasets:[...]}})`. Not executed or tested in this run.
+
+## Leads worth chasing (named entities, contradictions, opened questions)
+- Django quick install guide / tutorial part 2 (docs.djangoproject.com/en/stable/intro/install/ and tutorial02) for migrate, createsuperuser and virtualenv commands.
+- django.contrib.auth docs (topics/auth/) and "customizing authentication" for custom user model and login views (LoginView, login_required); not read.
+- pytest-django docs (pytest-django.readthedocs.io) and PyPI for current version/Django-compat; not read.
+- Django docs on fixtures / loaddata / custom management commands for seeding synthetic data; not read.
+- Per-company isolation pattern (filter queryset by request.user.company, user FK) - no source read; only common practice.
+- arXiv 2509.23261 "Matthew Effect of AI Programming Assistants" (Django REST/ORM track in its benchmark) and SWE-bench Verified Django share - read in full to see if any Django-specific assistant result exists.
+- Ecosystem sentiment (too heavy vs just right for small apps) - needs forum/blog/survey sources, e.g. JetBrains/DSF Developers Survey.
+- Date oddity: Django 5.2 FAQ table (row 5) does not label 5.2 as LTS but download page (row 2) does; resolved in favour of the download page.
+
+## Not found / could not verify
+- PBKDF2 iteration count for Django 6.1 (docs say see `PBKDF2PasswordHasher.iterations` in source; not retrieved).
+- Release date of Django 6.1.2 (download page gave none).
+- Sessions details, login views, custom user model and per-company isolation conventions (no auth docs page read).
+- Fixtures and management-command seeding.
+- pytest-django status and how to test a standalone module without the web layer.
+- Credible statements on AI coding assistants and Django (nothing fetched that states or measures it).
+- Developer sentiment after 6 to 12 months for small apps; boilerplate amount.
+- Chart.js current version and licence; the docs page offered neither.
+- Whether Python's bundled SQLite on a typical reviewer machine meets Django 6.1's SQLite 3.37.0 minimum (row 13 only states the minimum).
