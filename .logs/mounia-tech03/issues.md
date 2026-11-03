@@ -1,18 +1,23 @@
 # Åpne punkter
 
-- [ ] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — velge sesongmetode (indeks, estimering fra to år, samspill med avviks- og utsolgt-regler) gjennom research
-- [ ] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — bekrefte «snart må bestilles» som lagerdekning (lager ÷ forventet salg per uke)
-- [ ] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — bekrefte dato for lagerbeholdning som trigger for «usikker lagerbeholdning»
-- [ ] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — avklare avviksjekk i de første ukene og median 0 uten utsolgt-flagg
-- [ ] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — avklare om manuelle justeringer av bestillingsmengden lagres mellom økter
-- [ ] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — avklare innholdet i malbasert forklaring og reserve for språkmodell-forklaring
-- [ ] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — velge teknologistakk og sette innleveringsfristen
+- [x] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — velge sesongmetode (indeks, estimering fra to år, samspill med avviks- og utsolgt-regler) gjennom research (løst 2026-11-03: enkel sesongindeks, PRD R-14)
+- [x] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — bekrefte «snart må bestilles» som lagerdekning (lager ÷ forventet salg per uke) (løst 2026-11-03: forslag over 0, sortert etter uker dekning, PRD R-12)
+- [x] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — bekrefte dato for lagerbeholdning som trigger for «usikker lagerbeholdning» (løst 2026-11-03: droppet, PRD §7)
+- [x] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — avklare avviksjekk i de første ukene og median 0 uten utsolgt-flagg (løst 2026-11-03: PRD R-10)
+- [x] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — avklare om manuelle justeringer av bestillingsmengden lagres mellom økter (løst 2026-11-03: kan-ha, PRD FR-31)
+- [x] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — avklare innholdet i malbasert forklaring og reserve for språkmodell-forklaring (løst 2026-11-03: PRD FR-26 til FR-28)
+- [ ] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — velge teknologistakk og sette innleveringsfristen (fristen er satt til 1. desember 2026; stakken velges i arkitektursteget)
 - [ ] 2026-10-31 [prognose-brainstorm-pre-prd](999-2026-10-31-17-43-00-prognose-brainstorm-pre-prd.md) — oppdatere Product Brief med beslutningene fra økten
-- [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — spørre læreren om KI-kravet: må appen vise en språkmodell, eller er malbasert forklaring nok?
-- [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — velge avviksregel: beholde «2 × median» med vern mot median 0, eller bytte til Tukey/IQR eller Hampel
-- [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — avklare at uke 2 og 3 blir lik uke 1 uten sesongjustering (vis i grensesnitt, eller løft sesong)
-- [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — velge SES-konvensjon (NIST mot FPP3) og startverdi, og dokumentere terskler (3, 8, 12, 104 uker, alfa 0,3) som antakelser i PRD
-- [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — definere dataisolasjon mellom bedrifter (filter i hver spørring, én datalag-funksjon) og test med to kontoer i arkitekturen
+- [x] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — spørre læreren om KI-kravet: må appen vise en språkmodell, eller er malbasert forklaring nok? (løst 2026-11-03: språkmodellen er bør-ha og avhenger ikke av svaret)
+- [x] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — velge avviksregel: beholde «2 × median» med vern mot median 0, eller bytte til Tukey/IQR eller Hampel (løst 2026-11-03: beholdt med vern, PRD R-10 og R-11)
+- [x] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — avklare at uke 2 og 3 blir lik uke 1 uten sesongjustering (vis i grensesnitt, eller løft sesong) (løst 2026-11-03: merknad i grensesnittet, PRD FR-7)
+- [x] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — velge SES-konvensjon (NIST mot FPP3) og startverdi, og dokumentere terskler (3, 8, 12, 104 uker, alfa 0,3) som antakelser i PRD (løst 2026-11-03: PRD R-4 og §11)
+- [x] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — definere dataisolasjon mellom bedrifter (filter i hver spørring, én datalag-funksjon) og test med to kontoer i arkitekturen (løst 2026-11-03: PRD FR-2 og SM-4; tillegget §2)
 - [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — skrive og teste README-sekvensen for oppsett (venv, installasjon, migrering, seeding, kjøring)
 - [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — skaffe lærebokkilder til rapport B (krever evt. poppler), eller dokumentere at de mangler
 - [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — valgfritt: ta igjen semantisk kildesjekk, HTML-oppsummering og språkpolering for research-rapportene
+- [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — sette rekkefølgen på bør-ha og milepæler i sprintplanleggingen (PRD §10 spørsmål 1)
+- [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — lage regnearket med de håndregnede referanseeksemplene E1–E30 (PRD DR-3)
+- [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — teste oppsettstiden (høyst 15 minutter) på ren macOS og Windows, også uten nett, og på nytt på siste commit (PRD §10 spørsmål 2)
+- [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — velge lokal språkmodell og avklare lisensen hvis FR-28 bygges (PRD §10 spørsmål 5)
+- [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — kjøre UX-steget (`bmad-ux`) og arkitektursteget (`bmad-architecture`), og deretter epics og stories
