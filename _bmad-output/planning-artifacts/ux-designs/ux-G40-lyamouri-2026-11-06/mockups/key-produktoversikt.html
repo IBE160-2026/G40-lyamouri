@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Produktoversikt · Prognose</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/*
+  O-kartet — dashboard (Operate). Same tokens as key-landing.html.
+  --paper #F6F8F5 ground · --white #FFFFFF table · --ink #141614 · --ink-2 #4A504C · --line #6B716D · --rule #D5DBD4
+  --green-fld #E2F1D9 rail (shell colour) · --magenta #C2188A course/action · --magenta-ink #930F69 · --magenta-tnt #F8DCEE
+  --hoy #1E6B34 · --mid #8A5300 · --lav #B42318 (always with a shape and a word) · --blue-ink #005C92 notes
+  --row-hover #F1F5EE · --grp #FBFCFA
+*/
+:root {
+  color-scheme: light;
+  --paper: #F6F8F5; --white: #FFFFFF; --ink: #141614; --ink-2: #4A504C; --line: #6B716D; --rule: #D5DBD4;
+  --green-fld: #E2F1D9; --magenta: #C2188A; --magenta-dk: #9E1272; --magenta-ink: #930F69; --magenta-tnt: #F8DCEE;
+  --hoy: #1E6B34; --mid: #8A5300; --lav: #B42318; --blue-ink: #005C92; --row-hover: #F1F5EE; --grp: #FBFCFA;
+  --font: "Albert Sans", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scrollbar-color: var(--line) var(--paper); }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 0.9375rem/1.5 var(--font); caret-color: var(--magenta); accent-color: var(--magenta); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--magenta-tnt); color: var(--ink); }
+a { color: var(--magenta-ink); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+:focus-visible { outline: 3px solid var(--magenta-ink); outline-offset: 2px; border-radius: 2px; }
+h1, h2 { margin: 0; letter-spacing: -0.02em; line-height: 1.15; }
+p { margin: 0; }
+table, .num { font-variant-numeric: tabular-nums lining-nums; }
+.skip { position: absolute; left: 1rem; top: -4rem; background: var(--white); color: var(--ink); padding: 0.6rem 1rem; border: 2px solid var(--ink); z-index: 10; }
+.skip:focus { top: 1rem; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100svh; }
+
+/* Rail: the shell colour, navigation, settings in use, legend, account */
+.rail { background: var(--green-fld); border-right: 1px solid var(--ink); padding: 1.1rem 0.9rem 1rem; display: flex; flex-direction: column; gap: 1.5rem; position: sticky; top: 0; height: 100svh; overflow-y: auto; }
+.wordmark { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.25rem; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; padding-inline: 0.35rem; }
+.wordmark svg { width: 26px; height: 26px; }
+.nav ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; }
+.nav a { display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.6rem; border-radius: 6px; color: var(--ink); text-decoration: none; font-weight: 500; }
+.nav a svg { width: 18px; height: 18px; flex: none; }
+.nav a:hover { background: rgba(255, 255, 255, 0.6); }
+.nav a[aria-current="page"] { background: var(--white); font-weight: 600; }
+.nav a[aria-current="page"] svg { color: var(--magenta); }
+.rail h2 { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0; padding-inline: 0.35rem; margin-bottom: 0.45rem; }
+.settings dl { margin: 0; display: grid; gap: 0.2rem; font-size: 0.8125rem; padding-inline: 0.35rem; }
+.settings dl div { display: flex; justify-content: space-between; gap: 0.75rem; }
+.settings dt { color: var(--ink-2); }
+.settings dd { margin: 0; font-weight: 600; text-align: right; }
+.settings p { font-size: 0.8125rem; color: var(--ink-2); padding-inline: 0.35rem; margin-top: 0.5rem; }
+.mini ul { list-style: none; margin: 0; padding: 0 0.35rem; display: grid; gap: 0.35rem; font-size: 0.8125rem; }
+.mini li { display: flex; align-items: center; gap: 0.5rem; }
+.account { margin-top: auto; border-top: 1px solid rgba(20, 22, 20, 0.2); padding-top: 0.85rem; padding-left: 0.35rem; padding-right: 0.35rem; display: grid; gap: 0.5rem; font-size: 0.875rem; }
+.account strong { font-weight: 600; }
+.btn-ghost { font: 600 0.875rem/1 var(--font); color: var(--ink); background: transparent; border: 1.5px solid var(--line); border-radius: 4px; min-height: 36px; padding: 0 0.85rem; cursor: pointer; justify-self: start; }
+.btn-ghost:hover { border-color: var(--ink); background: var(--white); }
+
+/* Work area */
+.work { padding: 1.5rem clamp(1rem, 2.2vw, 2rem) 2.5rem; min-width: 0; }
+.head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.75rem 1.5rem; margin-bottom: 0.9rem; }
+.head h1 { font-size: 1.875rem; font-weight: 700; }
+.head .ctx { color: var(--ink-2); margin-top: 0.3rem; }
+.head .ctx strong { color: var(--ink); font-weight: 600; }
+.btn { font: 600 0.9375rem/1 var(--font); color: var(--ink); background: var(--white); border: 1.5px solid var(--ink); border-radius: 4px; min-height: 42px; padding: 0 1.1rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+.btn:hover { background: var(--green-fld); }
+.btn svg { width: 16px; height: 16px; }
+.status { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 1.25rem; padding: 0.7rem 0.95rem; background: var(--white); border: 1px solid var(--ink); border-radius: 6px; margin-bottom: 1rem; }
+.status span { display: inline-flex; align-items: center; gap: 0.45rem; }
+.status b { font-weight: 700; }
+
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; margin: 0 0 0.75rem; padding: 0; border: 0; }
+.filters legend { float: left; font-size: 0.875rem; font-weight: 600; margin-right: 0.25rem; padding: 0; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1.5px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--white); position: relative; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label { padding: 0.45rem 0.8rem; font-size: 0.875rem; font-weight: 500; cursor: pointer; }
+.seg label + input + label { border-left: 1.5px solid var(--line); }
+.seg label .c { color: var(--ink-2); margin-left: 0.2rem; }
+.seg input:checked + label { background: var(--ink); color: var(--white); font-weight: 600; }
+.seg input:checked + label .c { color: var(--white); }
+.seg input:focus-visible + label { outline: 3px solid var(--magenta-ink); outline-offset: -3px; }
+.sortnote { font-size: 0.8125rem; color: var(--ink-2); }
+
+/* Table */
+.tablewrap { background: var(--white); border: 1px solid var(--ink); border-radius: 6px; overflow: clip; }
+table.ov { width: 100%; border-collapse: collapse; }
+.ov thead th { position: sticky; top: 0; background: var(--white); z-index: 1; text-align: left; font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--ink); vertical-align: bottom; line-height: 1.25; }
+.ov th.r, .ov td.r { text-align: right; }
+.ov td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.ov tbody tr:not(.grp):hover { background: var(--row-hover); }
+.ov tbody tr:focus-within { background: var(--row-hover); }
+.ov td.vn { color: var(--ink-2); width: 5.5rem; }
+.ov td.name a { color: var(--ink); text-decoration: none; font-weight: 500; }
+.ov td.name a:hover { text-decoration: underline; text-decoration-color: var(--magenta); }
+.ov .grp th { text-align: left; background: var(--grp); padding: 0.85rem 0.75rem 0.55rem; border-bottom: 1px solid var(--rule); font-size: 0.9375rem; }
+.ov .grp th .n { font-weight: 400; color: var(--ink-2); margin-left: 0.4rem; }
+.ov .grp th .d { display: block; font-weight: 400; font-size: 0.8125rem; color: var(--ink-2); margin-top: 0.15rem; }
+.ov tbody + tbody .grp th { border-top: 1px solid var(--ink); }
+.muted { color: var(--ink-2); }
+.why { display: block; font-size: 0.8125rem; color: var(--ink-2); margin-top: 0.15rem; max-width: 30ch; }
+.noforecast { color: var(--ink); }
+.noforecast small { display: block; font-size: 0.8125rem; color: var(--ink-2); }
+
+/* Signature: legend symbols drawn in CSS */
+.fin { display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 700; color: var(--magenta-ink); font-size: 1rem; }
+.fin::before { content: ""; width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--magenta); box-shadow: inset 0 0 0 2.5px var(--white), inset 0 0 0 4.5px var(--magenta); flex: none; }
+.trust { display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 600; white-space: nowrap; }
+.trust::before { content: ""; width: 12px; height: 12px; border-radius: 50%; border: 2px solid currentColor; flex: none; }
+.trust.hoy { color: var(--hoy); } .trust.hoy::before { background: currentColor; }
+.trust.mid { color: var(--mid); } .trust.mid::before { background: linear-gradient(90deg, transparent 50%, currentColor 50%); }
+.trust.lav { color: var(--lav); }
+
+.foot { margin-top: 0.9rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; font-size: 0.8125rem; color: var(--ink-2); }
+
+/* CSS-only filter (the app filters on the server with a query parameter) */
+.work:has(#f-bestill:checked) tbody:not([data-g="1"]) { display: none; }
+.work:has(#f-uten:checked) tbody:not([data-g="2"]) { display: none; }
+.work:has(#f-tillit:checked) tr[data-t="hoy"] { display: none; }
+.work:has(#f-tillit:checked) .grp .d, .work:has(#f-tillit:checked) .grp .n { display: none; }
+
+@media (max-width: 1180px) {
+  .shell { grid-template-columns: 208px minmax(0, 1fr); }
+  .mini { display: none; }
+  .ov td, .ov thead th { padding-inline: 0.5rem; }
+  .why { max-width: 22ch; }
+}
+@media (max-width: 960px) {
+  .shell { grid-template-columns: minmax(0, 1fr); }
+  .rail { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; border-right: 0; border-bottom: 1px solid var(--ink); }
+  .nav ul { display: flex; flex-wrap: wrap; }
+  .settings, .mini { display: none; }
+  .account { margin: 0 0 0 auto; border: 0; padding: 0; grid-auto-flow: column; align-items: center; }
+  .tablewrap { overflow-x: auto; }
+}
+/* Phones: each product becomes a card; the labels come from data-label */
+@media (max-width: 640px) {
+  body { font-size: 1rem; }
+  .rail { padding: 0.75rem 1rem; }
+  .account span { display: none; }
+  .work { padding: 1.25rem 1rem 2rem; }
+  .head h1 { font-size: 1.625rem; }
+  .head .btn { width: 100%; justify-content: center; }
+  .status { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
+  .tablewrap { border: 0; border-radius: 0; background: transparent; overflow: visible; }
+  table.ov, .ov tbody, .ov tr, .ov th, .ov td { display: block; }
+  .ov thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .ov tbody { margin-bottom: 1.25rem; }
+  .ov .grp th { background: transparent; border: 0; padding: 0.25rem 0.1rem 0.5rem; font-size: 1rem; }
+  .ov tbody + tbody .grp th { border-top: 0; }
+  .ov tr:not(.grp) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem 1rem; background: var(--white); border: 1px solid var(--ink); border-radius: 6px; padding: 0.8rem 0.9rem; margin-bottom: 0.6rem; }
+  .ov td { border: 0; padding: 0; }
+  .ov th.r, .ov td.r { text-align: left; }
+  .ov td::before { content: attr(data-label); display: block; font-size: 0.75rem; font-weight: 500; color: var(--ink-2); margin-bottom: 0.1rem; }
+  .ov td.name { grid-column: 1 / -1; order: -2; font-size: 1.0625rem; }
+  .ov td.name::before { content: none; }
+  .ov td.vn { grid-column: 1 / -1; order: -1; margin-top: -0.45rem; font-size: 0.8125rem; width: auto; }
+  .ov td.vn::before { content: attr(data-label) " "; display: inline; font-size: inherit; font-weight: 400; color: inherit; margin: 0; }
+  .ov td.noforecast { grid-column: 1 / -1; }
+  .why { max-width: none; }
+}
+@media (max-width: 560px) {
+  .seg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .seg label { text-align: center; border-top: 1.5px solid var(--line); }
+  .seg label + input + label { border-left: 0; }
+  .seg label:nth-of-type(even) { border-left: 1.5px solid var(--line); }
+  .seg label:nth-of-type(-n+2) { border-top: 0; }
+}
+@media (pointer: coarse) {
+  .nav a { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+  .seg label { padding-top: 0.7rem; padding-bottom: 0.7rem; }
+  .btn-ghost { min-height: 44px; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#innhold">Hopp til innholdet</a>
+<div class="shell">
+  <aside class="rail" aria-label="Meny og innstillinger">
+    <a class="wordmark" href="#innhold">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M2 25 L9.6 17.4" stroke="#C2188A" stroke-width="2.5" stroke-linecap="round"/><circle cx="16" cy="12" r="8.5" fill="none" stroke="#C2188A" stroke-width="2.5"/><circle cx="16" cy="12" r="2.4" fill="#141614"/></svg>
+      Prognose
+    </a>
+    <nav class="nav" aria-label="Hovedmeny">
+      <ul>
+        <li><a href="#innhold" aria-current="page"><svg viewBox="0 0 18 18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6.5 4.5 H15.5 M6.5 9 H15.5 M6.5 13.5 H15.5"/><circle cx="3" cy="4.5" r="0.9" fill="currentColor"/><circle cx="3" cy="9" r="0.9" fill="currentColor"/><circle cx="3" cy="13.5" r="0.9" fill="currentColor"/></svg>Produktoversikt</a></li>
+        <li><a href="#"><svg viewBox="0 0 18 18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2.5" width="12" height="13.5" rx="1.5"/><path d="M6.5 7 H11.5 M6.5 10 H11.5 M6.5 13 H9.5"/></svg>Samlet bestillingsoversikt</a></li>
+      </ul>
+    </nav>
+    <section class="settings" aria-labelledby="h-inn">
+      <h2 id="h-inn">Innstillinger i bruk</h2>
+      <dl>
+        <div><dt>Prognosemetode</dt><dd>Glidende gj.snitt, 3 uker</dd></div>
+        <div><dt>Scenarioprosent</dt><dd>10&nbsp;%</dd></div>
+        <div><dt>Sikkerhetsmargin</dt><dd>10&nbsp;%</dd></div>
+        <div><dt>Uvanlige uker</dt><dd>Tatt med</dd></div>
+        <div><dt>Sesongjustering</dt><dd>Av</dd></div>
+      </dl>
+      <p>Innstillingene gjelder alle produkter i bedriften og endres på produktsiden.</p>
+    </section>
+    <section class="mini" aria-labelledby="h-tegn">
+      <h2 id="h-tegn">Tegnforklaring</h2>
+      <ul>
+        <li><span class="fin" aria-hidden="true"></span>Bestill snart</li>
+        <li><span class="trust hoy">Høy</span>tillit</li>
+        <li><span class="trust mid">Middels</span>tillit</li>
+        <li><span class="trust lav">Lav</span>tillit</li>
+      </ul>
+    </section>
+    <div class="account">
+      <span>Innlogget som <strong>Testbedrift A</strong></span>
+      <form action="#" method="post"><button class="btn-ghost" type="submit">Logg ut</button></form>
+    </div>
+  </aside>
+
+  <main class="work" id="innhold">
+    <div class="head">
+      <div>
+        <h1>Produktoversikt</h1>
+        <p class="ctx">Siste registrerte uke: <strong>uke 45</strong> · Bestilling for <strong>uke 46</strong> · 30 produkter · Syntetiske data</p>
+      </div>
+      <a class="btn" href="#">Samlet bestillingsoversikt<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a>
+    </div>
+
+    <p class="status">
+      <span><span class="fin" aria-hidden="true"></span><span><b>4 produkter</b> bør bestilles for uke 46</span></span>
+      <span><span class="trust lav" aria-hidden="true"></span><span><b>1 produkt</b> har ingen prognose</span></span>
+      <span class="muted"><b style="color:var(--ink)">25 produkter</b>&nbsp;er dekket neste uke</span>
+    </p>
+
+    <fieldset class="filters">
+      <legend>Vis</legend>
+      <span class="seg">
+        <input type="radio" name="vis" id="f-alle" checked><label for="f-alle">Alle<span class="c">30</span></label>
+        <input type="radio" name="vis" id="f-bestill"><label for="f-bestill">Bestill snart<span class="c">4</span></label>
+        <input type="radio" name="vis" id="f-uten"><label for="f-uten">Uten prognose<span class="c">1</span></label>
+        <input type="radio" name="vis" id="f-tillit"><label for="f-tillit">Middels eller lav tillit<span class="c">6</span></label>
+      </span>
+      <span class="sortnote">Sortert etter bestillingsbehov: lavest uker dekning først.</span>
+    </fieldset>
+
+    <div class="tablewrap">
+      <table class="ov">
+        <caption class="visually-hidden">Alle produkter i Testbedrift A, sortert med Bestill snart først</caption>
+        <thead>
+          <tr>
+            <th scope="col">Varenummer</th>
+            <th scope="col">Produkt</th>
+            <th scope="col" class="r">Lager&shy;beholdning</th>
+            <th scope="col" class="r">Ukeprognose<br>uke 46</th>
+            <th scope="col" class="r">Foreslått bestillings&shy;mengde</th>
+            <th scope="col" class="r">Uker dekning</th>
+            <th scope="col">Tillitsmerke</th>
+          </tr>
+        </thead>
+        <tbody data-g="1">
+          <tr class="grp"><th colspan="7" scope="colgroup">Bestill snart<span class="n">4 produkter</span></th></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10871</td><td data-label="Produkt" class="name"><a href="#">Malertape 25 mm</a></td><td data-label="Lagerbeholdning" class="r">0</td><td data-label="Ukeprognose uke 46" class="r">10,0</td><td data-label="Foreslått bestillingsmengde" class="r"><span class="fin"><span class="visually-hidden">Bestill snart: </span>11</span></td><td data-label="Uker dekning" class="r">0,0</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10872</td><td data-label="Produkt" class="name"><a href="#">Malertape 50 mm</a></td><td data-label="Lagerbeholdning" class="r">0</td><td data-label="Ukeprognose uke 46" class="r">20,0</td><td data-label="Foreslått bestillingsmengde" class="r"><span class="fin"><span class="visually-hidden">Bestill snart: </span>22</span></td><td data-label="Uker dekning" class="r">0,0</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="mid"><td data-label="Varenummer" class="vn">10234</td><td data-label="Produkt" class="name"><a href="key-landing.html#tittel">Treskrue 4 × 40 mm, 200 stk</a></td><td data-label="Lagerbeholdning" class="r">5</td><td data-label="Ukeprognose uke 46" class="r">14,3</td><td data-label="Foreslått bestillingsmengde" class="r"><span class="fin"><span class="visually-hidden">Bestill snart: </span>11</span></td><td data-label="Uker dekning" class="r">0,3</td><td data-label="Tillitsmerke"><span class="trust mid">Middels</span><span class="why">2 utsolgte uker og 1 uvanlig uke de siste 12 ukene.</span></td></tr>
+          <tr data-t="mid"><td data-label="Varenummer" class="vn">10590</td><td data-label="Produkt" class="name"><a href="#">Strøsand 25 kg</a></td><td data-label="Lagerbeholdning" class="r">20</td><td data-label="Ukeprognose uke 46" class="r">51,0</td><td data-label="Foreslått bestillingsmengde" class="r"><span class="fin"><span class="visually-hidden">Bestill snart: </span>37</span></td><td data-label="Uker dekning" class="r">0,4</td><td data-label="Tillitsmerke"><span class="trust mid">Middels</span><span class="why">Nytt nivå de siste 12 ukene.</span></td></tr>
+        </tbody>
+        <tbody data-g="2">
+          <tr class="grp"><th colspan="7" scope="colgroup">Uten prognose<span class="n">1 produkt</span><span class="d">Du bestemmer bestillingen selv for disse produktene.</span></th></tr>
+          <tr data-t="lav"><td data-label="Varenummer" class="vn">11502</td><td data-label="Produkt" class="name"><a href="#">Arbeidshansker vinter, str. L</a></td><td data-label="Lagerbeholdning" class="r">12</td><td data-label="Prognose" colspan="3" class="noforecast">Ingen prognose: for lite data (2 gyldige uker)<small>Det trengs minst 3 gyldige uker.</small></td><td data-label="Tillitsmerke"><span class="trust lav">Lav</span><span class="why">Ingen prognose (2 gyldige uker).</span></td></tr>
+        </tbody>
+        <tbody data-g="3">
+          <tr class="grp"><th colspan="7" scope="colgroup">Dekket neste uke<span class="n">25 produkter</span><span class="d">Lagerbeholdningen dekker forventet behov neste uke.</span></th></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10110</td><td data-label="Produkt" class="name"><a href="#">Spiker 75 mm, 2,5 kg</a></td><td data-label="Lagerbeholdning" class="r">150</td><td data-label="Ukeprognose uke 46" class="r">100,0</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">1,5</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10120</td><td data-label="Produkt" class="name"><a href="#">Spiker 50 mm, 1 kg</a></td><td data-label="Lagerbeholdning" class="r">40</td><td data-label="Ukeprognose uke 46" class="r">18,0</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,2</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10158</td><td data-label="Produkt" class="name"><a href="#">Treskrue 4 × 50 mm, 200 stk</a></td><td data-label="Lagerbeholdning" class="r">22</td><td data-label="Ukeprognose uke 46" class="r">9,3</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,4</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10199</td><td data-label="Produkt" class="name"><a href="#">Gipsskrue 3,9 × 35 mm, 500 stk</a></td><td data-label="Lagerbeholdning" class="r">15</td><td data-label="Ukeprognose uke 46" class="r">6,7</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,3</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10233</td><td data-label="Produkt" class="name"><a href="#">Treskrue 3,5 × 30 mm, 200 stk</a></td><td data-label="Lagerbeholdning" class="r">30</td><td data-label="Ukeprognose uke 46" class="r">11,0</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,7</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10345</td><td data-label="Produkt" class="name"><a href="#">Bits PH2, 10 stk</a></td><td data-label="Lagerbeholdning" class="r">40</td><td data-label="Ukeprognose uke 46" class="r">12,0</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">3,3</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10388</td><td data-label="Produkt" class="name"><a href="#">Bits TX25, 10 stk</a></td><td data-label="Lagerbeholdning" class="r">18</td><td data-label="Ukeprognose uke 46" class="r">7,3</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,5</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10402</td><td data-label="Produkt" class="name"><a href="#">Plugg 6 mm, 100 stk</a></td><td data-label="Lagerbeholdning" class="r">14</td><td data-label="Ukeprognose uke 46" class="r">5,0</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,8</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10455</td><td data-label="Produkt" class="name"><a href="#">Vinkelbeslag 40 mm</a></td><td data-label="Lagerbeholdning" class="r">30</td><td data-label="Ukeprognose uke 46" class="r">12,3</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,4</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10511</td><td data-label="Produkt" class="name"><a href="#">Hengsel 75 mm, 2 stk</a></td><td data-label="Lagerbeholdning" class="r">9</td><td data-label="Ukeprognose uke 46" class="r">3,7</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,5</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10592</td><td data-label="Produkt" class="name"><a href="#">Strøsand 10 kg</a></td><td data-label="Lagerbeholdning" class="r">60</td><td data-label="Ukeprognose uke 46" class="r">24,0</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,5</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="mid"><td data-label="Varenummer" class="vn">10620</td><td data-label="Produkt" class="name"><a href="#">Isfjerner spray 400 ml</a></td><td data-label="Lagerbeholdning" class="r">26</td><td data-label="Ukeprognose uke 46" class="r">15,3</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">1,7</td><td data-label="Tillitsmerke"><span class="trust mid">Middels</span><span class="why">1 uvanlig uke de siste 12 ukene.</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10688</td><td data-label="Produkt" class="name"><a href="#">Vinduskrape</a></td><td data-label="Lagerbeholdning" class="r">20</td><td data-label="Ukeprognose uke 46" class="r">6,0</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">3,3</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10703</td><td data-label="Produkt" class="name"><a href="#">Frostvæske 4 l</a></td><td data-label="Lagerbeholdning" class="r">12</td><td data-label="Ukeprognose uke 46" class="r">4,3</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,8</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10745</td><td data-label="Produkt" class="name"><a href="#">Malerkost 50 mm</a></td><td data-label="Lagerbeholdning" class="r">21</td><td data-label="Ukeprognose uke 46" class="r">8,7</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,4</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10760</td><td data-label="Produkt" class="name"><a href="#">Malerrull 18 cm</a></td><td data-label="Lagerbeholdning" class="r">16</td><td data-label="Ukeprognose uke 46" class="r">6,3</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,5</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10790</td><td data-label="Produkt" class="name"><a href="#">Sparkel 0,5 l</a></td><td data-label="Lagerbeholdning" class="r">13</td><td data-label="Ukeprognose uke 46" class="r">5,7</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,3</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10811</td><td data-label="Produkt" class="name"><a href="#">Sandpapir K120, 10 ark</a></td><td data-label="Lagerbeholdning" class="r">25</td><td data-label="Ukeprognose uke 46" class="r">10,0</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,5</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10835</td><td data-label="Produkt" class="name"><a href="#">Silikon sanitær, hvit</a></td><td data-label="Lagerbeholdning" class="r">19</td><td data-label="Ukeprognose uke 46" class="r">7,0</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,7</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">10902</td><td data-label="Produkt" class="name"><a href="#">Kabelstrips 200 mm, 100 stk</a></td><td data-label="Lagerbeholdning" class="r">24</td><td data-label="Ukeprognose uke 46" class="r">9,0</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,7</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="mid"><td data-label="Varenummer" class="vn">10950</td><td data-label="Produkt" class="name"><a href="#">Skjøteledning 5 m</a></td><td data-label="Lagerbeholdning" class="r">8</td><td data-label="Ukeprognose uke 46" class="r">2,3</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">3,4</td><td data-label="Tillitsmerke"><span class="trust mid">Middels</span><span class="why">78 uker med salgshistorikk (under 104).</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">11020</td><td data-label="Produkt" class="name"><a href="#">LED-pære E27, 806 lm</a></td><td data-label="Lagerbeholdning" class="r">35</td><td data-label="Ukeprognose uke 46" class="r">13,7</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,6</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">11088</td><td data-label="Produkt" class="name"><a href="#">Batterier AA, 8 stk</a></td><td data-label="Lagerbeholdning" class="r">40</td><td data-label="Ukeprognose uke 46" class="r">16,3</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,4</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="hoy"><td data-label="Varenummer" class="vn">11120</td><td data-label="Produkt" class="name"><a href="#">Avfallssekk 125 l, 10 stk</a></td><td data-label="Lagerbeholdning" class="r">28</td><td data-label="Ukeprognose uke 46" class="r">11,3</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">2,5</td><td data-label="Tillitsmerke"><span class="trust hoy">Høy</span></td></tr>
+          <tr data-t="mid"><td data-label="Varenummer" class="vn">11210</td><td data-label="Produkt" class="name"><a href="#">Tetningslist 9 mm, 6 m</a></td><td data-label="Lagerbeholdning" class="r">10</td><td data-label="Ukeprognose uke 46" class="r">3,3</td><td data-label="Foreslått bestillingsmengde" class="r muted">0</td><td data-label="Uker dekning" class="r">3,0</td><td data-label="Tillitsmerke"><span class="trust mid">Middels</span><span class="why">1 utsolgt uke de siste 12 ukene.</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="foot">
+      <p>Rekkefølge: Bestill snart etter uker dekning, så produkter uten prognose, så resten etter varenummer.</p>
+      <p>Tallene er avrundet for visning.</p>
+    </div>
+  </main>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Designnotat (internt): tilstander · Prognose</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Internal design note for the project group. Not part of the app. Same tokens as key-landing.html. */
+:root {
+  color-scheme: light;
+  --paper: #F6F8F5; --white: #FFFFFF; --ink: #141614; --ink-2: #4A504C; --line: #6B716D; --rule: #D5DBD4;
+  --green-fld: #E2F1D9; --blue-ink: #005C92; --magenta: #C2188A; --magenta-dk: #9E1272; --magenta-ink: #930F69; --magenta-tnt: #F8DCEE; --lav: #B42318;
+  --font: "Albert Sans", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 1rem/1.55 var(--font); accent-color: var(--magenta); }
+::selection { background: var(--magenta-tnt); color: var(--ink); }
+a { color: var(--magenta-ink); text-underline-offset: 0.2em; }
+:focus-visible { outline: 3px solid var(--magenta-ink); outline-offset: 2px; }
+h1, h2, h3 { margin: 0; letter-spacing: -0.02em; line-height: 1.2; }
+p { margin: 0; }
+.wrap { width: min(1100px, 100% - 2rem); margin-inline: auto; padding-top: 2rem; padding-bottom: 3rem; }
+.banner { display: grid; gap: 0.4rem; padding: 1rem 1.25rem; border: 2px dashed var(--line); border-radius: 6px; background: var(--white); margin-bottom: 1.75rem; }
+.banner h1 { font-size: 1.75rem; }
+.banner p { color: var(--ink-2); font-size: 0.9375rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1.25rem; }
+figure { margin: 0; display: grid; gap: 0.5rem; align-content: start; }
+figcaption { font-size: 0.8125rem; color: var(--ink-2); }
+.login { padding: 1.25rem 1.5rem 1.4rem; background: var(--green-fld); border: 1px solid var(--ink); display: grid; gap: 0.85rem; }
+.login h2 { font-size: 1.5rem; }
+.field { display: grid; gap: 0.3rem; }
+.field label { font-size: 0.875rem; font-weight: 600; }
+.field input { font: 500 1rem/1.2 var(--font); color: var(--ink); background: var(--white); border: 1.5px solid var(--lav); border-radius: 4px; padding: 0.7rem 0.75rem; min-height: 46px; width: 100%; }
+.btn { font: 600 1rem/1 var(--font); color: var(--white); background: var(--magenta); border: 0; border-radius: 4px; min-height: 46px; padding: 0 1.25rem; width: 100%; }
+.err { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.875rem; font-weight: 600; color: var(--lav); }
+.err svg, .note svg { width: 16px; height: 16px; flex: none; margin-top: 0.15rem; }
+.empty { background: var(--white); border: 1px solid var(--ink); border-radius: 6px; padding: 1.5rem; display: grid; gap: 0.6rem; justify-items: start; }
+.empty h3 { font-size: 1.125rem; }
+.empty p { color: var(--ink-2); max-width: 52ch; }
+.empty code { font: 500 0.875rem/1.4 ui-monospace, "SF Mono", Menlo, monospace; background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; padding: 0.15rem 0.4rem; color: var(--ink); }
+.notes { margin-top: 2rem; display: grid; gap: 0.5rem; }
+.notes h2 { font-size: 1.25rem; }
+.notes ul { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.35rem; color: var(--ink-2); font-size: 0.9375rem; max-width: 75ch; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="banner">
+    <h1>Designnotat: tilstander</h1>
+    <p>Internt notat for prosjektgruppen. Dette er ikke en side i appen, og den vises ikke for brukerne. Hovedskjermene er <a href="key-landing.html">landingssiden</a> og <a href="key-produktoversikt.html">produktoversikten</a>.</p>
+  </div>
+
+  <div class="grid">
+    <figure>
+      <form class="login" action="#" method="post" aria-labelledby="h-err">
+        <h2 id="h-err">Logg inn</h2>
+        <p class="err" role="alert"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 4.2 v4.6 M8 11.4 v0.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Feil kundenummer eller passord.</p>
+        <div class="field"><label for="k2">Kundenummer</label><input id="k2" type="text" inputmode="numeric" value="100002" aria-invalid="true"></div>
+        <div class="field"><label for="p2">Passord</label><input id="p2" type="password" value="xxxxxxxx" aria-invalid="true"></div>
+        <button class="btn" type="button">Logg inn</button>
+      </form>
+      <figcaption>Feil innlogging på landingssiden: én felles melding som ikke sier hvilket felt som var feil (FR-1).</figcaption>
+    </figure>
+
+    <figure>
+      <div class="empty">
+        <h3>Ingen produkter ennå</h3>
+        <p>Det er ikke lastet inn data for Testbedrift A. Kjør innlastingskommandoen fra README-filen, og last siden på nytt.</p>
+        <code>‹innlastingskommandoen fra README›</code>
+      </div>
+      <figcaption>Tom produktoversikt (FR-24). Kommandoen fastsettes i arkitektursteget.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="empty">
+        <h3>Ingen produkter passer filteret</h3>
+        <p>Ingen produkter har middels eller lav tillit denne uken.</p>
+        <a href="key-produktoversikt.html">Vis alle produkter</a>
+      </div>
+      <figcaption>Tomt filterresultat i produktoversikten.</figcaption>
+    </figure>
+  </div>
+
+  <section class="notes" aria-labelledby="h-notes">
+    <h2 id="h-notes">Merknader til skissene</h2>
+    <ul>
+      <li>Bryteren for sikkerhetsmargin og filteret i produktoversikten virker i skissene uten JavaScript (CSS). I appen sender de et skjema eller en adresseparameter til serveren.</li>
+      <li>Under 700 px bytter grafene til egne mobilversjoner med samme data og symboler. I appen gjør Chart.js dette med færre etiketter og større skrift.</li>
+      <li>Under 640 px blir hver produktrad i produktoversikten et kort med etiketter (<code>data-label</code>). Tabellsemantikken bør sikres i appen, for eksempel med ARIA-roller.</li>
+      <li>Tallene er syntetiske og følger reglene og referanseeksemplene i PRD-en.</li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
