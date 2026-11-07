@@ -51,6 +51,12 @@ _bmad/custom/*.user.toml
 _bmad/render/
 .claude/settings.local.json
 
+# Impeccable design skill: platform-specific engine binary and local state
+.claude/skills/impeccable/scripts/bin/
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.npm-cache/
+
 # Operating system / editors
 .DS_Store
 Thumbs.db

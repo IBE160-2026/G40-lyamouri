@@ -1,0 +1,27 @@
+{
+  "telemetry": false,
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-06/mockups/key-landing.html"
+        ],
+        "createdAt": "2026-11-07T13:35:05.222Z",
+        "reason": "Claude: identical copy of the approved .working/key-landing.html; children carry the inset (map-frame sections, table cells, .wrap width); the static scan does not resolve clamp() or the width expression"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-06/mockups/key-produktoversikt.html"
+        ],
+        "createdAt": "2026-11-07T13:35:05.236Z",
+        "reason": "Claude: identical copy of the approved .working/key-produktoversikt.html; table cells carry the inset inside the bordered wrapper; the account block has a 13.6px top inset"
+      }
+    ]
+  }
+}
