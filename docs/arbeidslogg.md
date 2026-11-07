@@ -75,6 +75,55 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** PRD er ferdig og godkjent. Neste steg er å oppdatere Product Brief med endringene, og deretter UX-design (`bmad-ux`) og arkitektur (`bmad-architecture`).
 
+### 6. november 2026 – UX-design med BMAD UX og Impeccable
+
+* Leste den ferdige PRD-en, addendumet, beslutningsloggen, siste sesjonslogg og de åpne punktene før UX-steget startet.
+* Fant den offisielle installasjonsmetoden for designskillen Impeccable og installerte versjon 4.8.0 i prosjektet med `npx impeccable install`. Telemetrien ble slått av, og npm-cachen ble holdt inne i prosjektmappen.
+* Startet `bmad-ux` og opprettet arbeidsområdet `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-06/` med beslutningslogg. Impeccable skrev `PRODUCT.md` ut fra PRD-en.
+* Utledet åtte designretninger fra brukernes norske hverdag, blant annet ukeplanleggeren, lagerkortet, værmeldingen og orienteringskartet. Impeccable trakk retningen som skulle bygges: orienteringskartet («O-kartet»).
+* Startet ti subagenter parallelt for å lage ti designkonsepter. Kvoten for bruk ble brukt opp to ganger før agentene hadde laget noe design, så ingen av konseptene ble ferdige.
+* Eksempel på styring av KI: Jeg stoppet planen med ti parallelle agenter, ba om at de ikke ble startet på nytt, og ba om ett gjennomarbeidet design i stedet, der Claude tar designbeslutningene og presenterer resultatet før detaljering.
+* Laget designforslaget «O-kartet» som to HTML-skisser: en landingsside med innlogging, utregning, tillitsmerker og «Prøv selv», og en produktoversikt (dashboard) med alle 30 testprodukter sortert etter reglene i PRD-en. Fargene, skriften (Albert Sans) og symbolene for utsolgte uker, uvanlige uker og nytt nivå er beskrevet i `visual-design.md`.
+* Kontrollerte skissene med Impeccable-detektoren og et eget kontrollskript: alle faste tekster fra PRD-en er med, all tekst har kontrast etter WCAG AA, og det er ingen JavaScript. Skissene er ikke kontrollert i nettleser, fordi en test med Chrome skrev utenfor prosjektmappen og derfor ble stoppet.
+* Ingenting er committet eller pushet.
+
+**Status:** Det visuelle designet er klart til min vurdering og er ikke godkjent ennå. Etter godkjenning kommer detaljeringen i BMAD (produktsiden, samlet bestillingsoversikt, `DESIGN.md` og `EXPERIENCE.md`), og deretter arkitekturen.
+
+### 7. november 2026 – Forbedringer av designet
+
+* Så på skissene i nettleseren og ba om fem forbedringer:
+  * en mye mindre varseltrekant;
+  * en kortere landingsside uten gjentakelser;
+  * en tydeligere innlogging;
+  * interne designnotater adskilt fra sidene brukerne ser;
+  * bedre tilpasning til mobil.
+
+  Farger, grafer, hovedstruktur og designretning skulle beholdes, og det skulle ikke komme nye funksjoner.
+* Eksempel på styring av KI: Den store varseltrekanten var en feil i CSS-koden fra KI, der en regel for grafen også traff ikonet. Feilen ble funnet og rettet etter min tilbakemelding.
+* Claude gjorde endringene med BMAD UX og Impeccable (`adapt` for mobil og `distill` for kortere tekst):
+  * Forhåndsvisningen av produktoversikten og gjentatte utregninger er fjernet fra landingssiden.
+  * Innloggingen har fått en egen knapp i toppen og en tydeligere boks.
+  * Designnotatene ligger nå i en egen intern fil.
+  * Grafer og tabeller har egne mobilversjoner.
+* Impeccable-detektoren fant ingen feil på de to skjermene etter endringene. Ingen filer er slettet, og ingenting er committet eller pushet.
+
+**Status:** Det oppdaterte designet er klart til min vurdering.
+
+### 7. november 2026 – UX-fasen fullført
+
+* Godkjente begge skjermene (landingssiden med innlogging og produktoversikten) og ba Claude fullføre UX-fasen med BMAD og Impeccable uten å endre det godkjente designet.
+* Claude skrev UX-dokumentene `DESIGN.md` og `EXPERIENCE.md` og satte dem til `final`. De beskriver farger, skrift, komponenter, tilstander, tilgjengelighet og tilpasning til skjermstørrelser. De har også enkle skisser (wireframes) av produktsiden og samlet bestillingsoversikt, og hovedflyten UJ-1.
+* De godkjente skissene ble kopiert til mappen `mockups/`.
+* Kontroller:
+  * BMAD sin dekningskontroll;
+  * avstemming mot PRD-en, der ingen krav falt bort;
+  * en uavhengig gjennomgang av struktur og språk, der alle rettingene ble tatt inn;
+  * Impeccable-detektoren, som ikke fant noe på skissene.
+* Eksempel på styring av KI: Gjennomgangen fant at mobilfilteret var beskrevet med feil bruddpunkt (640 px i stedet for 560 px), og at grafbeskrivelsen ikke passet med Chart.js. Begge ble rettet i dokumentene, uten å endre designet.
+* Claude foreslo hvilke filer som kan slettes. Etter min godkjenning og en kontroll av at kopiene var identiske, ble verktøycachen, de uferdige agentfilene og de doble kopiene slettet. Ingenting er committet eller pushet.
+
+**Status:** UX-fasen er ferdig. Neste steg er arkitektur (`bmad-architecture`).
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
