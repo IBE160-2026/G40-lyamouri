@@ -213,8 +213,9 @@ So that publishing is proven in the first week and every later story deploys the
 **Acceptance Criteria:**
 
 **Given** a fresh clone and Python 3.13
-**When** the developer creates a virtual environment and runs `pip install -r requirements.txt`, `python manage.py migrate` and `python manage.py runserver --insecure`
+**When** the developer creates a virtual environment and runs `pip install -r requirements.txt`, `python manage.py migrate`, `python manage.py load_seed` and `python manage.py runserver --insecure`
 **Then** a Norwegian start page (`lang="nb"`) loads on 127.0.0.1:8000 with SQLite and one stylesheet served from `/static/`
+**And** this first version of `load_seed` only creates the gitignored session-secret file when it is missing, so no secret is hard-coded or committed; Story 1.2 adds the data (NFR-3, AD-12)
 **And** `python manage.py test`, `ruff check` and `ruff format --check` pass
 
 **Given** the repository
@@ -262,7 +263,7 @@ So that I can try Prognose on known cases without real data.
 **Given** an empty or loaded database
 **When** `python manage.py load_seed` runs, once or several times
 **Then** the database holds exactly the seed state, without duplicates or errors (DR-4)
-**And** the command creates the gitignored session-secret file when it is missing (NFR-3)
+**And** it still creates the gitignored session-secret file when it is missing (NFR-3)
 
 **Given** loaded data
 **When** the application is stopped and started again
@@ -916,3 +917,11 @@ So that it is easier to read, without any risk to the numbers.
 **When** it is read
 **Then** it names the chosen runtime and model, the license obligations, the download size and expected time, and describes the model as a separate optional step outside the basic setup (DR-1, SM-2, PRD §10 question 5)
 **And** no data is sent to a hosted AI service (AG-5)
+
+## Change Log
+
+Changes after approval on 2026-11-08, recorded as DR-5 and PRD §12 require.
+
+| Date | Change | Reason | Commit or pull request |
+|---|---|---|---|
+| 2026-11-08 | Story 1.1: the first version of `load_seed` only creates the session-secret file, and Story 1.2 adds the data. | The readiness check in sprint planning found that Story 1.1 recorded no source for the local secret (NFR-3, AD-12). | Not committed yet |

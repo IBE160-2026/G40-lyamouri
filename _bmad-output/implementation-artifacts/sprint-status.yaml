@@ -1,0 +1,93 @@
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created, ready for development
+#   - in-progress: Developer actively working on implementation
+#   - review: Implementation complete, ready for review
+#   - done: Story completed
+
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+# Action Item Status:
+#   - open: Committed during a retrospective, not yet addressed
+#   - in-progress: Actively being worked on
+#   - done: Completed
+
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when its first story starts (via build's sprint sync)
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates the next story after the previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+# - Retrospective appends its action items to action_items; the status view surfaces open ones
+generated: 11-08-2026 15:39
+last_updated: 11-08-2026 15:39
+project: G40-lyamouri
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+# MILESTONES (sprint planning 11-08-2026; deadline 12-01-2026, DR-6):
+# - by 11-11-2026: epic 1 done and published on Vercel
+# - by 11-18-2026: epic 2 done; SM-1 passes
+# - by 11-21-2026: epic 3 done; SM-3 passes (Must scope complete); stories 4.1 to 4.3 start
+# - 11-22 to 11-27-2026: Should items in this order: 5.1, 5.2, 5.3, 6.1, 6.2, 7.1; Could items only if time allows
+# - 11-28 to 11-30-2026: story 4.4 (final check) and buffer
+# - 12-01-2026: submission
+development_status:
+  epic-1: backlog
+  1-1-project-skeleton-running-locally-and-on-vercel: backlog
+  1-2-synthetic-data-for-two-test-companies: backlog
+  1-3-log-in-on-the-landing-page: backlog
+  1-4-see-only-my-own-company-s-products: backlog
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-weeks-the-forecast-can-trust: backlog
+  2-2-base-forecast-for-the-next-three-weeks: backlog
+  2-3-scenarios-and-suggested-order-quantity: backlog
+  2-4-warnings-and-confidence-label: backlog
+  2-5-product-overview-with-forecasts-and-order-status: backlog
+  2-6-product-screen-with-chart-and-decision-details: backlog
+  2-7-see-how-the-forecast-was-calculated: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-change-and-save-the-company-settings: backlog
+  3-2-see-the-effect-of-a-change-on-every-product: backlog
+  3-3-read-a-plain-language-explanation: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-readme-that-lets-the-examiner-set-up-and-try-prognose: backlog
+  4-2-design-finish-review-on-the-real-build: backlog
+  4-3-status-table-and-process-documentation: backlog
+  4-4-final-check-on-the-final-commit: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-seasonal-adjustment-for-seasonal-products: backlog
+  5-2-warnings-for-seasonal-patterns-and-level-shifts: backlog
+  5-3-order-quantity-per-scenario-and-overstock-note: backlog
+  5-4-settings-per-product-could: backlog
+  5-5-forecast-accuracy-could: backlog
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-adjust-an-order-quantity: backlog
+  6-2-combined-order-overview: backlog
+  6-3-save-adjustments-and-mark-products-as-approved-could: backlog
+  6-4-export-the-combined-order-overview-could: backlog
+  6-5-note-when-the-stock-will-not-last-through-weeks-2-and-3-coul: backlog
+  epic-6-retrospective: optional
+
+  epic-7: backlog
+  7-1-rephrase-the-explanation-with-a-local-language-model: backlog
+  epic-7-retrospective: optional
