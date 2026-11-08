@@ -135,6 +135,8 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
   * en enkel arkitektur som kan videreutvikles, og fristen prioriteres.
 * Spinen har 14 arkitekturbeslutninger. Beregningsreglene ligger i en ren Python-kjerne uten Django, all bedriftsisolasjon går gjennom én spørremodul, og det er én testkommando og én fasit. Versjonene ble sjekket mot primærkildene.
 * Eksempel på styring av KI: Claude foreslo nyeste Django 6.1. Jeg valgte heller langtidsversjonen 5.2 for stabilitet frem mot fristen.
+* Etterpå ba jeg Claude sjekke om Django 5.2 kan publiseres på Vercel. Ifølge dokumentasjonen til Vercel går det, men det er ikke testet med en faktisk publisering ennå. SQLite beholdes lokalt, og PostgreSQL (Neon sin gratisplan) er planlagt for valgfri publisering etter må-ha. Arkitekturen fikk en ny beslutning (AD-15): miljøvariabelen `DATABASE_URL` bestemmer hvilken database som brukes.
+* Så bestemte jeg at Vercel skal være publiseringsløsningen, ikke bare et valg. PRD-en fikk et nytt leveransekrav (DR-10) og et nytt suksessmål (SM-9). Arkitekturen fikk en ny beslutning (AD-16): bare `main` publiseres, og databaseendringer kjøres av eieren fra egen PC. Den første storyen publiserer et prosjektskjelett, slik at publiseringen blir prøvd ut tidlig.
 
 **Status:** Arkitekturen er ferdig (`final`). Neste steg er epics og stories (`bmad-create-epics-and-stories`).
 
