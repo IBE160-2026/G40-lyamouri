@@ -20,7 +20,7 @@
 - [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — lage regnearket med de håndregnede referanseeksemplene E1–E30 (PRD DR-3)
 - [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — teste oppsettstiden (høyst 15 minutter) på ren macOS og Windows, også uten nett, og på nytt på siste commit (PRD §10 spørsmål 2)
 - [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — velge lokal språkmodell og avklare lisensen hvis FR-28 bygges (PRD §10 spørsmål 5)
-- [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — kjøre UX-steget (`bmad-ux`) og arkitektursteget (`bmad-architecture`), og deretter epics og stories
+- [x] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — kjøre UX-steget (`bmad-ux`) og arkitektursteget (`bmad-architecture`), og deretter epics og stories (løst 2026-11-08: UX, arkitektur og epics og stories er ferdige)
 - [x] 2026-11-06 [ux-design-prognose](996-2026-11-06-23-23-12-ux-design-prognose.md) — vurdere det visuelle designet «O-kartet» (landingsside og produktoversikt) og godkjenne det eller be om endringer (løst 2026-11-07: begge skjermene er godkjent)
 - [x] 2026-11-06 [ux-design-prognose](996-2026-11-06-23-23-12-ux-design-prognose.md) — avklare om landingssiden skal være innloggingssiden (FR-1) eller en egen offentlig side (løst 2026-11-07: godkjent som én side, i tråd med FR-1)
 - [x] 2026-11-06 [ux-design-prognose](996-2026-11-06-23-23-12-ux-design-prognose.md) — etter godkjenning: tegne produktsiden og samlet bestillingsoversikt, skrive `DESIGN.md` og `EXPERIENCE.md`, og kjøre Impeccable finish review og dokumentasjon (løst 2026-11-07: spinene er ferdige; produktsiden og samlet bestillingsoversikt er wireframes; finish review er flyttet til byggingen, se eget punkt)
@@ -41,3 +41,4 @@
 - [ ] 2026-11-08 [arkitektur-prognose](995-2026-11-08-11-46-25-arkitektur-prognose.md) — i første story: publisere prosjektskjelettet på Vercel (fra1) med Neon (Frankfurt), og sjekke at IBE160-2026-organisasjonen tillater Vercel-appen og at Hobby-planen ikke blokkerer commits med Claude som medforfatter
 - [x] 2026-11-08 [arkitektur-prognose](995-2026-11-08-11-46-25-arkitektur-prognose.md) — ved commit: fylle inn commit-hashen i endringsloggen i PRD-en (§12) (løst 2026-11-08: `21cd020` står i §12)
 - [ ] 2026-11-08 [arkitektur-prognose](995-2026-11-08-11-46-25-arkitektur-prognose.md) — valgfritt: nevne den publiserte adressen i sensorflyten i EXPERIENCE.md (Flow 2)
+- [ ] 2026-11-08 [epics-og-stories-prognose](994-2026-11-08-13-55-42-epics-og-stories-prognose.md) — fylle inn detaljene i kan-ha-storyene (5.4, 5.5 og 6.3 til 6.5) når de planlegges (PRD §4)
