@@ -35,3 +35,4 @@
 - [ ] 2026-11-07 [ux-design-prognose](996-2026-11-06-23-23-12-ux-design-prognose.md) — kjøre Impeccable finish review og dokumentasjon på den ekte byggingen (FINISH-linjen i retningskontrakten)
 - [ ] 2026-11-07 [ux-design-prognose](996-2026-11-06-23-23-12-ux-design-prognose.md) — i byggingen: la produkttabellen rulle i rammen mellom 961 og 1023 px; skissen klipper den der, og spinen gjelder
 - [ ] 2026-11-07 [ux-design-prognose](996-2026-11-06-23-23-12-ux-design-prognose.md) — valgfritt: HTML-skisser av produktsiden og samlet bestillingsoversikt, og BMAD sin flerlinsevalidering (Reviewer Gate) av UX-spinene
+- [x] 2026-11-08 [arkitektur-prognose](995-2026-11-08-11-46-25-arkitektur-prognose.md) — bekrefte antakelsene i arkitekturutkastet (Django 6.1.3, runserver --insecure, justeringer i sesjonen, ytelse og SQLite-versjon), og deretter sette spinen til final (løst 2026-11-08: Django 5.2 LTS valgt, antakelsene godkjent, spinen er final)
