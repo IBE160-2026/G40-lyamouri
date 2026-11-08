@@ -924,4 +924,4 @@ Changes after approval on 2026-11-08, recorded as DR-5 and PRD §12 require.
 
 | Date | Change | Reason | Commit or pull request |
 |---|---|---|---|
-| 2026-11-08 | Story 1.1: the first version of `load_seed` only creates the session-secret file, and Story 1.2 adds the data. | The readiness check in sprint planning found that Story 1.1 recorded no source for the local secret (NFR-3, AD-12). | Not committed yet |
+| 2026-11-08 | Story 1.1: the first version of `load_seed` only creates the session-secret file, and Story 1.2 adds the data. | The readiness check in sprint planning found that Story 1.1 recorded no source for the local secret (NFR-3, AD-12). | `425d818` |
