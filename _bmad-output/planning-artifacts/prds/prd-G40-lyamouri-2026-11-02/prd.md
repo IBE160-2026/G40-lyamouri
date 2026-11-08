@@ -873,4 +873,4 @@ This PRD was approved and set to final on 2026-11-03. Every change to a requirem
 
 | Date | Change | Reason | Commit or pull request |
 |---|---|---|---|
-| 2026-11-08 | Vercel is the publishing solution. New DR-10 and SM-9; updated FR-4, NFR-1, NFR-3, NFR-8, NFR-9, DR-1, DR-9, §1, §7, §8.1 and the summary at the top. The local app keeps SQLite, and the published version uses PostgreSQL. | The group chose Vercel for publishing. The technical choices are in the architecture spine (AD-13, AD-15, AD-16). | Not committed yet |
+| 2026-11-08 | Vercel is the publishing solution. New DR-10 and SM-9; updated FR-4, NFR-1, NFR-3, NFR-8, NFR-9, DR-1, DR-9, §1, §7, §8.1 and the summary at the top. The local app keeps SQLite, and the published version uses PostgreSQL. | The group chose Vercel for publishing. The technical choices are in the architecture spine (AD-13, AD-15, AD-16). | `21cd020` |
