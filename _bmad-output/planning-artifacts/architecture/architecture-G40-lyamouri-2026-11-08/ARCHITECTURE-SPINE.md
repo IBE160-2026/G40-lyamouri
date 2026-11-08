@@ -4,11 +4,11 @@ type: architecture-spine
 purpose: build-substrate
 altitude: feature
 paradigm: 'server-rendered Django monolith with a functional core (functional core, imperative shell)'
-scope: 'Prognose v1: one local web app for weekly forecasts, order quantities and purchase planning'
+scope: 'Prognose v1: one web app for weekly forecasts, order quantities and purchase planning; runs locally and is published on Vercel'
 status: final
 created: '2026-11-08'
 updated: '2026-11-08'
-binds: [FR-1, FR-2, FR-3, FR-4, FR-5, FR-6, FR-7, FR-8, FR-9, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-16, FR-17, FR-18, FR-19, FR-20, FR-21, FR-22, FR-23, FR-24, FR-25, FR-26, FR-27, FR-28, FR-29, FR-30, FR-31, FR-32, FR-33, FR-34, FR-35, FR-36, NFR-1, NFR-2, NFR-3, NFR-4, NFR-5, NFR-6, NFR-7, NFR-8, NFR-9, NFR-10, NFR-11]
+binds: [FR-1, FR-2, FR-3, FR-4, FR-5, FR-6, FR-7, FR-8, FR-9, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-16, FR-17, FR-18, FR-19, FR-20, FR-21, FR-22, FR-23, FR-24, FR-25, FR-26, FR-27, FR-28, FR-29, FR-30, FR-31, FR-32, FR-33, FR-34, FR-35, FR-36, NFR-1, NFR-2, NFR-3, NFR-4, NFR-5, NFR-6, NFR-7, NFR-8, NFR-9, NFR-10, NFR-11, DR-10, SM-9]
 sources:
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md'
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/addendum.md'
@@ -34,7 +34,7 @@ flowchart LR
   A --> D
 ```
 
-Arrows point from the depender to the dependency. Nothing points back into the shell. The pure core and `planning/queries.py` are the seams for later growth, such as another UI, an API or hosting, without touching the rules.
+Arrows point from the depender to the dependency. Nothing points back into the shell. The pure core and `planning/queries.py` are the seams for later growth, such as another UI or an API, without touching the rules.
 
 ## Invariants & Rules
 
@@ -89,7 +89,7 @@ Arrows point from the depender to the dependency. Nothing points back into the s
 ### AD-9 — Adjusted quantities behind one service
 - **Binds:** FR-29 to FR-31
 - **Prevents:** two storage mechanisms for adjustments
-- **Rule:** adjusted order quantities live in the Django session, keyed by varenummer and latest data week, and are reached only through `planning/adjustments.py`. FR-31 (Could) replaces the storage behind the same functions.
+- **Rule:** adjusted order quantities live in the Django session (Django's default database backend, in both run modes), keyed by varenummer and latest data week, and are reached only through `planning/adjustments.py`. FR-31 (Could) replaces the storage behind the same functions.
 
 ### AD-10 — Explanation boundary
 - **Binds:** FR-26 to FR-28, AG-1 to AG-5, NFR-1
@@ -112,11 +112,20 @@ Arrows point from the depender to the dependency. Nothing points back into the s
   - `data/generate_seed.py` deterministically writes the versioned seed files in `data/seed/`. They hold inputs and password hashes only.
   - `python manage.py load_seed` resets the database idempotently.
   - `load_seed` also creates the gitignored session-secret file when it is missing.
+  - Published: `SECRET_KEY` is a Vercel environment variable, set once by the project owner, and there is no secret file. The published database gets its seed through the same `load_seed`, run as AD-16 describes.
 
-### AD-13 — Local run mode
-- **Binds:** NFR-1, NFR-9, NFR-10, SM-2
-- **Prevents:** debug pages or stack traces reaching the examiner
-- **Rule:** the app runs as one local process (`python manage.py runserver --insecure`, 127.0.0.1). `runserver` is used only on the user's own PC; the app is never deployed or exposed to a network. DEBUG is off by default and serves Norwegian 404 and 500 pages; only `.env` can turn DEBUG on for development. `LANGUAGE_CODE = 'nb'` and `TIME_ZONE = 'Europe/Oslo'`.
+### AD-13 — Run modes: local and published
+- **Binds:** NFR-1, NFR-9, NFR-10, SM-2, DR-10, SM-9
+- **Prevents:** debug pages or stack traces reaching the examiner, and a published version that differs from the local one in unlisted ways
+- **Rule:**
+  - **Local** (development, tests and the examiner's PC): one process, `python manage.py runserver --insecure` on 127.0.0.1, with SQLite. It works offline (NFR-1). `runserver` is used only here.
+  - **Published:** Vercel's Python runtime runs `prognose/wsgi.py` as one function in region `fra1`, with Python 3.13 from `.python-version` and packages from `requirements.txt`. Vercel runs `collectstatic` into `STATIC_ROOT` (`staticfiles/`, gitignored) and serves `/static/` from its CDN.
+  - `settings.py` detects the published version by the `VERCEL` variable, and only then:
+    - forces DEBUG off;
+    - builds `ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS` (https) from `VERCEL_PROJECT_PRODUCTION_URL` and `VERCEL_URL`;
+    - sets `SECURE_PROXY_SSL_HEADER` and secure session and CSRF cookies;
+    - requires `SECRET_KEY` and `DATABASE_URL`, and stops with a clear error if either is missing.
+  - **Both:** DEBUG is off by default, with Norwegian 404 and 500 pages; only `.env` can turn DEBUG on, and only locally. `LANGUAGE_CODE = 'nb'` and `TIME_ZONE = 'Europe/Oslo'`. The local language model stays off on Vercel.
 
 ### AD-14 — One test command and one answer key
 - **Binds:** NFR-2, DR-3, SM-1, SM-3, SM-4
@@ -127,6 +136,23 @@ Arrows point from the depender to the dependency. Nothing points back into the s
   - The core-flow and isolation tests use the Django test client.
   - Ruff lints and formats.
 
+### AD-15 — Database chosen by environment
+- **Binds:** FR-4, NFR-9, DR-10, AD-13
+- **Prevents:** SQLite- or PostgreSQL-specific code that breaks the other database, and connection settings that fail behind Neon's connection pooler
+- **Rule:**
+  - Without `DATABASE_URL` the app uses the local SQLite file `db.sqlite3` (gitignored). With `DATABASE_URL` it uses PostgreSQL through psycopg. The URL is parsed with `urllib.parse`, and every PostgreSQL connection sets `sslmode=require`, `CONN_MAX_AGE = 0` and `DISABLE_SERVER_SIDE_CURSORS = True`.
+  - The published database is Neon PostgreSQL on the free plan, created from the Vercel dashboard (Storage → Neon) in AWS Frankfurt (`eu-central-1`), next to `fra1`. The app uses the pooled `DATABASE_URL` that the integration sets. `DATABASE_URL_UNPOOLED` is used only for `migrate` and `load_seed` (AD-16).
+  - Data access uses the Django ORM and migrations only, with no raw SQL, and the same migrations run on both databases. Tests run on SQLite.
+  - The app writes no files at request time.
+
+### AD-16 — Deploys from main; database changes by the owner
+- **Binds:** DR-10, DR-7, SM-9, NFR-3
+- **Prevents:** preview deployments without a database, unmerged code reaching the published data, and production database URLs stored in files
+- **Rule:**
+  - One group member owns the Vercel Hobby account and project and connects it to the public GitHub repository. Only `main` deploys, always to production. `vercel.json` holds `"regions": ["fra1"]` and `"git": {"deploymentEnabled": {"**": false, "main": true}}`. Pull requests are reviewed by running the branch locally (DR-7).
+  - Migrations and seed loading never run in the build, at startup or in a request. At first setup, and right after a merge that adds a migration, the owner runs `python manage.py migrate` from their PC, plus `python manage.py load_seed` when the demo should be reset. `DATABASE_URL` is set to the `DATABASE_URL_UNPOOLED` value for that one command and is never written to `.env` or any other file.
+  - On Vercel, the group sets only `SECRET_KEY`. The Neon integration adds the database variables, and Vercel provides the system variables.
+
 ## Consistency Conventions
 
 | Concern | Convention |
@@ -135,26 +161,30 @@ Arrows point from the depender to the dependency. Nothing points back into the s
 | Data & formats | `varenummer` is a string of digits. Quantities are integers. Forecasts are floats. Percentages are stored as whole numbers (10 means 10 %). Enum values: `moving_average` and `exponential_smoothing`; `included` and `excluded`. |
 | Errors | User-facing messages are Norwegian and name the problem and the fix. Validation keeps the previous value (FR-20). Unknown addresses and other companies' objects give the same «ikke funnet» page. |
 | Logging | Console logging only. Never log passwords, the session secret or full request bodies (NFR-4). |
-| Config | Settings come from the environment, with an optional `.env` read by a small standard-library parser. `.env.example` lists `DEBUG`, `PROGNOSE_LLM_URL` and `PROGNOSE_LLM_MODEL`. Nothing in `.env` is needed for the basic setup. |
-| Dependencies | Exact pins in one `requirements.txt`. No other Python packages without a new AD. |
-| Delivery order | Must items first. Should and Could items start only after SM-1 and SM-3 pass (DR-6). |
+| Config | Settings come from the environment, with an optional `.env` read by a small standard-library parser. `.env.example` lists `DEBUG`, `PROGNOSE_LLM_URL` and `PROGNOSE_LLM_MODEL`. Nothing in `.env` is needed for the basic setup, and `.env` never holds a value for the published version. On Vercel, settings read only `SECRET_KEY`, the Neon integration's `DATABASE_URL` and Vercel's system variables (AD-13). |
+| Dependencies | Exact pins in one `requirements.txt`, which Vercel also installs from. There is no `pyproject.toml`; Ruff reads `ruff.toml`. No other Python packages without a new AD. |
+| Checks | `python manage.py test`, `ruff check` and `ruff format --check` run locally before every pull request (DR-7). No CI service is required in v1. |
+| Delivery order | The first story publishes the project skeleton on Vercel with Neon, so the publishing path is proven in the first week; after that every merge to `main` deploys. Must items first; Should and Could items start only after SM-1 and SM-3 pass (DR-6). |
 
 ## Stack
 
 | Name | Version |
 | --- | --- |
-| Python | 3.13 |
+| Python | 3.13 (locally, and on Vercel through `.python-version`) |
 | Django | 5.2.19 (LTS, supported to April 2028) |
-| SQLite | bundled with Python (≥ 3.31) |
+| SQLite (local) | bundled with Python (≥ 3.31) |
 | Chart.js (vendored) | 4.6.1 |
 | Albert Sans (self-hosted, OFL) | Google Fonts release at build time |
-| Ruff | 0.17.4 |
+| Ruff | 0.17.4 (settings in `ruff.toml`) |
+| psycopg[binary] | 3.3.8 |
+| PostgreSQL (published) | Neon free plan via the Vercel Marketplace, AWS Frankfurt, Neon's default version (Django 5.2 needs 14 or later) |
+| Vercel (published) | Hobby plan (free), Python runtime, region `fra1` |
 
 ## Structural Seed
 
 ```text
 G40-lyamouri/
-  manage.py, requirements.txt, .env.example, README.md, PRODUCT.md
+  manage.py, requirements.txt, .python-version, vercel.json, ruff.toml, .env.example, README.md, PRODUCT.md
   prognose/      # Django project: settings, urls, wsgi
   accounts/      # Company (custom user), login and logout
   planning/      # models, queries.py, adjustments.py, forms, views, templates, templatetags
@@ -172,6 +202,11 @@ flowchart LR
   B[Browser on the same PC] -->|HTTP 127.0.0.1:8000| W[Django runserver]
   W --> S[(db.sqlite3, gitignored)]
   W -.optional, off by default.-> L[Local language model endpoint]
+  G[GitHub: main branch] -->|deploy| V[Vercel Function in fra1: Django WSGI]
+  U[Browser on the internet] -->|HTTPS| V
+  U -->|/static/| C[Vercel CDN]
+  V -->|pooled DATABASE_URL| P[(Neon PostgreSQL, Frankfurt)]
+  O[PC of the project owner] -.migrate and load_seed, unpooled URL.-> P
 ```
 
 ```mermaid
@@ -195,6 +230,7 @@ erDiagram
 | Purchase planning (FR-29 to FR-32) | `planning/adjustments.py`, views | AD-8, AD-9 |
 | Accuracy and stock through weeks 2 and 3 (FR-33, FR-34) | `forecasting/` | AD-2 |
 | Quality and delivery (NFR-1 to NFR-11, DR-1 to DR-9) | conventions, `docs/` | AD-11 to AD-14 |
+| Publishing (DR-10, SM-9) | `prognose/settings.py`, `vercel.json`, `.python-version`, Vercel project, Neon | AD-12, AD-13, AD-15, AD-16 |
 
 ## Deferred
 
@@ -203,4 +239,8 @@ erDiagram
 - **Could items (per-product settings FR-23, saved adjustments FR-31, CSV export FR-32):** decided when scheduled. FR-31 swaps the storage behind AD-9.
 - **Caching:** only if the NFR-8 check fails, and it needs an amendment to AD-3.
 - **How Impeccable reads the single DESIGN.md during the build:** decided in the first UI story. There is never a second copy.
-- **Hosting beyond localhost:** out of scope (NFR-1, PRD §7).
+- **Account limits, checked in the first story:**
+  - The IBE160-2026 organization must allow the Vercel GitHub app. If it does not, the owner deploys `main` with the Vercel CLI (65.12.1) instead.
+  - Vercel Hobby blocks deployments when a commit author other than the owner appears in a private repository, and community reports say Claude co-author lines can trigger this. The repository is public, which Vercel staff describe as exempt.
+  - If deployments are still blocked, the owner merges pull requests with a merge commit, so the deployed commit is the owner's.
+- **Free-plan terms:** re-checked before submission. Vercel Hobby is for non-commercial use, and Neon stops access at its limits instead of charging.

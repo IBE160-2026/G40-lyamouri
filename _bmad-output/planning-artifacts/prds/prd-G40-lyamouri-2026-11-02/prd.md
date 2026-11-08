@@ -2,7 +2,7 @@
 title: 'PRD: Prognose (G40-lyamouri)'
 status: final
 created: '2026-11-02'
-updated: '2026-11-03'
+updated: '2026-11-08'
 ---
 
 # PRD: Prognose (G40-lyamouri)
@@ -12,7 +12,8 @@ updated: '2026-11-03'
 - **Must (§8.1):** the weekly core flow in UJ-1: log in, see the product overview, open a product, see the forecast calculation, scenarios, suggested order quantity, warnings and confidence label, change a setting and see the result change, and read the template explanation.
 - **Should (§8.2):** seasonal adjustment and the seasonal-pattern warning, order quantity per scenario, the overstock note, the level-shift warning text, the optional local language model, and adjusting order quantities with the combined order overview. These items are at risk before the deadline; their order is set in sprint planning (§10, question 1).
 - **Could (§8.3):** settings per product, saving adjustments and approval, CSV export, the note that stock will not last through weeks 2 and 3, and forecast accuracy (MAE).
-- **Done when:** the Must scope passes SM-1 and SM-3, and SM-2 holds on the final commit.
+- **Done when:** the Must scope passes SM-1 and SM-3, and SM-2 and SM-9 hold on the final commit.
+- **Where it runs:** locally from the README with SQLite, and as a published version on Vercel with PostgreSQL, from the same code (DR-10).
 - **Where the complexity lies:** 17 deterministic rules (15 of them in the Must scope) checked by 30 reference examples (24 of them for the Must scope), two isolated companies with saved settings, and a guarded explanation layer, not user roles or integrations.
 
 ## 0. Document Purpose
@@ -45,11 +46,11 @@ The review and reconciliation reports for this PRD (`review-*.md`, `reconcile-*.
 
 ## 1. Vision
 
-Prognose is a local web application that helps the purchasing manager of a small business decide how much to order of each product next week. It forecasts weekly demand from the company's own sales history with established, hand-checkable methods, shows normal, optimistic and pessimistic scenarios, and turns the normal forecast into a suggested order quantity: forecast plus safety margin minus stock on hand. Prognose recommends; the purchasing manager decides: every suggested order quantity is advice that the purchasing manager can accept or adjust, and the final purchasing decision always stays with them.
+Prognose is a web application that helps the purchasing manager of a small business decide how much to order of each product next week. It forecasts weekly demand from the company's own sales history with established, hand-checkable methods, shows normal, optimistic and pessimistic scenarios, and turns the normal forecast into a suggested order quantity: forecast plus safety margin minus stock on hand. Prognose recommends; the purchasing manager decides: every suggested order quantity is advice that the purchasing manager can accept or adjust, and the final purchasing decision always stays with them.
 
 What sets Prognose apart from a spreadsheet or a large ERP system is transparency with built-in checks. Every number comes from deterministic rules that the user can see and check by hand, with settings the user can adjust. The system also says when a forecast should not be trusted: it leaves out stockout weeks, flags unusual sales, notices when demand moves to a new level, and gives each product a confidence label with a plain-language reason. Every product gets a plain-language explanation in Norwegian, built from fixed templates; an optional AI model that runs locally can rephrase it, but AI never produces the numbers.
 
-The first version is a course project for IBE160, module 4.1 (Forecasting and Demand Management), at Høgskolen i Molde. It runs locally with synthetic data and no paid services, so an examiner can install it from the README, log in as a test company and check each forecast against a reference example. Later versions could feed sales and operations planning (S&OP) or master production scheduling (MPS), but that is outside version 1.
+The first version is a course project for IBE160, module 4.1 (Forecasting and Demand Management), at Høgskolen i Molde. It runs locally and as a published version on Vercel, with synthetic data and no paid services, so an examiner can install it from the README or open the published address, log in as a test company and check each forecast against a reference example. Later versions could feed sales and operations planning (S&OP) or master production scheduling (MPS), but that is outside version 1.
 
 ## 2. Target User
 
@@ -208,11 +209,12 @@ The system provides a synthetic dataset for two test companies, each with 10 to 
 
 #### FR-4: Data stored between sessions
 
-Products, sales history, stock on hand and settings are stored in a local database. Priority: Must.
+Products, sales history, stock on hand and settings are stored in a database: a local file when Prognose runs on the user's computer, and PostgreSQL in the published version (DR-10). Priority: Must.
 
 **Consequences (testable):**
 - After the application is stopped and started again, all data and settings are unchanged.
-- The database runs locally as a file. No database server or online service is needed.
+- Locally, the database runs as a file. No database server or online service is needed.
+- The published version keeps the same data in PostgreSQL, loaded with the same load command (DR-4).
 
 ### 4.3 Forecast Calculation (Must)
 
@@ -676,15 +678,15 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
 
 ### 6.1 Cross-Cutting Non-Functional Requirements
 
-- **NFR-1 Local and free to run.** The application and every Must feature run on one computer without paid services, API keys or third-party accounts. After installation, Prognose runs without an internet connection: all assets, including the chart library, are served locally and not from a content delivery network. The README covers macOS and Windows.
+- **NFR-1 Local and free to run.** The application and every Must feature run on one computer without paid services, API keys or third-party accounts. After installation, the local app runs without an internet connection: all assets, including the chart library, are served locally and not from a content delivery network. The README covers macOS and Windows. The published version (DR-10) uses only free plans; only the group member who publishes it needs accounts there, and users and the examiner need nothing but a browser.
 - **NFR-2 Correct, testable calculations.** All rules in §5 live in one calculation module with no dependency on the user interface or the database. Automated unit tests check every rule and every reference example that applies to the features built (SM-1), and all tests run with one documented command that needs nothing beyond the README's installation steps; the README shows the expected result.
-- **NFR-3 Security.** Passwords are hashed with an established, secure implementation as described in FR-1, never a self-made algorithm. The logged-in company is checked on the server on every request (FR-2). The secret used to sign sessions is created automatically by the load command (DR-4) when it is missing, stored in a local file that `.gitignore` excludes (DR-2), and never committed; setup needs no manual file editing. The repository contains no secrets; optional configuration is listed in `.env.example`.
+- **NFR-3 Security.** Passwords are hashed with an established, secure implementation as described in FR-1, never a self-made algorithm. The logged-in company is checked on the server on every request (FR-2). The secret used to sign sessions is created automatically by the load command (DR-4) when it is missing, stored in a local file that `.gitignore` excludes (DR-2), and never committed; setup needs no manual file editing. In the published version, the secret is an environment variable on Vercel instead. The repository contains no secrets; optional configuration is listed in `.env.example`.
 - **NFR-4 Privacy.** Only synthetic data is used: no real company, customer or personal data. Files in the repository contain no personal data and no local file paths. Saved AI sessions are cleaned of personal data and local paths before they are committed, and before submission the group scans the whole repository history for secrets, personal data and local paths and records the result in the QA log (DR-9).
 - **NFR-5 Language and number format.** All screens, messages, warnings, notes and explanations are in Norwegian `[ASSUMPTION: bokmål]`. Numbers use a decimal comma; percentages are whole numbers with «%».
 - **NFR-6 Platform and screen size.** Prognose runs in a desktop browser on a laptop or PC, because the user plans at an office PC (UJ-1). The README names at least one current browser per operating system that the group has tested. From 1024 pixels wide upwards there is no horizontal page scrolling; narrower windows stay readable, without overlapping or cut-off content. FR-25 sets what must be visible without scrolling at 1366 × 768. A mobile layout is not required.
 - **NFR-7 Readable markings.** In the chart, stockout weeks, unusual weeks and level-shift weeks differ by more than color alone (for example by shape or pattern), and a legend explains them.
-- **NFR-8 Responsiveness.** `[ASSUMPTION]` With 50 products of 104 weeks each, the product overview and the product screen open within 2 seconds on an ordinary laptop, and results update within 2 seconds after a settings change.
-- **NFR-9 Simple architecture.** One web application with one local database and no more parts than the app needs. The technology is decided in the architecture step; the research recommendation and its rationale are in `addendum.md` (§2 there).
+- **NFR-8 Responsiveness.** `[ASSUMPTION]` With 50 products of 104 weeks each, the product overview and the product screen open within 2 seconds on an ordinary laptop, and results update within 2 seconds after a settings change. The target applies to the local app. In the published version, the first request after a quiet period may take longer, because the free plans start the server and the database on demand.
+- **NFR-9 Simple architecture.** One web application with one database and no more parts than the app needs: SQLite when the app runs locally, and PostgreSQL in the published version (DR-10). The technology is decided in the architecture step; the research recommendation and its rationale are in `addendum.md` (§2 there).
 - **NFR-10 Robustness.** Numeric fields accept a decimal comma or a decimal point. Empty or non-numeric input is refused with a Norwegian message, and the previous value stays. No address or input shows a stack trace or a debug page; an unknown address shows a "not found" page in Norwegian with a link to the product overview. Submitting the same change twice, reloading a page or going back gives the same result without errors.
 - **NFR-11 Basic accessibility.** Text contrast meets WCAG 2.2 level AA. Every function works with the keyboard alone, with a visible focus. Every form field has a visible label. Pages declare Norwegian as their language. The chart has a text alternative: a short summary and a table with the plotted values; its markings follow NFR-7.
 
@@ -704,6 +706,7 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
   - Prerequisites with minimum versions.
   - Setup on macOS and Windows, tested by the group from a fresh clone: exact commands to copy into macOS Terminal and Windows PowerShell, including activating the virtual environment; how the session secret is created (NFR-3); and fixes for the most likely setup errors. Once SM-2 is confirmed, the README states the setup time.
   - The customer numbers and passwords of the two test companies, how to generate and load the synthetic data, and that reloading the data resets the settings and adjustments (DR-4).
+  - The address of the published version, and for the group the steps to publish it and to load the seed data into its database (DR-10).
   - A «Prøv selv» (try it yourself) section of 5 to 10 steps that follows UJ-1, and a table of the test products naming the rule, warning or confidence label each one shows and its reference example (E-n).
   - How to run the tests, with the expected result (NFR-2), and the browsers tested (NFR-6).
   - How to switch on the optional language model as a separate step: which model is used, its download size and expected download time, its license obligations, and what happens without it (FR-28).
@@ -731,7 +734,13 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
   - Commits are small and pushed as the work happens, so that the commit history covers the whole build period.
   - **Definition of Done.** A story is done when its tests and the linter pass; it has no commented-out, unused or duplicated code; the status table and the affected documents are updated; and its pull request has been reviewed.
 - **DR-8 Status table.** One table lists every FR with its priority, its status at submission (built, partly built, not built or changed), its stories and tests, and the reason for any deviation. The README links it.
-- **DR-9 QA log.** Every defect in AI-generated code or text that a test, the reference spreadsheet, a review or a manual test finds is recorded with how it was found, the fix and the commit or pull request. A manual test checklist for NFR-6, NFR-7, NFR-8, NFR-11 and SM-2 (including the offline start) is run on the final commit and recorded with date, operating system, browser and result.
+- **DR-9 QA log.** Every defect in AI-generated code or text that a test, the reference spreadsheet, a review or a manual test finds is recorded with how it was found, the fix and the commit or pull request. A manual test checklist for NFR-6, NFR-7, NFR-8, NFR-11, SM-2 (including the offline start) and SM-9 is run on the final commit and recorded with date, operating system, browser and result.
+- **DR-10 Publishing.** Prognose is published on Vercel from the `main` branch, with the same code as the local app.
+  - The published version uses a PostgreSQL database. Vercel and the database run on free plans, with no paid services.
+  - The examiner can open the address, log in as a test company and see the product overview without installing anything (SM-9).
+  - It holds only the synthetic seed data and is a shared demo: anyone with the logins in the README can change a test company's settings, and the load command restores the seed state (DR-4).
+  - Debug pages are off, and secrets are environment variables on Vercel, never in the repository (NFR-3, NFR-10).
+  - The optional local language model (FR-28) is not available there; the template explanation is shown.
 
 ## 7. Non-Goals (Explicit)
 
@@ -741,6 +750,7 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
 - No supplier integrations, campaign or market data, or incoming customer orders: each new signal would need its own rules and test data.
 - No import of real company data; version 1 uses the synthetic seed data only.
 - No hosted AI services, no AI-generated numbers and no advanced machine learning.
+- No paid hosting, custom domain or uptime guarantee: the published version runs on free plans (DR-10).
 - No trend method (such as Holt's linear method) and no seasonal naive benchmark; the trend lag is a stated limitation.
 - No flagging of unusually low sales: weeks with low sales are never unusual weeks (R-10). Stockout weeks are handled by the stockout flag.
 - No lead time, open orders, pack sizes, minimum order quantities or statistical safety stock (z × σ); the safety margin is a simple percentage.
@@ -753,13 +763,14 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
 ### 8.1 In Scope (Must)
 
 - Login and company data isolation: FR-1, FR-2 (§4.1).
-- Synthetic data stored locally: FR-3, FR-4 (§4.2).
+- Synthetic data stored in the database: FR-3, FR-4 (§4.2).
 - Forecast calculation and insufficient data: FR-5 to FR-8 (§4.3).
 - Scenarios, suggested order quantity and the order calculation line: FR-10 to FR-12 (§4.4).
 - Stockout weeks, unusual weeks, level shift (calculation and label), old-data warning and confidence label: FR-15 to FR-19 (§4.5).
 - Company-wide settings: FR-20 to FR-22 (§4.6).
 - Product overview, product screen and forecast calculation: FR-24, FR-25, FR-35 (§4.7).
 - Template explanation, kept apart from the numbers: FR-26, FR-27 (§4.8).
+- Publishing on Vercel: DR-10 (§6.3).
 - All non-functional requirements, AI guardrails and delivery requirements in §6.
 
 ### 8.2 Should (after the Must scope passes SM-1 and SM-3)
@@ -799,6 +810,7 @@ Everything in §7.
 - **SM-6 Explanation integrity.** Every number in every template explanation comes from the calculation result. With the optional language model, rephrased text is never accepted if it changes a number or attaches a number to a different label. Validates FR-26 to FR-28.
 - **SM-7 Rule coverage.** Every warning and every confidence label, including «høy», is triggered by at least one test product in the dataset. Validates FR-3, FR-15 to FR-19.
 - **SM-8 Traceable process.** Decisions and the use of AI during development are documented, the AI steering log has at least five cases linked to commits or pull requests, every story was merged through a reviewed pull request, and the status table traces every FR to the stories and tests that implement and verify it. Validates DR-5, DR-7, DR-8, DR-9.
+- **SM-9 Published version works.** On the published address, a person can log in as each test company, see the product overview, and run the core flow in SM-3 by hand. Checked after the first deployment and on the final commit (DR-9). Validates DR-10, FR-4.
 
 **Counter-metrics (do not optimize)**
 - **SM-C1 Forecast accuracy.** Accuracy is not pursued through more complex models at the cost of rules that can be checked by hand. Counterbalances SM-1.
@@ -861,4 +873,4 @@ This PRD was approved and set to final on 2026-11-03. Every change to a requirem
 
 | Date | Change | Reason | Commit or pull request |
 |---|---|---|---|
-| | | | |
+| 2026-11-08 | Vercel is the publishing solution. New DR-10 and SM-9; updated FR-4, NFR-1, NFR-3, NFR-8, NFR-9, DR-1, DR-9, §1, §7, §8.1 and the summary at the top. The local app keeps SQLite, and the published version uses PostgreSQL. | The group chose Vercel for publishing. The technical choices are in the architecture spine (AD-13, AD-15, AD-16). | Not committed yet |
