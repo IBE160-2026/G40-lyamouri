@@ -124,6 +124,20 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** UX-fasen er ferdig. Neste steg er arkitektur (`bmad-architecture`).
 
+### 8. november 2026 – Arkitektur
+
+* Kjørte `bmad-architecture` på rask vei med den godkjente PRD-en og UX-designet som grunnlag. Leveransen er én arkitekturspine som byggeunderlag.
+* Mine valg:
+  * Django + SQLite;
+  * Django 5.2 LTS med Python 3.13 i stedet for nyeste Django 6.1;
+  * `runserver` brukes bare lokalt;
+  * justeringer lagres i økten, og alle produkter beregnes ved hver visning;
+  * en enkel arkitektur som kan videreutvikles, og fristen prioriteres.
+* Spinen har 14 arkitekturbeslutninger. Beregningsreglene ligger i en ren Python-kjerne uten Django, all bedriftsisolasjon går gjennom én spørremodul, og det er én testkommando og én fasit. Versjonene ble sjekket mot primærkildene.
+* Eksempel på styring av KI: Claude foreslo nyeste Django 6.1. Jeg valgte heller langtidsversjonen 5.2 for stabilitet frem mot fristen.
+
+**Status:** Arkitekturen er ferdig (`final`). Neste steg er epics og stories (`bmad-create-epics-and-stories`).
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
