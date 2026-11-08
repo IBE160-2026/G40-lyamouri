@@ -16,7 +16,7 @@
 - [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — skrive og teste README-sekvensen for oppsett (venv, installasjon, migrering, seeding, kjøring)
 - [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — skaffe lærebokkilder til rapport B (krever evt. poppler), eller dokumentere at de mangler
 - [ ] 2026-11-01 [research-for-prd](998-2026-11-01-16-49-03-research-for-prd.md) — valgfritt: ta igjen semantisk kildesjekk, HTML-oppsummering og språkpolering for research-rapportene
-- [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — sette rekkefølgen på bør-ha og milepæler i sprintplanleggingen (PRD §10 spørsmål 1)
+- [x] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — sette rekkefølgen på bør-ha og milepæler i sprintplanleggingen (PRD §10 spørsmål 1) (løst 2026-11-08: står i `sprint-status.yaml`)
 - [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — lage regnearket med de håndregnede referanseeksemplene E1–E30 (PRD DR-3)
 - [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — teste oppsettstiden (høyst 15 minutter) på ren macOS og Windows, også uten nett, og på nytt på siste commit (PRD §10 spørsmål 2)
 - [ ] 2026-11-03 [prd-prognose](997-2026-11-03-18-34-13-prd-prognose.md) — velge lokal språkmodell og avklare lisensen hvis FR-28 bygges (PRD §10 spørsmål 5)
@@ -42,3 +42,4 @@
 - [x] 2026-11-08 [arkitektur-prognose](995-2026-11-08-11-46-25-arkitektur-prognose.md) — ved commit: fylle inn commit-hashen i endringsloggen i PRD-en (§12) (løst 2026-11-08: `21cd020` står i §12)
 - [ ] 2026-11-08 [arkitektur-prognose](995-2026-11-08-11-46-25-arkitektur-prognose.md) — valgfritt: nevne den publiserte adressen i sensorflyten i EXPERIENCE.md (Flow 2)
 - [ ] 2026-11-08 [epics-og-stories-prognose](994-2026-11-08-13-55-42-epics-og-stories-prognose.md) — fylle inn detaljene i kan-ha-storyene (5.4, 5.5 og 6.3 til 6.5) når de planlegges (PRD §4)
+- [x] 2026-11-08 [sprint-planning-prognose](993-2026-11-08-15-39-56-sprint-planning-prognose.md) — ved commit: fylle inn commit-hashen i endringsloggen i `epics.md` (løst 2026-11-08: `425d818` står i endringsloggen)
