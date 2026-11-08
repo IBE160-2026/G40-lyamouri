@@ -140,6 +140,14 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** Arkitekturen er ferdig (`final`). Neste steg er epics og stories (`bmad-create-epics-and-stories`).
 
+### 8. november 2026 – Epics og stories
+
+* Kjørte `bmad-create-epics-and-stories` med godkjent PRD, UX og arkitektur som grunnlag, med må-ha og fristen først.
+* Resultatet er 7 epics og 29 stories i `_bmad-output/planning-artifacts/epics.md`. Epic 1–4 er må-ha, og epic 5–7 er bør-ha, med kan-ha sist. Den første storyen publiserer prosjektskjelettet på Vercel.
+* Eksempel på styring av KI: jeg ba Claude sjekke at addendumet var dekket. Kontrollen fant fire punkter fra addendumet og PRD §10 som manglet i kravlisten, og de ble lagt til uten nye funksjoner. Sluttkontrollen fant også to stories som viste til senere stories, og de ble rettet.
+
+**Status:** Epics og stories er ferdige. Neste steg er sprintplanlegging (`bmad-sprint-planning`).
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
