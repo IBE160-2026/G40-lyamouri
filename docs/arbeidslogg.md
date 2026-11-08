@@ -148,6 +148,13 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** Epics og stories er ferdige. Neste steg er sprintplanlegging (`bmad-sprint-planning`).
 
+### 8. november 2026 – Sprintplanlegging
+
+* Kjørte `bmad-sprint-planning`. Klarhetskontrollen fant at story 1.1 manglet en kilde for den lokale sesjonshemmeligheten. Jeg valgte å rette storyen før sprintplanen ble laget, og endringen står i endringsloggen i `epics.md`.
+* Sprintplanen ligger i `_bmad-output/implementation-artifacts/sprint-status.yaml`. Milepæler: epic 1 innen 11. november, epic 2 innen 18. november, epic 3 innen 21. november, bør-ha 22.–27. november, sluttkontroll 28.–30. november og innlevering 1. desember.
+
+**Status:** Sprintplanen er klar. Neste steg er story 1.1 med `bmad-build`.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
