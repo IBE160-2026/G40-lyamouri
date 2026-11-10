@@ -1,0 +1,11 @@
+# Exact pins for Prognose (DR-2). Vercel installs from this file too.
+# No other packages without a new decision in the architecture spine.
+Django==5.2.19
+psycopg[binary]==3.3.8
+ruff==0.17.4
+
+# Resolved dependencies of the packages above (Python 3.13)
+asgiref==3.13.0
+psycopg-binary==3.3.8
+sqlparse==0.6.1
+tzdata==2026.6 ; sys_platform == "win32"

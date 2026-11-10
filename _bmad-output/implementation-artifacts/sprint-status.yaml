@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 11-08-2026 15:39
-last_updated: 11-10-2026 19:26
+last_updated: 11-10-2026 20:44
 project: G40-lyamouri
 project_key: NOKEY
 tracking_system: file-system
@@ -42,8 +42,8 @@ story_location: _bmad-output/implementation-artifacts
 # - 11-28 to 11-30-2026: story 4.4 (final check) and buffer
 # - 12-01-2026: submission
 development_status:
-  epic-1: backlog
-  1-1-project-skeleton-running-locally-and-on-vercel: ready-for-dev
+  epic-1: in-progress
+  1-1-project-skeleton-running-locally-and-on-vercel: review
   1-2-synthetic-data-for-two-test-companies: backlog
   1-3-log-in-on-the-landing-page: backlog
   1-4-see-only-my-own-company-s-products: backlog

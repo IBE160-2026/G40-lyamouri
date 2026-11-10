@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Ikke funnet – Prognose{% endblock %}
+
+{% block content %}
+    <h1>Ikke funnet</h1>
+    <p>Siden du ba om, finnes ikke. Sjekk adressen, eller gå til startsiden.</p>
+    <p><a href="{% url 'start' %}">Til startsiden</a></p>
+{% endblock %}

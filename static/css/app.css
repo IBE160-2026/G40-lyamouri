@@ -1,0 +1,15 @@
+/* Prognose: the one stylesheet (AD-11). Plain base styles; the DESIGN.md tokens come with the landing page. */
+
+body {
+  margin: 0;
+  font-family: system-ui, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #ffffff;
+}
+
+main {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}

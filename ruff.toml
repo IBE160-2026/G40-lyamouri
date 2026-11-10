@@ -1,0 +1,11 @@
+# Ruff lints and formats Prognose (DR-2, AD-14):
+#   ruff check .
+#   ruff format --check .
+target-version = "py313"
+
+# BMAD, Claude Code and Impeccable files are tooling, not app code. Migrations are generated.
+extend-exclude = ["_bmad*", ".claude", ".impeccable", "migrations"]
+
+[lint]
+# Ruff's default rules plus the Django rules (DJ), which the defaults leave out.
+extend-select = ["DJ"]
