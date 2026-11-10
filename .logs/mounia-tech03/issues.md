@@ -43,3 +43,6 @@
 - [ ] 2026-11-08 [arkitektur-prognose](995-2026-11-08-11-46-25-arkitektur-prognose.md) — valgfritt: nevne den publiserte adressen i sensorflyten i EXPERIENCE.md (Flow 2)
 - [ ] 2026-11-08 [epics-og-stories-prognose](994-2026-11-08-13-55-42-epics-og-stories-prognose.md) — fylle inn detaljene i kan-ha-storyene (5.4, 5.5 og 6.3 til 6.5) når de planlegges (PRD §4)
 - [x] 2026-11-08 [sprint-planning-prognose](993-2026-11-08-15-39-56-sprint-planning-prognose.md) — ved commit: fylle inn commit-hashen i endringsloggen i `epics.md` (løst 2026-11-08: `425d818` står i endringsloggen)
+- [ ] 2026-11-10 [story-1-1-prosjektskjelett](992-2026-11-10-19-26-58-story-1-1-prosjektskjelett.md) — norske sider for 400, 403 og CSRF-feil (`403_csrf.html`) i story 1.3, der innloggingsskjemaet gjør CSRF-siden synlig
+- [ ] 2026-11-10 [story-1-1-prosjektskjelett](992-2026-11-10-19-26-58-story-1-1-prosjektskjelett.md) — bestemme om migreringssjekk (`makemigrations --check`, og `migrate --check` mot Neon) skal inn i sjekkene før pull requester; krever en arkitekturbeslutning (se `deferred-work.md`)
+- [ ] 2026-11-10 [story-1-1-prosjektskjelett](992-2026-11-10-19-26-58-story-1-1-prosjektskjelett.md) — Ruff 0.17 sjekker Python-blokker i Markdown: hold dem formatert i `.logs/` og `docs/`, eller unnta mappene i `ruff.toml`
