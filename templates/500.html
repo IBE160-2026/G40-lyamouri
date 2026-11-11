@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Noe gikk galt – Prognose{% endblock %}
+
+{% block content %}
+    <h1>Noe gikk galt</h1>
+    <p>Siden kunne ikke vises på grunn av en feil hos oss. Prøv igjen om litt.</p>
+    <p><a href="{% url 'start' %}">Til startsiden</a></p>
+{% endblock %}
