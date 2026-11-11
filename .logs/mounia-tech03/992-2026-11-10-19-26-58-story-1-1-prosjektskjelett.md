@@ -44,9 +44,10 @@ Fortsette BMAD-build med story 1.1 fra den godkjente spesifikasjonen (`ready-for
   - `collectstatic` med `VERCEL=1` trenger ingen database.
   - Pinnene finnes for Linux x86_64 (Vercel), Windows og macOS.
 - Review ga 40 funn:
-  - 9 er patchet: tre testhull (DEBUG fra `.env`, lokal `DATABASE_URL`, konsollogging), Neon-URL-en holdes utenfor skallhistorikken, og mindre rettelser i README, `.gitignore` og favicon.
+  - 14 er rettet med 9 endringer: tre testhull (DEBUG fra `.env`, lokal `DATABASE_URL`, konsollogging), Neon-URL-en holdes utenfor skallhistorikken, og mindre rettelser i README, `.gitignore` og favicon.
   - 1 er utsatt til `deferred-work.md`.
-  - 30 er avvist, med begrunnelse i triageloggen.
+  - 25 er avvist, med begrunnelse i triageloggen.
+  - Rettet 2026-11-11: her sto først «9 er patchet» og «30 er avvist». Det var antall rettingsinstrukser, ikke antall funn i triageloggen.
   - Hver ny test feilet mot sin mutasjon.
 - Status: spesifikasjonen er `done`, og story 1.1 står som `review` i `sprint-status.yaml` (epic 1 er `in-progress`).
 - Etter godkjenning fant personvernsøket ingen stier, e-postadresser eller nøkler, bare tydelige testverdier. Commit `571d4dc` Legg til prosjektskjelettet for story 1.1 er pushet til GitHub på grenen `story/1-1-project-skeleton`, sammen med denne loggen. Ingenting er flettet.
