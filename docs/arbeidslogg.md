@@ -155,6 +155,26 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** Sprintplanen er klar. Neste steg er story 1.1 med `bmad-build`.
 
+### 15. november 2026 – PRD etter lærerens tilbakemelding
+
+* Hentet lærerens formative tilbakemelding på PRD-en (12. november) fra `main` med `git pull`. Læreren kalte PRD-en uvanlig sterk. Før videre arbeid ba læreren om:
+  * en kutt-linje for publiseringen;
+  * en avgrenset mengde tillatte tall i forklaringen;
+  * én prioritet per FR.
+* Kjørte `bmad-prd` i oppdateringsmodus på en egen gren, `prd/teacher-feedback`, og gikk gjennom alle punktene:
+  * kutt-linje for publiseringen og gruppering av leveransekravene;
+  * tillatte tall i forklaringen og plassholdere for språkmodellen;
+  * FR-17 delt i FR-17 og FR-17b, og en tabell over prioritet og suksessmål per FR;
+  * testbare konsekvenser i FR-24, FR-25 og NFR-6;
+  * rekkefølgen på bør-ha-delene og et nytt suksessmål, SM-10, for at brukere forstår tillitsmerket;
+  * presiseringer i ordlisten, R-16, SM-1 og SM-7.
+* Kvalitetssikring: tre uavhengige agenter avstemte endringene mot tilbakemeldingen, vurderte PRD-en mot BMAD-rubrikken og sjekket konsistensen. 10 avvik ble rettet, og en struktur- og prosarunde ble lagt inn. Alle 30 referanseeksemplene stemmer fortsatt.
+* Eksempel på styring av KI: Claude lot FR-24 følge det godkjente UX-designet, der årsaken står over tre kolonner, i stedet for lærerens eksempel. Jeg bestemte at FR-24 skal oppfylle lærerens funksjonelle krav: prognosekolonnen viser årsaken, og bestillingskolonnen viser «–». UX-en oppdateres senere.
+* Jeg godkjente kutt-linjen, som er knyttet til datoen i sprintplanen for ferdig må-ha. Jeg godkjente også grupperingen av leveransekravene, begrunnelsen for rekkefølgen på bør-ha-delene, SM-10 og plassholderregelen.
+* PRD-en er satt til `final` igjen og committet (`47a8857`).
+
+**Status:** PRD-en er oppdatert. Neste steg er å oppdatere epics, arkitektur og UX etter endringene med `bmad-correct-course`.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
