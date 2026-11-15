@@ -2,7 +2,7 @@
 title: 'PRD: Prognose (G40-lyamouri)'
 status: final
 created: '2026-11-02'
-updated: '2026-11-08'
+updated: '2026-11-15'
 ---
 
 # PRD: Prognose (G40-lyamouri)
@@ -10,9 +10,9 @@ updated: '2026-11-08'
 **Version 1 at a glance**
 - **Status:** see the frontmatter. The submission deadline is 1 December 2026 (DR-6).
 - **Must (§8.1):** the weekly core flow in UJ-1: log in, see the product overview, open a product, see the forecast calculation, scenarios, suggested order quantity, warnings and confidence label, change a setting and see the result change, and read the template explanation.
-- **Should (§8.2):** seasonal adjustment and the seasonal-pattern warning, order quantity per scenario, the overstock note, the level-shift warning text, the optional local language model, and adjusting order quantities with the combined order overview. These items are at risk before the deadline; their order is set in sprint planning (§10, question 1).
+- **Should (§8.2):** seasonal adjustment and the seasonal-pattern warning, order quantity per scenario, the overstock note, the level-shift warning text, the optional local language model, and adjusting order quantities with the combined order overview. These items are at risk before the deadline; their order is in §8.2.
 - **Could (§8.3):** settings per product, saving adjustments and approval, CSV export, the note that stock will not last through weeks 2 and 3, and forecast accuracy (MAE).
-- **Done when:** the Must scope passes SM-1 and SM-3, and SM-2 and SM-9 hold on the final commit.
+- **Done when:** the Must scope passes SM-1 and SM-3, and SM-2 and SM-9 hold on the final commit. If the publishing cut line in §8.1 applies, SM-9 lapses, and SM-2 and SM-3 count as met on the local version.
 - **Where it runs:** locally from the README with SQLite, and as a published version on Vercel with PostgreSQL, from the same code (DR-10).
 - **Where the complexity lies:** 17 deterministic rules (15 of them in the Must scope) checked by 30 reference examples (24 of them for the Must scope), two isolated companies with saved settings, and a guarded explanation layer, not user roles or integrations.
 
@@ -23,7 +23,7 @@ This PRD defines what version 1 of Prognose must do. It is written for the proje
 **Where to find what**
 - §1 Vision; §2 Target user, jobs to be done and the user journey UJ-1.
 - §3 Glossary: a lookup table of binding terms and their Norwegian labels.
-- §4 Features with functional requirements FR-1 to FR-36, each with a priority.
+- §4 Features with functional requirements FR-1 to FR-36 and FR-17b, each with one priority.
 - §5 Calculation rules R-1 to R-17 and reference examples E1 to E30, the answer key for the tests.
 - §6 Non-functional requirements (NFR), AI guardrails (AG) and delivery requirements (DR).
 - §7 Non-goals; §8 MVP scope; §9 Success metrics (SM); §10 Open questions.
@@ -34,6 +34,7 @@ This PRD defines what version 1 of Prognose must do. It is written for the proje
 **This PRD builds on** (and does not repeat):
 - Product Brief: `_bmad-output/planning-artifacts/briefs/brief-G40-lyamouri-2026-09-18/brief.md`
 - Teacher feedback on the brief: `_bmad-output/planning-artifacts/briefs/brief-G40-lyamouri-2026-09-18/tilbakemelding-product-brief.md`
+- Teacher feedback on this PRD (2026-11-12): `tilbakemelding-prd.md` in this folder. The changes it led to are listed in §12.
 - Brainstorm decisions and MoSCoW: `_bmad-output/brainstorming/brainstorm-prognose-pre-prd-2026-10-31/brainstorm-intent.md`
 - Research reports A to D: `_bmad-output/planning-artifacts/research/` (forecasting methods and data rules; safety stock and order quantity; technology stack; explanations without a paid API)
 
@@ -96,7 +97,7 @@ The user interface and all explanations are in Norwegian; this PRD is in English
 |---|---|---|
 | **Company** | Bedrift | A business account, identified by a **customer number** (kundenummer) and a password. A company owns its products, sales history and settings, and sees only its own data. |
 | **Product** | Produkt | An item the company buys and sells, identified by a **product number** (varenummer) and a name. Each product has a sales history and a stock on hand. A company has about 10 to 50 products. |
-| **Sales history** | Salgshistorikk | Units sold per product per week. Most test products have 104 weeks; some have fewer. The number of weeks in the sales history includes stockout weeks. |
+| **Sales history** | Salgshistorikk | Units sold per product per week. Most test products have 104 weeks; some have fewer. The length of the sales history is its number of weeks, stockout weeks included; R-16 uses this length. |
 | **Stock on hand** | Lagerbeholdning | The stock of a product at the end of the latest data week (R-13). |
 
 **Weeks**
@@ -108,10 +109,11 @@ The user interface and all explanations are in Norwegian; this PRD is in English
 | **Recent period** | Siste 12 uker | The 12 most recent weeks of the sales history, up to and including the latest data week. Stockout weeks, unusual weeks and level shifts count as active warnings only when they fall in it (R-15). |
 | **Stockout week** | Utsolgt uke | A week flagged in the data as out of stock. Its sales do not show real demand. |
 | **Valid week** | Gyldig uke | A week that is not a stockout week. Valid weeks are counted for the thresholds and the confidence label. |
+| **Latest valid week** | Siste gyldige uke | The most recent valid week in a product's sales history. The old-data warning counts how many weeks it lies before the latest data week, by position in the sales history (R-15, FR-18). |
 | **Outlier rule** | Avviksregel | The rule (R-10) that decides whether a valid week is an unusual week: sales more than 2 × the baseline. |
 | **Baseline** | Sammenligningsgrunnlag | The median of the 3 most recent earlier valid weeks that are not unusual weeks (R-10). |
 | **Unusual week** | Uvanlig uke | A valid week that the outlier rule flags. The user chooses whether unusual weeks are included in or excluded from the calculation. An excluded unusual week still counts as a valid week. |
-| **Level shift** | Nytt nivå | Three or more unusual weeks in a row, counting valid weeks only (R-11). They become level-shift weeks: a possible new normal level, always kept in the calculation and reported with a warning. |
+| **Level shift** | Nytt nivå | Three or more unusual weeks in a row, counting valid weeks only (R-11). They become level-shift weeks: a possible new normal level, always kept in the calculation and reported with a warning (level-shift warning text: FR-17b, Should). |
 | **Calculation week** | Uke brukt i beregningen | A valid week that is used to calculate the forecast: not an excluded unusual week. |
 
 **Forecast**
@@ -142,7 +144,7 @@ The user interface and all explanations are in Norwegian; this PRD is in English
 | Term | UI label (Norwegian) | Definition |
 |---|---|---|
 | **Confidence label** | Tillitsmerke (høy, middels, lav) | A per-product label with a plain-language reason, set by R-16. |
-| **Warning** | Varsel | A message about the data behind a forecast that counts as an active warning for the confidence label: stockout weeks, unusual weeks or a level shift in the recent period; old data; insufficient data; and (Should) an unadjusted seasonal pattern (R-15). |
+| **Warning** | Varsel | A message about the data behind a forecast that counts as an active warning for the confidence label: stockout weeks, unusual weeks or a level shift in the recent period (level-shift warning text: FR-17b, Should); old data; insufficient data; and (Should) an unadjusted seasonal pattern (R-15). |
 | **Note** | Merknad | An information message that does not affect the confidence label, for example that weeks 2 and 3 repeat week 1, that seasonal adjustment could not be used, or that the stock on hand covers next week (R-15). |
 | **Explanation** | Forklaring | Plain-language text about a product's forecast and suggested order quantity. Template-based (Must); optionally rephrased by a local language model (Should), in which case it is labeled «KI-omformulert forklaring» (FR-27). |
 
@@ -159,7 +161,7 @@ The user interface and all explanations are in Norwegian; this PRD is in English
 
 ## 4. Features
 
-Every functional requirement (FR) has a priority: **Must** (version 1 is not done without it), **Should** (built only after the Must scope passes SM-1 and SM-3) or **Could** (only if time allows). The tag in a feature's heading is its core priority; within a feature, the Should and Could FRs follow the Must FRs. Formulas, conventions and reference examples for all calculations are in §5. Where reference examples (E-n) test an FR, the FR names them. Must and Should FRs have testable consequences; Could FRs are stated in one sentence and get their consequences when they are planned. FR numbers are stable: FR-35 and FR-36 were added during review and sit with the feature they belong to.
+Every functional requirement (FR) has a priority: **Must** (version 1 is not done without it), **Should** (built only after the Must scope passes SM-1 and SM-3) or **Could** (only if time allows). A feature's heading lists the priorities of its FRs, highest first. Within a feature, the Should and Could FRs follow the Must FRs, and §8.5 lists every FR with its priority and success metrics. Formulas, conventions and reference examples for all calculations are in §5. Where reference examples (E-n) test an FR, the FR names them. Must and Should FRs have testable consequences; Could FRs are stated in one sentence and get their consequences when they are planned. FR numbers are stable: FR-35 and FR-36 were added during review and sit with the feature they belong to, and FR-17b was split from FR-17 after the teacher's feedback on this PRD (§12).
 
 ### 4.1 Login and Company Data (Must)
 
@@ -216,7 +218,7 @@ Products, sales history, stock on hand and settings are stored in a database: a 
 - Locally, the database runs as a file. No database server or online service is needed.
 - The published version keeps the same data in PostgreSQL, loaded with the same load command (DR-4).
 
-### 4.3 Forecast Calculation (Must)
+### 4.3 Forecast Calculation (Must/Should)
 
 **Description:** The base forecast is calculated with the forecasting method chosen in the settings, over calculation weeks only. Without seasonal adjustment (Should), the week forecasts for weeks 1, 2 and 3 are equal. Realizes UJ-1 step 2.
 
@@ -269,7 +271,7 @@ The system applies the seasonal adjustment in R-14 when the company setting «Se
 - With the setting off, a test confirms that the seasonal test product's week forecasts stay flat and that the note from FR-7 is shown.
 - The limitations in §5.5 are stated in the README.
 
-### 4.4 Scenarios and Suggested Order Quantity (Must)
+### 4.4 Scenarios and Suggested Order Quantity (Must/Should)
 
 **Description:** Prognose turns the week forecasts into three scenarios and a suggested order quantity for next week. The product screen shows exactly how the quantity was calculated and what it does not take into account. The suggested order quantity is advice: Prognose places no orders, and the user makes the final decision. Realizes UJ-1 steps 2 and 5.
 
@@ -319,7 +321,7 @@ When the suggested order quantity is 0 and the stock on hand is above 0, the pro
 **Consequences (testable):**
 - When both the week-1 normal forecast and the stock on hand are 0, no overstock note is shown (E23).
 
-### 4.5 Data Quality, Warnings and Confidence (Must)
+### 4.5 Data Quality, Warnings and Confidence (Must/Should)
 
 **Description:** Prognose tells the user when a forecast rests on weak or distorted data, and always shows which weeks were left out and why. Warnings and notes follow R-15, and the confidence label follows R-16. Realizes UJ-1 step 3.
 
@@ -349,13 +351,13 @@ The system finds unusual weeks with the outlier rule (R-10), marks them, and inc
 
 #### FR-17: Level shift
 
-The system treats three or more unusual weeks in a row as a level shift (R-11), not as unusual weeks. Priority: Must for the calculation and the confidence label; Should for the dedicated warning text.
+The system treats three or more unusual weeks in a row as a level shift (R-11), not as unusual weeks, and counts it for the confidence label. Priority: Must.
 
 **Consequences (testable):**
 - Level-shift weeks stay in the calculation whatever the unusual-week setting is.
 - Detection follows the single forward pass in R-10 and R-11: two high weeks in a row are unusual weeks (E8), three are a level shift (E9), and a later spike is compared with the new level (E15). Stockout weeks in between do not break the run (E16).
 - Each level-shift week has its own marker in the chart.
-- A level shift in the recent period counts as an active warning for the confidence label (Must), and the label's reason names it. The dedicated warning text «Etterspørselen ser ut til å ha endret nivå.» is Should.
+- A level shift in the recent period counts as an active warning for the confidence label, and the label's reason names it. The dedicated warning text is FR-17b (Should).
 - `[ASSUMPTION: this simplified rule is project-defined; the research found no established simple rule. It is validated with the level-shift and seasonal test products before it is relied on (§10).]`
 
 #### FR-18: Old-data warning
@@ -375,6 +377,14 @@ Every product gets a confidence label with a plain-language reason in Norwegian,
 - The reason names the condition that decided the label and lists the active warnings, for example «Middels: 1 uvanlig uke de siste 12 ukene.»
 - Results match E29.
 
+#### FR-17b: Level-shift warning text
+
+When a level shift counts as an active warning (FR-17), the product screen shows the warning «Etterspørselen ser ut til å ha endret nivå.» Priority: Should.
+
+**Consequences (testable):**
+- The warning appears for every product with at least one level-shift week in the recent period (R-15), and for no other product.
+- It does not change the confidence label; FR-17 already counts the level shift as an active warning.
+
 #### FR-36: Seasonal-pattern warning
 
 When a product shows a seasonal pattern (R-17) that the forecast does not use, because seasonal adjustment is off or not possible, the system shows the warning «Produktet har tydelig sesongvariasjon som prognosen ikke tar hensyn til.» Priority: Should. It needs only steps 1 and 2 of R-14, so it can be built before FR-9.
@@ -383,7 +393,7 @@ When a product shows a seasonal pattern (R-17) that the forecast does not use, b
 - The warning counts as an active warning for the confidence label (R-16).
 - Results match E30.
 
-### 4.6 Settings (Must)
+### 4.6 Settings (Must/Could)
 
 **Description:** One set of settings applies to all products of a company and is saved between sessions. The user can change the settings from the product screen and see the result change at once, which is the core flow from the teacher's feedback (SM-3). Because a change affects every product, the screen always says so.
 
@@ -449,7 +459,7 @@ After login, the system shows the product overview: all products of the company 
 
 **Consequences (testable):**
 - The products are sorted by R-12 (E13, E24).
-- A product without a forecast shows the reason instead of a number.
+- For a product without a forecast, the week-1 normal forecast column shows the reason from FR-8 in Norwegian, for example «Ingen prognose: færre enn 3 gyldige uker» for a product with fewer than 3 valid weeks. The suggested order quantity and weeks of cover columns show «–».
 - When the company has no products, the overview says in Norwegian that no data is loaded and names the load command from the README.
 
 #### FR-25: Product screen
@@ -459,7 +469,8 @@ For one product, the system shows a chart and the decision details. Priority: Mu
 **Consequences (testable):**
 - The chart shows the sales history and the week forecasts with the three scenarios for the forecast horizon.
 - Stockout weeks, unusual weeks and level-shift weeks each have their own marker, which differs by more than color (NFR-7), and a legend explains them.
-- The screen shows the stock on hand, the safety margin, the forecast calculation (FR-35), the order calculation line (FR-12), all active warnings and notes, the confidence label with its reason, and the explanation (FR-26).
+- The screen shows the stock on hand, the safety margin, the forecast calculation (FR-35), the order calculation line (FR-12), the confidence label with its reason, and the explanation (FR-26).
+- The screen lists every active warning and every note that R-15 gives the product and whose FR is built, each with its Norwegian text, and no warning or note that does not apply. Until FR-17b is built, an active level shift is named only in the confidence label's reason (FR-17).
 - On a 1366 × 768 screen, the suggested order quantity, the confidence label and the active warnings are visible without scrolling (see also NFR-6).
 - The settings can be changed from the screen (FR-21).
 
@@ -474,9 +485,9 @@ The product screen shows how the base forecast and the week forecasts were calcu
 - With seasonal adjustment on (Should), the seasonal indices and adjusted values used, and the week forecasts for weeks 1 to 3 (E14).
 - Numbers are rounded for display by R-9, and the values match the reference examples.
 
-### 4.8 Explanation (Must)
+### 4.8 Explanation (Must/Should)
 
-**Description:** Every product screen has a plain-language explanation in Norwegian. The version 1 explanation is built from templates, so it never contains a number that the calculation did not produce. An optional local language model can make the text read more naturally, under strict checks. Realizes UJ-1 step 3.
+**Description:** Every product screen has a plain-language explanation in Norwegian. The version 1 explanation is built from templates, so it contains only the allowed numbers in FR-27. An optional local language model can make the text read more naturally, under strict checks. Realizes UJ-1 step 3.
 
 **Functional Requirements:**
 
@@ -485,16 +496,30 @@ The product screen shows how the base forecast and the week forecasts were calcu
 The system writes an explanation from the calculation result only. Priority: Must.
 
 **Consequences (testable):**
-- The explanation covers the forecasting method and settings used, the number of calculation weeks, which weeks were left out and why, every active warning and note (R-15), the confidence label and its reason, and the order calculation line.
+- The explanation covers the forecasting method and settings used, the number of calculation weeks, which weeks were left out and why, every active warning and every note (R-15) whose FR is built, the confidence label and its reason, and the order calculation line.
 - The same calculation result always gives the same text, and snapshot tests cover each template.
-- Every number in the explanation comes from the calculation result.
+- Every number in the explanation is an allowed number (FR-27).
 
 #### FR-27: Explanation kept apart from calculated numbers
 
 The explanation is shown in its own area under the heading «Forklaring», below the calculated numbers. Priority: Must.
 
 **Consequences (testable):**
-- The explanation contains no number that is not also shown among the calculated numbers on the product screen.
+- The explanation contains only allowed numbers. A number is any figure in the text, including week numbers. The allowed numbers are:
+  - the values in the product's calculation result that the product screen shows, as rounded for display by R-9:
+    - the settings used (window or smoothing factor, scenario percentage and safety margin percentage);
+    - the base forecast;
+    - the week forecasts and scenarios for weeks 1 to 3;
+    - the safety margin amount;
+    - the stock on hand;
+    - the unrounded result on the order calculation line;
+    - the suggested order quantity;
+    - the weeks of cover;
+    - the number of calculation weeks;
+    - the week numbers of weeks 1 to 3 and of the weeks left out;
+    - the counts in the active warnings, the notes and the confidence label's reason;
+  - the fixed numbers named in the active warnings, the notes and the confidence label's reason: the horizon week labels 1, 2 and 3, and the thresholds 3 (R-6), 8 (R-15), 12 (R-15, R-16), and 100 and 104 (R-16).
+- A test takes every number from each template explanation and fails if any of them is not an allowed number for that product.
 - Text produced or rephrased by a language model is labeled «KI-omformulert forklaring» (when FR-28 is built).
 
 #### FR-28: Optional local language model
@@ -503,13 +528,17 @@ When switched on, a language model running locally rephrases the template explan
 
 **Consequences (testable):**
 - The feature is off by default. It is switched on in the local configuration listed in `.env.example`, not in the company settings. It needs no API key, paid service or internet connection, and no hosted AI service is used (AG-5).
-- The application inserts every number itself; the model only rephrases the text around them.
-- The application rejects the rephrased text if any number, or the label attached to a number, differs from the template explanation.
+- The model receives the template explanation with a named placeholder in place of each number, for example `{base_forecast}`, and returns its text with the placeholders. The application inserts every number itself; the model only rephrases the text around the placeholders.
+- The application rejects the rephrased text in three cases:
+  - its placeholders differ from the template's in name, count or order;
+  - the Norwegian §3 label nearest before a placeholder differs from the one in the template, so a number has moved to another label;
+  - the text contains a number outside a placeholder.
+- A test sends prepared answers with each of these faults and checks that the template explanation is shown.
 - The template explanation is shown instead, without an error for the user, when the model server is not running, the model is missing, no answer arrives within 10 seconds `[ASSUMPTION]`, the response contains an error, or the text is rejected.
 - The README names the model used and its license obligations (DR-1).
 - The model is never part of the basic setup (SM-2): the README describes it as a separate, optional step with its download size and expected time, and the app runs fully without it.
 
-### 4.9 Purchase Planning (Should)
+### 4.9 Purchase Planning (Should/Could)
 
 **Description:** The user can override a suggested order quantity and collect all decisions in one list before the purchasing meeting. Prognose recommends; the user decides, and no order is ever placed from the system. Realizes UJ-1 steps 5 and 6.
 
@@ -623,8 +652,8 @@ Each rule is tagged with its source status: **sourced** (backed by the research 
   Stockout weeks and unusual weeks before the recent period are still listed on the product screen, but they are not active warnings. The notes, which do not affect the label, are: weeks 2 and 3 repeat week 1 (FR-7); seasonal adjustment could not be used (FR-9); the stock on hand covers next week (FR-14); and the stock will not last through weeks 2 and 3 (FR-33).
 - **R-16 Confidence label** *(project-defined thresholds)*. The conditions are checked in this order, and the first one that applies sets the label:
   1. The product has no forecast, or fewer than 12 valid weeks: **lav**.
-  2. The product has an active warning, fewer than 104 weeks in its sales history, or fewer than 100 valid weeks: **middels**.
-  3. Otherwise (at least 104 weeks in the sales history, at least 100 valid weeks, and no active warning): **høy**.
+  2. The product has an active warning, a sales history shorter than 104 weeks (stockout weeks included), or fewer than 100 valid weeks: **middels**.
+  3. Otherwise (a sales history of at least 104 weeks, at least 100 valid weeks, and no active warning): **høy**.
 
   The reason names the deciding condition and lists the active warnings (E29).
 - **R-17 Seasonal-pattern check** *(Should; project-defined thresholds)*. For a product where R-14 steps 1 and 2 can be calculated (every week number has a calculation week and no week-number mean is 0), the product has a seasonal pattern when any seasonal index is 1.3 or more, or 0.7 or less `[ASSUMPTION]`. When seasonal adjustment is off or not used for the product, this is an active warning (E30).
@@ -683,7 +712,7 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
 - **NFR-3 Security.** Passwords are hashed with an established, secure implementation as described in FR-1, never a self-made algorithm. The logged-in company is checked on the server on every request (FR-2). The secret used to sign sessions is created automatically by the load command (DR-4) when it is missing, stored in a local file that `.gitignore` excludes (DR-2), and never committed; setup needs no manual file editing. In the published version, the secret is an environment variable on Vercel instead. The repository contains no secrets; optional configuration is listed in `.env.example`.
 - **NFR-4 Privacy.** Only synthetic data is used: no real company, customer or personal data. Files in the repository contain no personal data and no local file paths. Saved AI sessions are cleaned of personal data and local paths before they are committed, and before submission the group scans the whole repository history for secrets, personal data and local paths and records the result in the QA log (DR-9).
 - **NFR-5 Language and number format.** All screens, messages, warnings, notes and explanations are in Norwegian `[ASSUMPTION: bokmål]`. Numbers use a decimal comma; percentages are whole numbers with «%».
-- **NFR-6 Platform and screen size.** Prognose runs in a desktop browser on a laptop or PC, because the user plans at an office PC (UJ-1). The README names at least one current browser per operating system that the group has tested. From 1024 pixels wide upwards there is no horizontal page scrolling; narrower windows stay readable, without overlapping or cut-off content. FR-25 sets what must be visible without scrolling at 1366 × 768. A mobile layout is not required.
+- **NFR-6 Platform and screen size.** Prognose runs in a desktop browser on a laptop or PC, because the user plans at an office PC (UJ-1). The README names at least one current browser per operating system that the group has tested. From 1024 pixels wide upwards there is no horizontal page scrolling. Down to 800 pixels wide, no text overlaps or is cut off, and every control can be reached with the keyboard; wide tables may scroll inside their own frame. FR-25 sets what must be visible without scrolling at 1366 × 768. A mobile layout is not required.
 - **NFR-7 Readable markings.** In the chart, stockout weeks, unusual weeks and level-shift weeks differ by more than color alone (for example by shape or pattern), and a legend explains them.
 - **NFR-8 Responsiveness.** `[ASSUMPTION]` With 50 products of 104 weeks each, the product overview and the product screen open within 2 seconds on an ordinary laptop, and results update within 2 seconds after a settings change. The target applies to the local app. In the published version, the first request after a quiet period may take longer, because the free plans start the server and the database on demand.
 - **NFR-9 Simple architecture.** One web application with one database and no more parts than the app needs: SQLite when the app runs locally, and PostgreSQL in the published version (DR-10). The technology is decided in the architecture step; the research recommendation and its rationale are in `addendum.md` (§2 there).
@@ -706,7 +735,7 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
   - Prerequisites with minimum versions.
   - Setup on macOS and Windows, tested by the group from a fresh clone: exact commands to copy into macOS Terminal and Windows PowerShell, including activating the virtual environment; how the session secret is created (NFR-3); and fixes for the most likely setup errors. Once SM-2 is confirmed, the README states the setup time.
   - The customer numbers and passwords of the two test companies, how to generate and load the synthetic data, and that reloading the data resets the settings and adjustments (DR-4).
-  - The address of the published version, and for the group the steps to publish it and to load the seed data into its database (DR-10).
+  - The address of the published version, and for the group the steps to publish it and to load the seed data into its database (DR-10). If the cut line in §8.1 applies, the README instead says that Prognose was not published, and why.
   - A «Prøv selv» (try it yourself) section of 5 to 10 steps that follows UJ-1, and a table of the test products naming the rule, warning or confidence label each one shows and its reference example (E-n).
   - How to run the tests, with the expected result (NFR-2), and the browsers tested (NFR-6).
   - How to switch on the optional language model as a separate step: which model is used, its download size and expected download time, its license obligations, and what happens without it (FR-28).
@@ -726,21 +755,23 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
   - The prompts and AI sessions for each story are saved in the documented folder (DR-2), cleaned as NFR-4 requires.
   - An AI steering log records at least five cases, at least one per epic, where the group clarified, rejected or corrected AI output. Each case records what the AI proposed, what was wrong, what the group decided, and the commit or pull request. The planning phase already gives its first entries, for example the rounding error found in E5 and the processing order of R-10 and R-11.
   - Every story names the FR-n it implements, every test names the FR-n or E-n it verifies, and every commit names its story, so that each FR can be traced from this PRD to code and tests.
-  - The change-log rule in §12 also applies to the architecture, UX and epics documents, and the Product Brief is updated after approval (§10, question 6).
-- **DR-6 Deadline.** The submission deadline is 1 December 2026, and the work is planned backwards from it. Milestone dates and the order of the Should items are set in sprint planning. Should and Could items start only after the Must scope passes SM-1 and SM-3 (§9).
+  - The change-log rule in §12 also applies to the architecture, UX and epics documents.
+  - The group updates the Product Brief with the changes listed in `addendum.md` (§7 there), so that the repository history shows how the plan developed.
+- **DR-6 Deadline.** The submission deadline is 1 December 2026, and the work is planned backwards from it. Milestone dates are set in sprint planning, and the order of the Should items is in §8.2. Should and Could items start only after the Must scope passes SM-1 and SM-3 (§9).
 - **DR-7 Workflow.**
   - Each story is built on its own branch and merged through a pull request that names the story and its FR-n and says what was tested; review comments stay in the pull request.
   - Defects and open points are tracked as issues.
   - Commits are small and pushed as the work happens, so that the commit history covers the whole build period.
   - **Definition of Done.** A story is done when its tests and the linter pass; it has no commented-out, unused or duplicated code; the status table and the affected documents are updated; and its pull request has been reviewed.
-- **DR-8 Status table.** One table lists every FR with its priority, its status at submission (built, partly built, not built or changed), its stories and tests, and the reason for any deviation. The README links it.
-- **DR-9 QA log.** Every defect in AI-generated code or text that a test, the reference spreadsheet, a review or a manual test finds is recorded with how it was found, the fix and the commit or pull request. A manual test checklist for NFR-6, NFR-7, NFR-8, NFR-11, SM-2 (including the offline start) and SM-9 is run on the final commit and recorded with date, operating system, browser and result.
+- **DR-8 Status table.** One table lists every FR, and DR-10, with its priority, its status at submission (built, partly built, not built or changed), its stories and tests, and the reason for any deviation. The README links it.
+- **DR-9 QA log.** Every defect in AI-generated code or text that a test, the reference spreadsheet, a review or a manual test finds is recorded with how it was found, the fix and the commit or pull request. A manual test checklist for NFR-6, NFR-7, NFR-8, NFR-11, SM-2 (including the offline start) and SM-9 (unless the cut line in §8.1 applies) is run on the final commit and recorded with date, operating system, browser and result.
 - **DR-10 Publishing.** Prognose is published on Vercel from the `main` branch, with the same code as the local app.
   - The published version uses a PostgreSQL database. Vercel and the database run on free plans, with no paid services.
   - The examiner can open the address, log in as a test company and see the product overview without installing anything (SM-9).
   - It holds only the synthetic seed data and is a shared demo: anyone with the logins in the README can change a test company's settings, and the load command restores the seed state (DR-4).
   - Debug pages are off, and secrets are environment variables on Vercel, never in the repository (NFR-3, NFR-10).
   - The optional local language model (FR-28) is not available there; the template explanation is shown.
+  - If publishing does not work in time, the cut line in §8.1 applies.
 
 ## 7. Non-Goals (Explicit)
 
@@ -770,20 +801,36 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
 - Company-wide settings: FR-20 to FR-22 (§4.6).
 - Product overview, product screen and forecast calculation: FR-24, FR-25, FR-35 (§4.7).
 - Template explanation, kept apart from the numbers: FR-26, FR-27 (§4.8).
-- Publishing on Vercel: DR-10 (§6.3).
-- All non-functional requirements, AI guardrails and delivery requirements in §6.
+- All non-functional requirements and AI guardrails in §6.
+- All delivery requirements in §6.3. They all stay Must and fall into three categories:
+  - Requirements needed to deliver the app or to pass its Must success metrics: DR-1, DR-2, DR-3 (SM-1 compares the tests with the reference spreadsheet), DR-4 and DR-6.
+  - Process requirements that the group set itself, so that the examiner can trace the work: DR-5, DR-7, DR-8 and DR-9. Within DR-5, documenting the use of AI comes from the Product Brief's success criteria (AG-6, SM-8).
+  - Publishing on Vercel (DR-10), which is the group's own choice and the only DR with a cut line (below).
+
+**Cut line for publishing.** The published version (DR-10) must work by the time the rest of the Must scope passes SM-1 and SM-3, and no later than the date that sprint planning sets for completing the Must scope. If it does not, the group stops working on publishing, and these consequences follow:
+- SM-9 lapses, and so does FR-4's requirement for the published version.
+- DR-10 is reported as not built, and FR-4 as partly built, in the status table (DR-8) and the README.
+- SM-2 and SM-3 count as met on the local version.
 
 ### 8.2 Should (after the Must scope passes SM-1 and SM-3)
 
 - Seasonal adjustment and the seasonal-pattern warning: FR-9, FR-36 (§4.3, §4.5).
 - Order quantity per scenario and overstock note: FR-13, FR-14 (§4.4).
-- Level-shift warning text: FR-17, warning part (§4.5).
+- Level-shift warning text: FR-17b (§4.5).
 - Optional local language model: FR-28 (§4.8).
 - Adjusting order quantities and the combined order overview: FR-29, FR-30 (§4.9).
 
 Seasonal adjustment was suggested in the Product Brief and by the teacher, and was moved to Should to protect the core flow before the deadline; the rationale is in `addendum.md` (§6 there). Until FR-9 and FR-36 are built, the week forecasts are flat (FR-7 note), and a product with a seasonal pattern gets no warning. Any Should item that is not built is listed with its reason in the status table (DR-8) and the README.
 
-`[NOTE FOR PM]` With the deadline on 1 December 2026, the Should items are at risk. Their order is decided in sprint planning (§10).
+**Order of the Should items (decided in sprint planning on 2026-11-08):**
+1. Seasonal adjustment: FR-9.
+2. Seasonal-pattern warning and level-shift warning text: FR-36, FR-17b.
+3. Order quantity per scenario and overstock note: FR-13, FR-14.
+4. Adjusting order quantities: FR-29.
+5. Combined order overview: FR-30.
+6. Optional local language model: FR-28.
+
+Seasonal adjustment comes first because the Product Brief and the teacher asked for it, and the optional language model comes last because the template explanation already meets the need (FR-26). With the deadline on 1 December 2026, the Should items are at risk.
 
 ### 8.3 Could (only if time allows)
 
@@ -797,20 +844,65 @@ Seasonal adjustment was suggested in the Product Brief and by the teacher, and w
 
 Everything in §7.
 
+### 8.5 Priority and Success Metrics per FR
+
+Each FR has one priority. A dash means that no success metric covers the FR.
+
+| FR | Priority | Success metrics |
+|---|---|---|
+| FR-1 | Must | SM-3 |
+| FR-2 | Must | SM-4 |
+| FR-3 | Must | SM-7 |
+| FR-4 | Must | SM-5, SM-9 |
+| FR-5 | Must | SM-1 |
+| FR-6 | Must | SM-1 |
+| FR-7 | Must | SM-1 |
+| FR-8 | Must | SM-1, SM-7 |
+| FR-9 | Should | SM-1 |
+| FR-10 | Must | SM-1, SM-3 |
+| FR-11 | Must | SM-1 |
+| FR-12 | Must | SM-1 |
+| FR-13 | Should | SM-1 |
+| FR-14 | Should | SM-1 |
+| FR-15 | Must | SM-1, SM-7 |
+| FR-16 | Must | SM-1, SM-7 |
+| FR-17 | Must | SM-1, SM-7 |
+| FR-17b | Should | SM-7 |
+| FR-18 | Must | SM-1, SM-7 |
+| FR-19 | Must | SM-1, SM-7, SM-10 |
+| FR-20 | Must | SM-3 |
+| FR-21 | Must | SM-3 |
+| FR-22 | Must | SM-5 |
+| FR-23 | Could | – |
+| FR-24 | Must | SM-1, SM-3 |
+| FR-25 | Must | SM-3, SM-10 |
+| FR-26 | Must | SM-6 |
+| FR-27 | Must | SM-6 |
+| FR-28 | Should | SM-6 |
+| FR-29 | Should | – |
+| FR-30 | Should | – |
+| FR-31 | Could | – |
+| FR-32 | Could | – |
+| FR-33 | Could | – |
+| FR-34 | Could | – |
+| FR-35 | Must | SM-1, SM-3 |
+| FR-36 | Should | SM-1, SM-7 |
+
 ## 9. Success Metrics
 
 **Primary**
-- **SM-1 Correct calculations.** For the Must scope, 100% of the reference examples for Must rules pass as automated tests and match the reference spreadsheet (DR-3): E1 to E13, E15 to E21, E23, E24, E28 and E29. When FR-9, FR-13 and FR-36 are built, E14, E22, E25 to E27 and E30 must pass too. Validates FR-5 to FR-13, FR-15 to FR-19, FR-35, FR-36 and rules R-1 to R-17.
+- **SM-1 Correct calculations.** For the Must scope, 100% of the reference examples for Must rules pass as automated tests and match the reference spreadsheet (DR-3): E1 to E13, E15 to E21, E23, E24, E28 and E29. When FR-9, FR-13 and FR-36 are built, E14, E22, E25 to E27 and E30 must pass too. Validates FR-5 to FR-8, FR-10 to FR-12, FR-15 to FR-19, FR-24 and FR-35, and rules R-1 to R-13, R-15 and R-16; and FR-9, FR-13, FR-14 and FR-36, and rules R-14 and R-17, once they are built.
 - **SM-2 Runnable by the examiner.** From a fresh clone, following only the README, a person can log in as a test company and see the product overview on macOS and on Windows, without paid services or keys; after installation, the app also starts and works with the network switched off. Target: at most 15 minutes from clone to logged in, to be confirmed by testing (§10, question 2; DR-9). Validates NFR-1, DR-1, DR-4.
 - **SM-3 Core flow works.** Log in; select a product; see the sales history, forecast calculation and scenarios; change the forecasting method, safety margin or unusual-week setting; and see the affected value change (FR-21). At least one automated test runs this flow through the web application. Validates FR-1, FR-10, FR-20, FR-21, FR-24, FR-25, FR-35.
 
 **Secondary**
 - **SM-4 Isolation.** The two-account isolation test passes, including lists. Validates FR-2.
 - **SM-5 Persistence.** Data and settings are unchanged after a restart. Validates FR-4, FR-22.
-- **SM-6 Explanation integrity.** Every number in every template explanation comes from the calculation result. With the optional language model, rephrased text is never accepted if it changes a number or attaches a number to a different label. Validates FR-26 to FR-28.
-- **SM-7 Rule coverage.** Every warning and every confidence label, including «høy», is triggered by at least one test product in the dataset. Validates FR-3, FR-15 to FR-19.
+- **SM-6 Explanation integrity.** Every number in every template explanation is an allowed number (FR-27). With the optional language model, no rephrased text that fails a check in FR-28 is ever accepted. Validates FR-26 to FR-28.
+- **SM-7 Rule coverage.** Every warning and every confidence label, including «høy», is triggered by at least one test product in the dataset. Validates FR-3, FR-8 and FR-15 to FR-19, and FR-17b and FR-36 once they are built.
 - **SM-8 Traceable process.** Decisions and the use of AI during development are documented, the AI steering log has at least five cases linked to commits or pull requests, every story was merged through a reviewed pull request, and the status table traces every FR to the stories and tests that implement and verify it. Validates DR-5, DR-7, DR-8, DR-9.
-- **SM-9 Published version works.** On the published address, a person can log in as each test company, see the product overview, and run the core flow in SM-3 by hand. Checked after the first deployment and on the final commit (DR-9). Validates DR-10, FR-4.
+- **SM-9 Published version works.** On the published address, a person can log in as each test company, see the product overview, and run the core flow in SM-3 by hand. Checked after the first deployment and on the final commit (DR-9). Lapses if the cut line in §8.1 applies. Validates DR-10, FR-4.
+- **SM-10 Confidence label understood.** Two people outside the group see the product screen of a test product with the confidence label «lav», and each explains in their own words, without reading the reason aloud, why it has that label. The check passes when both name the condition that decided the label (R-16). Checked by hand and recorded in the QA log (DR-9) when the Must scope passes SM-3, so that a failure can still be fixed. Validates FR-19, FR-25.
 
 **Counter-metrics (do not optimize)**
 - **SM-C1 Forecast accuracy.** Accuracy is not pursued through more complex models at the cost of rules that can be checked by hand. Counterbalances SM-1.
@@ -833,12 +925,12 @@ Everything in §7.
 
 ## 10. Open Questions
 
-1. **Order of the Should items.** Which Should items come first in the time left before 1 December 2026 (seasonal adjustment and the seasonal-pattern warning, optional language model, adjusting order quantities)? Decided in sprint planning, together with the milestone dates.
+1. **Order of the Should items.** Decided: the order is in §8.2 (sprint planning, 2026-11-08).
 2. **Setup time.** Is the 15-minute setup target (SM-2), including the offline check, met on clean macOS and Windows machines? Answered by testing before the README is final, and again on the final commit.
 3. **Sources for the inventory rules.** The research found only vendor sources and one short university tutorial for the order-up-to policy, and no source for a percentage safety margin. Textbook references are added if found; otherwise the gap is stated in the process documentation.
 4. **Project-defined rules.** Do R-10, R-11, R-14 and R-17 behave as expected on the test products? Pass criterion: for every rule test product, the app's results equal the expected results in the reference spreadsheet (DR-3).
 5. **Local model choice.** If FR-28 is built, which small model is used, and what does its license require? Candidates are in `addendum.md` (§3 there).
-6. **Update the Product Brief.** After this PRD is approved, the Product Brief is updated with the changes listed in `addendum.md` (§7 there), so that the repository history shows how the plan developed. Owner: the group.
+6. **Update the Product Brief.** Moved to DR-5 as a task.
 
 ## 11. Assumptions and Rule Sources
 
@@ -874,3 +966,11 @@ This PRD was approved and set to final on 2026-11-03. Every change to a requirem
 | Date | Change | Reason | Commit or pull request |
 |---|---|---|---|
 | 2026-11-08 | Vercel is the publishing solution. New DR-10 and SM-9; updated FR-4, NFR-1, NFR-3, NFR-8, NFR-9, DR-1, DR-9, §1, §7, §8.1 and the summary at the top. The local app keeps SQLite, and the published version uses PostgreSQL. | The group chose Vercel for publishing. The technical choices are in the architecture spine (AD-13, AD-15, AD-16). | `21cd020` |
+| 2026-11-15 | Cut line for publishing and the grouping of the DRs (§8.1), carried into DR-1, DR-8, DR-9, DR-10, SM-9 and the summary at the top; §8.1 states the effect on FR-4. | The teacher's feedback, point 4.1 (`tilbakemelding-prd.md`, 2026-11-12). | `47a8857` |
+| 2026-11-15 | Allowed numbers in the explanation (FR-27), with FR-26 and §4.8 aligned. Placeholders for the language model, checked for name, count, order and label (FR-28, SM-6, addendum §3). | The teacher's feedback, point 4.2. | `47a8857` |
+| 2026-11-15 | FR-17 split into FR-17 (Must) and FR-17b (Should), with FR-25, FR-26, §3, §8.2 and SM-7 aligned. Feature headings show all their priorities, and §8.5 lists every FR with its priority and success metrics. | The teacher's feedback, point 4.3. | `47a8857` |
+| 2026-11-15 | Testable consequences in FR-24 (the reason in the forecast column, and «–» for the suggested order quantity and weeks of cover), FR-25 and NFR-6 (down to 800 px). | The teacher's feedback, point 4.4. | `47a8857` |
+| 2026-11-15 | Order of the Should items recorded in §8.2 (DR-6; §10 question 1 closed); §10 question 6 moved to DR-5; new SM-10. | The teacher's feedback, point 4.5. | `47a8857` |
+| 2026-11-15 | The term "latest valid week" in §3 (R-15, FR-18); the length of the sales history in §3 (R-16); SM-1 split by priority; FR-14 and FR-24 added to SM-1, and FR-8 to SM-7. | The teacher's feedback, section 5 (mechanical findings). | `47a8857` |
+
+Open after the 2026-11-15 changes: align `epics.md`, the architecture spine (AD-10 and FR-17b) and EXPERIENCE.md (FR-24, the level-shift state and the explanation rule) with this PRD, then delete this line.

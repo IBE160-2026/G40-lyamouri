@@ -1,14 +1,14 @@
 ---
 title: 'Addendum: Prognose PRD'
 created: '2026-11-02'
-updated: '2026-11-03'
+updated: '2026-11-15'
 ---
 
 # Addendum: Prognose PRD
 
 ## 1. Purpose
 
-This addendum goes with the PRD in this folder (`prd.md`). The PRD states capabilities. This document keeps the technical detail, research figures, rejected alternatives and rationale that the architecture, UX and epics steps need. The PRD points here for the technology rationale (PRD §0 and NFR-9 → §2), the local model candidates (PRD §10, question 5 → §3), the rule and priority rationale (PRD §5 and §8.2 → §6), and the changes from the Product Brief (PRD §0, DR-5, §10 question 6 and §12 → §7). Sections 6 and 7 were moved here from the PRD on 2026-11-03.
+This addendum goes with the PRD in this folder (`prd.md`). The PRD states capabilities. This document keeps the technical detail, research figures, rejected alternatives and rationale that the architecture, UX and epics steps need. The PRD points here for the technology rationale (PRD §0 and NFR-9 → §2), the local model candidates (PRD §10, question 5 → §3), the rule and priority rationale (PRD §5 and §8.2 → §6), and the changes from the Product Brief (PRD §0, DR-5 and §12 → §7). Sections 6 and 7 were moved here from the PRD on 2026-11-03.
 
 - **No new requirements.** Every requirement, priority and calculation rule is in the PRD. If this addendum and the PRD disagree, the PRD wins.
 - **Nothing is decided here** unless the PRD says so. The technology stack, the local model runtime and the model itself are still open. For these, this addendum gives the research recommendation for the architecture step.
@@ -109,7 +109,7 @@ FR-28.
 - **Error behavior:** a missing model returns 404. An error in the middle of a stream arrives inside a 200 response, so a 200 status alone does not prove success [D14]. The documentation does not say what happens when the server is stopped (inference: the client gets a connection failure). FR-28 and AG-3 send all of these cases, as well as a timeout and a rejected text, to the template explanation without an error. No source measured how fast a small model answers on a laptop, so the timeout and how it fits NFR-8's 2-second target are architecture choices.
 - **Structured output does not guarantee correct values:** Ollama advises putting the schema in the prompt as well, setting temperature 0, and validating the parsed result with Pydantic or Zod [D10]. A valid structure fixes only the shape. Google states that schema-valid output "can still be semantically wrong", and that the application has to validate the values [D23]. The OpenAI and Ollama pages that were read say nothing either way [D28][D10].
 - **Why each label and value are checked together (FR-28):** in summaries of financial reports written by language models, about 5% of the numbers were wrong. The most common error was a real number in the wrong context: context mismatch 1.59 to 3.28%, against fabrication 0 to 0.81%, for models from 2023 [D2]. A check that every number appears somewhere in the input misses that error. The same authors found GPT-4 unreliable as an automatic number checker [D2]. Restricting a model to provided data reduces hallucinations but does not eliminate them [D3].
-- **Proof-carrying numbers:** a preprint proposes that the model writes each number as a token tied to a structured claim. The renderer, not the model, then verifies each claim under a stated policy: exact equality, rounding or tolerance [D19]. D-R2 rests on this pattern. Addendum note: FR-28 rejects text where a number "differs from the template explanation", which amounts to an exact-equality policy.
+- **Proof-carrying numbers:** a preprint proposes that the model writes each number as a token tied to a structured claim. The renderer, not the model, then verifies each claim under a stated policy: exact equality, rounding or tolerance [D19]. D-R2 rests on this pattern. Addendum note: FR-28's placeholder checks amount to an exact-equality policy. The application inserts every number and rejects any rephrased text that fails a check.
 
 ### Model candidates
 
@@ -188,7 +188,7 @@ The PRD (§5 and §8) states the rules and priorities; this section keeps the re
 ### Priority decisions
 
 - **Seasonal adjustment as Should.** The Product Brief and the teacher suggested seasonal adjustment in version 1, and the group first wanted seasonal variation to affect the calculation. It was moved to Should to protect the core flow before the deadline, because R-14 is the most demanding rule.
-- **Optional language model (FR-28) as Should.** Its priority does not depend on the teacher's answer, and its place among the Should items is decided in sprint planning (group decision, 2026-11-03).
+- **Optional language model (FR-28) as Should.** Its priority does not depend on the teacher's answer, and its place among the Should items is decided in sprint planning (group decision, 2026-11-03). Sprint planning later put it last, and PRD §8.2 records the order.
 - **Deliberately set to Could, not rejected.** Two items were placed at Could on purpose during planning: settings per product (FR-23), and saving adjusted order quantities between sessions with an approved mark per product (FR-31). Until they are built, one company-wide set of settings applies to every product and the screen says so (FR-20 to FR-22). Adjustments last for the current session only (UJ-1 priority note). Like every Should and Could item, they start only after the Must scope passes SM-1 and SM-3 (DR-6, SM-C2).
 
 ## 7. Changes from the Product Brief
