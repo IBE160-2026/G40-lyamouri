@@ -40,6 +40,8 @@ Etter godkjenning skulle dette gjøres:
 
 Nødvendige BMAD-, Claude- og Impeccable-filer og den arkiverte story-grenen skulle beholdes. Sesjonsloggen skulle oppdateres, uten å starte arkitekturen.
 
+Til slutt ba brukeren om at `docs/arbeidslogg.md` oppdateres med oppryddingen som faktisk ble gjennomført, uten dobbeltføring, og at endringen committes og pushes.
+
 ### Plan
 - Kartlegge sporede, usporede og ignorerte filer, grener, pull requests, like filer (kontrollsum) og store filer, bare med lesekommandoer.
 - Sammenligne secret key-håndteringen og `.gitignore` med story-grenen, og legge inn en lik blokk slik at fila ikke får flettekonflikt.
@@ -176,6 +178,9 @@ Nødvendige BMAD-, Claude- og Impeccable-filer og den arkiverte story-grenen sku
     - Git sporer 407 filer, og arbeidsmappa er ren.
   - **Feil og retting:** den første slettekommandoen stoppet før noe ble slettet, fordi sjekken av sporede filer ga feil returkode for filer som ikke var sporet. Det ble kontrollert at alt fortsatt fantes, og kommandoen ble kjørt på nytt med en riktig sjekk.
   - **Commit:** `d2bfad2` (PRD-utkastene), og deretter denne loggen. Arbeidsloggen er ikke oppdatert i denne runden, fordi brukeren ba om sesjonsloggen.
+- **Arbeidsloggen** (`19911b1`):
+  - Én ny oppføring, «Oppryddingen fullført», har bare den siste delen: PRD-utkastene, slettingen og kontrollen av BMAD og Impeccable.
+  - De fire tidligere oppføringene om oppryddingen samme dag er ikke gjentatt, og det finnes ingen like overskrifter.
 
 ### Åpne punkter
 - **Åpne punkter fra story 1.1**, som bare finnes i taggen:
