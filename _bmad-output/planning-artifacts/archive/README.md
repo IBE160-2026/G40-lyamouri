@@ -1,6 +1,6 @@
 # Archive: planning artifacts superseded by the PRD update of 2026-11-15
 
-These folders were moved here on the branch `design/after-prd-feedback`: the UX and the architecture on 2026-11-15, before new design work started, and the epics and the sprint plan on 2026-11-16, before the new architecture. The work-log entries for story 1.1 were copied here on 2026-11-16. They are kept for reference and traceability. Nothing was deleted, and `git log --follow <file>` shows each file's history from its original path.
+These folders were moved here on the branch `design/after-prd-feedback`: the UX and the architecture on 2026-11-15, before new design work started, and the epics and the sprint plan on 2026-11-16, before the new architecture. The work-log entries for story 1.1 were copied here on 2026-11-16, and two intermediate PRD drafts were moved here from a local cache the same day. They are kept for reference and traceability. Nothing was deleted, and `git log --follow <file>` shows each file's history from its original path.
 
 | Folder | Original path | Created | Why it is superseded |
 |---|---|---|---|
@@ -8,6 +8,7 @@ These folders were moved here on the branch `design/after-prd-feedback`: the UX 
 | `architecture-G40-lyamouri-2026-11-08/` | `_bmad-output/planning-artifacts/architecture/architecture-G40-lyamouri-2026-11-08/` | 2026-11-08 | Built on the PRD before the teacher's feedback. AD-10 describes the old number-and-label check, and `binds` lacks FR-17b. |
 | `epics-G40-lyamouri-2026-11-08/` | `_bmad-output/planning-artifacts/epics.md` and `_bmad-output/implementation-artifacts/sprint-status.yaml` | 2026-11-08 | Built on the archived UX and architecture and on the PRD before the teacher's feedback. The epics' input paths point to the old folders, and the sprint plan's first milestone (11 November) has passed. A new epics list and sprint plan are made after the new architecture. |
 | `story-1-1-G40-lyamouri-2026-11-10/` | `docs/arbeidslogg.md` in the tag `archive/story-1-1-project-skeleton` | 2026-11-10 | A verbatim copy of the work-log entries for 10 and 11 November (story 1.1 and the GitHub CLI). Pull request #1 was closed without merging, so `docs/arbeidslogg.md` on this branch does not have them. |
+| `prd-drafts-G40-lyamouri-2026-11-15/` | `_bmad/render/bmad-review/`, a local cache that was never committed | 2026-11-15 | Two intermediate drafts of the PRD update of 2026-11-15, saved by `bmad-review` as diffs against the PRD before the update: one at 16:35 and one at 20:42, after the structure review. No other copy exists. The final version is commit `47a8857`. |
 
 ## Old code (story 1.1)
 
