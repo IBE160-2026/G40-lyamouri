@@ -25,6 +25,13 @@ Til slutt ba brukeren om at sesjonsloggene flyttes til `.logs/mounia-03/` med `g
 
 Etter det ba brukeren om at gamle epics, stories og `sprint-status.yaml` arkiveres før den nye arkitekturen. Den gamle koden skulle også arkiveres, så den ikke brukes i den nye arkitekturen. All dokumentasjon og Git-historikk skulle beholdes, og det skulle kontrolleres at ingen viktige filer går tapt. Grener skulle ikke flettes, og arkitekturen skulle ikke startes.
 
+Til slutt godkjente brukeren de tre forslagene:
+- lukke PR #1 med en kommentar om at den gamle koden er arkivert;
+- bevare arbeidsloggoppføringene fra 10. og 11. november i arkivet;
+- slette de gamle lokale filene (`__pycache__`, `.venv` og `db.sqlite3`) etter å ha kontrollert at de ikke trengs.
+
+Arbeidsloggen og sesjonsloggen skulle oppdateres, og nødvendige endringer committes og pushes, uten å starte arkitekturen.
+
 ### Plan
 - Kartlegge sporede, usporede og ignorerte filer, grener, pull requests, like filer (kontrollsum) og store filer, bare med lesekommandoer.
 - Sammenligne secret key-håndteringen og `.gitignore` med story-grenen, og legge inn en lik blokk slik at fila ikke får flettekonflikt.
@@ -45,6 +52,11 @@ Etter det ba brukeren om at gamle epics, stories og `sprint-status.yaml` arkiver
   - bevare den gamle koden i en annotert tag på story-grenen, uten å endre grenen eller PR #1;
   - beskrive begge deler i arkivets README;
   - kontrollere fillister, rename-gjenkjenning, taggens innhold og henvisninger, og prøveflette.
+- **De tre godkjente forslagene:**
+  - kontrollere hver lokal fil mot taggen, `requirements.txt` og databaseinnholdet før sletting;
+  - teste BMAD-skriptene uten `.venv`;
+  - lukke PR #1 med `gh pr close` og en kommentar, uten å slette grenen;
+  - kopiere arbeidsloggoppføringene ordrett med et skript og kontrollere kopien mot taggen.
 
 ### Resultat
 - **Gjennomgang (ingen endringer):**
@@ -104,10 +116,27 @@ Etter det ba brukeren om at gamle epics, stories og `sprint-status.yaml` arkiver
     - Noreply-adressen er løst.
     - Godkjenning av Vercel-appen, migreringssjekk, Ruff i Markdown og norske feilsider er samlet i ett punkt i `issues.md`.
   - **Commits:** `8f58dfb` (arkivering), `652f747` (retting) og `daa3ccb` (arbeidsloggen), og deretter denne loggen. Grenen og taggen er pushet.
+- **De tre godkjente forslagene:**
+  - **Lokale filer slettet etter kontroll:**
+    - 19 `.pyc`-filer i åtte `__pycache__`-mapper i `accounts/`, `explanation/`, `forecasting/`, `planning/` og `prognose/`, og de fem mappene som ble tomme;
+    - `.venv` (93 MB);
+    - `db.sqlite3` (76 KB).
+  - **Kontroll før slettingen:**
+    - alle `.pyc`-filene har kilde i taggen;
+    - ingen av filene har vært committet på noen gren;
+    - `.venv` (Python 3.13) har de samme pakkene som `requirements.txt` i taggen;
+    - databasen hadde bare Djangos skjema, 16 migreringer og ingen bedrifter eller økter;
+    - ingenting på grenen bruker `.venv` eller databasen.
+  - **Kontroll etter slettingen:**
+    - git er uendret (404 sporede filer);
+    - `memlog.py`, `resolve_config.py` og `resolve_customization.py` for `bmad-architecture` virker med `uv run` uten `.venv`, og ingen ny `.venv` ble laget.
+    - `.secret_key`, `.ruff_cache`, `_bmad/render` og `.DS_Store` er beholdt.
+  - **PR #1** er lukket uten fletting, med en kommentar om arkiveringen. Grenen `story/1-1-project-skeleton` ligger fortsatt på GitHub (`ffc934c`).
+  - **Arbeidsloggoppføringene** fra 10. og 11. november er kopiert ordrett, 34 linjer, fra taggen til `archive/story-1-1-G40-lyamouri-2026-11-10/arbeidslogg.md`. Kopien er kontrollert linje for linje mot taggen. Arkivets README viser til den og sier at PR #1 er lukket. Sesjonsloggene 991–992 ligger fortsatt bare i taggen.
+  - **Retting:** én kontroll med `sed` feilet på macOS. Ingenting ble committet, og kontrollen ble gjort på nytt med Python.
+  - **Commits:** `1a0709e` (arkivkopi og README) og `dc6e12a` (arbeidsloggen), og deretter denne loggen.
 
 ### Åpne punkter
-- **PR #1 har konflikt med `main`** i `issues.md` og `docs/arbeidslogg.md`. Den løses ved å beholde begge sider i datorekkefølge. Den kan forebygges ved å oppdatere PR #1 med `main`, men det er en fletting og krever godkjenning. Flettes designgrenen først, må konflikten bare løses én gang. Da må også plasseringen av loggene 991 og 992 i `.logs/mounia-03/` godkjennes.
-- **PR #1 er arkivert i taggen og skal ikke flettes.** Konfliktene over må bare løses hvis den tas i bruk igjen. Den står fortsatt som åpen på GitHub. Den kan gjøres om til utkast eller lukkes med en kommentar, men det krever godkjenning.
 - **Åpne punkter fra story 1.1**, som bare finnes i taggen:
   - eieren av IBE160-2026 må godkjenne Vercels GitHub-app;
   - migreringssjekk før pull requester;
@@ -115,9 +144,10 @@ Etter det ba brukeren om at gamle epics, stories og `sprint-status.yaml` arkiver
   - norske feilsider for 400, 403 og CSRF.
 
   De vurderes i den nye arkitekturen.
-- **Arbeidsloggen på designgrenen** mangler oppføringene for 10. og 11. november, altså story 1.1 og GitHub CLI. De og loggene 991–992 ligger i taggen og kan kopieres inn hvis brukeren vil.
 - **PRD §12:** den åpne linjen om å rette `epics.md` og arkitekturspinen lukkes når ny arkitektur og nye epics finnes.
-- **Valgfri opprydding som krever godkjenning:** de lokale restene og cachene, som hører til den arkiverte koden, og grenen `prd/teacher-feedback`, som er flettet gjennom PR #2.
+- **Valgfri opprydding som krever godkjenning:**
+  - `.ruff_cache/`, `_bmad/render/`, `.DS_Store` og `.secret_key` ligger fortsatt lokalt;
+  - grenen `prd/teacher-feedback` er flettet gjennom PR #2.
 - **`.gitignore`:** Next.js-delen trengs ikke etter PRD-en og ryddes når stakken er valgt.
 - **Lenkene inne i `DESIGN.md`** virker ikke når fila leses gjennom `docs/DESIGN.md`. Det kan ikke rettes uten å endre det godkjente designet.
 - **QA-loggen:** beskriv de gamle commit-identitetene ved innlevering (NFR-4, DR-9). Det gjelder 61 automatiske identiteter og én commit med skoleadressen.
