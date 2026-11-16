@@ -279,6 +279,25 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** Impeccable finner det godkjente designet, og rotmappen følger DR-2. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
+### 16. november 2026 – Opprydding før arkitekturen
+
+* Gikk gjennom prosjektmappa og foreslo hva som skulle beholdes, arkiveres eller slettes. Etter min beslutning ble bare trygge rettelser gjort: ingen filer er slettet, ingen grener er flettet, og historikken er ikke skrevet om. Designkonseptene A–D og all dokumentasjon er beholdt.
+* Secret key (DR-2, NFR-3):
+  * Ingen gren har noen gang committet `.secret_key`, databasen eller `.env`. Koden på story-grenen har ingen innebygd nøkkel.
+  * `.gitignore` på denne grenen manglet `.secret_key` og `db.sqlite3`. Fila har nå samme blokk som story-grenen (PR #1), byte for byte, så den gir ingen konflikt når grenene flettes.
+  * Alle DR-2-punktene for `.gitignore` er kontrollert med eksempelstier, og seed-dataene blir fortsatt versjonert.
+* Rettet datoen i arkivets README. PRD-en ble sist oppdatert 16. november, og bare oppdateringen fra 15. november er i `main`.
+* Prøvefletting av grenene i en isolert kopi:
+  * `design/after-prd-feedback` kan flettes inn i `main` uten konflikt.
+  * PR #1 (story 1.1) har allerede konflikt med `main` i `.logs/mounia-tech03/issues.md` og `docs/arbeidslogg.md`. Begge sider har lagt til oppføringer på samme sted. Det kan forebygges ved å oppdatere PR #1 med `main`, men det er en fletting og krever godkjenning.
+* Kontroller:
+  * Filhenvisninger: bare `epics.md` har brutte henvisninger, og den venter på arkitekturen.
+  * Personvern: ingen lokale stier, brukernavn, e-postadresser, nøkler eller tokens i noen fil på noen gren eller i historikken. To database-adresser på story-grenen er falske testverdier.
+  * 58 commits har en automatisk forfatter med brukernavn og maskinnavn. Det kan bare rettes ved å skrive om historikken, og det er ikke gjort.
+* Committet (`d67211c`) og pushet til `design/after-prd-feedback`. Ingenting er flettet til `main`.
+
+**Status:** De trygge rettelsene er gjort. Det som gjenstår, krever godkjenning eller arkitekturen. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
