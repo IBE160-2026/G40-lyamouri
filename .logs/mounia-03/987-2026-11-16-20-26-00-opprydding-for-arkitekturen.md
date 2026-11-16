@@ -16,6 +16,13 @@ Deretter ba brukeren om at alle kjente problemer ryddes opp før BMAD-arkitektur
 
 Designkonseptene A–D og all viktig dokumentasjon skulle beholdes. Ingen filer skulle slettes, historikken skulle ikke skrives om, og ingen grener skulle flettes uten godkjenning. Trygge rettelser skulle committes og pushes, arbeidsloggen oppdateres og arkitekturen ikke startes.
 
+Så ba brukeren om en kontroll av personvern og Git-identitet:
+- skille mellom tillatte navn i dokumentasjonen og personopplysninger som bryter NFR-4;
+- sette Git-identitet for nye commits, og spørre først om navn og e-post;
+- ikke endre gamle commits eller prosjektfiler.
+
+Til slutt ba brukeren om at sesjonsloggene flyttes til `.logs/mounia-03/` med `git mv`, og at nødvendige henvisninger og overskrifter oppdateres. All historikk og alt innhold skulle beholdes. Endringene skulle kontrolleres, arbeidsloggen oppdateres og alt committes og pushes, uten å flette grener, slette filer eller starte arkitekturen.
+
 ### Plan
 - Kartlegge sporede, usporede og ignorerte filer, grener, pull requests, like filer (kontrollsum) og store filer, bare med lesekommandoer.
 - Sammenligne secret key-håndteringen og `.gitignore` med story-grenen, og legge inn en lik blokk slik at fila ikke får flettekonflikt.
@@ -23,6 +30,14 @@ Designkonseptene A–D og all viktig dokumentasjon skulle beholdes. Ingen filer 
 - Kontrollere filhenvisninger i dokumentene som er i bruk med et skript, uten å endre logger, memlogger og arkiv, som er historikk.
 - Søke etter lokale stier, brukernavn, e-postadresser, nøkler og tokens på alle grener og i hele historikken.
 - Committe i tre deler: rettelsene, arbeidsloggen og denne loggen.
+- **Personvern og identitet:**
+  - klassifisere hvert sted navnet står, og lese forfatteridentitetene i historikken;
+  - spørre brukeren om navn og e-post;
+  - sette identiteten lokalt i `.git/config`.
+- **Flytting av loggene:**
+  - flytte hele mappa med `git mv` og bytte brukernavnet i overskriftene;
+  - kontrollere med rename-gjenkjenning og `git log --follow`;
+  - prøveflette PR #1 i en isolert klon.
 
 ### Resultat
 - **Gjennomgang (ingen endringer):**
@@ -51,13 +66,33 @@ Designkonseptene A–D og all viktig dokumentasjon skulle beholdes. Ingen filer 
   - Navnet står i `README.md` (medlemsliste), som persona i PRD-en og UX-en og i BMAD-konfigurasjonen. Det har ligget i `main` siden 3. november.
   - 58 commits på alle grener har automatisk forfatter med brukernavn og maskinnavn.
 - **Commits på `design/after-prd-feedback`:** `d67211c` (`.gitignore` og arkivets README) og `33b65aa` (arbeidsloggen), og deretter denne loggen. Alt er pushet. Ingenting er flettet, slettet eller skrevet om.
+- **Personvern og identitet** (ingen filer ble endret i denne runden):
+  - **Tillatt:**
+    - personaen «Mounia», som brukeren selv valgte (se PRD-memloggen);
+    - fullt navn i medlemslisten i README;
+    - «Mounia-03» i BMAD-konfigurasjonen;
+    - lærerens navn i lærerens 6 commits.
+  - **Gråsone:** det gamle brukernavnet, som er første del av en privat e-postadresse, sto i mappenavnet og i 12 overskrifter. Hele adressen fantes ingen steder.
+  - **Bryter NFR-4, men bare i historikken:** 61 commits har fullt navn, macOS-brukernavn og maskinnavn, og flettecommiten for PR #2 har skoleadressen.
+  - **Git-identitet:** satt lokalt etter brukerens valg til `Mounia-03 <327966115+Mounia-03@users.noreply.github.com>`.
+- **Flytting av loggene** (`6245a0a`):
+  - 12 filer er omdøpt og ingen er slettet. Bare de 12 overskriftslinjene er endret.
+  - `git log --follow` viser historikken. For `issues.md` er det 16 commits tilbake til 2026-10-31.
+  - **Prøvefletting:** designgrenen kan flettes inn i `main` uten konflikt. Flettes PR #1 etterpå, kommer to «file location»-konflikter for 991 og 992 i tillegg. Git legger begge filene i den nye mappa. Loggene 991 og 992 har ikke det gamle brukernavnet.
+  - Henvisningen til den gamle mappa i arbeidsloggoppføringen om oppryddingen er beholdt. Den beskriver PR #1 mot `main`, der mappa fortsatt har det gamle navnet.
+- **Feil og retting:**
+  - Arbeidsloggoppføringen (`8f6ecdf`) og commit-meldingen til `6245a0a` skrev ut det gamle brukernavnet.
+  - Teksten i arbeidsloggen er rettet i `3f6d417`. Commitene er ikke endret, og navnet fantes fra før i historikken.
+- **Commits med den nye identiteten:** `6245a0a` (flytting), `8f6ecdf` og `3f6d417` (arbeidsloggen), og deretter denne loggen.
 
 ### Åpne punkter
-- **PR #1 har konflikt med `main`** i `issues.md` og `docs/arbeidslogg.md`. Den løses ved å beholde begge sider i datorekkefølge. Den kan forebygges ved å oppdatere PR #1 med `main`, men det er en fletting og krever godkjenning. Flettes designgrenen først, må konflikten bare løses én gang.
+- **PR #1 har konflikt med `main`** i `issues.md` og `docs/arbeidslogg.md`. Den løses ved å beholde begge sider i datorekkefølge. Den kan forebygges ved å oppdatere PR #1 med `main`, men det er en fletting og krever godkjenning. Flettes designgrenen først, må konflikten bare løses én gang. Da må også plasseringen av loggene 991 og 992 i `.logs/mounia-03/` godkjennes.
 - **PR #1 og story-grenen** bygger på den arkiverte arkitekturen. De avklares i arkitektursteget og flettes ikke før det.
 - **`epics.md` og `sprint-status.yaml`:** forslaget er å arkivere dem med `git mv` når nye epics og ny sprintplan lages etter arkitekturen.
 - **Valgfri opprydding som krever godkjenning:** de lokale restene og cachene, og grenen `prd/teacher-feedback`, som er flettet gjennom PR #2.
 - **`.gitignore`:** Next.js-delen trengs ikke etter PRD-en og ryddes når stakken er valgt.
 - **Lenkene inne i `DESIGN.md`** virker ikke når fila leses gjennom `docs/DESIGN.md`. Det kan ikke rettes uten å endre det godkjente designet.
-- **Navn og NFR-4:** avklar om navnet i README, personaen i PRD-en og UX-en og BMAD-konfigurasjonen er greit. NFR-4 sier at filene ikke skal ha personopplysninger.
-- **Git-identitet:** 58 commits har automatisk forfatter. Det kan bare rettes ved å skrive om historikken.
+- **QA-loggen:** beskriv de gamle commit-identitetene ved innlevering (NFR-4, DR-9). Det gjelder 61 automatiske identiteter og én commit med skoleadressen.
+- **GitHub og andre kloner:**
+  - Slå på «Keep my email addresses private» under Settings → Emails.
+  - Sett samme Git-identitet i andre kloner, fordi den bare er satt i dette repoet.
