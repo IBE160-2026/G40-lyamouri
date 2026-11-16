@@ -338,6 +338,23 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** Den gamle planen og koden er arkivert. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
+### 16. november 2026 – PR #1 lukket, arbeidslogg arkivert og lokale rester slettet
+
+* Godkjente de tre forslagene fra arkiveringen:
+  1. **PR #1 er lukket uten fletting.** Kommentaren sier at den gamle koden er arkivert i taggen `archive/story-1-1-project-skeleton` og ikke brukes i den nye arkitekturen. Grenen `story/1-1-project-skeleton` er beholdt.
+  2. **Arbeidsloggoppføringene fra 10. og 11. november** (story 1.1 og GitHub CLI) er kopiert ordrett fra taggen til `archive/story-1-1-G40-lyamouri-2026-11-10/arbeidslogg.md`. Arkivets README viser til dem.
+  3. **De gamle lokale filene er slettet etter kontroll:** `__pycache__` i fem gamle appmapper (19 `.pyc`-filer, og mappene som ble tomme), `.venv` (93 MB) og `db.sqlite3`.
+* Kontroller før slettingen:
+  * alle 19 `.pyc`-filene har kildekoden sin i taggen, og ingen av filene har noen gang vært committet;
+  * `.venv` har de samme pakkene som `requirements.txt` i taggen og kan lages på nytt;
+  * `db.sqlite3` hadde bare Djangos skjema og ingen data, og kan lages på nytt med `migrate`;
+  * ingenting på denne grenen bruker `.venv` eller databasen.
+* Kontroller etter slettingen: git er uendret (404 sporede filer), og BMAD-skriptene virker fortsatt uten `.venv`. `.secret_key`, `.ruff_cache`, `_bmad/render` og `.DS_Store` er beholdt, fordi de ikke var med i forslaget.
+* Kvalitetssikring: én kontrollkommando fra Claude feilet, fordi macOS-versjonen av `sed` ikke godtok skrivemåten. Ingenting ble committet da, og kontrollen ble gjort på nytt med Python.
+* Committet (`1a0709e`) og pushet til `design/after-prd-feedback`. Ingen grener er flettet.
+
+**Status:** Den gamle planen og koden er arkivert, og PR #1 er lukket. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
