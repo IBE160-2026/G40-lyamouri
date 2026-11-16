@@ -23,6 +23,8 @@ Så ba brukeren om en kontroll av personvern og Git-identitet:
 
 Til slutt ba brukeren om at sesjonsloggene flyttes til `.logs/mounia-03/` med `git mv`, og at nødvendige henvisninger og overskrifter oppdateres. All historikk og alt innhold skulle beholdes. Endringene skulle kontrolleres, arbeidsloggen oppdateres og alt committes og pushes, uten å flette grener, slette filer eller starte arkitekturen.
 
+Etter det ba brukeren om at gamle epics, stories og `sprint-status.yaml` arkiveres før den nye arkitekturen. Den gamle koden skulle også arkiveres, så den ikke brukes i den nye arkitekturen. All dokumentasjon og Git-historikk skulle beholdes, og det skulle kontrolleres at ingen viktige filer går tapt. Grener skulle ikke flettes, og arkitekturen skulle ikke startes.
+
 ### Plan
 - Kartlegge sporede, usporede og ignorerte filer, grener, pull requests, like filer (kontrollsum) og store filer, bare med lesekommandoer.
 - Sammenligne secret key-håndteringen og `.gitignore` med story-grenen, og legge inn en lik blokk slik at fila ikke får flettekonflikt.
@@ -38,6 +40,11 @@ Til slutt ba brukeren om at sesjonsloggene flyttes til `.logs/mounia-03/` med `g
   - flytte hele mappa med `git mv` og bytte brukernavnet i overskriftene;
   - kontrollere med rename-gjenkjenning og `git log --follow`;
   - prøveflette PR #1 i en isolert klon.
+- **Arkivering:**
+  - flytte `epics.md` og `sprint-status.yaml` med `git mv` til en ny arkivmappe;
+  - bevare den gamle koden i en annotert tag på story-grenen, uten å endre grenen eller PR #1;
+  - beskrive begge deler i arkivets README;
+  - kontrollere fillister, rename-gjenkjenning, taggens innhold og henvisninger, og prøveflette.
 
 ### Resultat
 - **Gjennomgang (ingen endringer):**
@@ -84,12 +91,33 @@ Til slutt ba brukeren om at sesjonsloggene flyttes til `.logs/mounia-03/` med `g
   - Arbeidsloggoppføringen (`8f6ecdf`) og commit-meldingen til `6245a0a` skrev ut det gamle brukernavnet.
   - Teksten i arbeidsloggen er rettet i `3f6d417`. Commitene er ikke endret, og navnet fantes fra før i historikken.
 - **Commits med den nye identiteten:** `6245a0a` (flytting), `8f6ecdf` og `3f6d417` (arbeidsloggen), og deretter denne loggen.
+- **Arkivering av gamle epics, sprintplan og kode:**
+  - `epics.md` og `sprint-status.yaml` ligger nå uendret (R100) i `archive/epics-G40-lyamouri-2026-11-08/`. `git log --follow` viser historikken: 4 og 2 commits fra 2026-11-08.
+  - Den gamle koden fra story 1.1 lå aldri på designgrenen. Den er bevart i den annoterte taggen `archive/story-1-1-project-skeleton`, som peker på `ffc934c`. Taggen har samme filtre som story-grenen (417 filer), med koden, spec-1-1, epic-1-context, deferred-work og loggene 991–992. Grenen og PR #1 er ikke endret.
+  - Arkivets README har en rad for de arkiverte epics og en del om den gamle koden: hvor den ligger, hvordan den kan ses uten å endre grener, og at den ikke er grunnlag for den nye arkitekturen. Den gamle linjen om at `epics.md` oppdateres senere, er erstattet med en linje om den åpne linjen i PRD §12.
+  - **Kontroll:**
+    - 404 sporede filer før og etter, og ingen er slettet;
+    - ingen dokumenter som er i bruk, peker på de gamle stiene;
+    - designgrenen kan fortsatt flettes inn i `main` uten konflikt.
+  - **Retting:** README-en sa først at sprintplanens datoer var passert. Bare den første milepælen (11. november) var det, og det er rettet i `652f747`.
+  - **Åpne punkter som bare fantes på story-grenen:**
+    - Noreply-adressen er løst.
+    - Godkjenning av Vercel-appen, migreringssjekk, Ruff i Markdown og norske feilsider er samlet i ett punkt i `issues.md`.
+  - **Commits:** `8f58dfb` (arkivering), `652f747` (retting) og `daa3ccb` (arbeidsloggen), og deretter denne loggen. Grenen og taggen er pushet.
 
 ### Åpne punkter
 - **PR #1 har konflikt med `main`** i `issues.md` og `docs/arbeidslogg.md`. Den løses ved å beholde begge sider i datorekkefølge. Den kan forebygges ved å oppdatere PR #1 med `main`, men det er en fletting og krever godkjenning. Flettes designgrenen først, må konflikten bare løses én gang. Da må også plasseringen av loggene 991 og 992 i `.logs/mounia-03/` godkjennes.
-- **PR #1 og story-grenen** bygger på den arkiverte arkitekturen. De avklares i arkitektursteget og flettes ikke før det.
-- **`epics.md` og `sprint-status.yaml`:** forslaget er å arkivere dem med `git mv` når nye epics og ny sprintplan lages etter arkitekturen.
-- **Valgfri opprydding som krever godkjenning:** de lokale restene og cachene, og grenen `prd/teacher-feedback`, som er flettet gjennom PR #2.
+- **PR #1 er arkivert i taggen og skal ikke flettes.** Konfliktene over må bare løses hvis den tas i bruk igjen. Den står fortsatt som åpen på GitHub. Den kan gjøres om til utkast eller lukkes med en kommentar, men det krever godkjenning.
+- **Åpne punkter fra story 1.1**, som bare finnes i taggen:
+  - eieren av IBE160-2026 må godkjenne Vercels GitHub-app;
+  - migreringssjekk før pull requester;
+  - Ruff og Python-blokker i Markdown;
+  - norske feilsider for 400, 403 og CSRF.
+
+  De vurderes i den nye arkitekturen.
+- **Arbeidsloggen på designgrenen** mangler oppføringene for 10. og 11. november, altså story 1.1 og GitHub CLI. De og loggene 991–992 ligger i taggen og kan kopieres inn hvis brukeren vil.
+- **PRD §12:** den åpne linjen om å rette `epics.md` og arkitekturspinen lukkes når ny arkitektur og nye epics finnes.
+- **Valgfri opprydding som krever godkjenning:** de lokale restene og cachene, som hører til den arkiverte koden, og grenen `prd/teacher-feedback`, som er flettet gjennom PR #2.
 - **`.gitignore`:** Next.js-delen trengs ikke etter PRD-en og ryddes når stakken er valgt.
 - **Lenkene inne i `DESIGN.md`** virker ikke når fila leses gjennom `docs/DESIGN.md`. Det kan ikke rettes uten å endre det godkjente designet.
 - **QA-loggen:** beskriv de gamle commit-identitetene ved innlevering (NFR-4, DR-9). Det gjelder 61 automatiske identiteter og én commit med skoleadressen.
