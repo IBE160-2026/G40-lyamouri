@@ -175,6 +175,43 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** PRD-en er oppdatert. Neste steg er å oppdatere epics, arkitektur og UX etter endringene med `bmad-correct-course`.
 
+### 15.–16. november 2026 – Nytt UX-design etter PRD-oppdateringen
+
+* Bestemte at det gamle UX-designet og den gamle arkitekturen ikke skulle rettes, men lages på nytt fra den oppdaterte PRD-en. Laget grenen `design/after-prd-feedback` fra `main` og flyttet de gamle mappene til `_bmad-output/planning-artifacts/archive/` med en README, uten å slette historikken (`f28ca71`).
+* Startet `bmad-ux` på nytt med PRD-en som eneste grunnlag og ba om tre tydelig ulike designkonsepter før noe endelig design:
+  * A «Arket»: en tett tabell og et regneark;
+  * B «Innkjøpsmøtet»: en guidet ukeflyt med kort;
+  * C «Instrumentpanelet»: liste og detalj på én skjerm med en stor graf.
+* Vurderte konseptene og valgte et fjerde, kombinert konsept D med en moderne palett i blått, turkis og grønt:
+  * fra C: hovedoppsettet, produktlisten til venstre og den store prognosegrafen;
+  * fra B: produktkort, tydelige bestillingsforslag og en enkel arbeidsflyt;
+  * fra A: detaljerte beregninger, salgsdata og forklaringer.
+
+  A, B og C beholdes uendret som dokumentasjon.
+* Så D i Safari og ba om to forbedringer: grafen skulle stå rett under bestillingsforslaget og tillitsmerket, og bryteren under grafen skulle få normal størrelse.
+* Eksempler på styring av KI:
+  * Et skript fra Claude lukket en av mine faner i Safari. Jeg bestemte at Claude bare skal åpne filer med `open -a Safari`, og ikke styre faner eller vinduer.
+  * Den enorme bryteren var en feil i CSS-koden fra KI: regelen som gjør grafen like bred som panelet, traff også bryteren da den ble flyttet inn i grafpanelet. Det er samme type feil som varseltrekanten 7. november. Den ble rettet med én CSS-linje etter min tilbakemelding, og en kontrollsum viste at ingenting annet var endret.
+  * Jeg ba om at grafen skulle flyttes høyere. Claude forklarte at varslene må stå over grafen fordi FR-25 krever at de er synlige uten å rulle på en skjerm på 1366 × 768, så grafen kunne bare flyttes et stykke opp.
+* Claude fant at forklaringsteksten i A, B og C bruker ukenummer som FR-27 ikke tillater, og at flere tekster avviker fra PRD-en. D bruker de nøyaktige tekstene fra PRD-en.
+* Godkjente D og ba Claude fullføre BMAD UX uten nye designendringer uten behov og uten subagenter. Claude skrev `DESIGN.md` og `EXPERIENCE.md` og satte dem til `final`:
+  * `DESIGN.md`: farger med målt kontrast, skrift, avstander, former og komponenter.
+  * `EXPERIENCE.md`: skjermkart, enkle skisser av innloggingen og samlet bestillingsoversikt (PRD §0), norske tekster for alle varsler og merknader, atferd, tilstander, regler for beregninger og forklaring, tilgjengelighet og tre brukerflyter. Én av flytene viser at en person utenfor gruppen kan forklare tillitsmerket «lav» (SM-10).
+  * D ble kopiert til `mockups/`.
+* Ett avvik fra mockupen: PRD-en krever en markør i grafen for hver utsolgte uke, uvanlige uke og uke med nytt nivå (FR-15–FR-17). `EXPERIENCE.md` sier derfor at grafen viser hele salgshistorikken, mens mockupen bare viser de siste 12 ukene. Spinene gjelder ved avvik.
+* Kontroller:
+  * BMAD sin dekningskontroll (`review-coverage.md`);
+  * en gjennomgang av struktur og språk med åtte rettinger;
+  * maskinelle kontroller av token-henvisninger, lenker og komponentnavn;
+  * Impeccable-detektoren;
+  * et søk etter personopplysninger, lokale stier og hemmeligheter i alle filene som ble committet.
+
+  BMAD sin gjennomgang med subagenter (Reviewer Gate) ble ikke kjørt, fordi jeg ba om at subagenter ikke skulle brukes.
+* Oppdaterte henvisningene i endringsloggen i PRD-en (§12) og i README-en i arkivet. `epics.md` og `.impeccable/config.json` oppdateres når den nye arkitekturen finnes.
+* Committet konseptene, UX-dokumentene og beslutningsloggen (`5db2fe7`) og pushet til `design/after-prd-feedback`. Ingenting er flettet til `main`.
+
+**Status:** UX-designet er ferdig (`final`). Neste steg er en ny arkitektur (`bmad-architecture`), som ikke er startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
