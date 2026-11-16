@@ -212,6 +212,31 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** UX-designet er ferdig (`final`). Neste steg er en ny arkitektur (`bmad-architecture`), som ikke er startet.
 
+### 16. november 2026 – Beslutninger før arkitekturen
+
+* Godkjente de fem antakelsene i UX-designet:
+  * produkter uten prognose sorteres etter varenummer;
+  * en bekreftelse sier «(uendret)» når en innstilling ikke endrer verdien;
+  * samlet bestillingsoversikt viser «–» og «Uten prognose» for et produkt uten prognose, i samme rekkefølge som produktoversikten;
+  * avrundingsnotat og faste desimaler ved eksponentiell glatting og sesongjustering;
+  * årstall i ukelister.
+* Bestemte at demoen skal vise effekten av uvanlige uker. Referanseeksempel E8 ble valgt, fordi det allerede står i PRD-en. Når uvanlige uker holdes utenfor, går grunnprognosen fra 41,0 til 21,3.
+* Ønsket hele salgshistorikken i grafen hvis det er enkelt og innenfor PRD-en. Det er det: FR-25 sier allerede at grafen viser salgshistorikken, så PRD-en trengte ingen endring for dette.
+* Tillot uke og år i PRD-en bare hvis det ikke påvirker andre krav. Kontrollen viste at bare FR-27 (tillatte tall i forklaringen) måtte endres. FR-28, SM-6, FR-15 og FR-16 virker som før, og ordlisten definerer allerede en uke med år og ukenummer.
+* PRD-en ble oppdatert med `bmad-prd` i oppdateringsmodus. Endringene gjelder R-9, R-12, FR-27, FR-30, FR-35, DR-1 og ordlisten, og endringsloggen (§12) har fått fire nye rader. Statusen er fortsatt `final`.
+* UX-dokumentene ble oppdatert med `bmad-ux` i oppdateringsmodus. Antakelsene er nå beslutninger med henvisning til PRD-reglene, flyt 1 bruker E8-demoen, og forklaringen kan nevne årstall. Mockupen er ikke endret.
+* Filhenvisninger: `.impeccable/config.json` peker nå på de arkiverte mockupene. `epics.md` viser fortsatt til den arkiverte UX-en og arkitekturen og oppdateres etter den nye arkitekturen.
+* Kontroller:
+  * alle 17 faste norske tekster fra PRD-en står ordrett i UX-en;
+  * de sju nye PRD-reglene stemmer med UX-en;
+  * ingen antakelser står igjen;
+  * YAML, token-henvisninger, lenker og JSON er gyldige;
+  * det er ingen personopplysninger, lokale stier eller hemmeligheter i filene.
+* Kvalitetssikring: Ett kontrollskript fra Claude meldte først «ingen funn» uten å ha lest filene, fordi skallet ikke delte opp fillisten. Claude oppdaget feilen før commit og kjørte kontrollen på nytt med riktig filliste.
+* Committet og pushet til `design/after-prd-feedback`: endringene (`5373e7b`) og commit-hashen i endringsloggene (`220bd3b`). Ingenting er flettet til `main`.
+
+**Status:** PRD-en og UX-designet er oppdatert og `final`. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
