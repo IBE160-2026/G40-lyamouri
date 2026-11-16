@@ -1,11 +1,22 @@
 # Archive: planning artifacts superseded by the PRD update of 2026-11-15
 
-These folders were moved here on 2026-11-15, on the branch `design/after-prd-feedback`, before new design work starts. They are kept for reference and traceability. Nothing was deleted, and `git log --follow <file>` shows each file's history from its original path.
+These folders were moved here on the branch `design/after-prd-feedback`: the UX and the architecture on 2026-11-15, before new design work started, and the epics and the sprint plan on 2026-11-16, before the new architecture. They are kept for reference and traceability. Nothing was deleted, and `git log --follow <file>` shows each file's history from its original path.
 
 | Folder | Original path | Created | Why it is superseded |
 |---|---|---|---|
 | `ux-G40-lyamouri-2026-11-06/` | `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-06/` | 2026-11-06 | Built on the PRD before the teacher's feedback. It disagrees with the updated FR-24 (reason in the forecast column, «–» for the order quantity and weeks of cover), with FR-17b and with the explanation rule in FR-27. |
 | `architecture-G40-lyamouri-2026-11-08/` | `_bmad-output/planning-artifacts/architecture/architecture-G40-lyamouri-2026-11-08/` | 2026-11-08 | Built on the PRD before the teacher's feedback. AD-10 describes the old number-and-label check, and `binds` lacks FR-17b. |
+| `epics-G40-lyamouri-2026-11-08/` | `_bmad-output/planning-artifacts/epics.md` and `_bmad-output/implementation-artifacts/sprint-status.yaml` | 2026-11-08 | Built on the archived UX and architecture and on the PRD before the teacher's feedback. The epics' input paths point to the old folders, and the sprint plan's dates have passed. A new epics list and sprint plan are made after the new architecture. |
+
+## Old code (story 1.1)
+
+The project skeleton from story 1.1 was built on 10 and 11 November on the archived architecture. It holds the Django apps, templates, static files, seed data, `manage.py`, `requirements.txt`, `ruff.toml`, `vercel.json` and `.env.example`. It is not on this branch, and it is not an input for the new architecture.
+- **Kept unchanged:** on the branch `story/1-1-project-skeleton` (pull request #1, open and not merged) and in the annotated tag `archive/story-1-1-project-skeleton` (commit `ffc934c`). The tag keeps the code even if the branch is removed later.
+- **Its documents** are in the same tag:
+  - the story specification, epic context and deferred work in `_bmad-output/implementation-artifacts/`;
+  - the session logs 991 and 992;
+  - the work-log entries for 10 and 11 November.
+- **To look at it** without changing any branch, run `git switch --detach archive/story-1-1-project-skeleton` or `git show archive/story-1-1-project-skeleton:<path>`.
 
 ## The basis for new work
 
@@ -26,7 +37,7 @@ The new UX was built from the updated PRD and set to `final` on 2026-11-16: `_bm
 ## Still pointing at the old paths
 
 These files were not changed:
-- `epics.md`, which is updated after the new architecture. It still names the archived UX and architecture as its inputs.
+- `prd.md` ends §12 with an open line about aligning `epics.md` and the architecture spine. The PRD is not changed now; the line is closed when the new architecture and epics exist.
 - The entries in `docs/arbeidslogg.md` and the session logs, which are history and stay as they were.
 
 `.impeccable/config.json`, which holds detector exceptions for the archived mockups, was pointed to their new paths in this folder on 2026-11-16.
