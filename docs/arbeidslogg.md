@@ -237,6 +237,28 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** PRD-en og UX-designet er oppdatert og `final`. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
+### 16. november 2026 – PRODUCT.md etter det nye UX-designet
+
+* Oppdaterte `PRODUCT.md` i rotmappen etter den godkjente PRD-en og det nye UX-designet. Fila er produktkonteksten som Impeccable leser, og den beskrev fortsatt det arkiverte designet fra 6. november. Bare denne fila ble endret, og ingen nye krav eller funksjoner ble lagt til.
+* Det som er nytt i fila:
+  * kildene er PRD-en og de endelige `DESIGN.md` og `EXPERIENCE.md`, ikke arkivet;
+  * appen kjører lokalt og som publisert versjon på Vercel med PostgreSQL, med kutt-linjen i PRD §8.1;
+  * innloggingssiden er inngangen, så spørsmålet om en egen offentlig side er lukket;
+  * må-, bør- og kan-ha følger PRD §8.1–8.3, også rekkefølgen på bør-ha-delene;
+  * «Uten prognose», tallformat og avrunding (R-9), årstall i uker (FR-27), hele salgshistorikken i grafen og E8-demoen i «Prøv selv»;
+  * språktonen fra `EXPERIENCE.md`. Farger og skrift står i `DESIGN.md` og gjentas ikke.
+* Kontroller:
+  * alle 18 siterte norske tekster står ordrett i PRD-en eller UX-dokumentene;
+  * alle 55 krav-ID-er, seksjonene, ordlisteordene og stiene finnes;
+  * listene over må-, bør- og kan-ha er like PRD §8.1–8.3;
+  * Impeccable leser fila uten feil;
+  * det er ingen personopplysninger, lokale stier eller hemmeligheter i endringen.
+* Kvalitetssikring: Claude skrev først «för» i stedet for «for» i den faste teksten «Tallene er avrundet for visning.», og rettet det før kontrollen.
+* Funn: Impeccable finner ikke den nye `DESIGN.md`, fordi den leter i rotmappen, mens fila ligger i UX-mappen. Det må løses før Impeccable brukes i byggingen.
+* Committet (`e549c78`) og pushet til `design/after-prd-feedback`. Ingenting er flettet til `main`.
+
+**Status:** `PRODUCT.md` samsvarer med PRD-en og UX-designet. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
