@@ -973,4 +973,4 @@ This PRD was approved and set to final on 2026-11-03. Every change to a requirem
 | 2026-11-15 | Order of the Should items recorded in §8.2 (DR-6; §10 question 1 closed); §10 question 6 moved to DR-5; new SM-10. | The teacher's feedback, point 4.5. | `47a8857` |
 | 2026-11-15 | The term "latest valid week" in §3 (R-15, FR-18); the length of the sales history in §3 (R-16); SM-1 split by priority; FR-14 and FR-24 added to SM-1, and FR-8 to SM-7. | The teacher's feedback, section 5 (mechanical findings). | `47a8857` |
 
-Open after the 2026-11-15 changes: align `epics.md`, the architecture spine (AD-10 and FR-17b) and EXPERIENCE.md (FR-24, the level-shift state and the explanation rule) with this PRD, then delete this line.
+Open after the 2026-11-15 changes: align `epics.md` and the architecture spine (AD-10 and FR-17b) with this PRD, then delete this line. EXPERIENCE.md was rewritten from this PRD on 2026-11-16 (`ux-designs/ux-G40-lyamouri-2026-11-15/`) and covers FR-24, the level-shift state and the explanation rule.

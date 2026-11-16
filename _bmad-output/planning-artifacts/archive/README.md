@@ -15,6 +15,10 @@ The new design and architecture start from the updated PRD:
 - **Changes:** the change log in its §12 lists every change.
 - **Disagreements:** `review-consistency-2026-11-15.md` in the same folder lists the statements in these archived documents that disagree with the PRD.
 
+## The new design
+
+The new UX was built from the updated PRD and set to `final` on 2026-11-16: `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/` (`DESIGN.md`, `EXPERIENCE.md` and `mockups/`). The new architecture is not made yet.
+
 ## Not archived
 
 `architecture/technology.md` stays where it is. It is the teacher's description of another project's stack (added 2026-11-12) and is input for the new architecture.
