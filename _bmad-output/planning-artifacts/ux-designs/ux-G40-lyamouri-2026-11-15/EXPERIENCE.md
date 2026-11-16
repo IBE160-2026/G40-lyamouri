@@ -344,4 +344,4 @@ The spine pair (DESIGN.md and EXPERIENCE.md) was set to `final` on 2026-11-16. E
 
 | Date | Change | Reason | Commit |
 |---|---|---|---|
-| 2026-11-16 | The five assumptions became decisions. «Uten prognose» added to the markings and the combined order table. Flow 1 uses the E8 demo product for unusual weeks. The explanation may name years (FR-27). DESIGN.md: the «Uten prognose» marking in red. | The user's decisions before the architecture; the PRD was updated the same day (R-9, R-12, FR-27, FR-30, FR-35, DR-1). | pending |
+| 2026-11-16 | The five assumptions became decisions. «Uten prognose» added to the markings and the combined order table. Flow 1 uses the E8 demo product for unusual weeks. The explanation may name years (FR-27). DESIGN.md: the «Uten prognose» marking in red. | The user's decisions before the architecture; the PRD was updated the same day (R-9, R-12, FR-27, FR-30, FR-35, DR-1). | `5373e7b` |
