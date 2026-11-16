@@ -320,6 +320,24 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** Nye commits har en identitet uten privat e-post, og sesjonsloggene ligger i én mappe. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
+### 16. november 2026 – Arkivering av gamle epics, sprintplan og kode
+
+* Arkiverte den gamle planen og koden før den nye arkitekturen, uten å slette noe, flette grener eller skrive om historikken:
+  * `epics.md` og `sprint-status.yaml` er flyttet med `git mv` til `archive/epics-G40-lyamouri-2026-11-08/`. De bygger på den arkiverte UX-en og arkitekturen og på PRD-en før lærerens tilbakemelding, og den første milepælen i sprintplanen (11. november) er passert. Nye epics og ny sprintplan lages etter den nye arkitekturen.
+  * Den gamle koden fra story 1.1 ligger ikke på designgrenen. Det er Django-skjelettet som ble bygget 10.–11. november på den arkiverte arkitekturen. Det er bevart uendret i grenen `story/1-1-project-skeleton` (PR #1) og i den nye taggen `archive/story-1-1-project-skeleton`. Der ligger også story-dokumentene, sesjonsloggene 991–992 og arbeidsloggoppføringene for 10. og 11. november.
+  * Arkivets README forklarer hva som er arkivert og hvor koden ligger. Den sier også at koden ikke er grunnlag for den nye arkitekturen.
+* Kontroller:
+  * 404 sporede filer før og etter, de to filene er flyttet uendret, og ingen er slettet;
+  * `git log --follow` viser historikken til de flyttede filene;
+  * taggen har nøyaktig samme 417 filer som story-grenen, også koden og story-dokumentene;
+  * ingen dokumenter som er i bruk, peker på de gamle stiene;
+  * designgrenen kan fortsatt flettes inn i `main` uten konflikt.
+* Fem åpne punkter fantes bare på story-grenen. Ett er løst (noreply-adressen), og de som kan gjelde den nye byggingen, er ført inn i `issues.md`.
+* Kvalitetssikring: Claude skrev først i arkivets README at sprintplanens datoer var passert. Bare den første milepælen var det, og setningen er rettet.
+* Committet (`8f58dfb` og `652f747`) og pushet grenen og taggen til GitHub. PR #1 og story-grenen er ikke endret.
+
+**Status:** Den gamle planen og koden er arkivert. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
