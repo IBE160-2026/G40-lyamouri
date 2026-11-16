@@ -355,6 +355,42 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** Den gamle planen og koden er arkivert, og PR #1 er lukket. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
+### 16. november 2026 – Oppryddingen fullført
+
+* De første delene av oppryddingen samme dag står i de fire oppføringene over. Her står bare den siste delen.
+* Undersøkte de siste lokale filene og grenen `prd/teacher-feedback` før noe ble slettet:
+  * `.secret_key` ble laget av `load_seed` i story 1.1, og bare den arkiverte koden bruker den. Ny kode lager en ny nøkkel automatisk (NFR-3).
+  * `.ruff_cache/` og de to `.DS_Store`-filene er mellomlager og Finder-innstillinger som lages på nytt.
+  * `_bmad/render/bmad-build/` er BMADs mellomlager for skillen fra story 1.1.
+  * `_bmad/render/bmad-review/` hadde de eneste kopiene av to mellomutkast av PRD-en fra 15. november.
+  * `prd/teacher-feedback` er flettet gjennom PR #2, og alle commitene ligger i `main`.
+* Arkiverte de to PRD-utkastene før slettingen. De er flyttet uendret til `archive/prd-drafts-G40-lyamouri-2026-11-15/`, committet og pushet (`d2bfad2`). Kontrollen viste:
+  * samme kontrollsum som før flyttingen, og identiske filer på GitHub;
+  * at begge diffene gir nøyaktig de opprinnelige utkastene når de brukes på PRD-versjonen de bygger på.
+* Slettet etter min godkjenning:
+  * `.secret_key`, `.ruff_cache/` og de to `.DS_Store`-filene;
+  * `_bmad/render/bmad-build/` og den tomme `bmad-review`-mappa;
+  * grenen `prd/teacher-feedback`, lokalt og på GitHub. Den kan gjenopprettes fra PR #2-siden.
+* Beholdt:
+  * BMAD-konfigurasjonen og BMAD-mappene;
+  * `.claude/settings.local.json`;
+  * Impeccable-motoren og mellomlageret dens;
+  * story-grenen med arkivtaggen.
+* Kontroll av BMAD og Impeccable etter oppryddingen:
+  * BMAD-skriptene virker, også oppsettet for `bmad-architecture`;
+  * `impeccable context` finner `docs/PRODUCT.md` og den godkjente `docs/DESIGN.md` uten å be om nytt design;
+  * git sporer 407 filer, og arbeidsmappa er ren;
+  * GitHub har bare grenene `design/after-prd-feedback`, `main` og `story/1-1-project-skeleton`.
+* Kvalitetssikring: den første slettekommandoen fra Claude stoppet før noe ble slettet, fordi sikkerhetssjekken var feil skrevet. Claude kontrollerte at alt fortsatt fantes, og kjørte kommandoen på nytt med riktig sjekk.
+* Committet (`d2bfad2`) og pushet til `design/after-prd-feedback`. Ingen grener er flettet.
+
+**Status:** Oppryddingen før arkitekturen er fullført. Disse punktene gjenstår:
+* beskrive de gamle commit-identitetene i QA-loggen;
+* slå på e-postinnstillingen på GitHub;
+* vurdere punktene fra story 1.1 i arkitekturen.
+
+Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
