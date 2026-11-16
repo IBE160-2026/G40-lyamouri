@@ -32,6 +32,14 @@ Til slutt godkjente brukeren de tre forslagene:
 
 Arbeidsloggen og sesjonsloggen skulle oppdateres, og nødvendige endringer committes og pushes, uten å starte arkitekturen.
 
+Så ba brukeren om en undersøkelse av de gjenværende lokale filene (`.secret_key`, `.ruff_cache`, `_bmad/render` og `.DS_Store`) og grenen `prd/teacher-feedback`, uten å slette noe.
+
+Etter godkjenning skulle dette gjøres:
+- flytte de to PRD-utkastene til arkivet og kontrollere at de er bevart;
+- deretter slette de gamle lokale kopiene og de øvrige filene som var kontrollert som trygge å fjerne.
+
+Nødvendige BMAD-, Claude- og Impeccable-filer og den arkiverte story-grenen skulle beholdes. Sesjonsloggen skulle oppdateres, uten å starte arkitekturen.
+
 ### Plan
 - Kartlegge sporede, usporede og ignorerte filer, grener, pull requests, like filer (kontrollsum) og store filer, bare med lesekommandoer.
 - Sammenligne secret key-håndteringen og `.gitignore` med story-grenen, og legge inn en lik blokk slik at fila ikke får flettekonflikt.
@@ -57,6 +65,12 @@ Arbeidsloggen og sesjonsloggen skulle oppdateres, og nødvendige endringer commi
   - teste BMAD-skriptene uten `.venv`;
   - lukke PR #1 med `gh pr close` og en kommentar, uten å slette grenen;
   - kopiere arbeidsloggoppføringene ordrett med et skript og kontrollere kopien mot taggen.
+- **Siste opprydding:**
+  - undersøke hver gjenværende lokal fil og grenen med lesekommandoer;
+  - flytte PRD-utkastene til arkivet, committe og pushe;
+  - bevise at utkastene kan gjenskapes;
+  - deretter slette med en sjekk av at ingen mål er sporet av git;
+  - til slutt teste BMAD og Impeccable.
 
 ### Resultat
 - **Gjennomgang (ingen endringer):**
@@ -135,6 +149,33 @@ Arbeidsloggen og sesjonsloggen skulle oppdateres, og nødvendige endringer commi
   - **Arbeidsloggoppføringene** fra 10. og 11. november er kopiert ordrett, 34 linjer, fra taggen til `archive/story-1-1-G40-lyamouri-2026-11-10/arbeidslogg.md`. Kopien er kontrollert linje for linje mot taggen. Arkivets README viser til den og sier at PR #1 er lukket. Sesjonsloggene 991–992 ligger fortsatt bare i taggen.
   - **Retting:** én kontroll med `sed` feilet på macOS. Ingenting ble committet, og kontrollen ble gjort på nytt med Python.
   - **Commits:** `1a0709e` (arkivkopi og README) og `dc6e12a` (arbeidsloggen), og deretter denne loggen.
+- **Siste opprydding:**
+  - **Undersøkelse:**
+    - `.secret_key`: 67 byte, rettighet 600, laget av `load_seed` 10. november. Bare den arkiverte koden bruker den.
+    - `.ruff_cache`: 18 filer fra Ruff 0.17.4.
+    - To `.DS_Store`-filer med Finders visningsinnstillinger.
+    - `_bmad/render/bmad-build`: BMADs mellomlager for skillen, 15 filer.
+    - `_bmad/render/bmad-review`: to diff-filer, som var de eneste kopiene av to mellomutkast av PRD-en fra 15. november.
+    - `prd/teacher-feedback`: flettet gjennom PR #2, uten commits som ikke er i `main`.
+  - **PRD-utkastene** (`d2bfad2`, pushet):
+    - De er flyttet uendret (samme SHA-256) til `archive/prd-drafts-G40-lyamouri-2026-11-15/`.
+    - Arkivets README beskriver dem.
+    - I en isolert klon kan begge brukes på PRD-versjonen de bygger på, og de gir nøyaktig fil-ID-ene i diffene (`2c20a02`/`2dc932b` og `fd5506c`/`a92f52c`).
+  - **Slettet:**
+    - `.secret_key`, `.ruff_cache/` og to `.DS_Store`;
+    - `_bmad/render/bmad-build/` og den tomme `_bmad/render/bmad-review/`;
+    - grenen `prd/teacher-feedback`, lokalt og på GitHub. Commit `89d4a91` er fortsatt i `main`, og PR #2-siden kan gjenopprette grenen.
+  - **Beholdt:**
+    - `_bmad/render/.gitignore` og `.claude/settings.local.json`;
+    - Impeccable-motoren og `.impeccable/hook.cache.json`;
+    - de to `config.user.toml`-filene og de tomme BMAD-mappene;
+    - `story/1-1-project-skeleton` og arkivtaggen.
+  - **Kontroll etterpå:**
+    - BMAD-skriptene og oppsettet for `bmad-architecture` virker.
+    - `impeccable context` finner `docs/PRODUCT.md` og `docs/DESIGN.md` uten å be om nytt design.
+    - Git sporer 407 filer, og arbeidsmappa er ren.
+  - **Feil og retting:** den første slettekommandoen stoppet før noe ble slettet, fordi sjekken av sporede filer ga feil returkode for filer som ikke var sporet. Det ble kontrollert at alt fortsatt fantes, og kommandoen ble kjørt på nytt med en riktig sjekk.
+  - **Commit:** `d2bfad2` (PRD-utkastene), og deretter denne loggen. Arbeidsloggen er ikke oppdatert i denne runden, fordi brukeren ba om sesjonsloggen.
 
 ### Åpne punkter
 - **Åpne punkter fra story 1.1**, som bare finnes i taggen:
@@ -145,9 +186,6 @@ Arbeidsloggen og sesjonsloggen skulle oppdateres, og nødvendige endringer commi
 
   De vurderes i den nye arkitekturen.
 - **PRD §12:** den åpne linjen om å rette `epics.md` og arkitekturspinen lukkes når ny arkitektur og nye epics finnes.
-- **Valgfri opprydding som krever godkjenning:**
-  - `.ruff_cache/`, `_bmad/render/`, `.DS_Store` og `.secret_key` ligger fortsatt lokalt;
-  - grenen `prd/teacher-feedback` er flettet gjennom PR #2.
 - **`.gitignore`:** Next.js-delen trengs ikke etter PRD-en og ryddes når stakken er valgt.
 - **Lenkene inne i `DESIGN.md`** virker ikke når fila leses gjennom `docs/DESIGN.md`. Det kan ikke rettes uten å endre det godkjente designet.
 - **QA-loggen:** beskriv de gamle commit-identitetene ved innlevering (NFR-4, DR-9). Det gjelder 61 automatiske identiteter og én commit med skoleadressen.
