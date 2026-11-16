@@ -298,6 +298,28 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** De trygge rettelsene er gjort. Det som gjenstår, krever godkjenning eller arkitekturen. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
+### 16. november 2026 – Personvern, Git-identitet og flytting av sesjonsloggene
+
+* Kontrollerte personvern og Git-identitet, og skilte mellom tillatte navn i dokumentasjonen og personopplysninger som bryter NFR-4:
+  * **Tillatt:**
+    * «Mounia» som persona i PRD-en og UX-en. Det er en oppdiktet rolle, og navnet valgte jeg selv.
+    * Fullt navn i medlemslisten i README.
+    * GitHub-navnet «Mounia-03» i BMAD-konfigurasjonen.
+    * Lærerens navn i lærerens egne commits.
+  * **Gråsone:** «mounia.tech03», første del av en privat e-postadresse, sto i navnet på loggmappa og i 12 overskrifter i sesjonsloggene.
+  * **Bryter NFR-4:** 61 gamle commits har fullt navn, macOS-brukernavn og maskinnavn, og flettecommiten som GitHub laget for PR #2, har skoleadressen min. Dette står bare i Git-historikken, ikke i filene.
+* Satte Git-identiteten for nye commits i dette repoet: `Mounia-03` med GitHubs noreply-adresse. Claude spurte meg først, og jeg valgte navnet og adressen. Gamle commits er ikke endret. Det ville krevd force-push og gjort alle commit-hashene i PRD-en, UX-en og loggene ugyldige. De gamle identitetene skal i stedet beskrives i QA-loggen ved innlevering (NFR-4, DR-9).
+* Flyttet sesjonsloggene fra `.logs/mounia-tech03/` til `.logs/mounia-03/` med `git mv`. Sesjonslogg-skillen bruker git-navnet, så nye logger havner i samme mappe som de gamle. «mounia.tech03» er byttet til «Mounia-03» i de 12 overskriftene.
+* Kontroller:
+  * alle 12 filene er omdøpt, ingen er slettet, og bare de 12 overskriftslinjene er endret;
+  * `git log --follow` viser hele historikken;
+  * «mounia.tech03» finnes ikke lenger i noen fil.
+* Prøvefletting i en isolert kopi: designgrenen kan fortsatt flettes inn i `main` uten konflikt. Flettes PR #1 etterpå, legger git loggene 991 og 992 fra story-grenen i den nye mappa, men ber om bekreftelse. Det kommer i tillegg til de to konfliktene som fantes fra før.
+* Henvisningen til den gamle mappa i oppføringen om oppryddingen er beholdt. Den beskriver PR #1 mot `main`, der mappa fortsatt har det gamle navnet.
+* Committet (`6245a0a`) og pushet til `design/after-prd-feedback`. Ingenting er flettet eller slettet.
+
+**Status:** Nye commits har en identitet uten privat e-post, og sesjonsloggene ligger i én mappe. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
