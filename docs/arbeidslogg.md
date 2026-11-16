@@ -259,6 +259,26 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** `PRODUCT.md` samsvarer med PRD-en og UX-designet. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
+### 16. november 2026 – Impeccable og DR-2 før arkitekturen
+
+* Rettet to punkter før arkitekturen, uten å endre PRD-en eller det godkjente designet:
+  1. **Impeccable fant ikke den godkjente `DESIGN.md`** og ville derfor lage et nytt visuelt design. Impeccable leter bare i rotmappen og i `docs/`, mens fila ligger i UX-mappen. Forsøk i en egen testmappe viste at `.impeccable/`-mappen ikke virker, og at Impeccable ikke har noen innstilling for stien. `docs/DESIGN.md` er nå en symbolsk lenke til den godkjente fila. Impeccable leser dermed originalen, og det finnes ingen kopi som kan bli ulik.
+  2. **`PRODUCT.md` lå løst i rotmappen**, og det tillater ikke DR-2. Fila er flyttet til `docs/` med `git mv`, så historikken følger med. Rotmappen har nå bare filene `README.md`, `.gitignore` og `CLAUDE.md`.
+* Kontroller:
+  * `impeccable context` finner `docs/PRODUCT.md` og `docs/DESIGN.md` og ber ikke lenger om et nytt design;
+  * Impeccable leste 28 986 tegn, som er den godkjente `DESIGN.md` uten det siste linjeskiftet;
+  * `impeccable doctor` fant ingen avvik;
+  * en ny klon av grenen ga samme resultat;
+  * kontrollsummene viser at alle 38 filene i PRD- og UX-mappene er uendret;
+  * innholdskontrollen av `PRODUCT.md` og personvernsøket fant ingen feil.
+* Vær oppmerksom på:
+  * Impeccable-kommandoer som skriver `DESIGN.md`, for eksempel `document` eller avslutningen av en bygging, vil enten skrive gjennom lenken til den godkjente fila eller erstatte lenken med en egen fil. Begge deler må godkjennes først og føres i endringsloggen til UX-en.
+  * På Windows uten støtte for symbolske lenker i git blir `docs/DESIGN.md` en tekstfil med stien. Det påvirker bare Impeccable, ikke appen.
+  * Story 4.1 i `epics.md` nevner `PRODUCT.md` som toppnivåfil, og README-en må forklare `docs/` (DR-2). Det rettes når `epics.md` oppdateres etter arkitekturen.
+* Committet (`505d131`) og pushet til `design/after-prd-feedback`. Ingenting er flettet til `main`.
+
+**Status:** Impeccable finner det godkjente designet, og rotmappen følger DR-2. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
