@@ -11,7 +11,7 @@ These folders were moved here on 2026-11-15, on the branch `design/after-prd-fee
 
 The new design and architecture start from the updated PRD:
 - **File:** `_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md`.
-- **Status:** `final`, updated 2026-11-15, merged into `main` in pull request #2.
+- **Status:** `final`, last updated 2026-11-16. The update of 2026-11-15 was merged into `main` in pull request #2. The changes of 2026-11-16 are on `design/after-prd-feedback` and not yet in `main`.
 - **Changes:** the change log in its §12 lists every change.
 - **Disagreements:** `review-consistency-2026-11-15.md` in the same folder lists the statements in these archived documents that disagree with the PRD.
 
