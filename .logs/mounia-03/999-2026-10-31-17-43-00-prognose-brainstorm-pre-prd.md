@@ -1,6 +1,6 @@
 # Prognose: brainstorming før PRD
 
-## 2026-10-31 kl. 17:43 — mounia.tech03
+## 2026-10-31 kl. 17:43 — Mounia-03
 
 ### Oppgave
 Forberede PRD-en for Prognose (G40-lyamouri) ved å avklare hullene i Product Brief og lærerens tilbakemelding. Brukeren ba om forslag til research- og brainstorming-temaer, og kjørte deretter en BMAD-brainstorming om planleggerflyt, periodeenhet og kantfall i beregningene, fulgt av konvergering med MoSCoW.
