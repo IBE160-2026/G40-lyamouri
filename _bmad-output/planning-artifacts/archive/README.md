@@ -6,7 +6,7 @@ These folders were moved here on the branch `design/after-prd-feedback`: the UX 
 |---|---|---|---|
 | `ux-G40-lyamouri-2026-11-06/` | `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-06/` | 2026-11-06 | Built on the PRD before the teacher's feedback. It disagrees with the updated FR-24 (reason in the forecast column, «–» for the order quantity and weeks of cover), with FR-17b and with the explanation rule in FR-27. |
 | `architecture-G40-lyamouri-2026-11-08/` | `_bmad-output/planning-artifacts/architecture/architecture-G40-lyamouri-2026-11-08/` | 2026-11-08 | Built on the PRD before the teacher's feedback. AD-10 describes the old number-and-label check, and `binds` lacks FR-17b. |
-| `epics-G40-lyamouri-2026-11-08/` | `_bmad-output/planning-artifacts/epics.md` and `_bmad-output/implementation-artifacts/sprint-status.yaml` | 2026-11-08 | Built on the archived UX and architecture and on the PRD before the teacher's feedback. The epics' input paths point to the old folders, and the sprint plan's dates have passed. A new epics list and sprint plan are made after the new architecture. |
+| `epics-G40-lyamouri-2026-11-08/` | `_bmad-output/planning-artifacts/epics.md` and `_bmad-output/implementation-artifacts/sprint-status.yaml` | 2026-11-08 | Built on the archived UX and architecture and on the PRD before the teacher's feedback. The epics' input paths point to the old folders, and the sprint plan's first milestone (11 November) has passed. A new epics list and sprint plan are made after the new architecture. |
 
 ## Old code (story 1.1)
 
