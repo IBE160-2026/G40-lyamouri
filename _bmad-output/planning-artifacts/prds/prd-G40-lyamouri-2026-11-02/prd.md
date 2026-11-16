@@ -2,7 +2,7 @@
 title: 'PRD: Prognose (G40-lyamouri)'
 status: final
 created: '2026-11-02'
-updated: '2026-11-15'
+updated: '2026-11-16'
 ---
 
 # PRD: Prognose (G40-lyamouri)
@@ -137,7 +137,7 @@ The user interface and all explanations are in Norwegian; this PRD is in English
 | **Adjusted order quantity** | Justert bestillingsmengde | A quantity the user sets instead of the suggested order quantity (Should). |
 | **Weeks of cover** | Uker dekning | Stock on hand ÷ week-1 normal forecast, shown with one decimal. Used to sort the product overview (R-12). |
 | **Order-soon status** | Bestill snart | Marks a product whose suggested order quantity is above 0, so that it comes first in the product overview (R-12). |
-| **Combined order overview** | Samlet bestillingsoversikt | A list of all products with their suggested or adjusted order quantity, each marked «Foreslått» or «Justert av deg» (Should). |
+| **Combined order overview** | Samlet bestillingsoversikt | A list of all products with their suggested or adjusted order quantity, each marked «Foreslått» or «Justert av deg»; a product without a forecast and without an adjusted order quantity is marked «Uten prognose» (Should). |
 
 **Trust signals and explanation**
 
@@ -483,7 +483,7 @@ The product screen shows how the base forecast and the week forecasts were calcu
 - For exponential smoothing, the last update, for example «Eksponentiell glatting, faktor 0,3: 0,3 × 15 + 0,7 × 13,3 = 13,8» (E2), and a table of all calculation weeks with their sales and level.
 - A list of the weeks left out and why (stockout week or excluded unusual week).
 - With seasonal adjustment on (Should), the seasonal indices and adjusted values used, and the week forecasts for weeks 1 to 3 (E14).
-- Numbers are rounded for display by R-9, and the values match the reference examples.
+- Numbers are rounded for display by R-9, and the values match the reference examples. Below the exponential-smoothing line and the seasonal values, where a hand check from the shown numbers can differ in the last decimal, the screen says «Tallene er avrundet for visning.», as on the order calculation line (FR-12).
 
 ### 4.8 Explanation (Must/Should)
 
@@ -516,7 +516,7 @@ The explanation is shown in its own area under the heading «Forklaring», below
     - the suggested order quantity;
     - the weeks of cover;
     - the number of calculation weeks;
-    - the week numbers of weeks 1 to 3 and of the weeks left out;
+    - the week numbers of weeks 1 to 3 and of the weeks left out, and the years of these weeks;
     - the counts in the active warnings, the notes and the confidence label's reason;
   - the fixed numbers named in the active warnings, the notes and the confidence label's reason: the horizon week labels 1, 2 and 3, and the thresholds 3 (R-6), 8 (R-15), 12 (R-15, R-16), and 100 and 104 (R-16).
 - A test takes every number from each template explanation and fails if any of them is not an allowed number for that product.
@@ -558,7 +558,8 @@ The user can replace the suggested order quantity with an adjusted order quantit
 The system shows the combined order overview. Priority: Should. Realizes UJ-1 step 6.
 
 **Consequences (testable):**
-- Every product of the company appears with its suggested or adjusted order quantity, marked «Foreslått» or «Justert av deg».
+- Every product of the company appears with its suggested or adjusted order quantity, marked «Foreslått» or «Justert av deg». A product without a forecast and without an adjusted order quantity shows «–» and is marked «Uten prognose».
+- The products are listed in the order of the product overview (R-12).
 
 #### FR-31: Save adjustments and mark products as approved
 
@@ -609,7 +610,7 @@ Each rule is tagged with its source status: **sourced** (backed by the research 
 
 - **R-7 Scenarios** *(project-defined: a fixed percentage, not a statistical interval)*. With week forecast F and scenario percentage s: optimistic = F × (1 + s); pessimistic = the larger of 0 and F × (1 − s).
 - **R-8 Suggested order quantity** *(partly supported: a simplified weekly order-up-to policy; the percentage margin is project-defined)*. With week-1 normal forecast F1, safety margin m and stock on hand S: suggested order quantity = the larger of 0 and (F1 × (1 + m) − S, rounded up to a whole unit). The rule assumes weekly review, no lead time, no orders already on the way, and stock on hand as the only stock; the margin is a rule of thumb that does not account for demand variability.
-- **R-9 Rounding and display** *(project-defined)*. Calculations use full precision. Before rounding up in R-8, the value is rounded to 6 decimals, so that a computer result such as 70.00000000000001 becomes 70 and not 71 (E5). Displayed numbers are rounded half away from zero (E20): forecasts, scenarios, weeks of cover and the margin amount with one decimal; the unrounded result on the order calculation line with two decimals; order quantities and percentages as whole numbers. The Norwegian decimal comma is used.
+- **R-9 Rounding and display** *(project-defined)*. Calculations use full precision. Before rounding up in R-8, the value is rounded to 6 decimals, so that a computer result such as 70.00000000000001 becomes 70 and not 71 (E5). Displayed numbers are rounded half away from zero (E20): forecasts, scenarios, weeks of cover and the margin amount with one decimal; the unrounded result on the order calculation line with two decimals; seasonal indices with four decimals and seasonally adjusted values with one decimal (FR-35); order quantities and percentages as whole numbers. The Norwegian decimal comma is used.
 
 ### 5.4 Unusual Weeks and Level Shift
 
@@ -620,7 +621,7 @@ Each rule is tagged with its source status: **sourced** (backed by the research 
 
 - **R-12 Order-soon status** *(project-defined)*. A product has order-soon status when its suggested order quantity is above 0, that is, when the stock on hand does not cover the week-1 normal forecast plus the safety margin. When the week-1 normal forecast is 0, weeks of cover is shown as «–» and there is no order-soon status (E23). The product overview is sorted in three groups:
   1. the products with order-soon status, by weeks of cover, lowest first, with ties sorted by product number (E24);
-  2. the products without a forecast `[ASSUMPTION]`, so they are not forgotten;
+  2. the products without a forecast `[ASSUMPTION]`, by product number, so they are not forgotten;
   3. the other products, by product number.
 - **R-13 Stock on hand** *(project-defined)*. One value per product: the stock at the end of the latest data week.
 - **R-14 Seasonal adjustment** *(Should; steps 1, 2 and 4 are project-defined, step 3 is sourced)*. Used only when the setting «Sesongjustering» is on.
@@ -736,7 +737,7 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
   - Setup on macOS and Windows, tested by the group from a fresh clone: exact commands to copy into macOS Terminal and Windows PowerShell, including activating the virtual environment; how the session secret is created (NFR-3); and fixes for the most likely setup errors. Once SM-2 is confirmed, the README states the setup time.
   - The customer numbers and passwords of the two test companies, how to generate and load the synthetic data, and that reloading the data resets the settings and adjustments (DR-4).
   - The address of the published version, and for the group the steps to publish it and to load the seed data into its database (DR-10). If the cut line in §8.1 applies, the README instead says that Prognose was not published, and why.
-  - A «Prøv selv» (try it yourself) section of 5 to 10 steps that follows UJ-1, and a table of the test products naming the rule, warning or confidence label each one shows and its reference example (E-n).
+  - A «Prøv selv» (try it yourself) section of 5 to 10 steps that follows UJ-1, and a table of the test products naming the rule, warning or confidence label each one shows and its reference example (E-n). For UJ-1 step 4 it uses the rule test product built from E8, whose unusual weeks are among the calculation weeks used, so that switching unusual weeks visibly changes the base forecast (41.0 → 21.333, FR-21).
   - How to run the tests, with the expected result (NFR-2), and the browsers tested (NFR-6).
   - How to switch on the optional language model as a separate step: which model is used, its download size and expected download time, its license obligations, and what happens without it (FR-28).
   - An overview of the folders and links to the planning and process documents: this PRD, the architecture, the epics and stories, the decision logs, the AI steering log (DR-5), the QA log (DR-9) and the status table (DR-8).
@@ -972,5 +973,9 @@ This PRD was approved and set to final on 2026-11-03. Every change to a requirem
 | 2026-11-15 | Testable consequences in FR-24 (the reason in the forecast column, and «–» for the suggested order quantity and weeks of cover), FR-25 and NFR-6 (down to 800 px). | The teacher's feedback, point 4.4. | `47a8857` |
 | 2026-11-15 | Order of the Should items recorded in §8.2 (DR-6; §10 question 1 closed); §10 question 6 moved to DR-5; new SM-10. | The teacher's feedback, point 4.5. | `47a8857` |
 | 2026-11-15 | The term "latest valid week" in §3 (R-15, FR-18); the length of the sales history in §3 (R-16); SM-1 split by priority; FR-14 and FR-24 added to SM-1, and FR-8 to SM-7. | The teacher's feedback, section 5 (mechanical findings). | `47a8857` |
+| 2026-11-16 | R-12: the products without a forecast are sorted by product number. FR-30 and §3: a product without a forecast and without an adjusted order quantity shows «–» and is marked «Uten prognose», and the combined order overview follows R-12. | The user approved the UX assumptions before the architecture (UX of 2026-11-16). | pending |
+| 2026-11-16 | R-9: seasonal indices with four decimals and seasonally adjusted values with one. FR-35: the rounding note «Tallene er avrundet for visning.» below the exponential-smoothing line and the seasonal values. | The user approved the UX assumptions; this closes the FR-35 hand-check finding left for later on 2026-11-15. | pending |
+| 2026-11-16 | FR-27: the years of weeks 1 to 3 and of the weeks left out are allowed numbers, so the explanation can name a week from another year. | The user's decision to show weeks with their year. No other requirement changes: FR-28's placeholders and SM-6 apply as before. This closes the year finding left for later on 2026-11-15. | pending |
+| 2026-11-16 | DR-1: «Prøv selv» uses the rule test product built from E8 for UJ-1 step 4, so that switching unusual weeks visibly changes the base forecast. | The user's decision that the demo shows the effect of unusual weeks. | pending |
 
 Open after the 2026-11-15 changes: align `epics.md` and the architecture spine (AD-10 and FR-17b) with this PRD, then delete this line. EXPERIENCE.md was rewritten from this PRD on 2026-11-16 (`ux-designs/ux-G40-lyamouri-2026-11-15/`) and covers FR-24, the level-shift state and the explanation rule.

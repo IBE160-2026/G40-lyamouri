@@ -26,6 +26,7 @@ The new UX was built from the updated PRD and set to `final` on 2026-11-16: `_bm
 ## Still pointing at the old paths
 
 These files were not changed:
-- `epics.md`, which is updated after the new design and architecture.
-- `.impeccable/config.json`, which holds detector exceptions for the archived mockups.
+- `epics.md`, which is updated after the new architecture. It still names the archived UX and architecture as its inputs.
 - The entries in `docs/arbeidslogg.md` and the session logs, which are history and stay as they were.
+
+`.impeccable/config.json`, which holds detector exceptions for the archived mockups, was pointed to their new paths in this folder on 2026-11-16.

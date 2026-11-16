@@ -320,6 +320,7 @@ components:
     adjusted-quantity: '{colors.blue}'
     adjusted-marking: '{colors.blue-ink}'
     adjusted-marking-background: '{colors.blue-tint}'
+    no-forecast-marking: '{colors.red}'
   not-found-panel:
     background: '{colors.surface}'
     border: '{colors.border}'
@@ -457,7 +458,7 @@ Visual specs. Behavior is in EXPERIENCE.md (Component Patterns). Names match acr
 - **Error message** — a `red-tint` row with the red «!» ring and ink text, `{rounded.md}`, placed above the fields it concerns. (Spine-only.)
 - **Settings form** — a panel with one field per setting: visible label (`{typography.label}`), number fields like the search field with the unit after them, radio buttons for the method and for unusual weeks, and «Lagre» (primary) and «Avbryt» (secondary). (Spine-only.)
 - **Login panel** — one panel, at most 420 px wide, centered on the canvas below the header bar without navigation. It holds the page title «Logg inn», fields with visible labels and a primary «Logg inn» button. (Spine-only; wireframe in EXPERIENCE.md.)
-- **Combined order table** — a panel with the worksheet's table style. An adjusted quantity is blue, and its marking «Justert av deg» is a `blue-tint` tag in `blue-ink`; «Foreslått» is plain muted text. The total row is bold. (Spine-only; wireframe in EXPERIENCE.md.)
+- **Combined order table** — a panel with the worksheet's table style. An adjusted quantity is blue, and its marking «Justert av deg» is a `blue-tint` tag in `blue-ink`; «Foreslått» is plain muted text; «Uten prognose» is plain red text next to «–» in ink, as on a card without a forecast. The total row is bold. (Spine-only; wireframe in EXPERIENCE.md.)
 - **Not-found panel** — a panel with the page title «Siden finnes ikke» and a link back to «Produktoversikt». (Spine-only.)
 
 ## Do's and Don'ts

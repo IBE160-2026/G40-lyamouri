@@ -143,12 +143,12 @@ The copy source for every warning, note, confirmation and error (FR-25 checks ea
 | Confidence label reason | always | «[Høy, Middels or Lav]: [deciding condition].», then any other active warnings. Examples: «Høy: minst 104 uker salgshistorikk, minst 100 gyldige uker og ingen varsler.» «Middels: 2 utsolgte uker og 1 uvanlig uke de siste 12 ukene.» «Middels: kortere salgshistorikk enn 104 uker.» «Middels: færre enn 100 gyldige uker.» «Lav: ingen prognose, færre enn 3 gyldige uker.» «Lav: færre enn 12 gyldige uker. 1 utsolgt uke de siste 12 ukene.» | PRD FR-19 format; UX texts, R-16 |
 | No decision | product without a forecast | «Prognose foreslår ingen mengde for dette produktet. Du bestemmer bestillingen selv.» | UX, FR-8 |
 | Settings area | wherever settings can change | «Endringen gjelder alle produkter i bedriften.» | PRD FR-21 |
-| Settings confirmation | after a change | «Innstillingen er endret: [sikkerhetsmargin] er nå [50] %.», then one line per affected value: «[Foreslått bestillingsmengde]: [11] → [17]». No difference: «[Grunnprognose]: [14,3] → [14,3] (uendret)» | PRD FR-21 format; UX `[ASSUMPTION]` for «(uendret)» |
+| Settings confirmation | after a change | «Innstillingen er endret: [sikkerhetsmargin] er nå [50] %.», then one line per affected value: «[Foreslått bestillingsmengde]: [11] → [17]». No difference: «[Grunnprognose]: [14,3] → [14,3] (uendret)» | PRD FR-21 format; UX for «(uendret)» |
 | Value out of range | FR-20 | «[Sikkerhetsmargin] må være mellom [0] og [100] %. Den forrige verdien er beholdt.» | UX, FR-20 |
 | Not a number | empty or non-numeric input | «Skriv et tall, for eksempel 10 eller 0,3. Den forrige verdien er beholdt.» | UX, NFR-10 |
 | Setting not in use | FR-20 | «Ikke i bruk med eksponentiell glatting.» / «Ikke i bruk med glidende gjennomsnitt.» | UX, FR-20 |
 | Adjusted quantity invalid (Should) | FR-29 | «Skriv et helt tall fra 0 og oppover.» | UX, FR-29 |
-| Markings (Should) | combined order overview, cards | «Foreslått» / «Justert av deg» | PRD FR-30 |
+| Markings (Should) | combined order overview, cards | «Foreslått» / «Justert av deg»; «Uten prognose» for a product without a forecast and without an adjusted quantity | PRD FR-30 |
 | No products | the company has no products | «Ingen data er lastet inn. Kjør [lastekommandoen] som står i README.» with the exact command filled in | UX, FR-24 |
 | No search match | search finds nothing | «Ingen produkter passer søket.» and the link «Vis alle produkter» | UX |
 | Not found | NFR-10, FR-2 | «Siden finnes ikke.» and the link «Til produktoversikten» | UX |
@@ -162,7 +162,7 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 |---|---|---|
 | App header | every page | Marks the current page. «Logg ut» ends the session and opens Innlogging (FR-1). |
 | Settings bar | every page after login | Shows the settings in use: the method with its window or factor, the scenario percentage, the safety margin, unusual weeks, and seasonal adjustment once FR-9 is built. «Endre innstillinger» opens Innstillinger. |
-| Product list | Produktoversikt, Produktside | All products in R-12 order: «Bestill snart» (weeks of cover, lowest first; ties by product number), «Uten prognose» (by product number `[ASSUMPTION]`), «Øvrige produkter» (by product number). Every card and row shows every FR-24 field. The list keeps its scroll position when a product is selected. |
+| Product list | Produktoversikt, Produktside | All products in R-12 order: «Bestill snart» (weeks of cover, lowest first; ties by product number), «Uten prognose» (by product number), «Øvrige produkter» (by product number). Every card and row shows every FR-24 field. The list keeps its scroll position when a product is selected. |
 | Group heading | product list | Names the group and sums it up: «4 produkter · 31 enheter foreslått», «1 produkt · du bestemmer selv», «25 · etter varenummer». An empty group is not shown. |
 | Product card | «Bestill snart», «Uten prognose» | The whole card is one link. It shows the reason unless the label is «høy». Without a forecast, the reason replaces the week-1 forecast, and the quantity and weeks of cover show «–» (FR-24). With FR-29, an adjusted quantity is shown with «Justert av deg» in place of «Foreslått». |
 | Product row | «Øvrige produkter» | The same fields as a card, on two lines; the whole row is one link. Shows the FR-14 note once it is built. |
@@ -188,7 +188,7 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 | Error message | above the field or form it concerns | `role="alert"`, and the previous value stays (FR-20, NFR-10). |
 | Settings form | Innstillinger | See Information Architecture. |
 | Login panel | Innlogging | Customer number and password with visible labels; Enter submits. After an error the customer number is kept and the password is cleared, and the message does not say which one was wrong (FR-1). |
-| Combined order table | Samlet bestillingsoversikt (FR-30, Should) | Every product in R-12 order with its suggested or adjusted quantity and its marking; an adjusted row shows the suggestion in brackets; a total row; each product name links to its Produktside. |
+| Combined order table | Samlet bestillingsoversikt (FR-30, Should) | Every product in R-12 order with its suggested or adjusted quantity and its marking; an adjusted row shows the suggestion in brackets; a product without a forecast and without an adjusted quantity shows «–» and «Uten prognose» (FR-30); a total row; each product name links to its Produktside. |
 | Not-found panel | unknown addresses, other companies' products | Shows no data from another company (FR-2) and links to Produktoversikt. |
 
 ## State Patterns
@@ -210,7 +210,7 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 | Old data | Produktside | The old-data warning; the label is at most «middels» (R-16). |
 | Seasonal adjustment on (Should) | Produktside | Week forecasts differ and the FR-7 note goes; the worksheet shows the indices and adjusted values (FR-35). When it cannot be used: the FR-9 note. |
 | Seasonal pattern not used (Should) | Produktside | The FR-36 warning. |
-| Settings changed | page you came from | Confirmation message with old → new; «(uendret)» when nothing changed `[ASSUMPTION]`. |
+| Settings changed | page you came from | Confirmation message with old → new; «(uendret)» when nothing changed. |
 | Invalid setting | Innstillinger | Error message at the field; the previous value stays. |
 | Quantity adjusted (Should) | card, decision panel, combined table | «Justert av deg» with the adjusted quantity; the suggestion stays visible; «Tilbake til forslaget» resets it (FR-29). The adjustment lasts for the session (FR-31 is Could). |
 | Last product reviewed | Produktside | The primary button becomes «Gå til samlet bestillingsoversikt» (FR-30), or «Tilbake til produktoversikten» without it. |
@@ -234,11 +234,11 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 |---|---|
 | Rounding | As R-9 (display rounding). |
 | Number format | Decimal comma; «%» after a space («10 %»); the minus sign «−»; no thousands grouping. |
-| Rounding note | «Tallene er avrundet for visning.» inside the order calculation line (FR-12), and also below the exponential-smoothing line and the seasonal table, where shown inputs can differ from a hand check `[ASSUMPTION]`. |
+| Rounding note | «Tallene er avrundet for visning.» inside the order calculation line (FR-12), and also below the exponential-smoothing line and the seasonal values (FR-35). |
 | Moving average | The FR-35 line, then «Uker brukt: uke 43, 44 og 45.» and «Holdt utenfor: uke 38 og 39 (utsolgt).». With unusual weeks excluded, each excluded week is listed and «[3] uker brukt i beregningen» is stated (FR-16). |
 | Exponential smoothing | The FR-35 line for the last update, and a table of every calculation week with its sales and level in its own scroll frame (FR-35). |
-| Seasonal adjustment (Should) | The indices (four decimals) and adjusted values (one decimal) for the weeks used and for weeks 1–3, and the week forecasts (FR-35, E14) `[ASSUMPTION]` for the decimals. |
-| Week labels | Horizon columns read «Uke 1 · uke 46». Chart axes use week numbers; the first week of a new year carries its year («1/2027»), and lists that reach before the recent period show the year («uke 10/2025») `[ASSUMPTION]`. |
+| Seasonal adjustment (Should) | The indices (four decimals) and adjusted values (one decimal) for the weeks used and for weeks 1–3, and the week forecasts (FR-35, E14); the decimals follow R-9. |
+| Week labels | Horizon columns read «Uke 1 · uke 46». Chart axes use week numbers; the first week of a new year carries its year («1/2027»), and lists that reach before the recent period show the year («uke 10/2025»). The explanation may name these years (FR-27). |
 | Weeks left out | Every stockout week and excluded unusual week in the history, with its reason, in «Prognoseutregning»; the recent ones are also warnings (R-15). |
 | Missing values | «–» for the suggested order quantity and weeks of cover without a forecast (FR-24), and for weeks of cover when the week-1 forecast is 0 (E23). |
 | Order quantity per scenario (Should) | A «Bestillingsmengde» column in the scenario table, calculated from week 1 (FR-13, E22). |
@@ -247,7 +247,7 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 
 - **Place:** its own panel titled «Forklaring», last on Produktside, below every calculated number (FR-27).
 - **Content, in order (FR-26):** the method and settings; the number of calculation weeks and the week forecasts; the weeks left out and why; every active warning and note; the order calculation; the weeks of cover; the confidence label and its reason; the scenarios.
-- **Numbers:** only the ones FR-27 allows. Templates therefore leave out sales figures, years, and the week numbers of calculation weeks, included unusual weeks and level-shift weeks. Example for Strøsand 25 kg, as in the mockup: «Prognosen bruker glidende gjennomsnitt over de 3 siste ukene brukt i beregningen. Det gir 14,3 per uke for uke 46, 47 og 48. Uke 38 og 39 er holdt utenfor fordi varen var utsolgt. Det er 1 uvanlig uke de siste 12 ukene, og uvanlige uker tas med i beregningen. Uke 2 og 3 viser samme tall som uke 1 fordi metoden ikke tar hensyn til trend eller sesong. Med 10 % sikkerhetsmargin (1,4) og 5 på lager blir utregningen 10,77, og Prognose foreslår å bestille 11. Lageret dekker 0,3 uker. Tillitsmerket er middels fordi det er 2 utsolgte uker og 1 uvanlig uke de siste 12 ukene. Scenarioene viser 15,8 hvis salget blir 10 % høyere, og 12,9 hvis det blir 10 % lavere.»
+- **Numbers:** only the ones FR-27 allows. Templates therefore leave out sales figures and the week numbers of calculation weeks, included unusual weeks and level-shift weeks. A year appears only next to a week left out or a horizon week that lies in another year than the latest data week (FR-27). Example for Strøsand 25 kg, as in the mockup: «Prognosen bruker glidende gjennomsnitt over de 3 siste ukene brukt i beregningen. Det gir 14,3 per uke for uke 46, 47 og 48. Uke 38 og 39 er holdt utenfor fordi varen var utsolgt. Det er 1 uvanlig uke de siste 12 ukene, og uvanlige uker tas med i beregningen. Uke 2 og 3 viser samme tall som uke 1 fordi metoden ikke tar hensyn til trend eller sesong. Med 10 % sikkerhetsmargin (1,4) og 5 på lager blir utregningen 10,77, og Prognose foreslår å bestille 11. Lageret dekker 0,3 uker. Tillitsmerket er middels fordi det er 2 utsolgte uker og 1 uvanlig uke de siste 12 ukene. Scenarioene viser 15,8 hvis salget blir 10 % høyere, og 12,9 hvis det blir 10 % lavere.»
 - **Language model (FR-28, Should):** rephrased text carries «KI-omformulert forklaring». On any failure the template text is shown without an error. The published version always shows the template text (DR-10).
 
 ## Accessibility Floor
@@ -294,9 +294,9 @@ Mounia, purchasing manager at a small hardware store with about 30 products, has
 3. She selects «Start med Isskrape», keeps the suggested 7 and moves on to Strøsand 25 kg.
 4. Without scrolling she sees «11», «Middels» and the two warnings; the chart right below shows the gap in weeks 38–39 and the peak in week 42 (UJ-1 steps 2–3).
 5. She scrolls to «Slik er tallene regnet ut»: (16 + 12 + 15) / 3 = 14,3, and the order calculation line ends at 11. She reads «Forklaring» (UJ-1 step 3).
-6. She switches unusual weeks off below the chart. The confirmation shows «Grunnprognose: 14,3 → 14,3 (uendret)», because week 42 is outside the 3-week window, and says the change applies to all products. She switches back (UJ-1 step 4).
+6. To see how much unusual weeks matter, she opens the demo product built from E8 (DR-1), whose two unusual weeks are among the 3 weeks used, and switches unusual weeks off below the chart. The confirmation shows «Grunnprognose: 41,0 → 21,3» and says the change applies to all products. She switches back (UJ-1 step 4). On Strøsand 25 kg the same switch would show «Grunnprognose: 14,3 → 14,3 (uendret)», because week 42 lies outside the 3-week window.
 7. She chooses «Behold 11 og gå videre», or «Juster mengden» and 13 (FR-29), and continues through the list (UJ-1 step 5).
-8. After the last product she opens Samlet bestillingsoversikt, where every product is marked «Foreslått» or «Justert av deg» (UJ-1 step 6, FR-30).
+8. After the last product she opens Samlet bestillingsoversikt, where every product is marked «Foreslått» or «Justert av deg», and the product without a forecast «Uten prognose» (UJ-1 step 6, FR-30).
 9. **Climax:** for every product she has one number for next week, how it was calculated, and whether to trust it, on one list she takes to the meeting.
 
 Failure paths: a wrong login shows «Feil kundenummer eller passord.». A product without a forecast shows «Du bestemmer bestillingen selv», and with FR-29 she sets the quantity herself. When the stock covers the need, the line ends «(lageret dekker behovet)». In a Must-only build, steps 7–8 use the previous and next links, and the meeting list stays outside Prognose.
@@ -327,14 +327,16 @@ Failure path: if Jonas cannot explain the label, the reason texts in the Message
 
 ## Open Questions and Assumptions
 
-- `[ASSUMPTION]` «Uten prognose» is sorted by product number; R-12 gives no order inside that group.
-- `[ASSUMPTION]` A settings change that does not alter a value is confirmed with «(uendret)».
-- `[ASSUMPTION]` In Samlet bestillingsoversikt, a product without a forecast and without an adjusted quantity shows «–» and «Uten prognose», because FR-30 names only «Foreslått» and «Justert av deg». The table uses the R-12 order of Produktoversikt.
-- `[ASSUMPTION]` The rounding note also appears below the exponential-smoothing line and the seasonal table; seasonal indices have four decimals and adjusted values one.
-- `[ASSUMPTION]` Weeks show their year at New Year and in lists that reach before the recent period.
-- **Open for the PRD:** FR-27 allows week numbers but not years, so the explanation cannot say which year a left-out week from an earlier year belongs to.
-- **Open for the dataset (FR-3, DR-3):** in the example numbers, week 42 lies outside Strøsand's 3-week window, so UJ-1 step 4 changes nothing for that product. A demo product with an unusual week inside the window, as in E8, would show the effect.
-- **Mockup differences (the spine wins):** the mockup's chart shows only the last 12 weeks; the chart shows the whole sales history. The legend icons in the mockup may render larger than 14 and 24 px, because the chart's `width: 100%` rule also matches them.
+No open questions remain. On 2026-11-16 the user approved the five assumptions that stood here, and the PRD was updated the same day:
+- «Uten prognose» is sorted by product number (R-12).
+- A settings change that does not alter a value is confirmed with «(uendret)» (Message Catalogue).
+- In Samlet bestillingsoversikt, a product without a forecast and without an adjusted quantity shows «–» and «Uten prognose», in R-12 order (FR-30).
+- The rounding note also appears below the exponential-smoothing line and the seasonal values; seasonal indices have four decimals and adjusted values one (FR-35, R-9).
+- Weeks show their year at New Year and in lists that reach before the recent period, and the explanation may name these years (FR-27).
+
+The user also decided that the demo for UJ-1 step 4 uses the rule test product built from E8 (DR-1, Flow 1), and that the chart shows the whole sales history.
+
+**Mockup differences (the spine wins):** the mockup's chart shows only the last 12 weeks, while the chart shows the whole sales history. The legend icons in the mockup may render larger than 14 and 24 px, because the chart's `width: 100%` rule also matches them.
 
 ## Change Log
 
@@ -342,3 +344,4 @@ The spine pair (DESIGN.md and EXPERIENCE.md) was set to `final` on 2026-11-16. E
 
 | Date | Change | Reason | Commit |
 |---|---|---|---|
+| 2026-11-16 | The five assumptions became decisions. «Uten prognose» added to the markings and the combined order table. Flow 1 uses the E8 demo product for unusual weeks. The explanation may name years (FR-27). DESIGN.md: the «Uten prognose» marking in red. | The user's decisions before the architecture; the PRD was updated the same day (R-9, R-12, FR-27, FR-30, FR-35, DR-1). | pending |

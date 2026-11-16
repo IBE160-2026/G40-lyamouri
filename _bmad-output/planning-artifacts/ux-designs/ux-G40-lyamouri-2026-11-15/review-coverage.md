@@ -77,3 +77,22 @@ Not applicable: offline (the local app needs no network, NFR-1), cold loading (s
 - Impeccable detector against the final DESIGN.md:
   - Mockup D: 0 findings, plus 3 advisories for the browser-frame colors.
   - Concepts A, B and C: findings against the new DESIGN.md, as expected, because they use their own palettes and fonts. They are kept unchanged as documentation, at the user's request.
+
+## Consistency check after the user's decisions (2026-11-16)
+
+The user approved the five assumptions, chose the E8 demo for unusual weeks, kept the whole sales history in the chart, and allowed week and year in the PRD. The PRD and both spines were then checked against each other by script:
+
+| PRD | Spines | Result |
+|---|---|---|
+| R-12: «Uten prognose» by product number | EXPERIENCE.md Product list | consistent |
+| FR-30 and §3: «–» and «Uten prognose», in R-12 order | Markings, Combined order table, wireframe; DESIGN.md Combined order table | consistent |
+| R-9: seasonal indices with 4 decimals, adjusted values with 1 | Calculation Display Rules | consistent |
+| FR-35: rounding note below the exponential-smoothing line and the seasonal values | Calculation Display Rules | consistent |
+| FR-27: years of weeks 1–3 and of weeks left out allowed | Explanation, Week labels | consistent |
+| DR-1: E8 demo, 41.0 → 21.333 (FR-21) | Flow 1 step 6, «Grunnprognose: 41,0 → 21,3» | consistent |
+| FR-25: the chart shows the sales history | Forecast chart: the whole history | consistent, no PRD change needed |
+
+- All 17 fixed Norwegian texts in the PRD appear word for word in the Message Catalogue.
+- No `[ASSUMPTION]` tags remain in the spines.
+- The YAML frontmatter, the token references, the links and the component names were rechecked and pass.
+- The mockup is unchanged. Its 12-week chart and possibly larger legend icons remain the known differences, and the spines win.
