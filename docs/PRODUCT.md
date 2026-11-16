@@ -4,9 +4,9 @@
 
 Sources:
 - The final PRD and its addendum in `_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/`. The PRD was approved on 2026-11-03 and last updated on 2026-11-16, and every change is listed in PRD §12. The PRD wins on any conflict.
-- The final UX spines `DESIGN.md` (how Prognose looks) and `EXPERIENCE.md` (how it works) in `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/`, set to final on 2026-11-16.
+- The final UX spines `DESIGN.md` (how Prognose looks) and `EXPERIENCE.md` (how it works) in `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/`, set to final on 2026-11-16. `docs/DESIGN.md` is a symbolic link to that DESIGN.md, so Impeccable reads the approved file and no copy exists.
 
-This file records product facts only and does not repeat the spines. The archived design of 2026-11-06 in `_bmad-output/planning-artifacts/archive/` is not a source.
+This file records product facts only and does not repeat the spines. It lives in `docs/` because PRD DR-2 allows only the README, a license and configuration files as loose files in the root, and Impeccable finds PRODUCT.md and DESIGN.md there. The archived design of 2026-11-06 in `_bmad-output/planning-artifacts/archive/` is not a source.
 
 ## Platform
 
