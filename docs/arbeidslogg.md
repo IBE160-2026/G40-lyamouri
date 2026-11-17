@@ -437,8 +437,10 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
   * arkivets README, der tre utsagn var blitt utdatert. Det ble oppdaget i sluttkontrollen før commit.
 * Claude skrev arkitekturspinen med 17 beslutninger (AD-1–AD-17) og et kort notat til læreren om hvordan `technology.md` er tilpasset.
 * Kontroll: Claude gjorde gjennomgangen selv, uten subagenter, slik jeg ba om. Kontrollskriptet fant ingen feil, og 12 hull og mangler i spinen ble lukket.
+* Sluttkontroll før commit: Claude viste de åpne punktene og endringene i DR-4 og DR-10. Claude kontrollerte også samsvaret og personvernet i de 14 filene og fant ingen private opplysninger.
+* Godkjente arkitekturen og dokumentendringene. Committet de 14 kontrollerte filene (`1441c40`) og commit-hashen i endringsloggene (`c76d6cd`), og pushet til `design/after-prd-feedback`. Ingenting er flettet til `main`.
 
-**Status:** Arkitekturspinen er `final`, og PRD-en og UX-designet er oppdatert. Ingenting er committet eller pushet før jeg har godkjent resultatet. Neste steg er godkjenning og commit, og deretter nye epics og stories.
+**Status:** Arkitekturspinen er `final` og committet. Neste steg er nye epics og stories (`bmad-create-epics-and-stories`), som ikke er startet.
 
 ## 4. Videre dokumentasjon
 
