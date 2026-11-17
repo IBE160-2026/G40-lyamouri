@@ -391,6 +391,15 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
+### 17. november 2026 – QA-logg for Git-identitetene
+
+* Undersøkte hvor QA-loggen (DR-9) skal ligge. Det fantes ingen QA-logg fra før. PRD-en lar arkitektursteget fastsette mappene (DR-2), og den arkiverte arkitekturen la QA-loggen i `docs/` sammen med de andre prosessdokumentene.
+* Opprettet `docs/qa-logg.md` som eneste nye fil. Den første oppføringen beskriver de gamle Git-forfatteridentitetene og hvorfor commit-historikken er bevart (NFR-4). Detaljene står bare i QA-loggen.
+* Kontroll: fila har ingen adresser, brukernavn eller maskinnavn. Alle krav-ID-er, stier, taggen og commitene den viser til, finnes.
+* Committet (`99796e5`) og pushet til `design/after-prd-feedback`.
+
+**Status:** QA-loggen har sin første oppføring, og den nye arkitekturen må bekrefte plasseringen. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
