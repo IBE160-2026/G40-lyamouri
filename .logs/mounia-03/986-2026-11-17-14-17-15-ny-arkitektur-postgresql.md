@@ -16,7 +16,7 @@ Til slutt skulle Claude:
 - gjennomgå arbeidet uten agenter;
 - dokumentere testen og oppdatere loggene.
 
-Implementeringen skulle ikke startes, og ingenting skulle committes eller pushes før brukeren har godkjent resultatet.
+Implementeringen skulle ikke startes, og ingenting skulle committes eller pushes før brukeren hadde godkjent resultatet. Etter en sluttkontroll godkjente brukeren resultatet og ba om commit og push av de 14 kontrollerte filene, med commit-hashene fylt inn i loggene.
 
 ### Plan
 - Lese PRD-en, addendumet, UX-spinene, `technology.md`, `issues.md`, den arkiverte arkitekturen og notatene fra story 1.1. Verifisere versjoner og tjenester på nettet.
@@ -78,11 +78,15 @@ Implementeringen skulle ikke startes, og ingenting skulle committes eller pushes
   - Arkivets README sa at PRD-en sist ble oppdatert 16. november, at den nye arkitekturen ikke var laget, og at PRD-en hadde en åpen linje i §12.
   - Addendum §2 beskrev databasekravet som en lokal fil.
 - **Tillatelser:** et forsøk på å teste PostgreSQL fra en Python-pakke ble stoppet av tillatelsessystemet. Det ble ikke prøvd på nytt.
-- **Uendret:** ingen kode og ingen commits. `story/1-1-project-skeleton` og taggen er ikke rørt. Sesjonsloggen er heller ikke committet, fordi brukeren har bedt om at ingenting committes før resultatet er godkjent.
+- **Commits:** etter godkjenningen ble disse committet og pushet til `design/after-prd-feedback`:
+  - de 14 kontrollerte filene (`1441c40`);
+  - commit-hashen i PRD §12 og i endringsloggen i `EXPERIENCE.md` (`c76d6cd`);
+  - arbeidsloggen (`991e0b6`).
+
+  Ingenting er flettet til `main`.
+- **Uendret:** ingen kode. `story/1-1-project-skeleton` og taggen er ikke rørt.
 
 ### Åpne punkter
-- Gå gjennom og godkjenne resultatet av arkitekturen og dokumentendringene.
-- Ved commit: fylle inn commit-hashen der PRD-en (§12) og `EXPERIENCE.md` sier «not committed yet».
 - Bekrefte at Dockers vilkår er godtatt i Docker Desktop.
 - Lage nye epics og stories (`bmad-create-epics-and-stories`) og en ny sprintplan fra den nye arkitekturen.
 - Teste oppstart uten nett og oppsett på Windows (x64) i første story og på siste commit (står allerede i `issues.md` som merknad 2026-11-17).
