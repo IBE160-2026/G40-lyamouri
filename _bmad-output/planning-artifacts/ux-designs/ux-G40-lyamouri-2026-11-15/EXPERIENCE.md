@@ -2,7 +2,7 @@
 name: 'Prognose'
 status: final
 created: '2026-11-15'
-updated: '2026-11-16'
+updated: '2026-11-17'
 sources:
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md'
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/tilbakemelding-prd.md'
@@ -31,6 +31,7 @@ sources:
 | Innstillinger | «Endre innstillinger» in the settings bar | change the company settings (FR-20 to FR-22) | spine-only (table below) |
 | Samlet bestillingsoversikt | «Samlet bestillingsoversikt» in the app header; step 3 of the week path | every product's suggested or adjusted quantity for the meeting (FR-30, Should) | wireframe below (spine-only) |
 | Ikke funnet | an unknown address, or another company's product (FR-2, NFR-10) | say that the page does not exist and link back | spine-only |
+| Feilside | a database or server error, or an expired form (NFR-10) | say what went wrong and what to do next | spine-only |
 
 - **App header** on every page: the company and the latest data week, then «Produktoversikt», «Samlet bestillingsoversikt» (only when FR-30 is built) and «Logg ut». When logged out it shows only the wordmark.
 - **Settings bar** on every page after login.
@@ -152,6 +153,9 @@ The copy source for every warning, note, confirmation and error (FR-25 checks ea
 | No products | the company has no products | «Ingen data er lastet inn. Kjør [lastekommandoen] som står i README.» with the exact command filled in | UX, FR-24 |
 | No search match | search finds nothing | «Ingen produkter passer søket.» and the link «Vis alle produkter» | UX |
 | Not found | NFR-10, FR-2 | «Siden finnes ikke.» and the link «Til produktoversikten» | UX |
+| Database unavailable | the database does not answer (NFR-10) | «Prognose får ikke kontakt med databasen. Prøv igjen om litt. Kjører du Prognose på din egen maskin, må databasen være startet slik README beskriver.» | UX |
+| Server error | any other error, including a request the app cannot use (NFR-10) | «Noe gikk galt, og siden kunne ikke vises. Prøv igjen, eller gå til produktoversikten.» and the link «Til produktoversikten» | UX |
+| Expired form | a form's security check fails (NFR-10) | «Skjemaet er utløpt. Last siden på nytt og prøv igjen.» | UX |
 | AI label (Should) | FR-28 rephrased text | «KI-omformulert forklaring» | PRD FR-27 |
 
 ## Component Patterns
@@ -189,7 +193,7 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 | Settings form | Innstillinger | See Information Architecture. |
 | Login panel | Innlogging | Customer number and password with visible labels; Enter submits. After an error the customer number is kept and the password is cleared, and the message does not say which one was wrong (FR-1). |
 | Combined order table | Samlet bestillingsoversikt (FR-30, Should) | Every product in R-12 order with its suggested or adjusted quantity and its marking; an adjusted row shows the suggestion in brackets; a product without a forecast and without an adjusted quantity shows «–» and «Uten prognose» (FR-30); a total row; each product name links to its Produktside. |
-| Not-found panel | unknown addresses, other companies' products | Shows no data from another company (FR-2) and links to Produktoversikt. |
+| Not-found panel | unknown addresses, other companies' products, error pages | Shows no data from another company (FR-2) and links to Produktoversikt. The error pages (database unavailable, server error, expired form) use the same panel, with the first sentence of their message as the page title. |
 
 ## State Patterns
 
@@ -216,6 +220,7 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 | Last product reviewed | Produktside | The primary button becomes «Gå til samlet bestillingsoversikt» (FR-30), or «Tilbake til produktoversikten» without it. |
 | Language model on (Should) | explanation panel | «KI-omformulert forklaring» above the text; on any FR-28 failure the template text, without an error message. |
 | Not found | any address | Not-found panel (FR-2, NFR-10). |
+| Error | any page | The not-found panel with the Database unavailable, Server error or Expired form text; no data and no technical details (NFR-10). |
 | Reload, Back, double submit | any page | The same result and no error (NFR-10). |
 | Focus | every control | A 3 px outline in `{colors.blue}`, 2 px outside the element (DESIGN.md, Elevation & Depth). |
 
@@ -312,7 +317,7 @@ Ingrid, the course examiner, on her own laptop, with the README and the referenc
 5. **Climax:** the screen matches her hand calculation and the spreadsheet, and the change shows its previous and new value.
 6. She sets the safety margin back to 10 %.
 
-Failure paths: a value outside the range, for example 150, shows «Sikkerhetsmargin må være mellom 0 og 100 %. Den forrige verdien er beholdt.». If publishing hit the cut line (PRD §8.1), the README says so and Ingrid uses the local app.
+Failure paths: a value outside the range, for example 150, shows «Sikkerhetsmargin må være mellom 0 og 100 %. Den forrige verdien er beholdt.». If publishing hit the cut line (PRD §8.1), the README says so and Ingrid uses the local app. If the local database is not started, every page shows the database message, and the README says how to start it.
 
 ### Flow 3 — SM-10. Someone outside the group explains «lav»
 
@@ -345,3 +350,4 @@ The spine pair (DESIGN.md and EXPERIENCE.md) was set to `final` on 2026-11-16. E
 | Date | Change | Reason | Commit |
 |---|---|---|---|
 | 2026-11-16 | The five assumptions became decisions. «Uten prognose» added to the markings and the combined order table. Flow 1 uses the E8 demo product for unusual weeks. The explanation may name years (FR-27). DESIGN.md: the «Uten prognose» marking in red. | The user's decisions before the architecture; the PRD was updated the same day (R-9, R-12, FR-27, FR-30, FR-35, DR-1). | `5373e7b` |
+| 2026-11-17 | Error pages for an unavailable database, a server error and an expired form: a Feilside surface in the Information Architecture, three Message Catalogue rows, the not-found panel for every error page, an Error state, and a failure path in Flow 2. DESIGN.md: the not-found panel also serves the error pages. | PostgreSQL now runs locally as a server, so a stopped database is a new failure, and NFR-10 needs Norwegian error pages (architecture step; PRD §12, 2026-11-17). | not committed yet |

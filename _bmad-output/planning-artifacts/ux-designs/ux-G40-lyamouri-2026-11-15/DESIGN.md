@@ -3,7 +3,7 @@ name: 'Prognose'
 description: 'Visual identity for Prognose v1: a calm, cool workbench in navy, blue, turquoise and green, where the decision comes first, every number can be checked, and every warning has a shape and a word.'
 status: final
 created: '2026-11-15'
-updated: '2026-11-16'
+updated: '2026-11-17'
 sources:
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md'
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/tilbakemelding-prd.md'
@@ -459,7 +459,7 @@ Visual specs. Behavior is in EXPERIENCE.md (Component Patterns). Names match acr
 - **Settings form** — a panel with one field per setting: visible label (`{typography.label}`), number fields like the search field with the unit after them, radio buttons for the method and for unusual weeks, and «Lagre» (primary) and «Avbryt» (secondary). (Spine-only.)
 - **Login panel** — one panel, at most 420 px wide, centered on the canvas below the header bar without navigation. It holds the page title «Logg inn», fields with visible labels and a primary «Logg inn» button. (Spine-only; wireframe in EXPERIENCE.md.)
 - **Combined order table** — a panel with the worksheet's table style. An adjusted quantity is blue, and its marking «Justert av deg» is a `blue-tint` tag in `blue-ink`; «Foreslått» is plain muted text; «Uten prognose» is plain red text next to «–» in ink, as on a card without a forecast. The total row is bold. (Spine-only; wireframe in EXPERIENCE.md.)
-- **Not-found panel** — a panel with the page title «Siden finnes ikke» and a link back to «Produktoversikt». (Spine-only.)
+- **Not-found panel** — a panel with the page title «Siden finnes ikke» and a link back to «Produktoversikt». The other error pages use the same panel with their own title and text (EXPERIENCE.md). (Spine-only.)
 
 ## Do's and Don'ts
 

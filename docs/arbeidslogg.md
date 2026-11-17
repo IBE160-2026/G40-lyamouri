@@ -400,6 +400,46 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** QA-loggen har sin første oppføring, og den nye arkitekturen må bekrefte plasseringen. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
+### 17. november 2026 – Ny arkitektur med PostgreSQL
+
+* Startet `bmad-architecture` på designgrenen. Grunnlaget var den godkjente PRD-en, UX-designet og lærerens `technology.md`. Claude leste også `issues.md` og den arkiverte arkitekturen, men gjenbrukte den ikke ukritisk. Flere deler av den var utdatert:
+  * skrifttypen Albert Sans;
+  * grafbiblioteket Chart.js;
+  * den gamle tallkontrollen i forklaringen.
+
+  I tillegg la den nettverkskode i en modul som den selv forbød nettverkskode i.
+* Godkjente anbefalingene P1–P10:
+  * Django 5.2 LTS med en ren beregningskjerne;
+  * uv og pytest;
+  * grafen som SVG laget på serveren;
+  * Neon for publisering og GitHub Actions for testene;
+  * koden i `src/`;
+  * regnearket som eneste fasit;
+  * PostgreSQL lokalt med Docker Compose.
+
+  P6, om migrering og seed-data i byggesteget på Vercel, ble godkjent med et forbehold.
+* Eksempler på styring av KI:
+  * Claude foreslo først SQLite lokalt og PostgreSQL bare på Vercel, slik PRD-en sa. Jeg bestemte at PostgreSQL er et krav i begge kjøremodusene, fordi det er mer langsiktig. Claude skulle undersøke konsekvensene for PRD-en før noe ble endret.
+  * Jeg godkjente automatisk migrering og seed-data på Vercel bare med et forbehold: ingenting skal slette eller overskrive brukerdata automatisk. Derfor ble arkitekturen og PRD-en (DR-4 og DR-10) endret:
+    * byggesteget migrerer bare når endringene bare legger til;
+    * `load_seed` laster bare inn i en tom database;
+    * bare en tilbakestilling som brukeren bekrefter, sletter data.
+  * Jeg ville ha Docker-løsningen bekreftet før godkjenningen. Claude skilte mellom det som var dokumentert, målt og ikke testet. Claude fant også at porten 54320 kan være reservert på Windows, så porten ble endret til 15432.
+* Installerte Docker Desktop 4.99.0 fra Dockers offisielle kilde etter godkjenning. Claude kontrollerte signaturen og notariseringen før installasjonen.
+* Testet PostgreSQL 18.7 med en midlertidig `compose.yaml` utenfor prosjektet. Resultatet står i `docs/qa-logg.md`. Oppstart uten nett og oppsett på Windows er ikke testet.
+* Kvalitetssikring: Claude prøvde å teste PostgreSQL fra en Python-pakke uten Docker. Tillatelsessystemet stoppet det, og Claude prøvde ikke å omgå det.
+* Oppdaterte dokumentene:
+  * PRD-en: FR-4, NFR-1–3, NFR-9, DR-1, DR-2, DR-4, DR-10, SM-2, SM-5 og §10, med tre nye rader i §12;
+  * addendum §2;
+  * `EXPERIENCE.md`, med feilsidene og en rad i endringsloggen;
+  * én linje i `DESIGN.md`;
+  * `docs/PRODUCT.md`;
+  * arkivets README, der tre utsagn var blitt utdatert. Det ble oppdaget i sluttkontrollen før commit.
+* Claude skrev arkitekturspinen med 17 beslutninger (AD-1–AD-17) og et kort notat til læreren om hvordan `technology.md` er tilpasset.
+* Kontroll: Claude gjorde gjennomgangen selv, uten subagenter, slik jeg ba om. Kontrollskriptet fant ingen feil, og 12 hull og mangler i spinen ble lukket.
+
+**Status:** Arkitekturspinen er `final`, og PRD-en og UX-designet er oppdatert. Ingenting er committet eller pushet før jeg har godkjent resultatet. Neste steg er godkjenning og commit, og deretter nye epics og stories.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

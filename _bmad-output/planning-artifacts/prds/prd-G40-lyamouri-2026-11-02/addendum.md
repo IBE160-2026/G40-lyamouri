@@ -1,7 +1,7 @@
 ---
 title: 'Addendum: Prognose PRD'
 created: '2026-11-02'
-updated: '2026-11-15'
+updated: '2026-11-17'
 ---
 
 # Addendum: Prognose PRD
@@ -11,7 +11,7 @@ updated: '2026-11-15'
 This addendum goes with the PRD in this folder (`prd.md`). The PRD states capabilities. This document keeps the technical detail, research figures, rejected alternatives and rationale that the architecture, UX and epics steps need. The PRD points here for the technology rationale (PRD §0 and NFR-9 → §2), the local model candidates (PRD §10, question 5 → §3), the rule and priority rationale (PRD §5 and §8.2 → §6), and the changes from the Product Brief (PRD §0, DR-5 and §12 → §7). Sections 6 and 7 were moved here from the PRD on 2026-11-03.
 
 - **No new requirements.** Every requirement, priority and calculation rule is in the PRD. If this addendum and the PRD disagree, the PRD wins.
-- **Nothing is decided here** unless the PRD says so. The technology stack, the local model runtime and the model itself are still open. For these, this addendum gives the research recommendation for the architecture step.
+- **Nothing is decided here** unless the PRD says so. For the technology stack, the local model runtime and the model itself, this addendum gives the research recommendation for the architecture step. The architecture spine of 2026-11-17 decided the stack; the local model runtime and the model are still open.
 - **Citation keys.** [An], [Bn], [Cn] and [Dn] are source n in research report A, B, C or D (§8). C-R1, D-R2 and so on are a report's numbered recommendations, and A-Q5, B-Q3 and so on are its numbered open questions. "Inference" marks a report's own reasoning without a source. "Addendum note" marks this document's own arithmetic or reading of the PRD. A bare § number is a section of this addendum; a PRD section is written "PRD §n".
 
 **Where to look**
@@ -26,7 +26,7 @@ This addendum goes with the PRD in this folder (`prd.md`). The PRD states capabi
 Report C recommends Django + SQLite (83) and names Flask + SQLite (80) as the runner-up. The margin is inside the scoring uncertainty (§5), and the architecture step decides.
 
 The PRD sets constraints, not a stack:
-- one web application with one local file database (NFR-9, FR-4);
+- one web application with one database: a local file when the research was done, and PostgreSQL in both run modes since 2026-11-17 (NFR-9, FR-4);
 - no paid services, keys, third-party accounts or internet connection when running (NFR-1);
 - an established password-hashing implementation and a server-side company check on every request (NFR-3, FR-1, FR-2);
 - one calculation module with no dependency on the user interface or the database (NFR-2);
@@ -80,6 +80,12 @@ C-R2, evidence basis medium. OWASP is the main source. Company isolation is usua
 ### Publishing on Vercel (added 2026-11-08, after approval)
 
 The group chose Vercel to publish Prognose; the local app with SQLite stays. Vercel's Python runtime runs Django without extra configuration: it finds `manage.py`, runs the WSGI app as one function, runs `collectstatic` and serves the static files from its CDN ([Vercel: Deploy a Django app](https://vercel.com/docs/frameworks/full-stack/django), checked 2026-11-08). A function cannot keep a SQLite file between requests, so the published version uses PostgreSQL on Neon's free plan, added from the Vercel Marketplace, which sets a pooled `DATABASE_URL` and a direct `DATABASE_URL_UNPOOLED` ([Neon: Vercel integration](https://neon.com/docs/guides/neon-managed-vercel-integration)). Vercel's own guidance is to run migrations outside the request path with the direct URL ([Vercel: Migrate a Python API from Heroku](https://vercel.com/kb/guide/migrate-a-python-api-from-heroku-to-vercel)). The binding choices are in the architecture spine (AD-13, AD-15, AD-16).
+
+### PostgreSQL in both run modes (added 2026-11-17, after approval)
+
+The user decided in the architecture step that Prognose uses PostgreSQL in both run modes, as the more long-term solution (PRD §12, 2026-11-17). Locally, PostgreSQL 18 runs in Docker Compose on the user's computer; when published, it runs on Neon's free plan. A test of the local database on macOS on 2026-11-17 is recorded in the QA log (`docs/qa-logg.md`).
+- The SQLite parts of this section are history: they record the research recommendation, not the decision.
+- The AD numbers in the paragraph above refer to the archived spine of 2026-11-08. The binding choices are now in the architecture spine of 2026-11-17 (`_bmad-output/planning-artifacts/architecture/architecture-G40-lyamouri-2026-11-17/`).
 
 ## 3. Explanation layer, technical notes
 

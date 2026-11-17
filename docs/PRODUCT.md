@@ -3,8 +3,8 @@
 <!-- impeccable:product-schema 1 -->
 
 Sources:
-- The final PRD and its addendum in `_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/`. The PRD was approved on 2026-11-03 and last updated on 2026-11-16, and every change is listed in PRD §12. The PRD wins on any conflict.
-- The final UX spines `DESIGN.md` (how Prognose looks) and `EXPERIENCE.md` (how it works) in `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/`, set to final on 2026-11-16. `docs/DESIGN.md` is a symbolic link to that DESIGN.md, so Impeccable reads the approved file and no copy exists.
+- The final PRD and its addendum in `_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/`. The PRD was approved on 2026-11-03 and last updated on 2026-11-17, and every change is listed in PRD §12. The PRD wins on any conflict.
+- The final UX spines `DESIGN.md` (how Prognose looks) and `EXPERIENCE.md` (how it works) in `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/`, set to final on 2026-11-16 and last updated on 2026-11-17. `docs/DESIGN.md` is a symbolic link to that DESIGN.md, so Impeccable reads the approved file and no copy exists.
 
 This file records product facts only and does not repeat the spines. It lives in `docs/` because PRD DR-2 allows only the README, a license and configuration files as loose files in the root, and Impeccable finds PRODUCT.md and DESIGN.md there. The archived design of 2026-11-06 in `_bmad-output/planning-artifacts/archive/` is not a source.
 
@@ -14,11 +14,12 @@ web
 
 ## Stack
 
-Undecided. The new BMAD architecture step decides the framework, the chart library and the URLs (NFR-9, EXPERIENCE.md Foundation).
+Decided in the architecture spine of 2026-11-17 (`_bmad-output/planning-artifacts/architecture/architecture-G40-lyamouri-2026-11-17/ARCHITECTURE-SPINE.md`), which owns the details and the URLs:
+- one Django 5.2 LTS web application with server-rendered templates, run with uv and Python 3.13;
+- PostgreSQL 18 in both run modes: locally in Docker Compose, and on Neon's free plan in the version published on Vercel, from the same code (NFR-9, DR-10);
+- the forecast chart as inline SVG rendered on the server, like the approved mockup, with no chart library.
 
-The PRD fixes one web application with one database: SQLite when it runs locally, and PostgreSQL in the version published on Vercel, from the same code (NFR-9, DR-10). The research recommends Django + SQLite with server-rendered templates and Chart.js, with Flask + SQLite as the runner-up (addendum §2).
-
-The UX assumes plain semantic HTML and CSS with no UI library. Every function works through links and forms, and scripts only enhance the page and draw the chart (EXPERIENCE.md, Foundation). The local app serves every asset itself, including the chart library, with no web fonts and no CDN, so it works offline after installation (NFR-1).
+The UX assumes plain semantic HTML and CSS with no UI library. Every function works through links and forms, and scripts only enhance the page (EXPERIENCE.md, Foundation). The local app serves every asset itself, with no web fonts and no CDN, so it works offline after installation (NFR-1).
 
 ## Users
 
@@ -67,8 +68,8 @@ The explanation is built from fixed Norwegian templates. An optional local langu
 
   Orders are placed outside Prognose. Steps 1 to 4 are Must. Adjusting quantities and the combined order overview are Should, so in a Must-only build the list for the meeting is made outside Prognose.
 - **Environment:** a desktop browser on a laptop or office PC, macOS or Windows (NFR-6).
-  - The local app runs offline after installation (NFR-1).
-  - The published version on Vercel is a shared demo on free plans (DR-10). Anyone with the logins in the README can change a test company's settings, and the load command restores the seed state. The optional language model is not available there. If publishing does not work in time, the cut line in PRD §8.1 applies and the local version counts.
+  - The local app and its database run offline after installation (NFR-1).
+  - The published version on Vercel is a shared demo on free plans (DR-10). Anyone with the logins in the README can change a test company's settings, and an explicit reset with the load command restores the seed state. The optional language model is not available there. If publishing does not work in time, the cut line in PRD §8.1 applies and the local version counts.
   - Both versions use synthetic data only, with two test companies whose logins are in the README (FR-3).
 - **Examiner's scene:**
   - a fresh clone and the README setup (target at most 15 minutes, SM-2), or the published address (SM-9);
@@ -134,7 +135,7 @@ The explanation is built from fixed Norwegian templates. An optional local langu
   - It shows the whole sales history (up to 104 weeks) and the three forecast weeks with the scenarios. This is within FR-25, and the user chose it on 2026-11-16 (EXPERIENCE.md).
   - Stockout weeks, unusual weeks and level-shift weeks each have their own marker that differs by more than color, explained in a legend (FR-15 to FR-17, NFR-7).
   - It has a text alternative with a summary and a value table (NFR-11).
-- **Data:** read-only in the app; only the settings and adjusted order quantities change (PRD §7). Reloading the seed data resets the settings and adjustments (DR-4).
+- **Data:** read-only in the app; only the settings and adjusted order quantities change (PRD §7). An explicit reset of the seed data resets the settings and adjustments (DR-4).
 
 ## Brand Commitments
 

@@ -24,13 +24,13 @@ The project skeleton from story 1.1 was built on 10 and 11 November on the archi
 
 The new design and architecture start from the updated PRD:
 - **File:** `_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md`.
-- **Status:** `final`, last updated 2026-11-16. The update of 2026-11-15 was merged into `main` in pull request #2. The changes of 2026-11-16 are on `design/after-prd-feedback` and not yet in `main`.
+- **Status:** `final`, last updated 2026-11-17. The update of 2026-11-15 was merged into `main` in pull request #2. The changes of 2026-11-16 and 2026-11-17 are on `design/after-prd-feedback` and not yet in `main`.
 - **Changes:** the change log in its §12 lists every change.
 - **Disagreements:** `review-consistency-2026-11-15.md` in the same folder lists the statements in these archived documents that disagree with the PRD.
 
 ## The new design
 
-The new UX was built from the updated PRD and set to `final` on 2026-11-16: `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/` (`DESIGN.md`, `EXPERIENCE.md` and `mockups/`). The new architecture is not made yet.
+The new UX was built from the updated PRD and set to `final` on 2026-11-16: `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/` (`DESIGN.md`, `EXPERIENCE.md` and `mockups/`). The new architecture was made from the same PRD and set to `final` on 2026-11-17: `_bmad-output/planning-artifacts/architecture/architecture-G40-lyamouri-2026-11-17/`.
 
 ## Not archived
 
@@ -39,7 +39,8 @@ The new UX was built from the updated PRD and set to `final` on 2026-11-16: `_bm
 ## Still pointing at the old paths
 
 These files were not changed:
-- `prd.md` ends §12 with an open line about aligning `epics.md` and the architecture spine. The PRD is not changed now; the line is closed when the new architecture and epics exist.
 - The entries in `docs/arbeidslogg.md` and the session logs, which are history and stay as they were.
+
+The open line at the end of PRD §12 about aligning `epics.md` and the architecture spine was removed on 2026-11-17, when the new architecture spine was set to `final`.
 
 `.impeccable/config.json`, which holds detector exceptions for the archived mockups, was pointed to their new paths in this folder on 2026-11-16.

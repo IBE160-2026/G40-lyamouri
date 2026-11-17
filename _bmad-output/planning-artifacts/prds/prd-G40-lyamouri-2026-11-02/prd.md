@@ -2,7 +2,7 @@
 title: 'PRD: Prognose (G40-lyamouri)'
 status: final
 created: '2026-11-02'
-updated: '2026-11-16'
+updated: '2026-11-17'
 ---
 
 # PRD: Prognose (G40-lyamouri)
@@ -13,7 +13,7 @@ updated: '2026-11-16'
 - **Should (§8.2):** seasonal adjustment and the seasonal-pattern warning, order quantity per scenario, the overstock note, the level-shift warning text, the optional local language model, and adjusting order quantities with the combined order overview. These items are at risk before the deadline; their order is in §8.2.
 - **Could (§8.3):** settings per product, saving adjustments and approval, CSV export, the note that stock will not last through weeks 2 and 3, and forecast accuracy (MAE).
 - **Done when:** the Must scope passes SM-1 and SM-3, and SM-2 and SM-9 hold on the final commit. If the publishing cut line in §8.1 applies, SM-9 lapses, and SM-2 and SM-3 count as met on the local version.
-- **Where it runs:** locally from the README with SQLite, and as a published version on Vercel with PostgreSQL, from the same code (DR-10).
+- **Where it runs:** locally from the README and as a published version on Vercel, from the same code, with PostgreSQL in both: a local PostgreSQL server on the user's computer, and a hosted PostgreSQL on a free plan when published (FR-4, NFR-9, DR-10).
 - **Where the complexity lies:** 17 deterministic rules (15 of them in the Must scope) checked by 30 reference examples (24 of them for the Must scope), two isolated companies with saved settings, and a guarded explanation layer, not user roles or integrations.
 
 ## 0. Document Purpose
@@ -211,11 +211,11 @@ The system provides a synthetic dataset for two test companies, each with 10 to 
 
 #### FR-4: Data stored between sessions
 
-Products, sales history, stock on hand and settings are stored in a database: a local file when Prognose runs on the user's computer, and PostgreSQL in the published version (DR-10). Priority: Must.
+Products, sales history, stock on hand and settings are stored in a PostgreSQL database: a local PostgreSQL server when Prognose runs on the user's computer, and a hosted PostgreSQL in the published version (DR-10). Priority: Must.
 
 **Consequences (testable):**
-- After the application is stopped and started again, all data and settings are unchanged.
-- Locally, the database runs as a file. No database server or online service is needed.
+- After the application and the database are stopped and started again, all data and settings are unchanged.
+- Locally, the database is a PostgreSQL server on the same computer, started with one documented command. No online service is needed.
 - The published version keeps the same data in PostgreSQL, loaded with the same load command (DR-4).
 
 ### 4.3 Forecast Calculation (Must/Should)
@@ -708,15 +708,15 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
 
 ### 6.1 Cross-Cutting Non-Functional Requirements
 
-- **NFR-1 Local and free to run.** The application and every Must feature run on one computer without paid services, API keys or third-party accounts. After installation, the local app runs without an internet connection: all assets, including the chart library, are served locally and not from a content delivery network. The README covers macOS and Windows. The published version (DR-10) uses only free plans; only the group member who publishes it needs accounts there, and users and the examiner need nothing but a browser.
-- **NFR-2 Correct, testable calculations.** All rules in §5 live in one calculation module with no dependency on the user interface or the database. Automated unit tests check every rule and every reference example that applies to the features built (SM-1), and all tests run with one documented command that needs nothing beyond the README's installation steps; the README shows the expected result.
-- **NFR-3 Security.** Passwords are hashed with an established, secure implementation as described in FR-1, never a self-made algorithm. The logged-in company is checked on the server on every request (FR-2). The secret used to sign sessions is created automatically by the load command (DR-4) when it is missing, stored in a local file that `.gitignore` excludes (DR-2), and never committed; setup needs no manual file editing. In the published version, the secret is an environment variable on Vercel instead. The repository contains no secrets; optional configuration is listed in `.env.example`.
+- **NFR-1 Local and free to run.** The application and every Must feature run on one computer without paid services, API keys or third-party accounts, and every tool the README asks for is free for personal and educational use. After installation, the local app and its database run without an internet connection: all assets, including the chart library, are served locally and not from a content delivery network. The README covers macOS and Windows. The published version (DR-10) uses only free plans; only the group member who publishes it needs accounts there, and users and the examiner need nothing but a browser.
+- **NFR-2 Correct, testable calculations.** All rules in §5 live in one calculation module with no dependency on the user interface or the database. Automated unit tests check every rule and every reference example that applies to the features built (SM-1), and all tests run with one documented command that needs nothing beyond the README's installation steps and the started local database; the README shows the expected result.
+- **NFR-3 Security.** Passwords are hashed with an established, secure implementation as described in FR-1, never a self-made algorithm. The logged-in company is checked on the server on every request (FR-2). The secret used to sign sessions is created automatically by the load command (DR-4) when it is missing, stored in a local file that `.gitignore` excludes (DR-2), and never committed; setup needs no manual file editing. In the published version, the secret is an environment variable on Vercel instead. The repository contains no secrets; optional configuration is listed in `.env.example`. The local database has no stored password and accepts connections only from the same computer.
 - **NFR-4 Privacy.** Only synthetic data is used: no real company, customer or personal data. Files in the repository contain no personal data and no local file paths. Saved AI sessions are cleaned of personal data and local paths before they are committed, and before submission the group scans the whole repository history for secrets, personal data and local paths and records the result in the QA log (DR-9).
 - **NFR-5 Language and number format.** All screens, messages, warnings, notes and explanations are in Norwegian `[ASSUMPTION: bokmål]`. Numbers use a decimal comma; percentages are whole numbers with «%».
 - **NFR-6 Platform and screen size.** Prognose runs in a desktop browser on a laptop or PC, because the user plans at an office PC (UJ-1). The README names at least one current browser per operating system that the group has tested. From 1024 pixels wide upwards there is no horizontal page scrolling. Down to 800 pixels wide, no text overlaps or is cut off, and every control can be reached with the keyboard; wide tables may scroll inside their own frame. FR-25 sets what must be visible without scrolling at 1366 × 768. A mobile layout is not required.
 - **NFR-7 Readable markings.** In the chart, stockout weeks, unusual weeks and level-shift weeks differ by more than color alone (for example by shape or pattern), and a legend explains them.
 - **NFR-8 Responsiveness.** `[ASSUMPTION]` With 50 products of 104 weeks each, the product overview and the product screen open within 2 seconds on an ordinary laptop, and results update within 2 seconds after a settings change. The target applies to the local app. In the published version, the first request after a quiet period may take longer, because the free plans start the server and the database on demand.
-- **NFR-9 Simple architecture.** One web application with one database and no more parts than the app needs: SQLite when the app runs locally, and PostgreSQL in the published version (DR-10). The technology is decided in the architecture step; the research recommendation and its rationale are in `addendum.md` (§2 there).
+- **NFR-9 Simple architecture.** One web application with one PostgreSQL database and no more parts than the app needs: a local PostgreSQL server when the app runs on the user's computer, and a hosted PostgreSQL on a free plan in the published version (DR-10), both of the same major version. The technology is decided in the architecture step; the research recommendation and its rationale are in `addendum.md` (§2 there), and the binding choices are in the architecture spine.
 - **NFR-10 Robustness.** Numeric fields accept a decimal comma or a decimal point. Empty or non-numeric input is refused with a Norwegian message, and the previous value stays. No address or input shows a stack trace or a debug page; an unknown address shows a "not found" page in Norwegian with a link to the product overview. Submitting the same change twice, reloading a page or going back gives the same result without errors.
 - **NFR-11 Basic accessibility.** Text contrast meets WCAG 2.2 level AA. Every function works with the keyboard alone, with a visible focus. Every form field has a visible label. Pages declare Norwegian as their language. The chart has a text alternative: a short summary and a table with the plotted values; its markings follow NFR-7.
 
@@ -734,8 +734,8 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
 - **DR-1 README.** The README covers:
   - What Prognose does and who it is for, with screenshots of at least the login page, the product overview and the product screen (Must). A screen recording of UJ-1 steps 1 to 4, at most 2 minutes long, is optional.
   - Prerequisites with minimum versions.
-  - Setup on macOS and Windows, tested by the group from a fresh clone: exact commands to copy into macOS Terminal and Windows PowerShell, including activating the virtual environment; how the session secret is created (NFR-3); and fixes for the most likely setup errors. Once SM-2 is confirmed, the README states the setup time.
-  - The customer numbers and passwords of the two test companies, how to generate and load the synthetic data, and that reloading the data resets the settings and adjustments (DR-4).
+  - Setup on macOS and Windows, tested by the group from a fresh clone: exact commands to copy into macOS Terminal and Windows PowerShell, run in the project's environment; how to start and stop the local database; how the session secret is created (NFR-3); and fixes for the most likely setup errors, including a database that is not started and a port that is in use. Once SM-2 is confirmed, the README states the setup time.
+  - The customer numbers and passwords of the two test companies, how to generate and load the synthetic data, and how an explicit reset restores the seed state, which also resets the settings and adjustments (DR-4).
   - The address of the published version, and for the group the steps to publish it and to load the seed data into its database (DR-10). If the cut line in §8.1 applies, the README instead says that Prognose was not published, and why.
   - A «Prøv selv» (try it yourself) section of 5 to 10 steps that follows UJ-1, and a table of the test products naming the rule, warning or confidence label each one shows and its reference example (E-n). For UJ-1 step 4 it uses the rule test product built from E8, whose unusual weeks are among the calculation weeks used, so that switching unusual weeks visibly changes the base forecast (41.0 → 21.333, FR-21).
   - How to run the tests, with the expected result (NFR-2), and the browsers tested (NFR-6).
@@ -746,11 +746,11 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
 - **DR-2 Repository layout.**
   - The synthetic data, its generator script, the reference spreadsheet, the documentation, the saved AI sessions and the planning artifacts each have a documented place. The concrete folders are fixed in the architecture step.
   - The README explains every top-level folder, including the BMAD and Claude Code folders. The root holds no loose files other than the README, a license and configuration files.
-  - A `.gitignore` keeps out the virtual environment, caches, test and coverage output, the local database file, `.env`, the session-secret file, and operating-system and editor files. The generated seed data is versioned; the database is not.
+  - A `.gitignore` keeps out the virtual environment, caches, test and coverage output, the local database data, `.env`, the session-secret file, and operating-system and editor files. The generated seed data is versioned; the database is not.
   - `.env.example` lists optional configuration, and no secrets are committed.
   - One formatter and one linter, chosen in the architecture step, run with a documented command and pass on the submitted commit. Dependencies are pinned to exact versions in one file.
 - **DR-3 Reference spreadsheet.** The group stores a spreadsheet in the repository with the hand-calculated reference examples E1 to E30 and the expected results for every rule test product (FR-3). The automated tests use the same inputs and expected results, so the examiner can compare the two.
-- **DR-4 Seed data.** The deterministic generator script (FR-3) creates the data, and one documented command loads it. Running the load command again resets the database to the seed state without duplicates or errors; the README says that this also resets the settings and adjustments.
+- **DR-4 Seed data.** The deterministic generator script (FR-3) creates the data, and one documented command loads it into an empty database. The load command never deletes or overwrites data on its own: when the database already holds data, it stops and changes nothing. Only an explicit reset, which the user confirms, deletes the data and reloads the seed state without duplicates or errors; the README says that a reset also resets the settings and adjustments.
 - **DR-5 Process documentation, AI use and traceability.**
   - Decisions are recorded with their rationale (BMAD logs and session logs).
   - The prompts and AI sessions for each story are saved in the documented folder (DR-2), cleaned as NFR-4 requires.
@@ -769,7 +769,8 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
 - **DR-10 Publishing.** Prognose is published on Vercel from the `main` branch, with the same code as the local app.
   - The published version uses a PostgreSQL database. Vercel and the database run on free plans, with no paid services.
   - The examiner can open the address, log in as a test company and see the product overview without installing anything (SM-9).
-  - It holds only the synthetic seed data and is a shared demo: anyone with the logins in the README can change a test company's settings, and the load command restores the seed state (DR-4).
+  - It holds only the synthetic seed data and is a shared demo: anyone with the logins in the README can change a test company's settings, and an explicit reset with the load command restores the seed state (DR-4).
+  - Publishing a new version never deletes or overwrites data in the database. A database change that could do so is applied only as a deliberate step by the group member who publishes.
   - Debug pages are off, and secrets are environment variables on Vercel, never in the repository (NFR-3, NFR-10).
   - The optional local language model (FR-28) is not available there; the template explanation is shown.
   - If publishing does not work in time, the cut line in §8.1 applies.
@@ -893,12 +894,12 @@ Each FR has one priority. A dash means that no success metric covers the FR.
 
 **Primary**
 - **SM-1 Correct calculations.** For the Must scope, 100% of the reference examples for Must rules pass as automated tests and match the reference spreadsheet (DR-3): E1 to E13, E15 to E21, E23, E24, E28 and E29. When FR-9, FR-13 and FR-36 are built, E14, E22, E25 to E27 and E30 must pass too. Validates FR-5 to FR-8, FR-10 to FR-12, FR-15 to FR-19, FR-24 and FR-35, and rules R-1 to R-13, R-15 and R-16; and FR-9, FR-13, FR-14 and FR-36, and rules R-14 and R-17, once they are built.
-- **SM-2 Runnable by the examiner.** From a fresh clone, following only the README, a person can log in as a test company and see the product overview on macOS and on Windows, without paid services or keys; after installation, the app also starts and works with the network switched off. Target: at most 15 minutes from clone to logged in, to be confirmed by testing (§10, question 2; DR-9). Validates NFR-1, DR-1, DR-4.
+- **SM-2 Runnable by the examiner.** From a fresh clone, following only the README, a person can log in as a test company and see the product overview on macOS and on Windows, without paid services or keys; after installation, the app and its database also start and work with the network switched off. Target: at most 15 minutes from clone to logged in, once the prerequisites that the README lists are installed, to be confirmed by testing (§10, question 2; DR-9). Validates NFR-1, DR-1, DR-4.
 - **SM-3 Core flow works.** Log in; select a product; see the sales history, forecast calculation and scenarios; change the forecasting method, safety margin or unusual-week setting; and see the affected value change (FR-21). At least one automated test runs this flow through the web application. Validates FR-1, FR-10, FR-20, FR-21, FR-24, FR-25, FR-35.
 
 **Secondary**
 - **SM-4 Isolation.** The two-account isolation test passes, including lists. Validates FR-2.
-- **SM-5 Persistence.** Data and settings are unchanged after a restart. Validates FR-4, FR-22.
+- **SM-5 Persistence.** Data and settings are unchanged after a restart of the app and the database. Validates FR-4, FR-22.
 - **SM-6 Explanation integrity.** Every number in every template explanation is an allowed number (FR-27). With the optional language model, no rephrased text that fails a check in FR-28 is ever accepted. Validates FR-26 to FR-28.
 - **SM-7 Rule coverage.** Every warning and every confidence label, including «høy», is triggered by at least one test product in the dataset. Validates FR-3, FR-8 and FR-15 to FR-19, and FR-17b and FR-36 once they are built.
 - **SM-8 Traceable process.** Decisions and the use of AI during development are documented, the AI steering log has at least five cases linked to commits or pull requests, every story was merged through a reviewed pull request, and the status table traces every FR to the stories and tests that implement and verify it. Validates DR-5, DR-7, DR-8, DR-9.
@@ -927,7 +928,7 @@ Each FR has one priority. A dash means that no success metric covers the FR.
 ## 10. Open Questions
 
 1. **Order of the Should items.** Decided: the order is in §8.2 (sprint planning, 2026-11-08).
-2. **Setup time.** Is the 15-minute setup target (SM-2), including the offline check, met on clean macOS and Windows machines? Answered by testing before the README is final, and again on the final commit.
+2. **Setup time.** Is the 15-minute setup target (SM-2), including the offline check, met on clean macOS and Windows machines with the prerequisites installed? Answered by testing before the README is final, and again on the final commit. The local database was tested on macOS on 2026-11-17 (QA log, DR-9); Windows and the offline check remain.
 3. **Sources for the inventory rules.** The research found only vendor sources and one short university tutorial for the order-up-to policy, and no source for a percentage safety margin. Textbook references are added if found; otherwise the gap is stated in the process documentation.
 4. **Project-defined rules.** Do R-10, R-11, R-14 and R-17 behave as expected on the test products? Pass criterion: for every rule test product, the app's results equal the expected results in the reference spreadsheet (DR-3).
 5. **Local model choice.** If FR-28 is built, which small model is used, and what does its license require? Candidates are in `addendum.md` (§3 there).
@@ -977,5 +978,6 @@ This PRD was approved and set to final on 2026-11-03. Every change to a requirem
 | 2026-11-16 | R-9: seasonal indices with four decimals and seasonally adjusted values with one. FR-35: the rounding note «Tallene er avrundet for visning.» below the exponential-smoothing line and the seasonal values. | The user approved the UX assumptions; this closes the FR-35 hand-check finding left for later on 2026-11-15. | `5373e7b` |
 | 2026-11-16 | FR-27: the years of weeks 1 to 3 and of the weeks left out are allowed numbers, so the explanation can name a week from another year. | The user's decision to show weeks with their year. No other requirement changes: FR-28's placeholders and SM-6 apply as before. This closes the year finding left for later on 2026-11-15. | `5373e7b` |
 | 2026-11-16 | DR-1: «Prøv selv» uses the rule test product built from E8 for UJ-1 step 4, so that switching unusual weeks visibly changes the base forecast. | The user's decision that the demo shows the effect of unusual weeks. | `5373e7b` |
-
-Open after the 2026-11-15 changes: align `epics.md` and the architecture spine (AD-10 and FR-17b) with this PRD, then delete this line. EXPERIENCE.md was rewritten from this PRD on 2026-11-16 (`ux-designs/ux-G40-lyamouri-2026-11-15/`) and covers FR-24, the level-shift state and the explanation rule.
+| 2026-11-17 | PostgreSQL in both run modes: a local PostgreSQL server on the user's computer and a hosted PostgreSQL when published. Updated FR-4, NFR-1, NFR-2, NFR-3, NFR-9, DR-1, DR-2, SM-2, SM-5, §10 question 2 and the summary at the top. SM-2's 15 minutes count from the clone once the README's prerequisites are installed, and DR-1's commands run in the project's environment instead of an activated virtual environment. | The user's decision in the architecture step that PostgreSQL is a requirement, as the more long-term solution. The local database runs in Docker (architecture spine of 2026-11-17). | not committed yet |
+| 2026-11-17 | DR-4: the load command loads into an empty database only, and only an explicit reset that the user confirms deletes data. DR-10: publishing never deletes or overwrites data in the database. DR-1 says how a reset works. | The user's condition when approving the architecture: no automatic deletion or overwriting of existing user data. | not committed yet |
+| 2026-11-17 | The open line about aligning `epics.md` and the architecture spine with this PRD is removed. Both are archived, the new architecture spine follows this PRD, and new epics are made from it. | The new architecture spine is final. | not committed yet |
