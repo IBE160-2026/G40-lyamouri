@@ -197,3 +197,35 @@ Til slutt ba brukeren om at `docs/arbeidslogg.md` oppdateres med oppryddingen so
 - **GitHub og andre kloner:**
   - Slå på «Keep my email addresses private» under Settings → Emails.
   - Sett samme Git-identitet i andre kloner, fordi den bare er satt i dette repoet.
+
+## 2026-11-17 kl. 10:59 — Mounia-03
+
+### Oppgave
+Brukeren ba om tre ting:
+- undersøke hvor QA-loggen skal ligge;
+- dokumentere de gamle Git-forfatteridentitetene og hvorfor commit-historikken er bevart;
+- oppdatere arbeidsloggen og sesjonsloggen uten dobbeltføring, og committe og pushe.
+
+Gamle commits skulle ikke endres, og unødvendige filer skulle ikke opprettes. Mac-en gikk i dvale før sesjonsloggen og pushen var ferdige. Brukeren ba derfor om at arbeidet kontrolleres og fullføres, uten å starte arkitekturen.
+
+### Plan
+- Søke i PRD-en, de arkiverte dokumentene og arkivtaggen etter en bestemt plassering for QA-loggen.
+- Telle forfatteridentitetene på alle grener og tagger, og skrive QA-oppføringen uten adresser eller maskinnavn.
+- Etter dvalen: kontrollere git-status og hvilke commits som ikke var pushet, og fullføre sesjonsloggen og `issues.md`.
+
+### Resultat
+- **Plassering:** det fantes ingen QA-logg. PRD-en lar arkitektursteget fastsette mappene (DR-2), og den arkiverte arkitekturen la QA-loggen i `docs/`.
+- **`docs/qa-logg.md`** (`99796e5`) er den eneste nye fila. Den første oppføringen beskriver forfatteridentitetene, rettingen og beslutningen om å bevare historikken (NFR-4, DR-9). Detaljene står bare der.
+- **Kontroll av QA-loggen:** ingen adresser, brukernavn eller maskinnavn. Krav-ID-ene, stiene, taggen og commiten den viser til, finnes.
+- **Arbeidsloggen** (`d50bae6`) har en kort oppføring for 17. november som viser til QA-loggen.
+- **Etter dvalen:**
+  - arbeidsmappa var ren;
+  - `99796e5` og `d50bae6` var committet, men ikke pushet;
+  - denne seksjonen og oppdateringen av `issues.md` manglet.
+
+  Begge deler er fullført og pushet sammen med de to commitene.
+
+### Åpne punkter
+- Gjenta personvernkontrollen av hele historikken på siste commit før innlevering, og før resultatet i `docs/qa-logg.md` (NFR-4).
+- Den nye arkitekturen må bekrefte at QA-loggen ligger i `docs/` (DR-2), og README-en må lenke til den (DR-1).
+- De øvrige åpne punktene står i seksjonen for 16. november og i `issues.md`.
