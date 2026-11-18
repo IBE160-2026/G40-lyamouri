@@ -1,6 +1,6 @@
 ---
 title: 'Epics and Stories: Prognose (G40-lyamouri)'
-status: draft
+status: final
 created: '2026-11-18'
 updated: '2026-11-18'
 stepsCompleted: [1, 2, 3, 4]
@@ -2340,7 +2340,7 @@ So that I can judge how well the method fits a product.
 
 ## Change Log
 
-This document is a draft until the user approves it. After approval, every change is recorded here with the date, the reason and the commit, as PRD §12 and DR-5 require.
+This document was approved by the user and set to `final` on 2026-11-18. Every later change is recorded here with the date, the reason and the commit, as PRD §12 and DR-5 require. The rows below record the changes made before the approval.
 
 | Date | Change | Reason | Commit |
 |---|---|---|---|
