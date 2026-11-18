@@ -490,9 +490,22 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
   `issues.md` er oppdatert med de åpne punktene.
 * Godkjente de åtte filene etter sluttkontrollen. Claude kontrollerte filene som ble staget, og personvernskanningen av linjene som ble lagt til, fant bare to falske treff. Committet de åtte filene (`9dee8b1`) på `design/after-prd-feedback`. Fylte deretter inn commit-hashen i endringsloggene i `epics.md`, PRD-en, arkitekturspinen og `EXPERIENCE.md` i en egen commit (`7d7c970`).
-* Godkjente `epics.md` som `final`. Status og innledningen til endringsloggen ble oppdatert, sammen med arbeidsloggen, sesjonsloggen og `issues.md`, i en egen liten commit. Ingenting er pushet eller flettet til `main`.
+* Godkjente `epics.md` som `final`. Status og innledningen til endringsloggen ble oppdatert, sammen med arbeidsloggen, sesjonsloggen og `issues.md`, i en egen liten commit (`cfdefff`).
+* Godkjente push. Claude kontrollerte remoten, forfatterne og linjene som ble pushet, og personvernskanningen fant 0 treff. Pushet `design/after-prd-feedback` med `9dee8b1`, `7d7c970` og `cfdefff` til GitHub, som har samme commit som lokalt.
+* Opprettet PR #3 mot `main`:
+  * den har 43 commits og 65 filer, og kan flettes uten konflikter;
+  * den har ingen automatiske tester, fordi GitHub Actions først kommer i story 1.2;
+  * 18 eldre commits har den gamle Git-identiteten, og flettingen tar dem med inn i `main` (QA-loggen, NFR-4).
 
-**Status:** `epics.md` er `final` og committet, sammen med endringene i PRD-en, arkitekturspinen og UX-spinene. Ingenting er pushet eller flettet til `main`. Neste steg er sprintplanlegging (`bmad-sprint-planning`).
+  Ingenting er flettet til `main`.
+
+**Status:** `epics.md` er `final`, og planarbeidet ligger i PR #3 mot `main`. Flettingen venter på min godkjenning.
+
+Før flettingen må to ting være på plass:
+* «Create a merge commit» velges, så commit-hashene som dokumentene viser til, beholdes;
+* «Keep my email addresses private» slås på, eller flettingen gjøres lokalt med noreply-adressen.
+
+Neste steg etter flettingen er sprintplanlegging (`bmad-sprint-planning`).
 
 ## 4. Videre dokumentasjon
 
