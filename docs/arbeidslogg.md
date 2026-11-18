@@ -489,9 +489,9 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
   * NFR-6 og UX-DR7 er lagt til i «Also covers» for epic 1, 3 og 4.
 
   `issues.md` er oppdatert med de åpne punktene.
-* Ingenting er committet eller pushet.
+* Godkjente de åtte filene etter sluttkontrollen. Claude kontrollerte filene som ble staget, og personvernskanningen av linjene som ble lagt til, fant bare to falske treff. Committet de åtte filene (`9dee8b1`) på `design/after-prd-feedback`. Fylte deretter inn commit-hashen i endringsloggene i `epics.md`, PRD-en, arkitekturspinen og `EXPERIENCE.md` i en egen commit. Ingenting er pushet eller flettet til `main`.
 
-**Status:** Epics og stories er skrevet og kontrollert, men ikke godkjent eller committet, og `epics.md` er fortsatt `draft`. Neste steg er å godkjenne og committe endringene, og deretter sprintplanlegging (`bmad-sprint-planning`).
+**Status:** Epics og stories er godkjent og committet. `epics.md` står fortsatt som `draft` til jeg bestemmer at den skal settes til `final`. Neste steg er sprintplanlegging (`bmad-sprint-planning`).
 
 ## 4. Videre dokumentasjon
 
