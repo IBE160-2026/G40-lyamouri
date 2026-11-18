@@ -3,7 +3,7 @@ name: 'Prognose'
 description: 'Visual identity for Prognose v1: a calm, cool workbench in navy, blue, turquoise and green, where the decision comes first, every number can be checked, and every warning has a shape and a word.'
 status: final
 created: '2026-11-15'
-updated: '2026-11-17'
+updated: '2026-11-18'
 sources:
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md'
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/tilbakemelding-prd.md'
@@ -391,13 +391,15 @@ Rules: no text below 12 px (chart labels only), and no UI text below 13 px. No l
 
 Spacing scale: `{spacing.1}` 4 · `{spacing.2}` 8 · `{spacing.3}` 12 · `{spacing.4}` 16 · `{spacing.5}` 20 · `{spacing.6}` 24 · `{spacing.7}` 32 · `{spacing.8}` 40 px. Tight pairs (label and value, icon and word) use 4–8 px, items in a list 8 px, panels 16 px apart, and sections 24–40 px.
 
-The app shell, top to bottom: the app header, the settings bar, and the work area. The work area has two columns, each scrolling separately: the product list at `{spacing.list-width}` on the left and the selected product filling the rest, with 16 px top and 24 px side padding.
+The app shell, top to bottom: the app header, the settings bar, and the work area. The work area has two columns, each scrolling separately: the product list at `{spacing.list-width}` on the left and the selected product filling the rest, with 16 px top and 24 px side padding. In the one-column layout the work area has no scroll frames: the product area comes first, the list follows, and the page scrolls.
 
 On the product screen, the decision panel and the trust panel sit side by side in two equal columns, and the forecast chart spans the full width right below them. The calculation worksheet and the explanation follow at full width.
 
 Reference size: 1366 × 640 px of browser content, which is what a 1366 × 768 screen shows. At that size the suggested order quantity, the confidence label and the active warnings are above the fold (FR-25), and the chart's heading and top edge are visible without scrolling.
 
-Narrower windows: at 1180 px and below the list narrows to `{spacing.list-width-narrow}` and the two decision panels stack. At 900 px and below the layout is one column, with the list on top (at most 420 px high, scrolling on its own) and the product below. Wide tables scroll inside their own frame. The breakpoints and the 800 px floor are in EXPERIENCE.md (Responsive & Platform).
+Narrower windows: at 1180 px and below the list narrows to `{spacing.list-width-narrow}` and the two decision panels stack. At 900 px and below the layout is one column, also on an iPad held upright and on a phone: the product area first, then the list, neither with a scroll frame of its own. Down to 320 px nothing overlaps, is cut off or makes the page scroll sideways: the app header and the settings bar wrap onto more lines, the work area's side padding drops to `{spacing.4}`, and only wide tables and the chart scroll inside their own frame. The breakpoints, the 320 px floor and the test sizes are in EXPERIENCE.md (Responsive & Platform).
+
+Touch screens: every button, field, radio button, switch and stand-alone link (such as the previous and next links) has a target of at least 44 × 44 px, the small button variant included; where the visible element is smaller, such as the 40 × 22 px switch track, its padding or its label makes up the target. Form fields use 16 px text, because a phone zooms in on smaller text when a field is selected. The keyboard key hint is hidden.
 
 ## Elevation & Depth
 
@@ -421,20 +423,20 @@ Shapes also carry meaning, so that color is never the only signal (NFR-7):
 
 Visual specs. Behavior is in EXPERIENCE.md (Component Patterns). Names match across both spines.
 
-- **App header** — `header` bar, 10 px × 20 px padding. Left: the wordmark «Prognose» (`{typography.wordmark}`, white) and the company with the latest data week (`{typography.body-sm}`, `header-meta`). Right: the navigation links in white, 14 px; the current page has weight 600 and a 2 px white underline. No logo mark, and no turquoise or blue text on navy.
-- **Settings bar** — white strip with a bottom hairline, 8 px × 20 px. «Innstillinger i bruk:» in muted, the values in ink at weight 600, then a small secondary button «Endre innstillinger» and the sentence «Endringen gjelder alle produkter i bedriften.» in `{typography.meta}` muted, pushed to the right. Wraps to two lines when narrow.
+- **App header** — `header` bar, 10 px × 20 px padding. Left: the wordmark «Prognose» (`{typography.wordmark}`, white) and the company with the latest data week (`{typography.body-sm}`, `header-meta`). Right: the navigation links in white, 14 px; the current page has weight 600 and a 2 px white underline. No logo mark, and no turquoise or blue text on navy. When the window is narrow, the navigation links wrap onto a line of their own below the wordmark.
+- **Settings bar** — white strip with a bottom hairline, 8 px × 20 px. «Innstillinger i bruk:» in muted, the values in ink at weight 600, then a small secondary button «Endre innstillinger» and the sentence «Endringen gjelder alle produkter i bedriften.» in `{typography.meta}` muted, pushed to the right. Wraps onto more lines when narrow.
 - **Product list** — `pane` background with a right hairline, padding 16 / 12 / 24 px. «Produktoversikt» in `{typography.section-title}` with the product count in meta; then the search field, the groups, and the keyboard hint.
 - **Group heading** — the group name in `{typography.subsection-title}`, its summary («4 produkter · 31 enheter foreslått») in meta muted, right-aligned on the same line; 24 px above, 8 px below.
 - **Product card** — white, 1 px border, `{rounded.lg}`, `{spacing.card-padding}`, 8 px apart. Top left: the name (`{typography.card-title}`) and «Varenr. 10012» (meta muted). Top right: «Foreslått» (meta muted) over the suggested order quantity (`{typography.order-number-card}`, blue). Then a facts line in meta: «Lager», «Ukeprognose uke 1» and «Uker dekning» in muted with their values in ink 600. Last: the trust label and, unless it is «høy», the reason in meta muted. *Selected:* `blue-tint` fill, 2 px blue border, secondary text in `blue-ink`. *No forecast:* 2 px dashed red border, the reason in red 600 where the forecast would be, «–» in ink for the quantity and the weeks of cover. When a card is both selected and without a forecast, selection wins (solid blue border); the red reason stays.
 - **Product row** — the compact form for «Øvrige produkter»: rows inside one white bordered box (`{rounded.lg}`), separated by hairlines, 10 px × 14 px. Name in 15 px 600; one meta line with product number, stock, week-1 forecast and weeks of cover; «Foreslått» over the quantity in `{typography.order-number-row}` ink (0 is not an order, so no blue); the trust label below.
-- **Search field** — visible label «Søk i produktene» (`{typography.label}`), then a white input with a 1 px `field` border, `{rounded.md}`, 7 px × 10 px, 14 px text.
+- **Search field** — visible label «Søk i produktene» (`{typography.label}`), then a white input with a 1 px `field` border, `{rounded.md}`, 7 px × 10 px, 14 px text, and 16 px on touch screens.
 - **Trust label** — a pill (`{rounded.full}`, 2 px × 10 px with 8 px before the icon), `{typography.label}`, a 12 px shape icon in the text color and the word: «Høy» green, «Middels» amber, «Lav» red, each on its tint. The large variant (`{typography.label-lg}`, 14 px icon) appears next to the product name and in the trust panel.
 - **Panel** — white, 1 px border, `{rounded.lg}`, `{spacing.panel-padding}`, 16 px apart; heading in `{typography.section-title}`.
-- **Decision panel** — a panel titled «Hva bør du bestille?». The suggested order quantity in `{typography.order-number}` blue, with «Foreslått bestillingsmengde for neste uke, uke 46» in 16 px 600 on the same baseline. The buttons sit at the bottom of the panel: primary «Behold 11 og gå videre», secondary «Juster mengden». Without a forecast, the number is «–» in ink, with «Ingen foreslått bestillingsmengde».
+- **Decision panel** — a panel titled «Hva bør du bestille?». The suggested order quantity in `{typography.order-number}` blue, with «Foreslått bestillingsmengde for neste uke, uke 46» in 16 px 600 on the same baseline. The buttons sit at the bottom of the panel: primary «Behold 11 og gå videre», secondary «Juster mengden». Without a forecast, the number is «–» in ink, with «Ingen foreslått bestillingsmengde». A quantity of 0 is also in ink, because 0 is not an order, as on the product row.
 - **Trust panel** — a panel titled «Kan du stole på prognosen?», the same height as the decision panel: the large trust label, the reason in body, then the warning list.
 - **Warning list** — rows with 8 px × 10 px padding, `{rounded.md}`, 8 px apart, 14 px ink text and a 16 px icon. Data problems (stockout weeks, old data, insufficient data) use `red-tint`; demand patterns (unusual weeks, level shift, seasonal pattern) use `amber-tint`. Icons follow Shapes.
 - **Unusual-weeks switch** — below the chart legend, after a hairline with 12 px above. A 40 × 22 px track (`{rounded.full}`) with a 16 px white knob: blue with the knob on the right when unusual weeks are included, `field` gray with the knob on the left when they are excluded. Beside it, 14 px text: the state in bold («Uvanlige uker tas med.»), what switching does, and «Endringen gjelder alle produkter i bedriften.». Only the chart itself is full width; the switch keeps its 40 × 22 px size.
-- **Forecast chart** — a panel titled «Hva skjer med salget?» with a one-line subtitle in body-small muted, then the chart at full width (aspect about 3:1) and the legend.
+- **Forecast chart** — a panel titled «Hva skjer med salget?» with a one-line subtitle in body-small muted, then the chart at full width (aspect about 3:1) and the legend. Its labels and captions never shrink below `{typography.chart-label}` and `{typography.chart-caption}`: when the panel is too narrow for that, the chart keeps the width it needs inside its own horizontally scrolling frame, and the legend wraps below it at the panel's width.
   - Sales: an ink line, 2.5 px, with 4.5 px dots where weeks are at least 12 px apart.
   - Stockout weeks: the line breaks, a 1.5 px dashed ink connector bridges the gap, and each week gets a 12 px hollow red square at its sales value.
   - Unusual weeks: an amber triangle about 20 × 17 px on the point, with its sales value in 12 px ink.
@@ -445,15 +447,15 @@ Visual specs. Behavior is in EXPERIENCE.md (Component Patterns). Names match acr
   - Axes: gridlines in `border`, baseline in `axis`, labels in `{typography.chart-label}` muted, and the forecast week numbers in turquoise 700.
   - Legend: 13 px ink items, each with its 14 px marker (24 px for lines and the band).
 - **Calculation worksheet** — a panel titled «Slik er tallene regnet ut» with subsections in `{typography.subsection-title}`: «Salgshistorikk, siste 12 uker», «Prognoseutregning», «Ukeprognoser og scenarioer» and «Utregning av bestillingsmengde». Tables: 14 px, a header row in 13 px muted with a 1 px ink rule below, hairlines between rows, numbers right-aligned, first column left-aligned. In the scenario table the normal row is bold and its order quantity is blue.
-- **Calculation line** — a `sunken` box, `{rounded.sm}`, 8 px × 10 px, in `{typography.formula}`. «Tallene er avrundet for visning.» sits on its own line inside the box in 13 px muted system UI. The FR-12 sentence about the safety margin follows below the box in meta muted.
+- **Calculation line** — a `sunken` box, `{rounded.sm}`, 8 px × 10 px, in `{typography.formula}`. «Tallene er avrundet for visning.» sits on its own line inside the box in 13 px muted system UI. The FR-12 sentence about the safety margin follows below the box in meta muted. On a narrow screen the line wraps between terms, never inside a number or between a number and its unit.
 - **Status tag** — in the sales table: `{rounded.sm}`, 1 px × 6 px, 13 px, with a 10 px icon. «utsolgt» red on red-tint (hollow square), «uvanlig» amber on amber-tint (triangle), «nytt nivå» ink on canvas (diamond), «brukt» turquoise on turquoise-tint (no icon).
 - **Explanation panel** — a panel on `turquoise-tint` with a `turquoise-border` border, titled «Forklaring», body text in ink only, at most `{spacing.text-measure}`. When a language model has rephrased it, «KI-omformulert forklaring» appears above the text in `{typography.label}` ink.
-- **Button** — `{rounded.md}`, 8 px × 14 px, weight 600, 1 px blue border. Primary: blue fill, white text. Secondary: white fill, blue text. The small variant (5 px × 10 px, 14 px) is used in the settings bar. Text only, no icon-only buttons.
+- **Button** — `{rounded.md}`, 8 px × 14 px, weight 600, 1 px blue border. Primary: blue fill, white text. Secondary: white fill, blue text. The small variant (5 px × 10 px, 14 px) is used in the settings bar. Text only, no icon-only buttons. On touch screens every button is at least 44 px high, the small variant included, and buttons in a row wrap onto a new line instead of shrinking.
 - **Week path** — three steps in a row: a 30 px circle with the number (2 px `field` border, muted number), the step title in 16 px 600 ink and a line of meta muted. Current step: blue circle, white number. Done step: green circle, white number.
 - **Week figures** — four figures in a row between two hairlines with 16 px padding, no boxes: the number in `{typography.week-figure}` ink, the label below in 14 px muted.
 - **Progress bar** — four 28 × 6 px segments, `{rounded.xs}`, 4 px apart: green for done, blue for the current product, `border` for the rest; always followed by its text («produkt 2 av 4 som bør bestilles snart»).
 - **Previous and next links** — plain blue links with arrows («← Isskrape», «Lyspære LED E27 9 W →»), right-aligned in the product header.
-- **Keyboard key** — 13 px, 0 × 6 px, white with a 1 px `field` border, `{rounded.sm}`.
+- **Keyboard key** — 13 px, 0 × 6 px, white with a 1 px `field` border, `{rounded.sm}`. Hidden on touch screens.
 - **Confirmation message** — `blue-tint` with `blue-ink` text, `{rounded.md}`, 8 px × 12 px, at the top of the product area. (Spine-only.)
 - **Error message** — a `red-tint` row with the red «!» ring and ink text, `{rounded.md}`, placed above the fields it concerns. (Spine-only.)
 - **Settings form** — a panel with one field per setting: visible label (`{typography.label}`), number fields like the search field with the unit after them, radio buttons for the method and for unusual weeks, and «Lagre» (primary) and «Avbryt» (secondary). (Spine-only.)
@@ -473,3 +475,4 @@ Visual specs. Behavior is in EXPERIENCE.md (Component Patterns). Names match acr
 | Keep UI text at 13 px or more and paragraphs within 72 characters | Use uppercase labels, letter-spacing or text below 12 px |
 | Keep the switch, icons and markers at their own sizes | Let a rule meant for the chart (`width: 100%`) reach other SVGs |
 | Use system fonts and inline assets only | Load web fonts or anything from a CDN (NFR-1) |
+| Let wide tables and the chart scroll inside their own frame on a narrow screen | Let the page scroll sideways, or shrink chart labels to make the chart fit a phone |

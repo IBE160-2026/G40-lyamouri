@@ -442,6 +442,57 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Arkitekturspinen er `final` og committet. Neste steg er nye epics og stories (`bmad-create-epics-and-stories`), som ikke er startet.
 
+### 18. november 2026 – Nye epics og stories og kontroll mot sensorveiledningen
+
+* Kjørte `bmad-create-epics-and-stories` på designgrenen. Grunnlaget var PRD-en med addendumet og lærerens tilbakemelding, arkitekturspinen med teknologinotatet, `DESIGN.md`, `EXPERIENCE.md` og `issues.md`. Jeg godkjente hvert steg og hver epic med presiseringer.
+* Resultatet er `epics.md` med status `draft`: 8 epics og 39 stories (28 må-ha, 6 bør-ha og 5 kan-ha), og avklaringene D-1 til D-8. Arkitekturspinen, `EXPERIENCE.md` og `DESIGN.md` ble justert der storyene og gjennomgangen krevde det.
+* Viktigste beslutninger:
+  * publiseringen på Vercel er story 1.9, rett etter story 1.8 og før epic 2, slik at sensor får en fungerende nettside; kutt-linjen er bare reserven;
+  * Windows- og offline-testen er story 1.3 på jobb-PC-en, og ingen av dem blokkerer annen utvikling;
+  * story 4.1–4.3 kommer før bør-ha, og story 4.4 sist;
+  * forventede resultater hardkodes aldri i tester eller beregningskode;
+  * hver bør-ha-story kan bygges alene, og justerte mengder endrer aldri prognosene eller R-12-sorteringen;
+  * språkmodellen er valgfri og lokal, og NFR-8 er uendret (D-7).
+* BMAD Review, med linsene adversarial og edge case i hovedtråden uten subagenter, fant 29 feil og mangler (A1–A14 og E1–E15) i `epics.md`, arkitekturspinen og `EXPERIENCE.md`. Jeg godkjente at alle ble rettet.
+* Kontrollerte planen mot hele sensorveiledningen for del 1, som jeg limte inn. Kontrollen fant åtte mangler som kunne påvirke karakteren. Seks av dem ble lagt inn i `epics.md`, uten nye stories eller funksjoner:
+  * en rutine for å eksportere relevante Claude Code-økter per story med `/export`, med personvernsjekk, og for å føre KI-feil og rettelser i KI-styringsloggen og QA-loggen; planleggingsfasen dokumenteres fra arbeidsloggen, memloggene og sesjonsloggene, uten rekonstruerte prompts;
+  * `issues.md` er prosjektets oversikt over feil og åpne punkter, og README-en skal lenke til den og forklare bruken;
+  * hver ferdige story gjennomgås med BMAD Code Review, og funn, beslutninger og rettelser dokumenteres i pull requesten med commits; ingen ekstra person kreves (D-8);
+  * README-en skal ha den publiserte adressen øverst, programmene med versjoner, installasjonen, testkommandoene og forventet oppsettstid med Docker;
+  * README-en skal forklare avgrensningen til modul 4.1 med lenke til Product Brief og lærerens tilbakemelding;
+  * README-en skal vise hvilke skjermstørrelser og nettlesere som faktisk er testet.
+
+  Punkt 2, at planarbeidet ikke er flettet inn i `main`, venter på at jeg godkjenner commit. Punkt 5, commits spredt over tid, dekkes av regelen om små commits som pushes underveis.
+* Bestemte at nettsiden også skal fungere på mobil og iPad. Claude vurderte først NFR-6, PRD-en, UX og arkitekturen uten å endre noe. Deretter ble NFR-6 i PRD-en, `EXPERIENCE.md`, `DESIGN.md` og `epics.md` oppdatert:
+  * minste bredde 320 px, uten sidelengs rulling;
+  * én kolonne fra 900 px og nedover, med produktet øverst og produktlisten under;
+  * grafen og brede tabeller ruller i egen ramme, og utregningslinjene brytes mellom leddene;
+  * trykkflater på minst 44 × 44 px og 16 px tekst i skjemafelt på berøringsskjerm;
+  * iPhone 13 testes på ekte telefon på den publiserte adressen, mens iPad og Android testes i nettleserens responsive visning, og de to typene test føres hver for seg.
+
+  Arkitekturen er uendret.
+* Eksempler på styring av KI:
+  * Claude foreslo 15 stories i epic 2. Jeg ba om å slå sammen tre par for å få færre pull requests, og om å beholde alle akseptansekriteriene og testene.
+  * Jeg ba Claude kontrollere unntaket fra NFR-8 mot PRD-en og addendumet før kravet eventuelt ble endret. NFR-8 ble beholdt uendret.
+  * Claude vurderte først GitHub Issues (A5) ut fra sammendraget av sensorveiledningen. Etter at jeg limte inn hele sensorveiledningen, ble merknaden rettet: den godtar «issues eller tilsvarende».
+  * Claude foreslo å lenke til «lærerens godkjenning av avgrensningen». Jeg ba om at ingenting skulle påstås godkjent uten dokumentasjon. Kontrollen viste at lærerens tilbakemelding fra 6. oktober er en vurdering («Avgrensningen er klok»), og at godkjenningen 14. oktober var min egen godkjenning av briefen.
+  * Claude anbefalte at README-en skulle si at appen bare er laget for PC. Jeg bestemte i stedet at nettsiden også skal fungere på mobil og iPad.
+* Sluttkontroll før commit:
+  * alle 39 stories er beholdt, og alle krav er dekket av minst én story;
+  * de 29 rettingene står fortsatt;
+  * henvisningene, tabellene og mobilkravene stemmer i de fire dokumentene;
+  * `lint_spine.py` fant 0 feil, og personvernskanningen fant ingenting.
+
+  Kontrollen fant to avvik: teststørrelsen 1366 × 768 i `EXPERIENCE.md`, og NFR-2 i «Also covers» for epic 2. Jeg godkjente forslagene:
+  * PC-størrelsen testes i nettlesere på PC;
+  * NFR-2 er lagt til i story 2.6;
+  * NFR-6 og UX-DR7 er lagt til i «Also covers» for epic 1, 3 og 4.
+
+  `issues.md` er oppdatert med de åpne punktene.
+* Ingenting er committet eller pushet.
+
+**Status:** Epics og stories er skrevet og kontrollert, men ikke godkjent eller committet, og `epics.md` er fortsatt `draft`. Neste steg er å godkjenne og committe endringene, og deretter sprintplanlegging (`bmad-sprint-planning`).
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

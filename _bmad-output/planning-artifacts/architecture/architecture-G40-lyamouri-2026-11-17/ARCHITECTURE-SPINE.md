@@ -7,7 +7,7 @@ paradigm: 'server-rendered Django monolith with a functional core and an imperat
 scope: 'Prognose v1: one web application for weekly forecasts, order quantities and purchase planning, with PostgreSQL in both run modes: locally in Docker Compose, and published on Vercel with Neon'
 status: final
 created: '2026-11-17'
-updated: '2026-11-17'
+updated: '2026-11-18'
 binds: [FR-1, FR-2, FR-3, FR-4, FR-5, FR-6, FR-7, FR-8, FR-9, FR-10, FR-11, FR-12, FR-13, FR-14, FR-15, FR-16, FR-17, FR-17b, FR-18, FR-19, FR-20, FR-21, FR-22, FR-23, FR-24, FR-25, FR-26, FR-27, FR-28, FR-29, FR-30, FR-31, FR-32, FR-33, FR-34, FR-35, FR-36, NFR-1, NFR-2, NFR-3, NFR-4, NFR-5, NFR-6, NFR-7, NFR-8, NFR-9, NFR-10, NFR-11, AG-1, AG-2, AG-3, AG-4, AG-5, AG-6, DR-1, DR-2, DR-3, DR-4, DR-5, DR-6, DR-7, DR-8, DR-9, DR-10]
 sources:
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md'
@@ -136,7 +136,7 @@ Arrows point from the depender to the dependency. Nothing points back into the s
 - **Rule:**
   - Pages are Django templates. One stylesheet defines the DESIGN.md tokens as CSS custom properties, and components use only those variables. Fonts are the system stacks in DESIGN.md. There is no front-end framework, UI library, web font or CDN.
   - The forecast chart is inline SVG rendered on the server, as in the approved mockup. A pure function in `web/chart.py` computes its geometry from `ProductResult` and display strings only, and its summary text comes from AD-4.
-  - One optional script, `web/static/web/app.js`, only enhances: arrow keys, scroll positions, submitting the switch and filtering while typing. Every function works without it.
+  - One optional script, `web/static/web/app.js`, only enhances: arrow keys, scroll positions, submitting the switch, filtering while typing, and enabling on Innstillinger the setting that the chosen forecasting method uses, so that the method and that setting change in one save. Every function works without it: a button next to the switch sends the change, and a field disabled for the saved method is changed in a second save. The settings form accepts the method and the setting it uses in one POST, which the tests check.
   - URL map, with Norwegian slugs:
 
     | Path | Page or action |
@@ -156,7 +156,7 @@ Arrows point from the depender to the dependency. Nothing points back into the s
 
 - **Binds:** NFR-10, FR-2; the EXPERIENCE.md Message Catalogue
 - **Prevents:** a stack trace, a debug page or an English default page reaching a user
-- **Rule:** DEBUG is off unless the local `.env` turns it on. The responses 400, 403 (including a failed CSRF check), 404 and 500 render Norwegian pages with the Message Catalogue texts in the not-found panel. A database connection error renders the Database unavailable page with status 503. Errors are logged to the console without request bodies, passwords, secrets or database URLs.
+- **Rule:** DEBUG is off unless the local `.env` turns it on. The responses 400, 403 (including a failed CSRF check), 404, 405 and 500 render Norwegian pages with the Message Catalogue texts in the not-found panel. A database connection error renders the Database unavailable page with status 503 wherever it is raised, also in middleware, so the handler sits in the outermost middleware, and that page reads nothing from the database. Errors are logged to the console without request bodies, passwords, secrets or database URLs.
 
 ### AD-13 — Run modes and configuration
 
@@ -216,14 +216,14 @@ Arrows point from the depender to the dependency. Nothing points back into the s
 | Data and formats | The product number (`varenummer`) is a string of 5 digits, unique within a company. Units sold, stock on hand and quantities are integers; forecasts are floats. Percentages are stored as whole numbers (10 means 10 %); the smoothing factor is stored with one decimal. Enum values: `moving_average`, `exponential_smoothing`, `included`, `excluded`. |
 | Errors | Norwegian messages name the problem and the fix. Validation keeps the previous value. Unknown addresses and other companies' objects give the same not-found page (AD-7, AD-12). |
 | Logging | Console only. Never log passwords, the session secret, database URLs or request bodies (NFR-4). |
-| Configuration | Environment variables only (AD-13). `.env.example` lists every optional local variable and marks each as optional or secret: `PROGNOSE_DEBUG`, `PROGNOSE_LLM_URL`, `PROGNOSE_LLM_MODEL` and `DATABASE_URL`. A production database URL never enters a file, a commit or the shell history. |
+| Configuration | Environment variables only (AD-13). `.env.example` lists every optional local variable that the code uses and marks each as optional or secret: `PROGNOSE_DEBUG` and `DATABASE_URL`, and `PROGNOSE_LLM_URL` and `PROGNOSE_LLM_MODEL` once FR-28 is built. A production database URL never enters a file, a commit or the shell history. |
 | Dependencies | `pyproject.toml` declares the direct dependencies with exact pins; `uv.lock` pins every package exactly and is the one lock file (DR-2); installs use `uv sync --locked`. A new package needs an update to the Stack table. |
 | Commands | The README commands are the same on macOS and Windows and run through `uv run`, so no virtual environment is activated: `docker compose up -d --wait`, `uv sync`, `uv run python src/manage.py migrate`, `uv run python src/manage.py load_seed`, `uv run python src/manage.py runserver --insecure`, and `uv run pytest`. |
-| Platforms | macOS on Apple silicon or Intel, and Windows 10 22H2 or Windows 11 23H2 on x64, each with Docker Desktop. Windows on ARM is not supported in v1, because psycopg has no wheel for it. |
+| Platforms | macOS on Apple silicon or Intel, and Windows 10 22H2 or Windows 11 23H2 on x64, each with Docker Desktop; on Windows, Docker Desktop needs WSL 2 and hardware virtualization switched on. Windows on ARM is not supported in v1, because psycopg has no wheel for it. |
 | Optional features | Should and Could items exist in code only once they are built. There are no runtime feature flags except the FR-28 switch. A story that builds an item updates every place EXPERIENCE.md ties to it, for example the header link, step 3 of the week path and the last-product button for FR-30. |
 | Checks before a pull request | Each story is built on its own branch and merged through a reviewed pull request (DR-7). Before that, `uv run pytest`, `uv run ruff check` and `uv run ruff format --check` pass locally and in CI (AD-17). |
 | Documents | `docs/` holds `PRODUCT.md`, the `DESIGN.md` link, `arbeidslogg.md`, `qa-logg.md` (DR-9), `ki-styringslogg.md` (DR-5) and `statustabell.md` (DR-8). Session logs and saved AI sessions are in `.logs/`, and story specifications in `_bmad-output/implementation-artifacts/`. |
-| Delivery order | The first story proves the whole path: the project skeleton with `compose.yaml` and CI, and the first deploy to Vercel with Neon. Then the Must items. Should and Could items start only after the Must scope passes SM-1 and SM-3 (DR-6). |
+| Delivery order | The first stories prove the local path: the project skeleton with `compose.yaml` (Story 1.1 in `epics.md`) and CI (Story 1.2). The first deploy to Vercel with Neon is a story of its own (Story 1.9), and so is the setup test on Windows x64 and offline (Story 1.3); no other story waits for either, so neither blocks other development. Then the Must items. Should and Could items start only after the Must scope passes SM-1 and SM-3 (DR-6). |
 
 ## Stack
 
@@ -307,13 +307,24 @@ erDiagram
 
 ## Deferred
 
-- **Local language model (FR-28, PRD §10 question 5):** the runtime and the model are chosen when FR-28 is scheduled, as the last Should item. AD-5 fixes the seam; how the 10-second timeout fits NFR-8's 2 seconds is decided then.
+- **Local language model (FR-28, PRD §10 question 5):** the runtime and the model are chosen when FR-28 is scheduled, as the last Should item, and AD-5 fixes the seam. How the 10-second timeout fits NFR-8 was decided on 2026-11-18: every page meets NFR-8's 2 seconds with the model off, which is the default, the basic setup (SM-2) and the published version (DR-10). With the model switched on locally, a product screen may wait up to the 10-second timeout of FR-28 before it shows the rephrased text or the template text, and the README states this exception. FR-28 sets the 10-second timeout, and addendum §3 makes the timeout and its fit with NFR-8 architecture choices, so NFR-8's text is unchanged; the teacher's feedback sets no response-time requirement. No caching or background loading is added; if the exception does not fit when FR-28 is scheduled, the story is postponed instead.
 - **Schemas of the seed JSON and of the spreadsheet's answer-key sheet:** set in the data story. AD-15 and AD-17 fix who writes and who reads them.
 - **Could items:** FR-31 replaces only the storage behind `web/adjustments.py` (AD-10); FR-23 needs an amendment to AD-9; FR-32 to FR-34 are decided when scheduled.
 - **Caching:** only if the NFR-8 check fails, and it needs an amendment to AD-2.
 - **Not in v1:** a Content Security Policy, browser end-to-end tests (Playwright) and rate limiting, because the test logins are public in the README.
 - **Operations:** no monitoring, backup or alerting service in v1. The demo holds synthetic data only, an explicit reset restores it (DR-4), and the Vercel and Neon dashboards show the logs.
 - **Validation messages the Message Catalogue lacks,** for a percentage with decimals or a factor with two decimals: settled in the settings story under the UX copy rules.
-- **Tests not run yet** (recorded in `docs/qa-logg.md`): the offline start with Docker Desktop, and the whole README setup on Windows x64. Both run in the first story and again on the final commit (DR-9, SM-2).
-- **Checks in the first story:** the IBE160-2026 organization must allow the Vercel GitHub app; otherwise the owner deploys `main` with the Vercel CLI. Also check Vercel Hobby's commit-author rule, that Vercel detects `manage.py` in `src/` and runs the build script with `DATABASE_URL_UNPOOLED`, that Neon offers Postgres 18 in AWS Frankfurt when the project is created, and that GitHub Actions is allowed in the organization.
+- **Tests not run yet** (recorded in `docs/qa-logg.md`): the offline start with Docker Desktop, and the whole README setup on Windows x64. Both run in Story 1.3 of `epics.md`, which no other story waits for, and again on the final commit (DR-9, SM-2). The Windows test runs on a Windows x64 PC at work if installing uv and Docker Desktop is allowed there. If no Windows x64 computer can be used, the README and the status table say that the setup was not tested on Windows.
+- **Checks before publishing:** Story 1.2 checks that GitHub Actions is allowed in the organization. Story 1.9 checks the rest: the IBE160-2026 organization must allow the Vercel GitHub app, otherwise the owner deploys `main` with the Vercel CLI; Vercel Hobby's commit-author rule; that Vercel detects `manage.py` in `src/` and runs the build script with `DATABASE_URL_UNPOOLED`; and that Neon offers Postgres 18 in AWS Frankfurt when the project is created. Because the first deploy is no longer in the first story, these checks find problems later, so Story 1.9 is scheduled with time left before the cut-line date (PRD §8.1).
 - **Free-plan terms:** re-checked before submission: Vercel Hobby is for non-commercial use, Neon Free has usage limits, and Docker Desktop is free for personal use and education.
+
+## Change Log
+
+The spine was set to `final` on 2026-11-17. Every later change is recorded here with the date, the reason and the commit, as PRD §12 and DR-5 require.
+
+| Date | Change | Reason | Commit |
+|---|---|---|---|
+| 2026-11-18 | AD-11: `app.js` may also enable, on Innstillinger, the setting that the chosen forecasting method uses, so that the method and that setting change in one save, and the settings form accepts both in one POST. Without the script, a button next to the unusual-weeks switch sends the change, and a method change and its setting take two saves. | The user's decisions when approving Epic 3 in `epics.md` (D-4 and D-5): change the method and its setting before saving, and make the switch work without JavaScript. | not committed yet |
+| 2026-11-18 | Consistency Conventions, «Delivery order», and two Deferred items: the first stories prove the local path and CI; publishing on Vercel with Neon is Story 1.9 and the setup test on Windows x64 and offline is Story 1.3 in `epics.md`, and no other story waits for either. The checks before publishing are split between Story 1.2 (GitHub Actions) and Story 1.9 (Vercel and Neon). Two limitations are stated: a later first deploy finds Vercel or Neon problems later, and Windows stays untested if no Windows x64 computer can be used. | The user's decisions when approving Epics 1 and 4 in `epics.md` (D-1 and D-3): publishing can be cut under PRD §8.1 without holding back the Must scope, and the Windows test must not block other development. | not committed yet |
+| 2026-11-18 | Deferred, «Local language model»: how the 10-second timeout fits NFR-8 is decided. Every page meets NFR-8 with the model off; with the model switched on locally, a product screen may wait up to the timeout, and the README states this. No caching or background loading is added. | The user's decision when approving Epic 7 in `epics.md` (D-7), after a check that the exception fits the PRD (NFR-8 and FR-28 are assumptions, and addendum §3 leaves the fit to the architecture) and the teacher's feedback, which sets no response-time requirement. | not committed yet |
+| 2026-11-18 | Fixes from the BMAD review: AD-12 also covers 405, and the 503 page appears wherever a database error is raised, from the outermost middleware, without reading the database; the Configuration row lists the language-model variables only once FR-28 is built (Story 1.1); the Platforms row names WSL 2 and hardware virtualization for Docker Desktop on Windows; the Deferred item on the local language model cites FR-28 and addendum §3 for the timeout, and NFR-8's text is unchanged. | The review of `epics.md`, this spine and EXPERIENCE.md (findings A3, A4, A13, E7 and E8); the user approved fixing all findings. | not committed yet |

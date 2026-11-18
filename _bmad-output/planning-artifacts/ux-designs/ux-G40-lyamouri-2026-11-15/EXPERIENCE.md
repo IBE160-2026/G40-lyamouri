@@ -2,7 +2,7 @@
 name: 'Prognose'
 status: final
 created: '2026-11-15'
-updated: '2026-11-17'
+updated: '2026-11-18'
 sources:
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md'
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/tilbakemelding-prd.md'
@@ -11,14 +11,14 @@ sources:
 
 # Prognose — Experience Spine
 
-> Desktop web for one purchasing manager per company. [DESIGN.md](DESIGN.md) owns how Prognose looks; this spine owns how it works. The approved mockup is [mockups/konsept-d-kombinert.html](mockups/konsept-d-kombinert.html): Produktoversikt with «Denne uken», Produktside, and a product without a forecast. Innlogging and Samlet bestillingsoversikt have wireframes below. The spines win on any conflict with a mockup, and the known differences are listed under Open Questions and Assumptions.
+> Responsive web for one purchasing manager per company: made for the office PC, and usable on an iPad and a phone. [DESIGN.md](DESIGN.md) owns how Prognose looks; this spine owns how it works. The approved mockup is [mockups/konsept-d-kombinert.html](mockups/konsept-d-kombinert.html): Produktoversikt with «Denne uken», Produktside, and a product without a forecast, all in the desktop layout; the narrower and touch layouts are fixed only in the spines (Responsive & Platform). Innlogging and Samlet bestillingsoversikt have wireframes below. The spines win on any conflict with a mockup, and the known differences are listed under Open Questions and Assumptions.
 
 ## Foundation
 
-- **Surface:** a desktop browser on an office PC or laptop (NFR-6, UJ-1). Mobile layouts, dark mode and print are not required and not designed.
+- **Surface:** a current browser on a PC or laptop, an iPad or a phone, with one responsive layout and the same functions everywhere (NFR-6). The office PC stays the main case (UJ-1). Dark mode and print are not required and not designed.
 - **Users:** one role per company (PRD §2.2). Prognose recommends and the user decides: nothing in the interface places an order (PRD §7).
 - **Language:** Norwegian bokmål throughout, with the glossary labels from PRD §3 used verbatim and no synonyms (NFR-5).
-- **Technology posture:** plain semantic HTML and CSS with the tokens in DESIGN.md, no UI library. Every function works through links and forms; scripts may only enhance (arrow keys in the list, keeping scroll positions) and draw the chart. Everything is served locally, with no web fonts and no CDN (NFR-1). The architecture fixes the framework, the chart library and the URLs; the mockup's addresses (`/produkter/`, `/produkter/10012/`) only illustrate.
+- **Technology posture:** plain semantic HTML and CSS with the tokens in DESIGN.md, no UI library. Every function works through links and forms; scripts may only enhance (arrow keys in the list, keeping scroll positions, sending the unusual-weeks switch, and enabling on Innstillinger the setting that the chosen method uses); the chart is SVG rendered on the server (AD-11). Everything is served locally, with no web fonts and no CDN (NFR-1). The architecture fixes the framework, how the chart is rendered and the URLs; the mockup's addresses (`/produkter/`, `/produkter/10012/`) only illustrate.
 - **Accessibility target:** WCAG 2.2 AA (NFR-11); see Accessibility Floor.
 
 ## Information Architecture
@@ -96,14 +96,14 @@ The page starts with «Endringen gjelder alle produkter i bedriften.» (FR-21) a
 | Setting | Control | Values | Notes |
 |---|---|---|---|
 | Prognosemetode | radio buttons «Glidende gjennomsnitt» and «Eksponentiell glatting» | default glidende gjennomsnitt | |
-| Vindu | number field, unit «uker» | 2–12, default 3 | with exponential smoothing: disabled, «Ikke i bruk med eksponentiell glatting.» |
-| Glattingsfaktor | number field | 0,1–0,9, default 0,3 | with the moving average: disabled, «Ikke i bruk med glidende gjennomsnitt.» |
+| Vindu | number field, unit «uker» | 2–12, default 3 | with exponential smoothing: disabled, «Ikke i bruk med eksponentiell glatting.»; with the script, enabled as soon as «Glidende gjennomsnitt» is chosen, before saving |
+| Glattingsfaktor | number field | 0,1–0,9, default 0,3 | with the moving average: disabled, «Ikke i bruk med glidende gjennomsnitt.»; with the script, enabled as soon as «Eksponentiell glatting» is chosen, before saving |
 | Scenarioprosent | number field, unit «%» | 0–50, default 10 | |
 | Sikkerhetsmargin | number field, unit «%» | 0–100, default 10 | |
 | Uvanlige uker | radio buttons «Tas med» and «Holdes utenfor» | default tas med | also the switch below the chart |
 | Sesongjustering | checkbox | off by default | only when FR-9 is built |
 
-«Lagre» applies the change to every product at once and returns to the page you came from with the confirmation message. «Avbryt» returns without changes. Number fields accept a decimal comma or a decimal point (NFR-10).
+«Lagre» applies the change to every product at once and returns to the page you came from with the confirmation message. «Avbryt» returns without changes. Number fields accept a decimal comma or a decimal point (NFR-10), and a value whose extra decimals are all zero counts as that number: 10,0 is 10 and 0,30 is 0,3. The method and the setting it uses are saved together; without the script, a field that is disabled for the saved method is changed in a second save.
 
 ## Voice and Tone
 
@@ -141,10 +141,10 @@ The copy source for every warning, note, confirmation and error (FR-25 checks ea
 | Order calculation line | always, with a forecast | «Prognose [14,3] + sikkerhetsmargin [10] % ([1,4]) − lager [5] = [10,77] → foreslått bestillingsmengde [11]». When the stock covers the need: «… → foreslått bestillingsmengde 0 (lageret dekker behovet)». Then «Tallene er avrundet for visning.» | PRD FR-12 |
 | Safety-margin text | below the order calculation line | «Sikkerhetsmarginen er en enkel tommelfingerregel. Leveringstid og varer som allerede er bestilt, er ikke tatt med.» | PRD FR-12 |
 | Forecast calculation | always, with a forecast | «Glidende gjennomsnitt, [3] uker: ([16] + [12] + [15]) / [3] = [14,3]» or «Eksponentiell glatting, faktor [0,3]: [0,3] × [15] + [0,7] × [13,3] = [13,8]» | PRD FR-35 |
-| Confidence label reason | always | «[Høy, Middels or Lav]: [deciding condition].», then any other active warnings. Examples: «Høy: minst 104 uker salgshistorikk, minst 100 gyldige uker og ingen varsler.» «Middels: 2 utsolgte uker og 1 uvanlig uke de siste 12 ukene.» «Middels: kortere salgshistorikk enn 104 uker.» «Middels: færre enn 100 gyldige uker.» «Lav: ingen prognose, færre enn 3 gyldige uker.» «Lav: færre enn 12 gyldige uker. 1 utsolgt uke de siste 12 ukene.» | PRD FR-19 format; UX texts, R-16 |
+| Confidence label reason | always | «[Høy, Middels or Lav]: [deciding condition].», then any other active warnings. Examples: «Høy: minst 104 uker salgshistorikk, minst 100 gyldige uker og ingen varsler.» «Middels: 2 utsolgte uker og 1 uvanlig uke de siste 12 ukene.» «Middels: kortere salgshistorikk enn 104 uker.» «Middels: færre enn 100 gyldige uker.» «Lav: ingen prognose, færre enn 3 gyldige uker.» «Lav: ingen prognose, færre uker enn vinduet.» «Lav: færre enn 12 gyldige uker. 1 utsolgt uke de siste 12 ukene.» When several conditions for the same label apply, the first in R-16 order decides: an active warning, then a sales history shorter than 104 weeks, then fewer than 100 valid weeks. | PRD FR-19 format; UX texts, R-16 |
 | No decision | product without a forecast | «Prognose foreslår ingen mengde for dette produktet. Du bestemmer bestillingen selv.» | UX, FR-8 |
 | Settings area | wherever settings can change | «Endringen gjelder alle produkter i bedriften.» | PRD FR-21 |
-| Settings confirmation | after a change | «Innstillingen er endret: [sikkerhetsmargin] er nå [50] %.», then one line per affected value: «[Foreslått bestillingsmengde]: [11] → [17]». No difference: «[Grunnprognose]: [14,3] → [14,3] (uendret)» | PRD FR-21 format; UX for «(uendret)» |
+| Settings confirmation | after a change | «Innstillingen er endret: [sikkerhetsmargin] er nå [50] %.», then one line per affected value: «[Foreslått bestillingsmengde]: [11] → [17]». No difference: «[Grunnprognose]: [14,3] → [14,3] (uendret)». A change that removes or gives a forecast shows «–» for the missing value: «[Grunnprognose]: [14,3] → –» | PRD FR-21 format; UX for «(uendret)» and «–» |
 | Value out of range | FR-20 | «[Sikkerhetsmargin] må være mellom [0] og [100] %. Den forrige verdien er beholdt.» | UX, FR-20 |
 | Not a number | empty or non-numeric input | «Skriv et tall, for eksempel 10 eller 0,3. Den forrige verdien er beholdt.» | UX, NFR-10 |
 | Setting not in use | FR-20 | «Ikke i bruk med eksponentiell glatting.» / «Ikke i bruk med glidende gjennomsnitt.» | UX, FR-20 |
@@ -166,28 +166,29 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 |---|---|---|
 | App header | every page | Marks the current page. «Logg ut» ends the session and opens Innlogging (FR-1). |
 | Settings bar | every page after login | Shows the settings in use: the method with its window or factor, the scenario percentage, the safety margin, unusual weeks, and seasonal adjustment once FR-9 is built. «Endre innstillinger» opens Innstillinger. |
-| Product list | Produktoversikt, Produktside | All products in R-12 order: «Bestill snart» (weeks of cover, lowest first; ties by product number), «Uten prognose» (by product number), «Øvrige produkter» (by product number). Every card and row shows every FR-24 field. The list keeps its scroll position when a product is selected. |
+| Product list | Produktoversikt, Produktside | All products in R-12 order: «Bestill snart» (weeks of cover, lowest first; ties by product number), «Uten prognose» (by product number), «Øvrige produkter» (by product number). Every card and row shows every FR-24 field. The list keeps its scroll position when a product is selected. In the one-column layout it follows the product area, with no scroll frame of its own (Responsive & Platform). |
 | Group heading | product list | Names the group and sums it up: «4 produkter · 31 enheter foreslått», «1 produkt · du bestemmer selv», «25 · etter varenummer». An empty group is not shown. |
 | Product card | «Bestill snart», «Uten prognose» | The whole card is one link. It shows the reason unless the label is «høy». Without a forecast, the reason replaces the week-1 forecast, and the quantity and weeks of cover show «–» (FR-24). With FR-29, an adjusted quantity is shown with «Justert av deg» in place of «Foreslått». |
 | Product row | «Øvrige produkter» | The same fields as a card, on two lines; the whole row is one link. Shows the FR-14 note once it is built. |
-| Search field | top of the list | Filters the list by product number or name; the groups keep their order. A plain form that works on Enter; filtering while typing is an enhancement. |
+| Search field | top of the list | Filters the list by product number or name, ignoring case; the groups keep their order. A plain form that works on Enter and always goes to Produktoversikt, also from Produktside; filtering while typing is an enhancement. The previous and next links ignore the filter. |
 | Trust label | cards, rows, product header, trust panel | The word is always text and the shape is decoration. Its reason follows the Message Catalogue. |
 | Panel | every surface | Holds one question or one task under one heading. A panel never contains another panel; inside it, structure comes from headings, tables and hairlines. |
-| Decision panel | Produktside | Shows the suggested order quantity for week 1 (FR-11). With FR-29: «Behold [11] og gå videre» keeps the suggestion and opens the next product in the review sequence. «Juster mengden» opens a whole-number field with «Lagre» and «Tilbake til forslaget», and the suggestion stays visible next to the adjusted quantity. Without a forecast, «Sett mengden selv» opens the same field. Without FR-29 there are no buttons, and the previous and next links do the job. |
+| Decision panel | Produktside | Shows the suggested order quantity for week 1 (FR-11). With FR-29: «Behold [11] og gå videre» keeps the suggestion and opens the next product in the review sequence. «Juster mengden» opens a whole-number field labeled «Justert bestillingsmengde», with «Lagre» and «Tilbake til forslaget», and the suggestion stays visible next to the adjusted quantity. For a product outside the review sequence, «Behold … og gå videre» opens the next product in R-12 order. Without a forecast, «Sett mengden selv» opens the same field. Without FR-29 there are no buttons, and the previous and next links do the job. With FR-14, the overstock note stands below the suggested order quantity when it is 0 and the stock on hand is above 0. |
 | Trust panel | Produktside | The label, its reason, and every active warning (R-15) whose FR is built, in R-15 order, and nothing that does not apply (FR-25). Together with the decision panel it is visible without scrolling at 1366 × 768 (FR-25). |
 | Warning list | trust panel | One row per active warning, worded as in the Message Catalogue. Stockout and unusual weeks before the recent period are not warnings; the forecast calculation lists them (R-15). |
-| Unusual-weeks switch | below the chart legend | Changes the company setting «Uvanlige uker» between «tas med» and «holdes utenfor» in one step (UJ-1 step 4). The page reloads with the confirmation message, and the change applies to every product (FR-21). It is a real checkbox with `role="switch"`, so Space toggles it. |
-| Forecast chart | Produktside, right below the two panels | Shows the whole sales history (up to 104 weeks) and the three forecast weeks with the scenario band, so every stockout, unusual and level-shift week has its own marker (FR-15 to FR-17, FR-25). The last 12 weeks are marked «Siste 12 uker». The legend explains every marker type, whether or not this product has one. Text alternative: see Accessibility Floor. The mockup shows only the last 12 weeks. |
-| Calculation worksheet | Produktside, below the chart | In order: «Salgshistorikk, siste 12 uker» (week, units sold, status); «Prognoseutregning» (FR-35, with the weeks used and every week left out, with its reason); «Ukeprognoser og scenarioer» (weeks 1–3, three scenarios, the FR-13 column once built, the FR-10 text and the FR-7 note); «Utregning av bestillingsmengde» (FR-12). |
+| Unusual-weeks switch | below the chart legend | Changes the company setting «Uvanlige uker» between «tas med» and «holdes utenfor» in one step (UJ-1 step 4). The page reloads with the confirmation message, and the change applies to every product (FR-21). It is a real checkbox with `role="switch"`, so Space toggles it. Without the script, the small secondary button «Lagre» next to it sends the change; the script hides the button and sends the change on toggle. |
+| Forecast chart | Produktside, right below the two panels | Shows the whole sales history (up to 104 weeks) and the three forecast weeks with the scenario band, so every stockout, unusual and level-shift week has its own marker (FR-15 to FR-17, FR-25). The last 12 weeks are marked «Siste 12 uker», with no mark when the whole history lies in them. The legend explains every marker type, whether or not this product has one. Text alternative: see Accessibility Floor. On a narrow screen the chart keeps its label sizes and scrolls sideways inside its own frame, and the text alternative gives the same values (NFR-6). The mockup shows only the last 12 weeks. |
+| Calculation worksheet | Produktside, below the chart | In order: «Salgshistorikk, siste 12 uker» (week, units sold, status), or «Salgshistorikk, alle ukene» for a history of 12 weeks or fewer; «Prognoseutregning» (FR-35, with the weeks used and every week left out, with its reason); «Ukeprognoser og scenarioer» (weeks 1–3, three scenarios, the FR-13 column once built, the FR-10 text and the FR-7 note, or the FR-9 note when seasonal adjustment could not be used); «Utregning av bestillingsmengde» (FR-12). A table wider than the panel scrolls inside its own frame, and calculation lines wrap between terms (NFR-6). |
 | Calculation line | worksheet | The exact FR-12 or FR-35 format, the rounding note inside the box, and the FR-12 safety-margin text below. |
 | Status tag | sales table | One tag per flagged week: «utsolgt», «uvanlig», «nytt nivå», or «brukt» for a week used in the forecast (the last N calculation weeks for the moving average; every calculation week for exponential smoothing). |
 | Explanation panel | last on Produktside | The template explanation (FR-26), with only the numbers FR-27 allows (see Explanation). |
 | Button | everywhere | The label says what happens. At most one primary button per panel. |
 | Week path | «Denne uken» | Step 1 is current on Produktoversikt. Step 2 opens the first product in the review sequence. Step 3 opens Samlet bestillingsoversikt; without FR-30 the path has two steps. |
 | Week figures | «Denne uken» | Products with order-soon status; units suggested in total (the sum of the suggested order quantities); products without a forecast; products with at least one active warning. Plain figures, not links. |
+| Trust legend | «Denne uken» | «Slik leser du tillitsmerket»: each trust label with its conditions, as fixed text. «Høy»: «Minst 104 uker salgshistorikk, minst 100 gyldige uker og ingen varsler.» «Middels»: «Minst ett varsel, kortere salgshistorikk enn 104 uker eller færre enn 100 gyldige uker.» «Lav»: «Ingen prognose, eller færre enn 12 gyldige uker.» The labels use the trust label component. |
 | Progress bar | Produktside header | The place in the review sequence: «produkt [2] av [4] som bør bestilles snart», then «produkt [1] av [1] uten prognose». Not shown for «Øvrige produkter». |
 | Previous and next links | Produktside header | The previous and next product in R-12 order, across all groups. |
-| Keyboard key | end of the list | Shows «↑ ↓ forrige og neste produkt · Enter åpner produktet». |
+| Keyboard key | end of the list | Shows «↑ ↓ forrige og neste produkt · Enter åpner produktet». Hidden on touch screens, which have no keyboard to use it with (NFR-6). |
 | Confirmation message | top of the product area | After a settings change: the new setting, and the old → new value of what it affects, as in the FR-21 table. Shown once, with `role="status"`. |
 | Error message | above the field or form it concerns | `role="alert"`, and the previous value stays (FR-20, NFR-10). |
 | Settings form | Innstillinger | See Information Architecture. |
@@ -207,17 +208,17 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 | Product selected | product list | The card or row has `aria-current="page"` and the selected style. |
 | No forecast: fewer than 3 valid weeks | card, row, Produktside | FR-24 in the list. On Produktside: «–» and «Ingen foreslått bestillingsmengde», the «No decision» sentence, «Lav» with its reason and warning. The chart shows the weeks that exist without a forecast region; the worksheet shows only the sales table. See the mockup's third frame. |
 | No forecast: window longer than the calculation weeks | card, row, Produktside | As above, with the window texts (FR-8, E11 b). |
-| Suggested order quantity 0 | card, row, Produktside | «Foreslått 0» in ink; the order calculation line ends «(lageret dekker behovet)» when stock covers the need; the FR-14 note once built. |
+| Suggested order quantity 0 | card, row, Produktside | «Foreslått 0» in ink; the order calculation line ends «(lageret dekker behovet)» when stock covers the need; the FR-14 note once built, in the decision panel on Produktside and on the row in the list. |
 | Week-1 forecast 0 | card, row | Weeks of cover «–», no order-soon status, no overstock note (R-12, E23). |
 | Unusual weeks excluded | Produktside | The switch is off; the chart still marks them (FR-16); the warning says «holdt utenfor»; «Prognoseutregning» lists each excluded week and the number of weeks used (FR-16). |
 | Level shift in the recent period | Produktside | The reason names it (FR-17); diamond markers and «nytt nivå» tags; the FR-17b warning once built. |
 | Old data | Produktside | The old-data warning; the label is at most «middels» (R-16). |
-| Seasonal adjustment on (Should) | Produktside | Week forecasts differ and the FR-7 note goes; the worksheet shows the indices and adjusted values (FR-35). When it cannot be used: the FR-9 note. |
+| Seasonal adjustment on (Should) | Produktside | Week forecasts differ and the FR-7 note goes; the worksheet shows the indices and adjusted values (FR-35). When it cannot be used: the FR-9 note, in «Ukeprognoser og scenarioer» where the FR-7 note stands. |
 | Seasonal pattern not used (Should) | Produktside | The FR-36 warning. |
 | Settings changed | page you came from | Confirmation message with old → new; «(uendret)» when nothing changed. |
 | Invalid setting | Innstillinger | Error message at the field; the previous value stays. |
 | Quantity adjusted (Should) | card, decision panel, combined table | «Justert av deg» with the adjusted quantity; the suggestion stays visible; «Tilbake til forslaget» resets it (FR-29). The adjustment lasts for the session (FR-31 is Could). |
-| Last product reviewed | Produktside | The primary button becomes «Gå til samlet bestillingsoversikt» (FR-30), or «Tilbake til produktoversikten» without it. |
+| Last product reviewed | Produktside | On the last product of the review sequence, and on the last product in R-12 order, the primary button becomes «Gå til samlet bestillingsoversikt» (FR-30), or «Tilbake til produktoversikten» without it. |
 | Language model on (Should) | explanation panel | «KI-omformulert forklaring» above the text; on any FR-28 failure the template text, without an error message. |
 | Not found | any address | Not-found panel (FR-2, NFR-10). |
 | Error | any page | The not-found panel with the Database unavailable, Server error or Expired form text; no data and no technical details (NFR-10). |
@@ -227,8 +228,8 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 ## Interaction Primitives
 
 - **Links and forms.** Every action is a link or a form submission, so everything works without scripts (Foundation).
-- **Keyboard.** Tab follows the reading order: header, settings bar, list, product. In the list, ↑ and ↓ move between products and Enter opens one (an enhancement; Tab and Enter always work). Space toggles the switch. There are no shortcuts without a visible hint.
-- **Mouse.** Click anywhere on a card or row. Nothing depends on hover, and there is no drag.
+- **Keyboard.** Tab follows the order of the page: header, settings bar, list, product, also in the one-column layout, where the product area is shown above the list; on Produktside the skip link «Gå til produktet» comes first (Accessibility Floor). In the list, ↑ and ↓ move between products and Enter opens one (an enhancement; Tab and Enter always work). Space toggles the switch. There are no shortcuts without a visible hint.
+- **Mouse and touch.** Click or tap anywhere on a card or row. Nothing depends on hover, nothing is dragged, and a swipe only scrolls the page or a scroll frame. On touch screens every control has a target of at least 44 × 44 px, and form fields use 16 px text so that the phone does not zoom in when a field is selected (NFR-6).
 - **Review sequence.** «Bestill snart», then «Uten prognose» (R-12 groups 1 and 2). «Behold … og gå videre» moves through it; previous and next cover every product.
 - **Settings.** The switch below the chart changes unusual weeks in one step; Innstillinger changes the rest. Every change applies to every product at once and ends with the confirmation message (FR-21).
 - **Banned:** modals, popovers, tooltips as the only home of information, auto-refresh, animation, infinite scroll, drag, hover-only controls, and color-only signals.
@@ -260,14 +261,14 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 Behavioral; visual contrast is in DESIGN.md (Colors).
 
 - WCAG 2.2 AA on every surface, and pages declare `lang="nb"` (NFR-11).
-- Every function works with the keyboard alone, with the visible focus ring (NFR-11). On Produktside the first focusable element is a skip link «Gå til produktet». The product list and the product area are labeled scroll regions («Produkter», «Valgt produkt») that keyboard users can scroll.
+- Every function works with the keyboard alone, with the visible focus ring (NFR-11). On Produktside the first focusable element is a skip link «Gå til produktet». The product list and the product area are labeled regions («Produkter», «Valgt produkt»); where they scroll on their own, keyboard users can scroll them. In the one-column layout the product area is shown above the list while the HTML order stays the same, so the skip link stays the first focusable element on Produktside.
 - Every field has a visible label, the search field included (NFR-11).
 - Headings: one `h1` per page (the product name, «Denne uken», the page title); panels use `h2`, worksheet subsections and list groups use `h3`.
 - The selected product has `aria-current="page"`. Trust labels are text; their shapes are hidden from screen readers.
 - **Chart text alternative (NFR-11):** the chart has a title and a short summary (weeks shown, stockout, unusual and level-shift weeks, forecast and scenario range). Its plotted values are in the worksheet's tables, plus a disclosure «Tabell med alle ukene i grafen» with every plotted week. Markers differ by shape, and the legend names each one (NFR-7).
 - Confirmations use `role="status"`, errors `role="alert"`, and field errors are linked to their field with `aria-describedby`.
 - No timing, no motion, and no content that appears only on hover.
-- Down to 800 px wide, no text overlaps or is cut off, and every control is reachable (NFR-6).
+- From 320 px wide, the page does not scroll sideways, no text overlaps or is cut off, and every control is reachable with the keyboard and by touch (NFR-6). Only wide tables and the chart scroll sideways, inside their own frame.
 
 ## Responsive & Platform
 
@@ -275,9 +276,12 @@ Behavioral; visual contrast is in DESIGN.md (Colors).
 |---|---|
 | ≥ 1181 px | The list (`{spacing.list-width}`) beside the product; the decision panel and the trust panel side by side, with the chart below them. |
 | 901–1180 px | The list narrows to `{spacing.list-width-narrow}`; the two panels stack, decision first. |
-| ≤ 900 px | One column: the list on top (at most 420 px high, scrolling on its own), the product below. Tables scroll inside their own frame. |
-| 1024 px and wider | No horizontal page scrolling (NFR-6). |
+| ≤ 900 px | One column, also on an iPad held upright and on a phone: the product area first (the product on Produktside, «Denne uken» on Produktoversikt), then the product list. Neither has a scroll frame of its own; the page scrolls, and the previous and next links move between products. |
+| 320 px and wider | No horizontal page scrolling, nothing overlaps or is cut off, and every control is reachable with the keyboard and by touch (NFR-6). Only wide tables and the chart scroll sideways, inside their own frame, and the chart keeps its label sizes; calculation lines wrap between terms. The app header and the settings bar wrap onto more lines. |
 | 1366 × 768 | The suggested order quantity, the confidence label and the active warnings are visible without scrolling (FR-25); the chart starts right below them. |
+| Smaller screens | The suggested order quantity, the confidence label and the active warnings come first in the product area, right after the product header (NFR-6). |
+| Touch screens | Every control has a target of at least 44 × 44 px, form fields use 16 px text, and the keyboard hint is hidden (NFR-6). |
+| Test sizes | 1366 × 768 (PC); 820 × 1180 and 1180 × 820 (iPad); 390 × 844 (iPhone 13); 360 × 800 (Android); and 320 px wide. 1366 × 768 is tested in the desktop browsers. The iPhone 13 is also tested on the real phone at the published address, unless the cut line applies (PRD §8.1); the iPad and Android sizes and 320 px only in the browser's responsive view. The QA log and the README keep the two kinds of test apart (NFR-6). |
 
 ## Inspiration & Anti-patterns
 
@@ -295,7 +299,7 @@ Behavioral; visual contrast is in DESIGN.md (Colors).
 Mounia, purchasing manager at a small hardware store with about 30 products, has 20 minutes before the meeting, at the office PC.
 
 1. Mounia opens Prognose and logs in with the company's customer number and password (Innlogging).
-2. Produktoversikt opens with «Denne uken»: 4 products to order soon, 31 units suggested, 1 product without a forecast, 3 with warnings. The list shows «Bestill snart» first, lowest weeks of cover first (UJ-1 step 1).
+2. Produktoversikt opens with «Denne uken»: 4 products to order soon, 31 units suggested, 1 product without a forecast, 4 with warnings (Strøsand 25 kg, Skruer, Snøskuffe aluminium and the E8 demo product). The list shows «Bestill snart» first, lowest weeks of cover first (UJ-1 step 1).
 3. She selects «Start med Isskrape», keeps the suggested 7 and moves on to Strøsand 25 kg.
 4. Without scrolling she sees «11», «Middels» and the two warnings; the chart right below shows the gap in weeks 38–39 and the peak in week 42 (UJ-1 steps 2–3).
 5. She scrolls to «Slik er tallene regnet ut»: (16 + 12 + 15) / 3 = 14,3, and the order calculation line ends at 11. She reads «Forklaring» (UJ-1 step 3).
@@ -341,7 +345,7 @@ No open questions remain. On 2026-11-16 the user approved the five assumptions t
 
 The user also decided that the demo for UJ-1 step 4 uses the rule test product built from E8 (DR-1, Flow 1), and that the chart shows the whole sales history.
 
-**Mockup differences (the spine wins):** the mockup's chart shows only the last 12 weeks, while the chart shows the whole sales history. The legend icons in the mockup may render larger than 14 and 24 px, because the chart's `width: 100%` rule also matches them.
+**Mockup differences (the spine wins):** the mockup's chart shows only the last 12 weeks, while the chart shows the whole sales history. The legend icons in the mockup may render larger than 14 and 24 px, because the chart's `width: 100%` rule also matches them. Two mockup values cannot occur under the rules: Skruer's week-1 forecast of 21,5, because a 3-week moving average of whole units gives 21,3 or 21,7 (the seed uses 21,3, and the suggestion 4 and the weeks of cover 0,9 stay), and Kabelstrips' weeks of cover of 3,7, because 25 ÷ 6,667 gives 3,8 under R-9. The mockup's «Denne uken» counts 3 products with warnings; with the E8 demo product in Testbedrift A it is 4 (Flow 1).
 
 ## Change Log
 
@@ -351,3 +355,7 @@ The spine pair (DESIGN.md and EXPERIENCE.md) was set to `final` on 2026-11-16. E
 |---|---|---|---|
 | 2026-11-16 | The five assumptions became decisions. «Uten prognose» added to the markings and the combined order table. Flow 1 uses the E8 demo product for unusual weeks. The explanation may name years (FR-27). DESIGN.md: the «Uten prognose» marking in red. | The user's decisions before the architecture; the PRD was updated the same day (R-9, R-12, FR-27, FR-30, FR-35, DR-1). | `5373e7b` |
 | 2026-11-17 | Error pages for an unavailable database, a server error and an expired form: a Feilside surface in the Information Architecture, three Message Catalogue rows, the not-found panel for every error page, an Error state, and a failure path in Flow 2. DESIGN.md: the not-found panel also serves the error pages. | PostgreSQL now runs locally as a server, so a stopped database is a new failure, and NFR-10 needs Norwegian error pages (architecture step; PRD §12, 2026-11-17). | `1441c40` |
+| 2026-11-18 | Innstillinger: with the script, the setting that the chosen method uses is enabled before saving; without it, a field disabled for the saved method is changed in a second save. The unusual-weeks switch gets the small secondary button «Lagre» when scripts are off, and the script hides it. The Foundation line names both enhancements. DESIGN.md is unchanged, because the button is its small secondary button. | The user's decisions when approving Epic 3 in `epics.md` (D-4 and D-5), with AD-11 in the architecture spine amended the same day. | not committed yet |
+| 2026-11-18 | Produktside: the FR-14 overstock note stands in the decision panel, below the suggested order quantity (the Decision panel row and the state «Suggested order quantity 0»). | The spines did not say where the note stands on Produktside; the user approved the placement when approving Epic 6 in `epics.md` (D-6). | not committed yet |
+| 2026-11-18 | Fixes from the BMAD review: the Foundation line follows AD-11 (the chart is rendered on the server, with no chart library); the Trust legend for «Slik leser du tillitsmerket»; the field label «Justert bestillingsmengde» and «Behold … og gå videre» outside the review sequence; search always goes to Produktoversikt, ignores case and leaves the previous and next links alone; the reason when the window prevents a forecast, and which condition comes first; «–» in the confirmation when a forecast is removed or given; where the FR-9 note stands; short histories in the sales table and the chart; zero decimals in number fields; Flow 1 counts 4 products with warnings; three more mockup differences. DESIGN.md: a suggested order quantity of 0 is ink in the decision panel. | The review of `epics.md`, the architecture spine and this spine found contradictions and gaps; the user approved fixing all 29 findings (A1–A14 and E1–E15). | not committed yet |
+| 2026-11-18 | Responsive design for PC, iPad and phone (NFR-6): the intro and the Surface line; one column at 900 px and below, with the product area first and the list below it and no scroll frames of their own; no horizontal page scrolling from 320 px; touch targets of at least 44 × 44 px, 16 px text in form fields and the keyboard hint hidden on touch screens; the chart keeps its label sizes and scrolls inside its own frame, and calculation lines wrap between terms; the keyboard order and the skip link; the test sizes, with tests on a real device kept apart from the browser's responsive view. DESIGN.md follows in Layout & Spacing, the app header, the settings bar, the search field, the forecast chart, the calculation line, the button, the keyboard key and Do's and Don'ts. No function added. | The user's decision of 2026-11-18 and the updated NFR-6 in the PRD; the user has an iPhone 13 for tests on a real device. | not committed yet |
