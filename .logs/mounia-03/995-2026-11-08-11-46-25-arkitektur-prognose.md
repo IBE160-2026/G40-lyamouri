@@ -1,6 +1,6 @@
 # Arkitektur for Prognose
 
-## 2026-11-08 kl. 11:46 — mounia.tech03
+## 2026-11-08 kl. 11:46 — Mounia-03
 
 ### Oppgave
 Starte BMAD-arkitekturen for Prognose med den godkjente PRD-en og UX-designet. Arkitekturen skal være enkel og realistisk. Ingen subagenter, spare tokens, korte svar, og ingen commit eller push uten godkjenning.
@@ -24,7 +24,7 @@ Starte BMAD-arkitekturen for Prognose med den godkjente PRD-en og UX-designet. A
 ### Åpne punkter
 - Bekrefte antakelsene fra den raske veien. Deretter settes spinen til `final`.
 
-## 2026-11-08 kl. 12:03 — mounia.tech03
+## 2026-11-08 kl. 12:03 — Mounia-03
 
 ### Oppgave
 Brukeren valgte Django 5.2 LTS med Python 3.13, runserver bare lokalt, og godkjente antakelse 3–5 for MVP. Arkitekturen skal være enkel, kunne videreutvikles og prioritere fristen.
@@ -45,7 +45,7 @@ Brukeren valgte Django 5.2 LTS med Python 3.13, runserver bare lokalt, og godkje
 - Neste steg er epics og stories (`bmad-create-epics-and-stories`).
 - Commits: `29dd679` Legg til arkitektur for Prognose (Django 5.2 LTS) og `e53053e` Oppdater arbeidsloggen med arkitekturen, pushet til GitHub sammen med denne loggen.
 
-## 2026-11-08 kl. 12:31 — mounia.tech03
+## 2026-11-08 kl. 12:31 — Mounia-03
 
 ### Oppgave
 Sjekke at Django 5.2 fungerer med Vercel, beholde SQLite lokalt, planlegge PostgreSQL for publisering, og oppdatere arkitekturen ved behov. Enkel MVP og fristen først.
@@ -67,7 +67,7 @@ Sjekke at Django 5.2 fungerer med Vercel, beholde SQLite lokalt, planlegge Postg
 - Føre publisering inn i endringsloggen i PRD-en (§12), hvis brukeren godkjenner.
 - Sette opp Vercel og Neon i en egen story etter må-ha.
 
-## 2026-11-08 kl. 12:59 — mounia.tech03
+## 2026-11-08 kl. 12:59 — Mounia-03
 
 ### Oppgave
 Gjøre Vercel til publiseringsløsningen: oppdatere PRD og arkitektur, beholde Django hvis det fungerer, bruke PostgreSQL ved publisering, og avklare alle nødvendige tekniske valg før epics og stories. Enkel MVP og fristen først. Ingen subagenter, ingen commit eller push.

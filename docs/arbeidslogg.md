@@ -175,6 +175,338 @@ Arbeidsloggen dokumenterer fremdriften i prosjektet fra 13. oktober 2026. Den sk
 
 **Status:** PRD-en er oppdatert. Neste steg er å oppdatere epics, arkitektur og UX etter endringene med `bmad-correct-course`.
 
+### 15.–16. november 2026 – Nytt UX-design etter PRD-oppdateringen
+
+* Bestemte at det gamle UX-designet og den gamle arkitekturen ikke skulle rettes, men lages på nytt fra den oppdaterte PRD-en. Laget grenen `design/after-prd-feedback` fra `main` og flyttet de gamle mappene til `_bmad-output/planning-artifacts/archive/` med en README, uten å slette historikken (`f28ca71`).
+* Startet `bmad-ux` på nytt med PRD-en som eneste grunnlag og ba om tre tydelig ulike designkonsepter før noe endelig design:
+  * A «Arket»: en tett tabell og et regneark;
+  * B «Innkjøpsmøtet»: en guidet ukeflyt med kort;
+  * C «Instrumentpanelet»: liste og detalj på én skjerm med en stor graf.
+* Vurderte konseptene og valgte et fjerde, kombinert konsept D med en moderne palett i blått, turkis og grønt:
+  * fra C: hovedoppsettet, produktlisten til venstre og den store prognosegrafen;
+  * fra B: produktkort, tydelige bestillingsforslag og en enkel arbeidsflyt;
+  * fra A: detaljerte beregninger, salgsdata og forklaringer.
+
+  A, B og C beholdes uendret som dokumentasjon.
+* Så D i Safari og ba om to forbedringer: grafen skulle stå rett under bestillingsforslaget og tillitsmerket, og bryteren under grafen skulle få normal størrelse.
+* Eksempler på styring av KI:
+  * Et skript fra Claude lukket en av mine faner i Safari. Jeg bestemte at Claude bare skal åpne filer med `open -a Safari`, og ikke styre faner eller vinduer.
+  * Den enorme bryteren var en feil i CSS-koden fra KI: regelen som gjør grafen like bred som panelet, traff også bryteren da den ble flyttet inn i grafpanelet. Det er samme type feil som varseltrekanten 7. november. Den ble rettet med én CSS-linje etter min tilbakemelding, og en kontrollsum viste at ingenting annet var endret.
+  * Jeg ba om at grafen skulle flyttes høyere. Claude forklarte at varslene må stå over grafen fordi FR-25 krever at de er synlige uten å rulle på en skjerm på 1366 × 768, så grafen kunne bare flyttes et stykke opp.
+* Claude fant at forklaringsteksten i A, B og C bruker ukenummer som FR-27 ikke tillater, og at flere tekster avviker fra PRD-en. D bruker de nøyaktige tekstene fra PRD-en.
+* Godkjente D og ba Claude fullføre BMAD UX uten nye designendringer uten behov og uten subagenter. Claude skrev `DESIGN.md` og `EXPERIENCE.md` og satte dem til `final`:
+  * `DESIGN.md`: farger med målt kontrast, skrift, avstander, former og komponenter.
+  * `EXPERIENCE.md`: skjermkart, enkle skisser av innloggingen og samlet bestillingsoversikt (PRD §0), norske tekster for alle varsler og merknader, atferd, tilstander, regler for beregninger og forklaring, tilgjengelighet og tre brukerflyter. Én av flytene viser at en person utenfor gruppen kan forklare tillitsmerket «lav» (SM-10).
+  * D ble kopiert til `mockups/`.
+* Ett avvik fra mockupen: PRD-en krever en markør i grafen for hver utsolgte uke, uvanlige uke og uke med nytt nivå (FR-15–FR-17). `EXPERIENCE.md` sier derfor at grafen viser hele salgshistorikken, mens mockupen bare viser de siste 12 ukene. Spinene gjelder ved avvik.
+* Kontroller:
+  * BMAD sin dekningskontroll (`review-coverage.md`);
+  * en gjennomgang av struktur og språk med åtte rettinger;
+  * maskinelle kontroller av token-henvisninger, lenker og komponentnavn;
+  * Impeccable-detektoren;
+  * et søk etter personopplysninger, lokale stier og hemmeligheter i alle filene som ble committet.
+
+  BMAD sin gjennomgang med subagenter (Reviewer Gate) ble ikke kjørt, fordi jeg ba om at subagenter ikke skulle brukes.
+* Oppdaterte henvisningene i endringsloggen i PRD-en (§12) og i README-en i arkivet. `epics.md` og `.impeccable/config.json` oppdateres når den nye arkitekturen finnes.
+* Committet konseptene, UX-dokumentene og beslutningsloggen (`5db2fe7`) og pushet til `design/after-prd-feedback`. Ingenting er flettet til `main`.
+
+**Status:** UX-designet er ferdig (`final`). Neste steg er en ny arkitektur (`bmad-architecture`), som ikke er startet.
+
+### 16. november 2026 – Beslutninger før arkitekturen
+
+* Godkjente de fem antakelsene i UX-designet:
+  * produkter uten prognose sorteres etter varenummer;
+  * en bekreftelse sier «(uendret)» når en innstilling ikke endrer verdien;
+  * samlet bestillingsoversikt viser «–» og «Uten prognose» for et produkt uten prognose, i samme rekkefølge som produktoversikten;
+  * avrundingsnotat og faste desimaler ved eksponentiell glatting og sesongjustering;
+  * årstall i ukelister.
+* Bestemte at demoen skal vise effekten av uvanlige uker. Referanseeksempel E8 ble valgt, fordi det allerede står i PRD-en. Når uvanlige uker holdes utenfor, går grunnprognosen fra 41,0 til 21,3.
+* Ønsket hele salgshistorikken i grafen hvis det er enkelt og innenfor PRD-en. Det er det: FR-25 sier allerede at grafen viser salgshistorikken, så PRD-en trengte ingen endring for dette.
+* Tillot uke og år i PRD-en bare hvis det ikke påvirker andre krav. Kontrollen viste at bare FR-27 (tillatte tall i forklaringen) måtte endres. FR-28, SM-6, FR-15 og FR-16 virker som før, og ordlisten definerer allerede en uke med år og ukenummer.
+* PRD-en ble oppdatert med `bmad-prd` i oppdateringsmodus. Endringene gjelder R-9, R-12, FR-27, FR-30, FR-35, DR-1 og ordlisten, og endringsloggen (§12) har fått fire nye rader. Statusen er fortsatt `final`.
+* UX-dokumentene ble oppdatert med `bmad-ux` i oppdateringsmodus. Antakelsene er nå beslutninger med henvisning til PRD-reglene, flyt 1 bruker E8-demoen, og forklaringen kan nevne årstall. Mockupen er ikke endret.
+* Filhenvisninger: `.impeccable/config.json` peker nå på de arkiverte mockupene. `epics.md` viser fortsatt til den arkiverte UX-en og arkitekturen og oppdateres etter den nye arkitekturen.
+* Kontroller:
+  * alle 17 faste norske tekster fra PRD-en står ordrett i UX-en;
+  * de sju nye PRD-reglene stemmer med UX-en;
+  * ingen antakelser står igjen;
+  * YAML, token-henvisninger, lenker og JSON er gyldige;
+  * det er ingen personopplysninger, lokale stier eller hemmeligheter i filene.
+* Kvalitetssikring: Ett kontrollskript fra Claude meldte først «ingen funn» uten å ha lest filene, fordi skallet ikke delte opp fillisten. Claude oppdaget feilen før commit og kjørte kontrollen på nytt med riktig filliste.
+* Committet og pushet til `design/after-prd-feedback`: endringene (`5373e7b`) og commit-hashen i endringsloggene (`220bd3b`). Ingenting er flettet til `main`.
+
+**Status:** PRD-en og UX-designet er oppdatert og `final`. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
+### 16. november 2026 – PRODUCT.md etter det nye UX-designet
+
+* Oppdaterte `PRODUCT.md` i rotmappen etter den godkjente PRD-en og det nye UX-designet. Fila er produktkonteksten som Impeccable leser, og den beskrev fortsatt det arkiverte designet fra 6. november. Bare denne fila ble endret, og ingen nye krav eller funksjoner ble lagt til.
+* Det som er nytt i fila:
+  * kildene er PRD-en og de endelige `DESIGN.md` og `EXPERIENCE.md`, ikke arkivet;
+  * appen kjører lokalt og som publisert versjon på Vercel med PostgreSQL, med kutt-linjen i PRD §8.1;
+  * innloggingssiden er inngangen, så spørsmålet om en egen offentlig side er lukket;
+  * må-, bør- og kan-ha følger PRD §8.1–8.3, også rekkefølgen på bør-ha-delene;
+  * «Uten prognose», tallformat og avrunding (R-9), årstall i uker (FR-27), hele salgshistorikken i grafen og E8-demoen i «Prøv selv»;
+  * språktonen fra `EXPERIENCE.md`. Farger og skrift står i `DESIGN.md` og gjentas ikke.
+* Kontroller:
+  * alle 18 siterte norske tekster står ordrett i PRD-en eller UX-dokumentene;
+  * alle 55 krav-ID-er, seksjonene, ordlisteordene og stiene finnes;
+  * listene over må-, bør- og kan-ha er like PRD §8.1–8.3;
+  * Impeccable leser fila uten feil;
+  * det er ingen personopplysninger, lokale stier eller hemmeligheter i endringen.
+* Kvalitetssikring: Claude skrev først «för» i stedet for «for» i den faste teksten «Tallene er avrundet for visning.», og rettet det før kontrollen.
+* Funn: Impeccable finner ikke den nye `DESIGN.md`, fordi den leter i rotmappen, mens fila ligger i UX-mappen. Det må løses før Impeccable brukes i byggingen.
+* Committet (`e549c78`) og pushet til `design/after-prd-feedback`. Ingenting er flettet til `main`.
+
+**Status:** `PRODUCT.md` samsvarer med PRD-en og UX-designet. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
+### 16. november 2026 – Impeccable og DR-2 før arkitekturen
+
+* Rettet to punkter før arkitekturen, uten å endre PRD-en eller det godkjente designet:
+  1. **Impeccable fant ikke den godkjente `DESIGN.md`** og ville derfor lage et nytt visuelt design. Impeccable leter bare i rotmappen og i `docs/`, mens fila ligger i UX-mappen. Forsøk i en egen testmappe viste at `.impeccable/`-mappen ikke virker, og at Impeccable ikke har noen innstilling for stien. `docs/DESIGN.md` er nå en symbolsk lenke til den godkjente fila. Impeccable leser dermed originalen, og det finnes ingen kopi som kan bli ulik.
+  2. **`PRODUCT.md` lå løst i rotmappen**, og det tillater ikke DR-2. Fila er flyttet til `docs/` med `git mv`, så historikken følger med. Rotmappen har nå bare filene `README.md`, `.gitignore` og `CLAUDE.md`.
+* Kontroller:
+  * `impeccable context` finner `docs/PRODUCT.md` og `docs/DESIGN.md` og ber ikke lenger om et nytt design;
+  * Impeccable leste 28 986 tegn, som er den godkjente `DESIGN.md` uten det siste linjeskiftet;
+  * `impeccable doctor` fant ingen avvik;
+  * en ny klon av grenen ga samme resultat;
+  * kontrollsummene viser at alle 38 filene i PRD- og UX-mappene er uendret;
+  * innholdskontrollen av `PRODUCT.md` og personvernsøket fant ingen feil.
+* Vær oppmerksom på:
+  * Impeccable-kommandoer som skriver `DESIGN.md`, for eksempel `document` eller avslutningen av en bygging, vil enten skrive gjennom lenken til den godkjente fila eller erstatte lenken med en egen fil. Begge deler må godkjennes først og føres i endringsloggen til UX-en.
+  * På Windows uten støtte for symbolske lenker i git blir `docs/DESIGN.md` en tekstfil med stien. Det påvirker bare Impeccable, ikke appen.
+  * Story 4.1 i `epics.md` nevner `PRODUCT.md` som toppnivåfil, og README-en må forklare `docs/` (DR-2). Det rettes når `epics.md` oppdateres etter arkitekturen.
+* Committet (`505d131`) og pushet til `design/after-prd-feedback`. Ingenting er flettet til `main`.
+
+**Status:** Impeccable finner det godkjente designet, og rotmappen følger DR-2. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
+### 16. november 2026 – Opprydding før arkitekturen
+
+* Gikk gjennom prosjektmappa og foreslo hva som skulle beholdes, arkiveres eller slettes. Etter min beslutning ble bare trygge rettelser gjort: ingen filer er slettet, ingen grener er flettet, og historikken er ikke skrevet om. Designkonseptene A–D og all dokumentasjon er beholdt.
+* Secret key (DR-2, NFR-3):
+  * Ingen gren har noen gang committet `.secret_key`, databasen eller `.env`. Koden på story-grenen har ingen innebygd nøkkel.
+  * `.gitignore` på denne grenen manglet `.secret_key` og `db.sqlite3`. Fila har nå samme blokk som story-grenen (PR #1), byte for byte, så den gir ingen konflikt når grenene flettes.
+  * Alle DR-2-punktene for `.gitignore` er kontrollert med eksempelstier, og seed-dataene blir fortsatt versjonert.
+* Rettet datoen i arkivets README. PRD-en ble sist oppdatert 16. november, og bare oppdateringen fra 15. november er i `main`.
+* Prøvefletting av grenene i en isolert kopi:
+  * `design/after-prd-feedback` kan flettes inn i `main` uten konflikt.
+  * PR #1 (story 1.1) har allerede konflikt med `main` i `.logs/mounia-tech03/issues.md` og `docs/arbeidslogg.md`. Begge sider har lagt til oppføringer på samme sted. Det kan forebygges ved å oppdatere PR #1 med `main`, men det er en fletting og krever godkjenning.
+* Kontroller:
+  * Filhenvisninger: bare `epics.md` har brutte henvisninger, og den venter på arkitekturen.
+  * Personvern: ingen lokale stier, brukernavn, e-postadresser, nøkler eller tokens i noen fil på noen gren eller i historikken. To database-adresser på story-grenen er falske testverdier.
+  * 58 commits har en automatisk forfatter med brukernavn og maskinnavn. Det kan bare rettes ved å skrive om historikken, og det er ikke gjort.
+* Committet (`d67211c`) og pushet til `design/after-prd-feedback`. Ingenting er flettet til `main`.
+
+**Status:** De trygge rettelsene er gjort. Det som gjenstår, krever godkjenning eller arkitekturen. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
+### 16. november 2026 – Personvern, Git-identitet og flytting av sesjonsloggene
+
+* Kontrollerte personvern og Git-identitet, og skilte mellom tillatte navn i dokumentasjonen og personopplysninger som bryter NFR-4:
+  * **Tillatt:**
+    * «Mounia» som persona i PRD-en og UX-en. Det er en oppdiktet rolle, og navnet valgte jeg selv.
+    * Fullt navn i medlemslisten i README.
+    * GitHub-navnet «Mounia-03» i BMAD-konfigurasjonen.
+    * Lærerens navn i lærerens egne commits.
+  * **Gråsone:** det gamle brukernavnet i loggene, som er første del av en privat e-postadresse, sto i navnet på loggmappa og i 12 overskrifter i sesjonsloggene.
+  * **Bryter NFR-4:** 61 gamle commits har fullt navn, macOS-brukernavn og maskinnavn, og flettecommiten som GitHub laget for PR #2, har skoleadressen min. Dette står bare i Git-historikken, ikke i filene.
+* Satte Git-identiteten for nye commits i dette repoet: `Mounia-03` med GitHubs noreply-adresse. Claude spurte meg først, og jeg valgte navnet og adressen. Gamle commits er ikke endret. Det ville krevd force-push og gjort alle commit-hashene i PRD-en, UX-en og loggene ugyldige. De gamle identitetene skal i stedet beskrives i QA-loggen ved innlevering (NFR-4, DR-9).
+* Flyttet sesjonsloggene fra `.logs/mounia-tech03/` til `.logs/mounia-03/` med `git mv`. Sesjonslogg-skillen bruker git-navnet, så nye logger havner i samme mappe som de gamle. Det gamle brukernavnet er byttet til «Mounia-03» i de 12 overskriftene.
+* Kontroller:
+  * alle 12 filene er omdøpt, ingen er slettet, og bare de 12 overskriftslinjene er endret;
+  * `git log --follow` viser hele historikken;
+  * det gamle brukernavnet finnes ikke lenger i overskriftene eller i noen annen fil.
+* Prøvefletting i en isolert kopi: designgrenen kan fortsatt flettes inn i `main` uten konflikt. Flettes PR #1 etterpå, legger git loggene 991 og 992 fra story-grenen i den nye mappa, men ber om bekreftelse. Det kommer i tillegg til de to konfliktene som fantes fra før.
+* Henvisningen til den gamle mappa i oppføringen om oppryddingen er beholdt. Den beskriver PR #1 mot `main`, der mappa fortsatt har det gamle navnet.
+* Committet (`6245a0a`) og pushet til `design/after-prd-feedback`. Ingenting er flettet eller slettet.
+
+**Status:** Nye commits har en identitet uten privat e-post, og sesjonsloggene ligger i én mappe. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
+### 16. november 2026 – Arkivering av gamle epics, sprintplan og kode
+
+* Arkiverte den gamle planen og koden før den nye arkitekturen, uten å slette noe, flette grener eller skrive om historikken:
+  * `epics.md` og `sprint-status.yaml` er flyttet med `git mv` til `archive/epics-G40-lyamouri-2026-11-08/`. De bygger på den arkiverte UX-en og arkitekturen og på PRD-en før lærerens tilbakemelding, og den første milepælen i sprintplanen (11. november) er passert. Nye epics og ny sprintplan lages etter den nye arkitekturen.
+  * Den gamle koden fra story 1.1 ligger ikke på designgrenen. Det er Django-skjelettet som ble bygget 10.–11. november på den arkiverte arkitekturen. Det er bevart uendret i grenen `story/1-1-project-skeleton` (PR #1) og i den nye taggen `archive/story-1-1-project-skeleton`. Der ligger også story-dokumentene, sesjonsloggene 991–992 og arbeidsloggoppføringene for 10. og 11. november.
+  * Arkivets README forklarer hva som er arkivert og hvor koden ligger. Den sier også at koden ikke er grunnlag for den nye arkitekturen.
+* Kontroller:
+  * 404 sporede filer før og etter, de to filene er flyttet uendret, og ingen er slettet;
+  * `git log --follow` viser historikken til de flyttede filene;
+  * taggen har nøyaktig samme 417 filer som story-grenen, også koden og story-dokumentene;
+  * ingen dokumenter som er i bruk, peker på de gamle stiene;
+  * designgrenen kan fortsatt flettes inn i `main` uten konflikt.
+* Fem åpne punkter fantes bare på story-grenen. Ett er løst (noreply-adressen), og de som kan gjelde den nye byggingen, er ført inn i `issues.md`.
+* Kvalitetssikring: Claude skrev først i arkivets README at sprintplanens datoer var passert. Bare den første milepælen var det, og setningen er rettet.
+* Committet (`8f58dfb` og `652f747`) og pushet grenen og taggen til GitHub. PR #1 og story-grenen er ikke endret.
+
+**Status:** Den gamle planen og koden er arkivert. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
+### 16. november 2026 – PR #1 lukket, arbeidslogg arkivert og lokale rester slettet
+
+* Godkjente de tre forslagene fra arkiveringen:
+  1. **PR #1 er lukket uten fletting.** Kommentaren sier at den gamle koden er arkivert i taggen `archive/story-1-1-project-skeleton` og ikke brukes i den nye arkitekturen. Grenen `story/1-1-project-skeleton` er beholdt.
+  2. **Arbeidsloggoppføringene fra 10. og 11. november** (story 1.1 og GitHub CLI) er kopiert ordrett fra taggen til `archive/story-1-1-G40-lyamouri-2026-11-10/arbeidslogg.md`. Arkivets README viser til dem.
+  3. **De gamle lokale filene er slettet etter kontroll:** `__pycache__` i fem gamle appmapper (19 `.pyc`-filer, og mappene som ble tomme), `.venv` (93 MB) og `db.sqlite3`.
+* Kontroller før slettingen:
+  * alle 19 `.pyc`-filene har kildekoden sin i taggen, og ingen av filene har noen gang vært committet;
+  * `.venv` har de samme pakkene som `requirements.txt` i taggen og kan lages på nytt;
+  * `db.sqlite3` hadde bare Djangos skjema og ingen data, og kan lages på nytt med `migrate`;
+  * ingenting på denne grenen bruker `.venv` eller databasen.
+* Kontroller etter slettingen: git er uendret (404 sporede filer), og BMAD-skriptene virker fortsatt uten `.venv`. `.secret_key`, `.ruff_cache`, `_bmad/render` og `.DS_Store` er beholdt, fordi de ikke var med i forslaget.
+* Kvalitetssikring: én kontrollkommando fra Claude feilet, fordi macOS-versjonen av `sed` ikke godtok skrivemåten. Ingenting ble committet da, og kontrollen ble gjort på nytt med Python.
+* Committet (`1a0709e`) og pushet til `design/after-prd-feedback`. Ingen grener er flettet.
+
+**Status:** Den gamle planen og koden er arkivert, og PR #1 er lukket. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
+### 16. november 2026 – Oppryddingen fullført
+
+* De første delene av oppryddingen samme dag står i de fire oppføringene over. Her står bare den siste delen.
+* Undersøkte de siste lokale filene og grenen `prd/teacher-feedback` før noe ble slettet:
+  * `.secret_key` ble laget av `load_seed` i story 1.1, og bare den arkiverte koden bruker den. Ny kode lager en ny nøkkel automatisk (NFR-3).
+  * `.ruff_cache/` og de to `.DS_Store`-filene er mellomlager og Finder-innstillinger som lages på nytt.
+  * `_bmad/render/bmad-build/` er BMADs mellomlager for skillen fra story 1.1.
+  * `_bmad/render/bmad-review/` hadde de eneste kopiene av to mellomutkast av PRD-en fra 15. november.
+  * `prd/teacher-feedback` er flettet gjennom PR #2, og alle commitene ligger i `main`.
+* Arkiverte de to PRD-utkastene før slettingen. De er flyttet uendret til `archive/prd-drafts-G40-lyamouri-2026-11-15/`, committet og pushet (`d2bfad2`). Kontrollen viste:
+  * samme kontrollsum som før flyttingen, og identiske filer på GitHub;
+  * at begge diffene gir nøyaktig de opprinnelige utkastene når de brukes på PRD-versjonen de bygger på.
+* Slettet etter min godkjenning:
+  * `.secret_key`, `.ruff_cache/` og de to `.DS_Store`-filene;
+  * `_bmad/render/bmad-build/` og den tomme `bmad-review`-mappa;
+  * grenen `prd/teacher-feedback`, lokalt og på GitHub. Den kan gjenopprettes fra PR #2-siden.
+* Beholdt:
+  * BMAD-konfigurasjonen og BMAD-mappene;
+  * `.claude/settings.local.json`;
+  * Impeccable-motoren og mellomlageret dens;
+  * story-grenen med arkivtaggen.
+* Kontroll av BMAD og Impeccable etter oppryddingen:
+  * BMAD-skriptene virker, også oppsettet for `bmad-architecture`;
+  * `impeccable context` finner `docs/PRODUCT.md` og den godkjente `docs/DESIGN.md` uten å be om nytt design;
+  * git sporer 407 filer, og arbeidsmappa er ren;
+  * GitHub har bare grenene `design/after-prd-feedback`, `main` og `story/1-1-project-skeleton`.
+* Kvalitetssikring: den første slettekommandoen fra Claude stoppet før noe ble slettet, fordi sikkerhetssjekken var feil skrevet. Claude kontrollerte at alt fortsatt fantes, og kjørte kommandoen på nytt med riktig sjekk.
+* Committet (`d2bfad2`) og pushet til `design/after-prd-feedback`. Ingen grener er flettet.
+
+**Status:** Oppryddingen før arkitekturen er fullført. Disse punktene gjenstår:
+* beskrive de gamle commit-identitetene i QA-loggen;
+* slå på e-postinnstillingen på GitHub;
+* vurdere punktene fra story 1.1 i arkitekturen.
+
+Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
+### 17. november 2026 – QA-logg for Git-identitetene
+
+* Undersøkte hvor QA-loggen (DR-9) skal ligge. Det fantes ingen QA-logg fra før. PRD-en lar arkitektursteget fastsette mappene (DR-2), og den arkiverte arkitekturen la QA-loggen i `docs/` sammen med de andre prosessdokumentene.
+* Opprettet `docs/qa-logg.md` som eneste nye fil. Den første oppføringen beskriver de gamle Git-forfatteridentitetene og hvorfor commit-historikken er bevart (NFR-4). Detaljene står bare i QA-loggen.
+* Kontroll: fila har ingen adresser, brukernavn eller maskinnavn. Alle krav-ID-er, stier, taggen og commitene den viser til, finnes.
+* Committet (`99796e5`) og pushet til `design/after-prd-feedback`.
+
+**Status:** QA-loggen har sin første oppføring, og den nye arkitekturen må bekrefte plasseringen. Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
+
+### 17. november 2026 – Ny arkitektur med PostgreSQL
+
+* Startet `bmad-architecture` på designgrenen. Grunnlaget var den godkjente PRD-en, UX-designet og lærerens `technology.md`. Claude leste også `issues.md` og den arkiverte arkitekturen, men gjenbrukte den ikke ukritisk. Flere deler av den var utdatert:
+  * skrifttypen Albert Sans;
+  * grafbiblioteket Chart.js;
+  * den gamle tallkontrollen i forklaringen.
+
+  I tillegg la den nettverkskode i en modul som den selv forbød nettverkskode i.
+* Godkjente anbefalingene P1–P10:
+  * Django 5.2 LTS med en ren beregningskjerne;
+  * uv og pytest;
+  * grafen som SVG laget på serveren;
+  * Neon for publisering og GitHub Actions for testene;
+  * koden i `src/`;
+  * regnearket som eneste fasit;
+  * PostgreSQL lokalt med Docker Compose.
+
+  P6, om migrering og seed-data i byggesteget på Vercel, ble godkjent med et forbehold.
+* Eksempler på styring av KI:
+  * Claude foreslo først SQLite lokalt og PostgreSQL bare på Vercel, slik PRD-en sa. Jeg bestemte at PostgreSQL er et krav i begge kjøremodusene, fordi det er mer langsiktig. Claude skulle undersøke konsekvensene for PRD-en før noe ble endret.
+  * Jeg godkjente automatisk migrering og seed-data på Vercel bare med et forbehold: ingenting skal slette eller overskrive brukerdata automatisk. Derfor ble arkitekturen og PRD-en (DR-4 og DR-10) endret:
+    * byggesteget migrerer bare når endringene bare legger til;
+    * `load_seed` laster bare inn i en tom database;
+    * bare en tilbakestilling som brukeren bekrefter, sletter data.
+  * Jeg ville ha Docker-løsningen bekreftet før godkjenningen. Claude skilte mellom det som var dokumentert, målt og ikke testet. Claude fant også at porten 54320 kan være reservert på Windows, så porten ble endret til 15432.
+* Installerte Docker Desktop 4.99.0 fra Dockers offisielle kilde etter godkjenning. Claude kontrollerte signaturen og notariseringen før installasjonen.
+* Testet PostgreSQL 18.7 med en midlertidig `compose.yaml` utenfor prosjektet. Resultatet står i `docs/qa-logg.md`. Oppstart uten nett og oppsett på Windows er ikke testet.
+* Kvalitetssikring: Claude prøvde å teste PostgreSQL fra en Python-pakke uten Docker. Tillatelsessystemet stoppet det, og Claude prøvde ikke å omgå det.
+* Oppdaterte dokumentene:
+  * PRD-en: FR-4, NFR-1–3, NFR-9, DR-1, DR-2, DR-4, DR-10, SM-2, SM-5 og §10, med tre nye rader i §12;
+  * addendum §2;
+  * `EXPERIENCE.md`, med feilsidene og en rad i endringsloggen;
+  * én linje i `DESIGN.md`;
+  * `docs/PRODUCT.md`;
+  * arkivets README, der tre utsagn var blitt utdatert. Det ble oppdaget i sluttkontrollen før commit.
+* Claude skrev arkitekturspinen med 17 beslutninger (AD-1–AD-17) og et kort notat til læreren om hvordan `technology.md` er tilpasset.
+* Kontroll: Claude gjorde gjennomgangen selv, uten subagenter, slik jeg ba om. Kontrollskriptet fant ingen feil, og 12 hull og mangler i spinen ble lukket.
+* Sluttkontroll før commit: Claude viste de åpne punktene og endringene i DR-4 og DR-10. Claude kontrollerte også samsvaret og personvernet i de 14 filene og fant ingen private opplysninger.
+* Godkjente arkitekturen og dokumentendringene. Committet de 14 kontrollerte filene (`1441c40`) og commit-hashen i endringsloggene (`c76d6cd`), og pushet til `design/after-prd-feedback`. Ingenting er flettet til `main`.
+
+**Status:** Arkitekturspinen er `final` og committet. Neste steg er nye epics og stories (`bmad-create-epics-and-stories`), som ikke er startet.
+
+### 18. november 2026 – Nye epics og stories og kontroll mot sensorveiledningen
+
+* Kjørte `bmad-create-epics-and-stories` på designgrenen. Grunnlaget var PRD-en med addendumet og lærerens tilbakemelding, arkitekturspinen med teknologinotatet, `DESIGN.md`, `EXPERIENCE.md` og `issues.md`. Jeg godkjente hvert steg og hver epic med presiseringer.
+* Resultatet er `epics.md` med status `draft`: 8 epics og 39 stories (28 må-ha, 6 bør-ha og 5 kan-ha), og avklaringene D-1 til D-8. Arkitekturspinen, `EXPERIENCE.md` og `DESIGN.md` ble justert der storyene og gjennomgangen krevde det.
+* Viktigste beslutninger:
+  * publiseringen på Vercel er story 1.9, rett etter story 1.8 og før epic 2, slik at sensor får en fungerende nettside; kutt-linjen er bare reserven;
+  * Windows- og offline-testen er story 1.3 på jobb-PC-en, og ingen av dem blokkerer annen utvikling;
+  * story 4.1–4.3 kommer før bør-ha, og story 4.4 sist;
+  * forventede resultater hardkodes aldri i tester eller beregningskode;
+  * hver bør-ha-story kan bygges alene, og justerte mengder endrer aldri prognosene eller R-12-sorteringen;
+  * språkmodellen er valgfri og lokal, og NFR-8 er uendret (D-7).
+* BMAD Review, med linsene adversarial og edge case i hovedtråden uten subagenter, fant 29 feil og mangler (A1–A14 og E1–E15) i `epics.md`, arkitekturspinen og `EXPERIENCE.md`. Jeg godkjente at alle ble rettet.
+* Kontrollerte planen mot hele sensorveiledningen for del 1, som jeg limte inn. Kontrollen fant åtte mangler som kunne påvirke karakteren. Seks av dem ble lagt inn i `epics.md`, uten nye stories eller funksjoner:
+  * en rutine for å eksportere relevante Claude Code-økter per story med `/export`, med personvernsjekk, og for å føre KI-feil og rettelser i KI-styringsloggen og QA-loggen; planleggingsfasen dokumenteres fra arbeidsloggen, memloggene og sesjonsloggene, uten rekonstruerte prompts;
+  * `issues.md` er prosjektets oversikt over feil og åpne punkter, og README-en skal lenke til den og forklare bruken;
+  * hver ferdige story gjennomgås med BMAD Code Review, og funn, beslutninger og rettelser dokumenteres i pull requesten med commits; ingen ekstra person kreves (D-8);
+  * README-en skal ha den publiserte adressen øverst, programmene med versjoner, installasjonen, testkommandoene og forventet oppsettstid med Docker;
+  * README-en skal forklare avgrensningen til modul 4.1 med lenke til Product Brief og lærerens tilbakemelding;
+  * README-en skal vise hvilke skjermstørrelser og nettlesere som faktisk er testet.
+
+  Punkt 2, at planarbeidet ikke er flettet inn i `main`, venter på at jeg godkjenner commit. Punkt 5, commits spredt over tid, dekkes av regelen om små commits som pushes underveis.
+* Bestemte at nettsiden også skal fungere på mobil og iPad. Claude vurderte først NFR-6, PRD-en, UX og arkitekturen uten å endre noe. Deretter ble NFR-6 i PRD-en, `EXPERIENCE.md`, `DESIGN.md` og `epics.md` oppdatert:
+  * minste bredde 320 px, uten sidelengs rulling;
+  * én kolonne fra 900 px og nedover, med produktet øverst og produktlisten under;
+  * grafen og brede tabeller ruller i egen ramme, og utregningslinjene brytes mellom leddene;
+  * trykkflater på minst 44 × 44 px og 16 px tekst i skjemafelt på berøringsskjerm;
+  * iPhone 13 testes på ekte telefon på den publiserte adressen, mens iPad og Android testes i nettleserens responsive visning, og de to typene test føres hver for seg.
+
+  Arkitekturen er uendret.
+* Eksempler på styring av KI:
+  * Claude foreslo 15 stories i epic 2. Jeg ba om å slå sammen tre par for å få færre pull requests, og om å beholde alle akseptansekriteriene og testene.
+  * Jeg ba Claude kontrollere unntaket fra NFR-8 mot PRD-en og addendumet før kravet eventuelt ble endret. NFR-8 ble beholdt uendret.
+  * Claude vurderte først GitHub Issues (A5) ut fra sammendraget av sensorveiledningen. Etter at jeg limte inn hele sensorveiledningen, ble merknaden rettet: den godtar «issues eller tilsvarende».
+  * Claude foreslo å lenke til «lærerens godkjenning av avgrensningen». Jeg ba om at ingenting skulle påstås godkjent uten dokumentasjon. Kontrollen viste at lærerens tilbakemelding fra 6. oktober er en vurdering («Avgrensningen er klok»), og at godkjenningen 14. oktober var min egen godkjenning av briefen.
+  * Claude anbefalte at README-en skulle si at appen bare er laget for PC. Jeg bestemte i stedet at nettsiden også skal fungere på mobil og iPad.
+* Sluttkontroll før commit:
+  * alle 39 stories er beholdt, og alle krav er dekket av minst én story;
+  * de 29 rettingene står fortsatt;
+  * henvisningene, tabellene og mobilkravene stemmer i de fire dokumentene;
+  * `lint_spine.py` fant 0 feil, og personvernskanningen fant ingenting.
+
+  Kontrollen fant to avvik: teststørrelsen 1366 × 768 i `EXPERIENCE.md`, og NFR-2 i «Also covers» for epic 2. Jeg godkjente forslagene:
+  * PC-størrelsen testes i nettlesere på PC;
+  * NFR-2 er lagt til i story 2.6;
+  * NFR-6 og UX-DR7 er lagt til i «Also covers» for epic 1, 3 og 4.
+
+  `issues.md` er oppdatert med de åpne punktene.
+* Godkjente de åtte filene etter sluttkontrollen. Claude kontrollerte filene som ble staget, og personvernskanningen av linjene som ble lagt til, fant bare to falske treff. Committet de åtte filene (`9dee8b1`) på `design/after-prd-feedback`. Fylte deretter inn commit-hashen i endringsloggene i `epics.md`, PRD-en, arkitekturspinen og `EXPERIENCE.md` i en egen commit (`7d7c970`).
+* Godkjente `epics.md` som `final`. Status og innledningen til endringsloggen ble oppdatert, sammen med arbeidsloggen, sesjonsloggen og `issues.md`, i en egen liten commit (`cfdefff`).
+* Godkjente push. Claude kontrollerte remoten, forfatterne og linjene som ble pushet, og personvernskanningen fant 0 treff. Pushet `design/after-prd-feedback` med `9dee8b1`, `7d7c970` og `cfdefff` til GitHub, som har samme commit som lokalt.
+* Opprettet PR #3 mot `main`:
+  * den har 43 commits og 65 filer, og kan flettes uten konflikter;
+  * den har ingen automatiske tester, fordi GitHub Actions først kommer i story 1.2;
+  * 18 eldre commits har den gamle Git-identiteten, og flettingen tar dem med inn i `main` (QA-loggen, NFR-4).
+
+  Ingenting er flettet til `main`.
+
+**Status:** `epics.md` er `final`, og planarbeidet ligger i PR #3 mot `main`. Flettingen venter på min godkjenning.
+
+Før flettingen må to ting være på plass:
+* «Create a merge commit» velges, så commit-hashene som dokumentene viser til, beholdes;
+* «Keep my email addresses private» slås på, eller flettingen gjøres lokalt med noreply-adressen.
+
+Neste steg etter flettingen er sprintplanlegging (`bmad-sprint-planning`).
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

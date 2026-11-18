@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Konsept A – Arket · Prognose</title>
+<style>
+/* Concept A «Arket» (the sheet) – palette
+   paper      #FAFAF7  page background
+   surface    #FFFFFF  sheets and tables
+   ink        #1F2328  body text (15.1:1 on paper)
+   ink-muted  #57606A  secondary text (6.4:1 on surface)
+   rule       #D0D7DE  hairlines
+   accent     #0B6E69  links, «Bestill snart», focus (5.8:1 on paper)
+   accent-bg  #E6F2F1  accent tint
+   warn       #B42318  warnings (6.6:1 on surface)
+   warn-bg    #FDECEA
+   caution    #7A4B00  «middels» text (6.8:1 on #FFF4DC)
+   caution-bg #FFF4DC
+   Type: system UI 13.5px, tabular numerals; formulas in system monospace. Square corners, no shadows, no motion. */
+:root{--paper:#FAFAF7;--surface:#FFFFFF;--ink:#1F2328;--muted:#57606A;--rule:#D0D7DE;--accent:#0B6E69;--accent-bg:#E6F2F1;--warn:#B42318;--warn-bg:#FDECEA;--caution:#7A4B00;--caution-bg:#FFF4DC;}
+*{box-sizing:border-box}
+body{margin:0;background:#E9E9E4;color:var(--ink);font:13.5px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;padding:24px}
+.concept-head{max-width:1240px;margin:0 auto 20px;background:var(--surface);border:1px solid var(--rule);padding:16px 20px}
+.concept-head h1{margin:0 0 6px;font-size:20px}
+.concept-head p{margin:0 0 10px;max-width:880px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.sw{display:flex;align-items:center;gap:6px;border:1px solid var(--rule);padding:3px 8px}
+.sw i{display:inline-block;width:14px;height:14px;border:1px solid #0002}
+h2.screen{max-width:1240px;margin:28px auto 8px;font-size:14px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.browser{max-width:1240px;margin:0 auto;border:1px solid #BFC3C8;background:var(--paper)}
+.browser .bar{display:flex;gap:6px;align-items:center;padding:7px 10px;background:#ECECEC;border-bottom:1px solid #BFC3C8;font-size:12px;color:#555}
+.browser .bar b{width:10px;height:10px;border-radius:50%;background:#C8C8C8;display:inline-block}
+.browser .bar span{margin-left:10px;background:#fff;border:1px solid #CCC;padding:2px 10px;flex:1}
+.app-top{display:flex;align-items:center;gap:18px;padding:10px 20px;border-bottom:2px solid var(--ink);background:var(--surface)}
+.word{font-weight:700;font-size:16px;letter-spacing:.02em}
+.app-top .meta{color:var(--muted)}
+.app-top nav{margin-left:auto;display:flex;gap:16px}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.page{padding:16px 20px 24px}
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.toolbar input{font:inherit;padding:5px 8px;border:1px solid var(--rule);width:280px;background:var(--surface)}
+.chip{border:1px solid var(--rule);background:var(--surface);padding:4px 10px}
+.chip[aria-pressed=true]{border-color:var(--ink);font-weight:600}
+.count{margin-left:auto;color:var(--muted)}
+table{border-collapse:collapse;width:100%;background:var(--surface)}
+th,td{border-bottom:1px solid var(--rule);padding:5px 8px;text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--ink);white-space:nowrap}
+td.n,th.n{text-align:right}
+tr.group td{background:var(--paper);font-weight:700;padding-top:10px;border-bottom:1px solid var(--ink)}
+.status-soon{color:var(--accent);font-weight:600}
+.status-soon::before{content:"";display:inline-block;width:8px;height:8px;background:var(--accent);margin-right:6px}
+.label{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.label b{display:inline-block;width:17px;height:17px;line-height:15px;text-align:center;border:1px solid currentColor;font-size:11px}
+.l-hoy{color:var(--ink)}
+.l-mid{color:var(--caution)}
+.l-mid b{background:var(--caution-bg)}
+.l-lav{color:var(--warn)}
+.l-lav b{background:var(--warn-bg)}
+.reason{display:block;color:var(--muted);font-size:12px}
+.noforecast{color:var(--warn)}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13px}
+.crumbs{color:var(--muted);margin-bottom:8px}
+.ph{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:14px}
+.ph h1{margin:0;font-size:19px}
+.grid{display:grid;grid-template-columns:1fr 330px;gap:18px}
+.step{background:var(--surface);border:1px solid var(--rule);margin-bottom:12px}
+.step h2{margin:0;padding:7px 10px;font-size:13.5px;border-bottom:1px solid var(--rule);display:flex;gap:8px}
+.step h2 .no{display:inline-block;width:20px;height:20px;line-height:18px;text-align:center;border:1px solid var(--ink);font-size:12px}
+.step .body{padding:9px 10px}
+.weeks td,.weeks th{padding:3px 6px;font-size:12.5px}
+.tag{font-size:11.5px;padding:0 5px;border:1px solid currentColor;white-space:nowrap}
+.t-out{color:var(--muted);border-style:dashed}
+.t-unusual{color:var(--caution)}
+.result{font-weight:700}
+.side .box{background:var(--surface);border:1px solid var(--rule);padding:10px;margin-bottom:12px}
+.side h3{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.warnlist{margin:6px 0 0;padding-left:18px}
+.warnlist li{color:var(--warn)}
+.note{color:var(--muted);font-size:12.5px}
+.btn{display:inline-block;border:1px solid var(--ink);background:var(--surface);padding:4px 10px;color:var(--ink);text-decoration:none;font-weight:600}
+.forklaring{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--ink);padding:10px 12px;margin-top:4px}
+.forklaring h2{margin:0 0 6px;font-size:13.5px}
+.state{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.state .browser{max-width:none}
+.legend{font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+</style>
+</head>
+<body>
+
+<header class="concept-head">
+  <h1>Konsept A – «Arket»</h1>
+  <p>Prognose as a calm, checkable worksheet. The product overview is one dense table that fits about 30 products on an office screen, and the product screen reads top to bottom like a hand calculation: weeks used → forecast → scenarios → order calculation line, every figure with its formula. Near-monochrome with one teal accent, hairline rules, tabular numerals, no motion: the register is the accountant's ledger, built for “can I check this by hand?”.</p>
+  <div class="swatches">
+    <span class="sw"><i style="background:#FAFAF7"></i>paper #FAFAF7</span>
+    <span class="sw"><i style="background:#1F2328"></i>ink #1F2328</span>
+    <span class="sw"><i style="background:#57606A"></i>muted #57606A</span>
+    <span class="sw"><i style="background:#0B6E69"></i>accent #0B6E69</span>
+    <span class="sw"><i style="background:#B42318"></i>warn #B42318</span>
+    <span class="sw"><i style="background:#FFF4DC"></i>caution bg #FFF4DC</span>
+  </div>
+</header>
+
+<h2 class="screen">Skjerm 1 · Produktoversikt (UJ-1 steg 1)</h2>
+<div class="browser">
+  <div class="bar"><b></b><b></b><b></b><span>127.0.0.1:8000/produkter/</span></div>
+  <div class="app-top">
+    <span class="word">Prognose</span>
+    <span class="meta">Testbedrift A · Siste registrerte uke: uke 45, 2026</span>
+    <nav><a href="#">Produktoversikt</a><a href="#">Samlet bestillingsoversikt</a><a href="#">Innstillinger</a><a href="#">Logg ut</a></nav>
+  </div>
+  <div class="page">
+    <div class="toolbar">
+      <input type="search" aria-label="Søk på varenummer eller navn" placeholder="Søk på varenummer eller navn">
+      <span class="chip" aria-pressed="true">Alle (30)</span>
+      <span class="chip">Bestill snart (4)</span>
+      <span class="chip">Uten prognose (1)</span>
+      <span class="chip">Med varsel (3)</span>
+      <span class="count">Innstillinger i bruk: glidende gjennomsnitt, 3 uker · sikkerhetsmargin 10 %</span>
+    </div>
+    <table>
+      <thead><tr>
+        <th>Varenr.</th><th>Produkt</th><th class="n">Lagerbeholdning</th><th class="n">Ukeprognose uke 1</th><th class="n">Foreslått bestillingsmengde</th><th class="n">Uker dekning</th><th>Tillitsmerke</th><th>Status</th>
+      </tr></thead>
+      <tbody>
+        <tr class="group"><td colspan="8">Bestill snart · 4 produkter, 31 enheter foreslått</td></tr>
+        <tr><td>10007</td><td><a href="#">Isskrape</a></td><td class="n">2</td><td class="n">8,0</td><td class="n">7</td><td class="n">0,3</td><td><span class="label l-hoy"><b>H</b>Høy</span></td><td><span class="status-soon">Bestill snart</span></td></tr>
+        <tr><td>10012</td><td><a href="#">Strøsand 25 kg</a></td><td class="n">5</td><td class="n">14,3</td><td class="n">11</td><td class="n">0,3</td><td><span class="label l-mid"><b>M</b>Middels</span><span class="reason">2 utsolgte uker og 1 uvanlig uke de siste 12 ukene</span></td><td><span class="status-soon">Bestill snart</span></td></tr>
+        <tr><td>10031</td><td><a href="#">Lyspære LED E27 9 W</a></td><td class="n">12</td><td class="n">18,7</td><td class="n">9</td><td class="n">0,6</td><td><span class="label l-hoy"><b>H</b>Høy</span></td><td><span class="status-soon">Bestill snart</span></td></tr>
+        <tr><td>10004</td><td><a href="#">Skruer 4×40 mm, 200 stk.</a></td><td class="n">20</td><td class="n">21,5</td><td class="n">4</td><td class="n">0,9</td><td><span class="label l-mid"><b>M</b>Middels</span><span class="reason">Nytt nivå de siste 12 ukene</span></td><td><span class="status-soon">Bestill snart</span></td></tr>
+        <tr class="group"><td colspan="8">Uten prognose · 1 produkt, du bestemmer selv</td></tr>
+        <tr><td>10040</td><td><a href="#">Snøskuffe aluminium</a></td><td class="n">6</td><td class="noforecast">Ingen prognose: færre enn 3 gyldige uker</td><td class="n">–</td><td class="n">–</td><td><span class="label l-lav"><b>L</b>Lav</span></td><td></td></tr>
+        <tr class="group"><td colspan="8">Øvrige produkter · 25, sortert etter varenummer</td></tr>
+        <tr><td>10001</td><td><a href="#">Malertape 25 mm</a></td><td class="n">40</td><td class="n">9,3</td><td class="n">0</td><td class="n">4,3</td><td><span class="label l-hoy"><b>H</b>Høy</span></td><td></td></tr>
+        <tr><td>10002</td><td><a href="#">Kabelstrips 200 mm</a></td><td class="n">25</td><td class="n">6,7</td><td class="n">0</td><td class="n">3,7</td><td><span class="label l-hoy"><b>H</b>Høy</span></td><td></td></tr>
+        <tr><td>10019</td><td><a href="#">Tetningslist 6 m</a></td><td class="n">14</td><td class="n">3,0</td><td class="n">0</td><td class="n">4,7</td><td><span class="label l-mid"><b>M</b>Middels</span><span class="reason">Kortere historikk enn 104 uker</span></td><td></td></tr>
+        <tr><td colspan="8" class="note">… 22 produkter til. Alle 30 får plass på én skjerm ved 1366 × 768 med kompakte rader.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h2 class="screen">Skjerm 2 · Produktside (UJ-1 steg 2–4)</h2>
+<div class="browser">
+  <div class="bar"><b></b><b></b><b></b><span>127.0.0.1:8000/produkter/10012/</span></div>
+  <div class="app-top">
+    <span class="word">Prognose</span>
+    <span class="meta">Testbedrift A · Siste registrerte uke: uke 45, 2026</span>
+    <nav><a href="#">Produktoversikt</a><a href="#">Samlet bestillingsoversikt</a><a href="#">Innstillinger</a><a href="#">Logg ut</a></nav>
+  </div>
+  <div class="page">
+    <div class="crumbs"><a href="#">Produktoversikt</a> / 10012</div>
+    <div class="ph"><h1>Strøsand 25 kg</h1><span>Varenr. 10012</span><span>Lagerbeholdning 5</span><span class="label l-mid"><b>M</b>Middels</span><span style="margin-left:auto"><a href="#">← Forrige</a> · <a href="#">Neste produkt →</a></span></div>
+    <div class="grid">
+      <div>
+        <section class="step"><h2><span class="no">1</span>Uker brukt i beregningen</h2><div class="body">
+          <table class="weeks">
+            <tr><th>Uke</th><td>34</td><td>35</td><td>36</td><td>37</td><td>38</td><td>39</td><td>40</td><td>41</td><td>42</td><td>43</td><td>44</td><td>45</td></tr>
+            <tr><th>Solgt</th><td>11</td><td>13</td><td>12</td><td>14</td><td>0</td><td>2</td><td>13</td><td>15</td><td>31</td><td>16</td><td>12</td><td>15</td></tr>
+            <tr><th>Status</th><td></td><td></td><td></td><td></td><td><span class="tag t-out">utsolgt</span></td><td><span class="tag t-out">utsolgt</span></td><td></td><td></td><td><span class="tag t-unusual">▲ uvanlig</span></td><td>brukt</td><td>brukt</td><td>brukt</td></tr>
+          </table>
+          <p class="note">Uke 38 og 39 er utelatt fordi varen var utsolgt. Uke 42 er en uvanlig uke og er tatt med (innstilling: tas med).</p>
+        </div></section>
+        <section class="step"><h2><span class="no">2</span>Prognoseutregning</h2><div class="body">
+          <div class="mono">Glidende gjennomsnitt, 3 uker: (16 + 12 + 15) / 3 = <span class="result">14,3</span></div>
+          <p class="note">Uker brukt: uke 43, 44 og 45.</p>
+        </div></section>
+        <section class="step"><h2><span class="no">3</span>Ukeprognoser og scenarioer (scenarioprosent 10 %)</h2><div class="body">
+          <table>
+            <thead><tr><th></th><th class="n">Uke 1 · uke 46</th><th class="n">Uke 2 · uke 47</th><th class="n">Uke 3 · uke 48</th></tr></thead>
+            <tr><td>Optimistisk</td><td class="n">15,8</td><td class="n">15,8</td><td class="n">15,8</td></tr>
+            <tr><td><b>Normal</b></td><td class="n"><b>14,3</b></td><td class="n"><b>14,3</b></td><td class="n"><b>14,3</b></td></tr>
+            <tr><td>Pessimistisk</td><td class="n">12,9</td><td class="n">12,9</td><td class="n">12,9</td></tr>
+          </table>
+          <p class="note">Merknad: Uke 2 og 3 viser samme tall som uke 1, fordi sesongjustering ikke er slått på.</p>
+        </div></section>
+        <section class="step"><h2><span class="no">4</span>Utregning av bestillingsmengde</h2><div class="body">
+          <div class="mono">14,3 + sikkerhetsmargin 10 % (1,4) − lagerbeholdning 5 = 10,77 → <span class="result">foreslått bestillingsmengde 11</span></div>
+        </div></section>
+        <section class="forklaring"><h2>Forklaring</h2>
+          <p style="margin:0">Prognosen bruker glidende gjennomsnitt over de 3 siste ukene brukt i beregningen, uke 43, 44 og 45: 14,3 per uke. Uke 38 og 39 er utelatt fordi varen var utsolgt. Uke 42 hadde uvanlig høyt salg og er tatt med. Med 10 % sikkerhetsmargin og 5 på lager foreslår Prognose å bestille 11. Tillitsmerket er middels fordi det er 2 utsolgte uker og 1 uvanlig uke de siste 12 ukene.</p>
+        </section>
+      </div>
+      <aside class="side">
+        <div class="box"><h3>Tillitsmerke</h3>
+          <span class="label l-mid"><b>M</b>Middels</span>
+          <span class="reason" style="margin-top:4px">Middels: 2 utsolgte uker og 1 uvanlig uke de siste 12 ukene.</span>
+        </div>
+        <div class="box"><h3>Varsler</h3>
+          <ul class="warnlist"><li>2 utsolgte uker de siste 12 ukene er holdt utenfor beregningen.</li><li>1 uvanlig uke de siste 12 ukene (uke 42).</li></ul>
+        </div>
+        <div class="box"><h3>Salgshistorikk, siste 12 uker</h3>
+          <svg viewBox="0 0 300 110" width="100%" role="img" aria-label="Salg per uke, uke 34 til 45, og prognose for uke 46 til 48. Tabellen i steg 1 har de samme tallene.">
+            <line x1="0" y1="100" x2="300" y2="100" stroke="#D0D7DE"/>
+            <g fill="#1F2328">
+              <rect x="4" y="62" width="12" height="38"/><rect x="24" y="55" width="12" height="45"/><rect x="44" y="59" width="12" height="41"/><rect x="64" y="52" width="12" height="48"/>
+              <rect x="124" y="55" width="12" height="45"/><rect x="144" y="49" width="12" height="51"/><rect x="184" y="45" width="12" height="55"/><rect x="204" y="59" width="12" height="41"/><rect x="224" y="49" width="12" height="51"/>
+            </g>
+            <rect x="84" y="97" width="12" height="3" fill="none" stroke="#57606A" stroke-dasharray="2 2"/><rect x="104" y="93" width="12" height="7" fill="none" stroke="#57606A" stroke-dasharray="2 2"/>
+            <rect x="164" y="0" width="12" height="100" fill="#7A4B00"/><path d="M170 -2 l5 8 h-10 z" fill="#7A4B00"/>
+            <g fill="none" stroke="#0B6E69" stroke-width="2" stroke-dasharray="4 3"><rect x="244" y="51" width="12" height="49"/><rect x="264" y="51" width="12" height="49"/><rect x="284" y="51" width="12" height="49"/></g>
+          </svg>
+          <div class="legend"><span>▮ solgt</span><span>┆ utsolgt (stiplet)</span><span>▲ uvanlig</span><span>┅ prognose</span></div>
+        </div>
+        <div class="box"><h3>Innstillinger i bruk</h3>
+          <p style="margin:0 0 6px">Glidende gjennomsnitt, 3 uker · Scenarioprosent 10 % · Sikkerhetsmargin 10 % · Uvanlige uker: tas med</p>
+          <a class="btn" href="#">Endre innstillinger</a>
+          <p class="note" style="margin:6px 0 0">Endringen gjelder alle produkter.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<h2 class="screen">Tilstand · Produkt uten prognose (FR-8, FR-24)</h2>
+<div class="state">
+  <div class="browser">
+    <div class="bar"><b></b><b></b><b></b><span>Rad i produktoversikten</span></div>
+    <div class="page">
+      <table>
+        <tr><th>Varenr.</th><th>Produkt</th><th class="n">Lager</th><th class="n">Ukeprognose uke 1</th><th class="n">Foreslått</th><th class="n">Uker dekning</th><th>Tillitsmerke</th></tr>
+        <tr><td>10040</td><td>Snøskuffe aluminium</td><td class="n">6</td><td class="noforecast">Ingen prognose: færre enn 3 gyldige uker</td><td class="n">–</td><td class="n">–</td><td><span class="label l-lav"><b>L</b>Lav</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="browser">
+    <div class="bar"><b></b><b></b><b></b><span>127.0.0.1:8000/produkter/10040/</span></div>
+    <div class="page">
+      <div class="ph"><h1>Snøskuffe aluminium</h1><span>Lagerbeholdning 6</span><span class="label l-lav"><b>L</b>Lav</span></div>
+      <section class="step"><h2><span class="no">!</span>Ingen prognose</h2><div class="body">
+        <p style="margin:0" class="noforecast">Ingen prognose: færre enn 3 gyldige uker.</p>
+        <p class="note">Produktet har 2 gyldige uker. Prognose foreslår ingen bestillingsmengde, så du bestemmer bestillingen selv.</p>
+      </div></section>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

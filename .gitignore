@@ -65,3 +65,8 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Prognose: local database (with SQLite's journal files), collected static files and the local session secret
+db.sqlite3*
+staticfiles/
+.secret_key
