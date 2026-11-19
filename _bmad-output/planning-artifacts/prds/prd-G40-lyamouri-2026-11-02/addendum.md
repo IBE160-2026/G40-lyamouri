@@ -26,7 +26,7 @@ This addendum goes with the PRD in this folder (`prd.md`). The PRD states capabi
 Report C recommends Django + SQLite (83) and names Flask + SQLite (80) as the runner-up. The margin is inside the scoring uncertainty (§5), and the architecture step decides.
 
 The PRD sets constraints, not a stack:
-- one web application with one database: a local file when the research was done, and PostgreSQL in both run modes since 2026-11-17 (NFR-9, FR-4);
+- one web application with one database: a local file when the research was done, PostgreSQL in both run modes from 2026-11-17, and only the local run mode since 2026-11-19 (NFR-9, FR-4, DR-10);
 - no paid services, keys, third-party accounts or internet connection when running (NFR-1);
 - an established password-hashing implementation and a server-side company check on every request (NFR-3, FR-1, FR-2);
 - one calculation module with no dependency on the user interface or the database (NFR-2);
@@ -52,7 +52,7 @@ C-R1, evidence basis medium-low. Django + SQLite with Django templates and Chart
 - a test client with `login()`/`force_login()`, per-test rollback in `TestCase`, an in-memory test database, and `SimpleTestCase` for pure logic [C18][C20];
 - seeding through management commands [C21].
 
-Versions as of 2026-11-01 (to be re-checked by 2026-12-01, §5): Django 6.1.2 is the latest stable release. Version 5.2 LTS is supported to April 2028, and 6.2 LTS is due in April 2027 [C13]. Django 6.1 supports Python 3.12 to 3.15 [C14] and needs SQLite 3.37 or newer [C17]. SQLite is the default database and ships with Python [C14], and a single-user local demo is well inside its limits [C12].
+Versions as of 2026-11-01 (to be re-checked by 2026-12-08, §5): Django 6.1.2 is the latest stable release. Version 5.2 LTS is supported to April 2028, and 6.2 LTS is due in April 2027 [C13]. Django 6.1 supports Python 3.12 to 3.15 [C14] and needs SQLite 3.37 or newer [C17]. SQLite is the default database and ships with Python [C14], and a single-user local demo is well inside its limits [C12].
 
 ### Runner-up: Flask + SQLite
 
@@ -167,7 +167,7 @@ This section covers the technology and AI options. Alternatives to the calculati
 - **Inferences, not findings:** Gemini's EEA terms covering Norway [D22]; a stopped Ollama server showing up as a connection failure; the Django README sequence [C15]; R-8 as a simplified order-up-to policy; the problem of one ratio per week number; and the Hampel filter failing when the median absolute deviation (MAD) is 0.
 - **Still open or not covered:** Django's PBKDF2 iteration count [C16]; an official Django pattern for tying records to a company; and which small model gives acceptable explanations, and how fast. The research also did not cover Chart.js support for the NFR-7 markings, the 2-second targets in NFR-8, or whether the SQLite that ships with Python on macOS and Windows meets Django 6.1's 3.37 minimum.
 - **Dates to re-check sources:**
-  - By 2026-12-01, which is also the submission deadline (DR-6): stack version claims [C1][C9][C13][C24][C33][C34], and the Ollama version and model sizes [D11]-[D13].
+  - By 2026-12-08, which is also the submission deadline (DR-6; earlier 2026-12-01): stack version claims [C1][C9][C13][C24][C33][C34], and the Ollama version and model sizes [D11]-[D13].
   - By 2027-02-01: hosted-tier terms and limits [D20]-[D22] and [D24]-[D27].
   - By 2027-04-21: report B's claims about vendor practice.
   - By 2027-05-01: signals about library maintenance [C7][C8][C29] and report A's software documentation. After this date, re-check reports C and D as a whole before acting on them.
@@ -217,7 +217,7 @@ The Product Brief (approved 2026-10-14) proposed the rules "to be validated duri
 - **Purchase planning:** adjusting order quantities and the combined order overview were added as Should; saving adjustments, approval and CSV export as Could.
 - **Data:** the data is read-only in the app; only settings and adjusted order quantities change.
 - **User interface:** Norwegian, with the visible forecast calculation and order calculation line.
-- **Deadline:** 1 December 2026.
+- **Deadline:** 8 December 2026 at 23:59 (earlier 1 December 2026).
 
 ## 8. Sources
 

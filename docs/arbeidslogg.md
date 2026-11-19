@@ -526,6 +526,33 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Publiseringen er tatt ut av v1, og planleggingsdokumentene er oppdatert. Neste steg er å flette pull requesten når jeg godkjenner den, og deretter sprintplanlegging (`bmad-sprint-planning`).
 
+### 19. november 2026 – Implementation Readiness og sprintplan
+
+* PR #5 er flettet inn i `main` med merge-commiten `5445a2f`, og GitHub viser den som flettet 19. november kl. 19.23.
+* Kjørte `bmad-help`. Planleggingen er ferdig, og neste påkrevde steg var sprintplanlegging.
+* Kjørte kontrollen av Implementation Readiness i `bmad-sprint-planning`. Claude endret ingen filer under kontrollen, og resultatet ble CONCERNS:
+  * alle 37 FR og alle NFR, AG, DR, SM og UX-DR er dekket av minst én story, unntatt SM-9, som ikke er med i v1, og ingen story avhenger av en senere story;
+  * milepælene manglet et sted å stå, fordi `sprint-status.yaml` bare har statuser;
+  * det sto igjen tekst fra publiseringen i `epics.md` og addendumet, blant annet AD-16 i story 5.1 og 8.2;
+  * arkitekturspinen sa både `uv sync` og `uv sync --locked`;
+  * story 1.8 bruker `forecasting/display.py` før story 2.3 lager den.
+* Godkjente sprintplanen med milepælene M0–M6, testdatoer, rekkefølge og reserverekkefølge:
+  * innleveringsfristen er 8. desember 2026 kl. 23.59, ikke 1. desember;
+  * jeg jobber 5–6 timer hver dag, også i helgene;
+  * Windows-PC-en er tilgjengelig 25. november og 7. desember;
+  * SM-10 gjennomføres 3.–4. desember, etter at SM-3 har bestått, uten unntak fra PRD-en;
+  * alle må-ha-stories prioriteres, reserverekkefølgen gjelder ved forsinkelse, og story 4.4 kommer sist;
+  * rettinger etter sluttkontrollen 7. desember gir en ny endelig versjon, som kontrolleres på nytt.
+* Claude laget `sprint-plan.md`, og med sprintskriptet `sprint-status.yaml` med 8 epics og 38 stories, i `_bmad-output/implementation-artifacts/`.
+* Claude førte den nye fristen inn i PRD-en, `epics.md`, addendumet og teknologinotatet, og rettet funnene fra kontrollen, med rader i endringsloggene. AD-15 ble kontrollert som riktig henvisning i story 5.1 og 8.2.
+* Kontroll:
+  * `lint_spine.py` fant 0 feil, og `sprint_plan.py validate` godkjente `sprint-status.yaml`;
+  * kontrollskriptet viste samme dekning som før, og personvernskanningen av de nye linjene fant ingenting;
+  * addendum §2 sa fortsatt at versjonene skal kontrolleres på nytt innen 2026-12-01. Etter min godkjenning ble datoen rettet til 2026-12-08, og PRD §12 nevner rettingen. Kontrollene ble kjørt på nytt uten funn.
+* Godkjente commit, push og pull request mot `main` fra grenen `plan/sprint-planning`, uten fletting.
+
+**Status:** Sprintplanen er laget og sendes som pull request mot `main`. Neste steg er å flette den når jeg godkjenner det, og deretter story 1.1 med `bmad-build`.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

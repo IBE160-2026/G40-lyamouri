@@ -8,7 +8,7 @@ updated: '2026-11-19'
 # PRD: Prognose (G40-lyamouri)
 
 **Version 1 at a glance**
-- **Status:** see the frontmatter. The submission deadline is 1 December 2026 (DR-6).
+- **Status:** see the frontmatter. The submission deadline is 8 December 2026 at 23:59 (DR-6).
 - **Must (§8.1):** the weekly core flow in UJ-1: log in, see the product overview, open a product, see the forecast calculation, scenarios, suggested order quantity, warnings and confidence label, change a setting and see the result change, and read the template explanation.
 - **Should (§8.2):** seasonal adjustment and the seasonal-pattern warning, order quantity per scenario, the overstock note, the level-shift warning text, the optional local language model, and adjusting order quantities with the combined order overview. These items are at risk before the deadline; their order is in §8.2.
 - **Could (§8.3):** settings per product, saving adjustments and approval, CSV export, the note that stock will not last through weeks 2 and 3, and forecast accuracy (MAE).
@@ -762,7 +762,7 @@ Sales history for E1 to E4: 12, 15, 11, 14, 13, 16, 12, 15 (weeks 1 to 8, no sto
   - Every story names the FR-n it implements, every test names the FR-n or E-n it verifies, and every commit names its story, so that each FR can be traced from this PRD to code and tests.
   - The change-log rule in §12 also applies to the architecture, UX and epics documents.
   - The group updates the Product Brief with the changes listed in `addendum.md` (§7 there), so that the repository history shows how the plan developed.
-- **DR-6 Deadline.** The submission deadline is 1 December 2026, and the work is planned backwards from it. Milestone dates are set in sprint planning, and the order of the Should items is in §8.2. Should and Could items start only after the Must scope passes SM-1 and SM-3 (§9).
+- **DR-6 Deadline.** The submission deadline is 8 December 2026 at 23:59 (earlier 1 December 2026), and the work is planned backwards from it. Milestone dates are set in sprint planning, and the order of the Should items is in §8.2. Should and Could items start only after the Must scope passes SM-1 and SM-3 (§9).
 - **DR-7 Workflow.**
   - Each story is built on its own branch and merged through a pull request that names the story and its FR-n and says what was tested; review comments stay in the pull request.
   - Defects and open points are tracked as issues.
@@ -825,7 +825,7 @@ Seasonal adjustment was suggested in the Product Brief and by the teacher, and w
 5. Combined order overview: FR-30.
 6. Optional local language model: FR-28.
 
-Seasonal adjustment comes first because the Product Brief and the teacher asked for it, and the optional language model comes last because the template explanation already meets the need (FR-26). With the deadline on 1 December 2026, the Should items are at risk.
+Seasonal adjustment comes first because the Product Brief and the teacher asked for it, and the optional language model comes last because the template explanation already meets the need (FR-26). With the deadline on 8 December 2026, the Should items are at risk.
 
 ### 8.3 Could (only if time allows)
 
@@ -976,3 +976,4 @@ This PRD was approved and set to final on 2026-11-03. Every change to a requirem
 | 2026-11-17 | The open line about aligning `epics.md` and the architecture spine with this PRD is removed. Both are archived, the new architecture spine follows this PRD, and new epics are made from it. | The new architecture spine is final. | `1441c40` |
 | 2026-11-18 | NFR-6: Prognose is a responsive website for PC, iPad and phone, with the same functions on every screen: no horizontal page scrolling from 320 px, the product before the list in one column, touch targets of at least 44 × 44 px and 16 px text in form fields, and a README that lists the tested screen sizes, devices and browsers, with real devices kept apart from the browser's responsive view. DR-1, DR-9 and the non-goal on a mobile app follow. No function added. | The user's decision of 2026-11-18: the website must also work on a phone and an iPad. 320 px is the width in the reflow criterion of WCAG 2.2, and the checks stay testable, as the teacher's feedback asked (point 4.4). | `9dee8b1` |
 | 2026-11-19 | Publishing removed from version 1: DR-10 and SM-9 stay as «not in version 1», and the cut line in §8.1 no longer applies. Updated: the summary at the top, §1, FR-4, NFR-1, NFR-3, NFR-6 (the real phone reaches the local app over the local network), NFR-8, NFR-9, DR-1 (how to start Prognose at the top of the README, and a section on keys and secrets saying that no API key, paid service or account is needed), DR-9, the non-goal on hosting, §8.1 and the traceability table. No function added. | The teacher's clarification on Canvas on 2026-11-19, as reported by the user and summarized in `avklaring-publisering-2026-11-19.md`: publishing is not mandatory; the application may run locally, but the README must explain how to start it and which API keys are needed. The user approved removing publishing on Vercel with Neon. | `ea06f01` (PR #5) |
+| 2026-11-19 | The submission deadline moves from 1 December 2026 to 8 December 2026 at 23:59. Updated: the summary at the top, DR-6 and §8.2, and in the addendum the re-check dates in §2 and §5 and the deadline in §7. The addendum's §2 now also says that only the local run mode is in version 1. | The new submission deadline of 8 December 2026 at 23:59, recorded during sprint planning on 2026-11-19. The run-mode sentence is a fix from the implementation-readiness check of the same day. | not committed yet |

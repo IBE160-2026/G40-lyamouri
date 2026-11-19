@@ -232,7 +232,8 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1), except D
 
 **Cross-cutting (PRD §6.1)**
 
-- **NFR-1 Local and free to run.** The app and every Must feature run on one computer without paid services, API keys or third-party accounts, and every tool the README asks for is free for personal and educational use. After installation, the local app and its database run without an internet connection, with every asset served locally and none from a CDN. The README covers macOS and Windows.- **NFR-2 Correct, testable calculations.** All §5 rules live in one calculation module with no dependency on the user interface or the database. Automated unit tests check every rule and every reference example for the features built (SM-1). All tests run with one documented command that needs nothing beyond the README installation and the started local database, and the README shows the expected result.
+- **NFR-1 Local and free to run.** The app and every Must feature run on one computer without paid services, API keys or third-party accounts, and every tool the README asks for is free for personal and educational use. After installation, the local app and its database run without an internet connection, with every asset served locally and none from a CDN. The README covers macOS and Windows.
+- **NFR-2 Correct, testable calculations.** All §5 rules live in one calculation module with no dependency on the user interface or the database. Automated unit tests check every rule and every reference example for the features built (SM-1). All tests run with one documented command that needs nothing beyond the README installation and the started local database, and the README shows the expected result.
 - **NFR-3 Security.** Passwords are hashed as FR-1 describes, and the logged-in company is checked on the server on every request (FR-2). The session-signing secret is created by the load command (DR-4) when it is missing, stored in a local file that `.gitignore` excludes, and never committed; setup needs no manual file editing. The repository holds no secrets, and `.env.example` lists the optional configuration. The local database has no stored password and accepts connections only from the same computer.
 - **NFR-4 Privacy.** Only synthetic data is used. Files in the repository contain no personal data and no local file paths. Saved AI sessions are cleaned before they are committed. Before submission, the group scans the whole repository history for secrets, personal data and local paths and records the result in the QA log (DR-9).
 - **NFR-5 Language and number format.** All screens, messages, warnings, notes and explanations are in Norwegian `[ASSUMPTION: bokmål]`. Numbers use a decimal comma; percentages are whole numbers with «%».
@@ -277,7 +278,7 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1), except D
   - Every story names the FR-n it implements, every test names the FR-n or E-n it verifies, and every commit names its story.
   - The change-log rule in PRD §12 applies to the architecture, UX and epics documents.
   - The group updates the Product Brief with the changes in addendum §7.
-- **DR-6 Deadline.** The submission deadline is 1 December 2026, and the work is planned backwards from it. Sprint planning sets the milestone dates; PRD §8.2 gives the order of the Should items. Should and Could items start only after the Must scope passes SM-1 and SM-3.
+- **DR-6 Deadline.** The submission deadline is 8 December 2026 at 23:59 (earlier 1 December 2026), and the work is planned backwards from it. Sprint planning sets the milestone dates; PRD §8.2 gives the order of the Should items. Should and Could items start only after the Must scope passes SM-1 and SM-3.
 - **DR-7 Workflow.** Each story is built on its own branch and merged through a pull request that names the story and its FR-n and says what was tested; review comments stay in the pull request. Defects and open points are tracked as issues. Commits are small and pushed as the work happens. **Definition of Done:** the story's tests and the linter pass; there is no commented-out, unused or duplicated code; the status table and the affected documents are updated; and the pull request has been reviewed.
 - **DR-8 Status table.** One table lists every FR, and DR-10, with its priority, its status at submission (built, partly built, not built or changed), its stories and tests, and the reason for any deviation. The README links it.
 - **DR-9 QA log.** Every defect in AI-generated code or text found by a test, the reference spreadsheet, a review or a manual test is recorded with how it was found, the fix, and the commit or pull request. A manual test checklist for NFR-6, NFR-7, NFR-8, NFR-11 and SM-2 (with the offline start) runs on the final commit and is recorded with the date, operating system, browser and result, and for NFR-6 also the screen size and whether it ran on a real device or in the browser's responsive view.
@@ -332,7 +333,7 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1), except D
 - **AD-13 Local run mode and configuration.** One run mode, the local one. Settings read only environment variables, after loading an optional local `.env`, and neither `.env` nor an API key is needed for the basic setup.
   - `DATABASE_URL` defaults to `postgresql://prognose@127.0.0.1:15432/prognose`. The session secret comes from the git-ignored file `.secret_key`, which `load_seed` creates when it is missing and never overwrites. The app runs with `uv run python src/manage.py runserver --insecure` on 127.0.0.1.
   - Phone test over the local network (NFR-6): only for the manual test on a real phone, the optional local variable `PROGNOSE_LAN_HOST` names the computer's address on a private network, and the app is started with `runserver --insecure 0.0.0.0:8000`. That address is added to `ALLOWED_HOSTS`; without the variable only `127.0.0.1` and `localhost` are allowed. DEBUG stays off, and the database port stays on `127.0.0.1`.
-  - `LANGUAGE_CODE` is `nb` and `TIME_ZONE` is `Europe/Oslo` in both modes.
+  - `LANGUAGE_CODE` is `nb` and `TIME_ZONE` is `Europe/Oslo`.
 - **AD-14 PostgreSQL locally and in CI.** PostgreSQL 18 everywhere: the image `postgres:18.7` in `compose.yaml` locally and in CI. Data access goes through the Django ORM and migrations with psycopg 3, without raw SQL.
   - `compose.yaml` holds only the database: user and database `prognose`, trust authentication, the port `127.0.0.1:15432`, a named volume at `/var/lib/postgresql`, `restart: unless-stopped` and a `pg_isready` health check. It is started with `docker compose up -d --wait`.
   - The tests run against the local PostgreSQL, and the app writes no files at request time.
@@ -346,9 +347,9 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1), except D
 - **Data and formats:** the product number (`varenummer`) is a string of 5 digits, unique within a company. Units sold, stock on hand and quantities are integers; forecasts are floats. Percentages are stored as whole numbers (10 means 10 %), and the smoothing factor with one decimal. Enum values: `moving_average`, `exponential_smoothing`, `included`, `excluded`.
 - **Errors:** Norwegian messages name the problem and the fix; validation keeps the previous value; unknown addresses and other companies' objects give the same not-found page.
 - **Logging:** console only, never passwords, the session secret, database URLs or request bodies.
-- **Configuration:** environment variables only. `.env.example` lists `PROGNOSE_DEBUG` and `DATABASE_URL`, and `PROGNOSE_LLM_URL` and `PROGNOSE_LLM_MODEL` once FR-28 is built, each marked as optional or secret (aligned in the spine on 2026-11-18). A production database URL never enters a file, a commit or the shell history.
+- **Configuration:** environment variables only. `.env.example` lists `PROGNOSE_DEBUG`, `DATABASE_URL` and `PROGNOSE_LAN_HOST` (the phone test, AD-13), and `PROGNOSE_LLM_URL` and `PROGNOSE_LLM_MODEL` once FR-28 is built, each marked as optional or secret (aligned in the spine on 2026-11-18 and 2026-11-19). None of them is needed for the basic setup, and no API key is needed.
 - **Dependencies:** `pyproject.toml` declares the direct dependencies with exact pins; `uv.lock` is the one lock file; installs use `uv sync --locked`. A new package needs an update to the Stack table in the spine.
-- **Commands,** the same on macOS and Windows and run through `uv run` without activating a virtual environment: `docker compose up -d --wait`, `uv sync`, `uv run python src/manage.py migrate`, `uv run python src/manage.py load_seed`, `uv run python src/manage.py runserver --insecure` and `uv run pytest`.
+- **Commands,** the same on macOS and Windows and run through `uv run` without activating a virtual environment: `docker compose up -d --wait`, `uv sync --locked`, `uv run python src/manage.py migrate`, `uv run python src/manage.py load_seed`, `uv run python src/manage.py runserver --insecure` and `uv run pytest`.
 - **Platforms:** macOS on Apple silicon or Intel, and Windows 10 22H2 or Windows 11 23H2 on x64, each with Docker Desktop; on Windows, Docker Desktop needs WSL 2 and hardware virtualization switched on. Windows on ARM is not supported in v1, because psycopg has no wheel for it.
 - **Optional features:** Should and Could items exist in code only once they are built, with no runtime feature flags except the FR-28 switch. A story that builds an item updates every place EXPERIENCE.md ties to it, for example the header link, step 3 of the week path and the last-product button for FR-30.
 - **Checks before a pull request:** `uv run pytest`, `uv run ruff check` and `uv run ruff format --check` pass locally and in CI.
@@ -376,7 +377,7 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1), except D
 - **Publishing (not in version 1).** Until 2026-11-19 the PRD's cut line applied to publishing on Vercel with Neon, planned as Story 1.9 right after Story 1.8 (the user's decisions of 2026-11-18). On 2026-11-19 the teacher clarified on Canvas that publishing is not mandatory, and the user removed it from version 1 together with Story 1.9; the cut line no longer applies (D-1).
 - **Done when** the Must scope passes SM-1 and SM-3, and SM-2 holds on the final commit.
 - **If time runs short in the Must scope:** sprint planning sets the order in which the remaining Must stories are finished, with the stories needed for SM-1, SM-2, SM-3 and DR-1 first. A Must story that is not built is marked as not built in the status table and the README, with the reason (DR-8). No priority changes (the teacher's feedback, 4.1).
-- **Deadline.** 1 December 2026 (DR-6), 13 days after this document was started. Sprint planning sets the milestone dates.
+- **Deadline.** 8 December 2026 at 23:59 (DR-6; earlier 1 December 2026), 20 days after this document was started. Sprint planning sets the milestone dates in `_bmad-output/implementation-artifacts/sprint-plan.md`.
 - **Could items** get testable consequences when they are planned (PRD §4).
 - **Every epic** gives at least one case for the AI steering log (DR-5), and every story meets the DR-7 Definition of Done.
 
@@ -704,7 +705,7 @@ So that I can run it on my own computer without paid services, keys or file edit
 **Acceptance Criteria:**
 
 **Given** a fresh clone on macOS with the prerequisites that the README lists (uv and Docker Desktop)
-**When** the group runs `docker compose up -d --wait`, `uv sync`, `uv run python src/manage.py migrate`, `uv run python src/manage.py load_seed` and `uv run python src/manage.py runserver --insecure`
+**When** the group runs `docker compose up -d --wait`, `uv sync --locked`, `uv run python src/manage.py migrate`, `uv run python src/manage.py load_seed` and `uv run python src/manage.py runserver --insecure`
 **Then** Prognose answers at `http://127.0.0.1:8000/` with a page that declares `lang="nb"` and shows the wordmark «Prognose»
 **And** no step activates a virtual environment, needs an `.env` file or a key, or asks for a file to be edited (NFR-1, NFR-3)
 
@@ -1894,14 +1895,14 @@ As a purchasing manager,
 I want to switch on seasonal adjustment for my company and see week forecasts that follow the season,
 So that a seasonal product is not ordered as if every week were the same.
 
-**Priority:** Should (PRD §8.2, item 1). **Requirements:** FR-9, FR-20 (the setting), FR-21 (the E14 row), FR-26 and FR-27 (the note in the explanation), FR-35 (the seasonal values); R-9, R-14, R-15 (the note); AD-2, AD-3, AD-9, AD-16, AD-17; E14, E25, E26, E27; UX-DR11, UX-DR15, UX-DR28, UX-DR42. It starts only after the Must scope has passed SM-1 and SM-3 and Stories 4.1 to 4.3 are done. R-14 steps 1 and 2 live in one place in the core and are shared with FR-36 (Story 5.2). If the story proves too large during implementation, it is split into the calculation and the screen (the user's decision, 2026-11-18).
+**Priority:** Should (PRD §8.2, item 1). **Requirements:** FR-9, FR-20 (the setting), FR-21 (the E14 row), FR-26 and FR-27 (the note in the explanation), FR-35 (the seasonal values); R-9, R-14, R-15 (the note); AD-2, AD-3, AD-9, AD-15, AD-17; E14, E25, E26, E27; UX-DR11, UX-DR15, UX-DR28, UX-DR42. It starts only after the Must scope has passed SM-1 and SM-3 and Stories 4.1 to 4.3 are done. R-14 steps 1 and 2 live in one place in the core and are shared with FR-36 (Story 5.2). If the story proves too large during implementation, it is split into the calculation and the screen (the user's decision, 2026-11-18).
 
 **Acceptance Criteria:**
 
 **Given** the company settings
 **When** this story adds «Sesongjustering»
 **Then** it is a new field on `CompanySettings`, off by default, with its default defined in `forecasting/settings.py` (FR-9, FR-20, AD-9)
-**And** its migration only adds a field, so that a deploy can apply it (AD-16)
+**And** its migration only adds a field, so that `migrate` keeps the data already in the database (AD-15)
 
 **Given** seasonal adjustment on and a product where R-14 can be used
 **When** the core calculates
@@ -2194,7 +2195,7 @@ As a purchasing manager,
 I want my adjusted quantities to stay between sessions, and to mark a product as approved,
 So that I can spread the weekly review over more than one session.
 
-**Priority:** Could (PRD §8.3). **Requirements:** FR-31, FR-29, FR-2, DR-4; AD-7, AD-10, AD-15, AD-16. It needs Story 6.2 (FR-29); without it, this story is not built.
+**Priority:** Could (PRD §8.3). **Requirements:** FR-31, FR-29, FR-2, DR-4; AD-7, AD-10, AD-15. It needs Story 6.2 (FR-29); without it, this story is not built.
 
 **Acceptance Criteria:**
 
@@ -2208,7 +2209,7 @@ So that I can spread the weekly review over more than one session.
 
 **Given** the storage
 **When** this story is built
-**Then** it replaces only the storage behind `web/adjustments.py`, so the views and the input to the core stay the same, and the new table comes with a migration that only adds (AD-10, AD-16)
+**Then** it replaces only the storage behind `web/adjustments.py`, so the views and the input to the core stay the same, and the new table comes with a migration that only adds (AD-10, AD-15)
 **And** the two-account test covers the saved adjustments and approvals, and an explicit reset deletes them with the company's other data (FR-2, DR-4, AD-15)
 
 **Given** the planning of this story
@@ -2311,3 +2312,5 @@ This document was approved by the user and set to `final` on 2026-11-18. Every l
 | 2026-11-18 | Responsive design for PC, iPad and phone, following the updated NFR-6 in the PRD and the UX spines: NFR-6, DR-1 and DR-9 in the inventory; UX-DR7, UX-DR19, UX-DR36, UX-DR43 and UX-DR44; a rule for every story on checks in the responsive view; criteria in Stories 1.4, 1.9, 2.7, 2.8, 2.9, 2.10, 2.11, 3.1, 3.3, 4.1, 4.2 and 4.4. The README lists the screen sizes, devices and browsers that were actually tested, with the real iPhone 13 kept apart from the responsive view (point 8 of the check against the examiner guidelines). No story or feature added, and the architecture is unchanged. | The user's decision of 2026-11-18: the website must also work on a phone and an iPad; the user has an iPhone 13 for tests on a real device, and the iPad and Android sizes are tested in the browser's responsive view. | `9dee8b1` |
 | 2026-11-18 | Fixes from the final check before commit: NFR-2 in Story 2.6, whose criterion runs every Must reference example as a test; NFR-6 and UX-DR7 in «Also covers» for Epics 1, 3 and 4, and UX-DR7 in Stories 4.2 and 4.4; the UX-DR7 test sizes say which sizes run in the desktop browsers, which in the responsive view and which on the real iPhone 13. No story or feature added. | The user approved the proposals from the final check: Epic 2 named NFR-2 in «Also covers» without a story that names it, and the PC size was described as tested only in the responsive view. | `9dee8b1` |
 | 2026-11-19 | Publishing removed from version 1 (D-1): Story 1.9 is removed, so Epic 1 has 8 stories and the plan 38. Updated: D-1, kept with its history; D-7; the requirements inventory (FR-4, NFR-1, NFR-3, NFR-6, NFR-8, NFR-9, DR-1, DR-9, DR-10, SM-9); the architecture summary (AD-5, AD-13, AD-14, AD-16, the delivery order, the stack and the deferred items); the planning constraints; UX-DR7 and UX-DR31; the FR coverage map; the rules for every story; the work outside stories; the Epic 1, 4 and 7 texts; and Stories 1.1 (the setting for the phone test, and the keys in the README), 1.8 (the first test on the real iPhone over the local network), 4.1 (how to start Prognose at the top, and the section «Nøkler og hemmeligheter»), 4.4 and 7.1. No feature added. | The teacher's clarification on Canvas on 2026-11-19, as reported by the user: publishing is not mandatory; the application may run locally, but the README must explain how to start it and which API keys are needed. The user approved removing publishing and Story 1.9, and keeping the real iPhone test over the local network. | `ea06f01` (PR #5) |
+| 2026-11-19 | The deadline moves to 8 December 2026 at 23:59 (DR-6 and the planning constraints), and the planning constraints name the sprint plan that holds the milestone dates. | The new submission deadline of 8 December 2026 at 23:59 and the sprint planning of 2026-11-19. | not committed yet |
+| 2026-11-19 | Fixes from the implementation-readiness check: NFR-1 and NFR-2 on separate lines; the AD-13 summary without «in both modes»; the Configuration convention lists `PROGNOSE_LAN_HOST` as the spine does, without the production database URL; the Commands convention and Story 1.1 use `uv sync --locked`, as the spine now does; Stories 5.1 and 8.2 give AD-15 instead of the removed AD-16 as the reason why their migrations only add. | The implementation-readiness check of 2026-11-19 found text left from publishing that disagreed with the spine, and two different install commands. The user approved the fixes. No story, priority or requirement changes. | not committed yet |
