@@ -1,0 +1,98 @@
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created, ready for development
+#   - in-progress: Developer actively working on implementation
+#   - review: Implementation complete, ready for review
+#   - done: Story completed
+
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+# Action Item Status:
+#   - open: Committed during a retrospective, not yet addressed
+#   - in-progress: Actively being worked on
+#   - done: Completed
+
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when its first story starts (via build's sprint sync)
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates the next story after the previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+# - Retrospective appends its action items to action_items; the status view surfaces open ones
+generated: 11-19-2026 20:56
+last_updated: 11-19-2026 20:56
+project: G40-lyamouri
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+development_status:
+  epic-1: backlog
+  1-1-start-prognose-locally-from-a-fresh-clone: backlog
+  1-2-check-every-pull-request-automatically: backlog
+  1-3-confirm-the-setup-on-windows-and-without-a-network: backlog
+  1-4-norwegian-app-shell-and-error-pages: backlog
+  1-5-reference-spreadsheet-as-the-answer-key: backlog
+  1-6-generate-the-synthetic-seed-data: backlog
+  1-7-load-the-seed-data-into-an-empty-database-with-an-explicit-r: backlog
+  1-8-log-in-and-see-only-your-own-company-s-products: backlog
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts: backlog
+  2-2-calculate-the-base-forecast-with-the-moving-average-or-expon: backlog
+  2-3-round-and-format-every-number-the-same-way: backlog
+  2-4-calculate-the-week-forecasts-the-scenarios-and-the-suggested: backlog
+  2-5-give-each-product-its-warnings-notes-and-confidence-label: backlog
+  2-6-sort-the-products-by-what-needs-ordering-first: backlog
+  2-7-show-what-to-order-and-whether-to-trust-it-on-the-product-sc: backlog
+  2-8-list-the-products-in-r-12-order: backlog
+  2-9-show-how-the-forecast-and-the-order-quantity-were-calculated: backlog
+  2-10-show-the-sales-history-and-the-forecast-in-a-chart-also-as-t: backlog
+  2-11-go-through-the-week-s-products-and-find-a-product-quickly: backlog
+  2-12-explain-each-forecast-in-plain-norwegian: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-change-the-company-settings-on-the-settings-page: backlog
+  3-2-confirm-a-settings-change-with-the-old-and-the-new-value: backlog
+  3-3-switch-unusual-weeks-on-the-product-screen: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-set-up-and-try-prognose-from-the-readme: backlog
+  4-2-check-the-confidence-label-with-real-readers-and-review-the: backlog
+  4-3-make-the-process-traceable-for-the-examiner: backlog
+  4-4-check-the-final-commit-before-submission: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-adjust-the-forecast-for-the-season: backlog
+  5-2-warn-about-an-unused-seasonal-pattern-and-a-level-shift: backlog
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-show-the-order-quantity-per-scenario-and-the-overstock-note: backlog
+  6-2-adjust-a-suggested-order-quantity: backlog
+  6-3-take-one-combined-order-overview-to-the-meeting: backlog
+  epic-6-retrospective: optional
+
+  epic-7: backlog
+  7-1-rephrase-the-explanation-with-an-optional-local-language-mod: backlog
+  epic-7-retrospective: optional
+
+  epic-8: backlog
+  8-1-give-one-product-its-own-settings: backlog
+  8-2-keep-adjusted-quantities-between-sessions-and-mark-products: backlog
+  8-3-export-the-combined-order-overview-as-csv: backlog
+  8-4-note-when-the-stock-will-not-last-through-weeks-2-and-3: backlog
+  8-5-show-the-forecast-accuracy: backlog
+  epic-8-retrospective: optional

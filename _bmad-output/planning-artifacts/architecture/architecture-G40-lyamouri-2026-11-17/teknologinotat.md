@@ -3,7 +3,7 @@
 **Til:** læreren i IBE160
 **Fra:** G40-lyamouri
 **Dato:** 17. november 2026
-**Oppdatert:** 19. november 2026. Publisering er tatt ut av v1 etter lærerens avklaring på Canvas samme dag. Prognose kjøres bare lokalt, og README-en forklarer oppstarten og at ingen API-nøkler trengs.
+**Oppdatert:** 19. november 2026. Publisering er tatt ut av v1 etter lærerens avklaring på Canvas samme dag. Prognose kjøres bare lokalt, og README-en forklarer oppstarten og at ingen API-nøkler trengs. Fristen er nå 8. desember 2026 kl. 23.59, ikke 1. desember.
 
 ## Kort fortalt
 
@@ -13,7 +13,7 @@
 - Docker Compose lokalt og Railway i produksjon;
 - betaling, e-post og en KI-assistent.
 
-Prognose er en MVP for én innkjøpsansvarlig per bedrift, med frist 1. desember 2026. PRD-en krever:
+Prognose er en MVP for én innkjøpsansvarlig per bedrift, med frist 8. desember 2026 kl. 23.59. PRD-en krever:
 - én app med én database (NFR-9);
 - installasjon fra README-en på macOS og Windows på høyst 15 minutter (SM-2);
 - at appen virker uten nett lokalt (NFR-1);
