@@ -80,4 +80,4 @@ Every change to this plan is recorded here with the date, the reason and the com
 
 | Date | Change | Reason | Commit |
 |---|---|---|---|
-| 2026-11-19 | Plan created: milestones M0 to M6, test dates, order and fallback order. | Sprint planning with the user on 2026-11-19, after the implementation-readiness check and the new deadline of 8 December 2026 at 23:59. | not committed yet |
+| 2026-11-19 | Plan created: milestones M0 to M6, test dates, order and fallback order. | Sprint planning with the user on 2026-11-19, after the implementation-readiness check and the new deadline of 8 December 2026 at 23:59. | `67694f7` (PR #6) |

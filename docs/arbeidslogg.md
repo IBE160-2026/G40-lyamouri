@@ -549,9 +549,9 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
   * `lint_spine.py` fant 0 feil, og `sprint_plan.py validate` godkjente `sprint-status.yaml`;
   * kontrollskriptet viste samme dekning som før, og personvernskanningen av de nye linjene fant ingenting;
   * addendum §2 sa fortsatt at versjonene skal kontrolleres på nytt innen 2026-12-01. Etter min godkjenning ble datoen rettet til 2026-12-08, og PRD §12 nevner rettingen. Kontrollene ble kjørt på nytt uten funn.
-* Godkjente commit, push og pull request mot `main` fra grenen `plan/sprint-planning`, uten fletting.
+* Godkjente commit, push og pull request mot `main` fra grenen `plan/sprint-planning`, uten fletting. Endringene er committet i `67694f7` og sendt som [PR #6](https://github.com/IBE160-2026/G40-lyamouri/pull/6). Commit-hashen og PR-nummeret er ført inn i endringsloggene i en egen commit.
 
-**Status:** Sprintplanen er laget og sendes som pull request mot `main`. Neste steg er å flette den når jeg godkjenner det, og deretter story 1.1 med `bmad-build`.
+**Status:** Sprintplanen er sendt som PR #6 mot `main`, som ikke er flettet. Neste steg er å flette PR #6 når jeg godkjenner det, og deretter story 1.1 med `bmad-build`.
 
 ## 4. Videre dokumentasjon
 
