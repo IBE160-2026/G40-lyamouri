@@ -1,7 +1,7 @@
 ---
 title: 'Addendum: Prognose PRD'
 created: '2026-11-02'
-updated: '2026-11-17'
+updated: '2026-11-19'
 ---
 
 # Addendum: Prognose PRD
@@ -79,9 +79,13 @@ C-R2, evidence basis medium. OWASP is the main source. Company isolation is usua
 
 ### Publishing on Vercel (added 2026-11-08, after approval)
 
+> Removed from version 1 on 2026-11-19, after the teacher's clarification on Canvas (PRD DR-10 and §12). This section is kept as history.
+
 The group chose Vercel to publish Prognose; the local app with SQLite stays. Vercel's Python runtime runs Django without extra configuration: it finds `manage.py`, runs the WSGI app as one function, runs `collectstatic` and serves the static files from its CDN ([Vercel: Deploy a Django app](https://vercel.com/docs/frameworks/full-stack/django), checked 2026-11-08). A function cannot keep a SQLite file between requests, so the published version uses PostgreSQL on Neon's free plan, added from the Vercel Marketplace, which sets a pooled `DATABASE_URL` and a direct `DATABASE_URL_UNPOOLED` ([Neon: Vercel integration](https://neon.com/docs/guides/neon-managed-vercel-integration)). Vercel's own guidance is to run migrations outside the request path with the direct URL ([Vercel: Migrate a Python API from Heroku](https://vercel.com/kb/guide/migrate-a-python-api-from-heroku-to-vercel)). The binding choices are in the architecture spine (AD-13, AD-15, AD-16).
 
 ### PostgreSQL in both run modes (added 2026-11-17, after approval)
+
+> Since 2026-11-19 only the local run mode is in version 1; the hosted part below is history (PRD DR-10).
 
 The user decided in the architecture step that Prognose uses PostgreSQL in both run modes, as the more long-term solution (PRD §12, 2026-11-17). Locally, PostgreSQL 18 runs in Docker Compose on the user's computer; when published, it runs on Neon's free plan. A test of the local database on macOS on 2026-11-17 is recorded in the QA log (`docs/qa-logg.md`).
 - The SQLite parts of this section are history: they record the research recommendation, not the decision.

@@ -2,7 +2,7 @@
 name: 'Prognose'
 status: final
 created: '2026-11-15'
-updated: '2026-11-18'
+updated: '2026-11-19'
 sources:
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md'
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/tilbakemelding-prd.md'
@@ -254,8 +254,7 @@ Behavioral rules. Visual specs are in DESIGN.md (Components), with the same name
 - **Place:** its own panel titled «Forklaring», last on Produktside, below every calculated number (FR-27).
 - **Content, in order (FR-26):** the method and settings; the number of calculation weeks and the week forecasts; the weeks left out and why; every active warning and note; the order calculation; the weeks of cover; the confidence label and its reason; the scenarios.
 - **Numbers:** only the ones FR-27 allows. Templates therefore leave out sales figures and the week numbers of calculation weeks, included unusual weeks and level-shift weeks. A year appears only next to a week left out or a horizon week that lies in another year than the latest data week (FR-27). Example for Strøsand 25 kg, as in the mockup: «Prognosen bruker glidende gjennomsnitt over de 3 siste ukene brukt i beregningen. Det gir 14,3 per uke for uke 46, 47 og 48. Uke 38 og 39 er holdt utenfor fordi varen var utsolgt. Det er 1 uvanlig uke de siste 12 ukene, og uvanlige uker tas med i beregningen. Uke 2 og 3 viser samme tall som uke 1 fordi metoden ikke tar hensyn til trend eller sesong. Med 10 % sikkerhetsmargin (1,4) og 5 på lager blir utregningen 10,77, og Prognose foreslår å bestille 11. Lageret dekker 0,3 uker. Tillitsmerket er middels fordi det er 2 utsolgte uker og 1 uvanlig uke de siste 12 ukene. Scenarioene viser 15,8 hvis salget blir 10 % høyere, og 12,9 hvis det blir 10 % lavere.»
-- **Language model (FR-28, Should):** rephrased text carries «KI-omformulert forklaring». On any failure the template text is shown without an error. The published version always shows the template text (DR-10).
-
+- **Language model (FR-28, Should):** rephrased text carries «KI-omformulert forklaring». On any failure the template text is shown without an error.
 ## Accessibility Floor
 
 Behavioral; visual contrast is in DESIGN.md (Colors).
@@ -281,7 +280,7 @@ Behavioral; visual contrast is in DESIGN.md (Colors).
 | 1366 × 768 | The suggested order quantity, the confidence label and the active warnings are visible without scrolling (FR-25); the chart starts right below them. |
 | Smaller screens | The suggested order quantity, the confidence label and the active warnings come first in the product area, right after the product header (NFR-6). |
 | Touch screens | Every control has a target of at least 44 × 44 px, form fields use 16 px text, and the keyboard hint is hidden (NFR-6). |
-| Test sizes | 1366 × 768 (PC); 820 × 1180 and 1180 × 820 (iPad); 390 × 844 (iPhone 13); 360 × 800 (Android); and 320 px wide. 1366 × 768 is tested in the desktop browsers. The iPhone 13 is also tested on the real phone at the published address, unless the cut line applies (PRD §8.1); the iPad and Android sizes and 320 px only in the browser's responsive view. The QA log and the README keep the two kinds of test apart (NFR-6). |
+| Test sizes | 1366 × 768 (PC); 820 × 1180 and 1180 × 820 (iPad); 390 × 844 (iPhone 13); 360 × 800 (Android); and 320 px wide. 1366 × 768 is tested in the desktop browsers. The iPhone 13 is also tested on the real phone over the local network; the iPad and Android sizes and 320 px only in the browser's responsive view. The QA log and the README keep the two kinds of test apart (NFR-6). |
 
 ## Inspiration & Anti-patterns
 
@@ -314,14 +313,14 @@ Failure paths: a wrong login shows «Feil kundenummer eller passord.». A produc
 
 Ingrid, the course examiner, on her own laptop, with the README and the reference spreadsheet open.
 
-1. Ingrid follows «Prøv selv» in the README (DR-1) and opens the local app or the published address (DR-10). She logs in as Testbedrift A.
+1. Ingrid follows «Prøv selv» in the README (DR-1) and opens the local app. She logs in as Testbedrift A.
 2. In Produktoversikt she picks a rule test product named in the README table, for example Strøsand 25 kg (E1, E4).
 3. On Produktside she compares «Slik er tallene regnet ut» with the spreadsheet: the weekly sales, «Glidende gjennomsnitt, 3 uker: (16 + 12 + 15) / 3 = 14,3» and the order calculation line «… = 10,77 → foreslått bestillingsmengde 11».
 4. She opens «Endre innstillinger», sets the safety margin to 50 % and saves. Back on the product, the confirmation shows «Foreslått bestillingsmengde: 11 → 17» (SM-3).
 5. **Climax:** the screen matches her hand calculation and the spreadsheet, and the change shows its previous and new value.
 6. She sets the safety margin back to 10 %.
 
-Failure paths: a value outside the range, for example 150, shows «Sikkerhetsmargin må være mellom 0 og 100 %. Den forrige verdien er beholdt.». If publishing hit the cut line (PRD §8.1), the README says so and Ingrid uses the local app. If the local database is not started, every page shows the database message, and the README says how to start it.
+Failure paths: a value outside the range, for example 150, shows «Sikkerhetsmargin må være mellom 0 og 100 %. Den forrige verdien er beholdt.». If the local database is not started, every page shows the database message, and the README says how to start it.
 
 ### Flow 3 — SM-10. Someone outside the group explains «lav»
 
@@ -359,3 +358,4 @@ The spine pair (DESIGN.md and EXPERIENCE.md) was set to `final` on 2026-11-16. E
 | 2026-11-18 | Produktside: the FR-14 overstock note stands in the decision panel, below the suggested order quantity (the Decision panel row and the state «Suggested order quantity 0»). | The spines did not say where the note stands on Produktside; the user approved the placement when approving Epic 6 in `epics.md` (D-6). | `9dee8b1` |
 | 2026-11-18 | Fixes from the BMAD review: the Foundation line follows AD-11 (the chart is rendered on the server, with no chart library); the Trust legend for «Slik leser du tillitsmerket»; the field label «Justert bestillingsmengde» and «Behold … og gå videre» outside the review sequence; search always goes to Produktoversikt, ignores case and leaves the previous and next links alone; the reason when the window prevents a forecast, and which condition comes first; «–» in the confirmation when a forecast is removed or given; where the FR-9 note stands; short histories in the sales table and the chart; zero decimals in number fields; Flow 1 counts 4 products with warnings; three more mockup differences. DESIGN.md: a suggested order quantity of 0 is ink in the decision panel. | The review of `epics.md`, the architecture spine and this spine found contradictions and gaps; the user approved fixing all 29 findings (A1–A14 and E1–E15). | `9dee8b1` |
 | 2026-11-18 | Responsive design for PC, iPad and phone (NFR-6): the intro and the Surface line; one column at 900 px and below, with the product area first and the list below it and no scroll frames of their own; no horizontal page scrolling from 320 px; touch targets of at least 44 × 44 px, 16 px text in form fields and the keyboard hint hidden on touch screens; the chart keeps its label sizes and scrolls inside its own frame, and calculation lines wrap between terms; the keyboard order and the skip link; the test sizes, with tests on a real device kept apart from the browser's responsive view. DESIGN.md follows in Layout & Spacing, the app header, the settings bar, the search field, the forecast chart, the calculation line, the button, the keyboard key and Do's and Don'ts. No function added. | The user's decision of 2026-11-18 and the updated NFR-6 in the PRD; the user has an iPhone 13 for tests on a real device. | `9dee8b1` |
+| 2026-11-19 | Publishing removed from version 1: the Explanation section no longer names a published version, the iPhone 13 is tested on the real phone over the local network (Responsive & Platform), and Flow 2 uses only the local app. DESIGN.md needs no change. | The teacher's clarification on Canvas on 2026-11-19, as reported by the user, and the updated DR-10 in the PRD. | not committed yet |

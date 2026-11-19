@@ -2,7 +2,7 @@
 title: 'Epics and Stories: Prognose (G40-lyamouri)'
 status: final
 created: '2026-11-18'
-updated: '2026-11-18'
+updated: '2026-11-19'
 stepsCompleted: [1, 2, 3, 4]
 inputDocuments:
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md'
@@ -29,13 +29,18 @@ This document provides the complete epic and story breakdown for Prognose (G40-l
 
 ## Deviations From the Sources
 
-### D-1 Publishing is a story of its own (decided; spine aligned)
+### D-1 Publishing removed from v1 (decided 2026-11-19; PRD and spine aligned)
 
-- **The architecture spine said,** until it was aligned on 2026-11-18: under Consistency Conventions, «Delivery order»: "The first story proves the whole path: the project skeleton with `compose.yaml` and CI, and the first deploy to Vercel with Neon." Under Deferred, «Checks in the first story»: the Vercel GitHub app in the IBE160-2026 organization, Vercel Hobby's commit-author rule, Vercel's detection of `src/manage.py` and its run of the build script with `DATABASE_URL_UNPOOLED`, Neon with Postgres 18 in AWS Frankfurt, and GitHub Actions. The open point in `issues.md` of 2026-11-08 also puts publishing in the first story.
-- **These epics do:** Stories 1.1 and 1.2 prove the local path and CI, and Story 1.2 checks that GitHub Actions is allowed. The last story of Epic 1, Story 1.9, publishes on Vercel with Neon and makes the other checks. No other story depends on it. Sprint planning schedules it right after Story 1.8, before any Epic 2 story, so that the examiner gets a working website; it is postponed only while it waits on something outside the group's control, and cut only under the cut line (PRD §8.1; the user's decision of 2026-11-18).
-- **Why:** the user's decision of 2026-11-18, so that publishing can be cut as the cut line requires without holding back the rest of the Must scope.
-- **Risk:** problems with Vercel or Neon, or a wait for the organization's approval of the Vercel app, can delay the first deploy. Scheduling Story 1.9 right after Story 1.8, and asking about the Vercel app when Epic 1 starts, leaves time to solve them before the cut-line date that sprint planning sets.
-- **Resolved:** on 2026-11-18 the user confirmed that publishing is Story 1.9 and blocks no other development. The spine's «Delivery order» row and its Deferred items were aligned the same day, with a row in its change log that also states the risk above. The point in `issues.md` gets a note when this session is logged.
+- **The teacher's clarification** (Canvas, 2026-11-19, as reported by the user; summarized, not quoted, in `prds/prd-G40-lyamouri-2026-11-02/avklaring-publisering-2026-11-19.md`): publishing is not mandatory. The application may run locally, but the README must explain how to start it and which API keys are needed.
+- **These epics do:** no story publishes Prognose. Story 1.9, publishing on Vercel with Neon, is removed, so Epic 1 has 8 stories and the plan 38. The real iPhone 13 test runs over the local network (AD-13), first in Story 1.8 and finally in Story 4.4. Stories 1.1 and 4.1 require the README to explain how to start Prognose and that no API key, paid service or account is needed.
+- **Why:** the user's decision of 2026-11-19, after the teacher's clarification. It removes the external risks, such as the organization's approval of the Vercel app, and the work on a second run mode.
+- **History, before 2026-11-19** (kept as written then):
+  - **The architecture spine said,** until it was aligned on 2026-11-18: under Consistency Conventions, «Delivery order»: "The first story proves the whole path: the project skeleton with `compose.yaml` and CI, and the first deploy to Vercel with Neon." Under Deferred, «Checks in the first story»: the Vercel GitHub app in the IBE160-2026 organization, Vercel Hobby's commit-author rule, Vercel's detection of `src/manage.py` and its run of the build script with `DATABASE_URL_UNPOOLED`, Neon with Postgres 18 in AWS Frankfurt, and GitHub Actions. The open point in `issues.md` of 2026-11-08 also puts publishing in the first story.
+  - **These epics do:** Stories 1.1 and 1.2 prove the local path and CI, and Story 1.2 checks that GitHub Actions is allowed. The last story of Epic 1, Story 1.9, publishes on Vercel with Neon and makes the other checks. No other story depends on it. Sprint planning schedules it right after Story 1.8, before any Epic 2 story, so that the examiner gets a working website; it is postponed only while it waits on something outside the group's control, and cut only under the cut line (PRD §8.1; the user's decision of 2026-11-18).
+  - **Why:** the user's decision of 2026-11-18, so that publishing can be cut as the cut line requires without holding back the rest of the Must scope.
+  - **Risk:** problems with Vercel or Neon, or a wait for the organization's approval of the Vercel app, can delay the first deploy. Scheduling Story 1.9 right after Story 1.8, and asking about the Vercel app when Epic 1 starts, leaves time to solve them before the cut-line date that sprint planning sets.
+  - **Resolved:** on 2026-11-18 the user confirmed that publishing is Story 1.9 and blocks no other development. The spine's «Delivery order» row and its Deferred items were aligned the same day, with a row in its change log that also states the risk above. The point in `issues.md` gets a note when this session is logged.
+- **Recorded in, on 2026-11-19:** PRD DR-10, SM-9, §8.1 and §12; the spine's AD-13, AD-14, AD-16 and change log; and this document's change log.
 
 ### D-2 DR-5 counts the epics that are implemented (decided)
 
@@ -72,7 +77,7 @@ DR-5 asks for at least one AI steering log case per epic. By the user's decision
 ### D-7 NFR-8 with the optional language model (decided; spine updated)
 
 - **The sources said:** NFR-8 asks for 2 seconds, and FR-28 waits up to 10 seconds for the model; both are marked `[ASSUMPTION]`. Addendum §3 says that how the timeout fits NFR-8 is an architecture choice, and the spine deferred it to when FR-28 is scheduled.
-- **The check:** the PRD leaves the fit to the architecture, and the model is off by default, outside the basic setup (SM-2) and never used in the published version (DR-10). The teacher's feedback on the brief and on the PRD sets no response-time requirement and asks only that the language model stays under control, which FR-28 already ensures. The exception therefore fits the PRD and the teacher's requirements. Checked again in the review of 2026-11-18: FR-28 itself sets the 10-second timeout, and addendum §3 makes both the timeout and its fit with NFR-8 architecture choices, so NFR-8's text is not changed.
+- **The check:** the PRD leaves the fit to the architecture, and the model is off by default and outside the basic setup (SM-2). The teacher's feedback on the brief and on the PRD sets no response-time requirement and asks only that the language model stays under control, which FR-28 already ensures. The exception therefore fits the PRD and the teacher's requirements. Checked again in the review of 2026-11-18: FR-28 itself sets the 10-second timeout, and addendum §3 makes both the timeout and its fit with NFR-8 architecture choices, so NFR-8's text is not changed.
 - **Now:** every page meets NFR-8 with the model off. With the model switched on locally, a product screen may wait up to the 10-second timeout, and the README states this exception. No caching or background loading is added (Story 7.1).
 - **Why:** the user's decision of 2026-11-18. If the exception turns out not to fit when Story 7.1 is scheduled, the story is postponed rather than the architecture made more complex.
 - **Recorded in:** the spine's Deferred item on the local language model and its change log, both dated 2026-11-18.
@@ -96,7 +101,7 @@ DR-5 asks for at least one AI steering log case per epic. By the user's decision
   - At least one product per pattern: a known trend; a seasonal pattern without trend; stockout weeks; unusual weeks; a level shift; a long run of stockout weeks at the end; stock on hand that covers next week; a history that reaches «høy».
   - The rule test products are built from the series of E1–E4, E7–E10 and E15–E19, and the reference spreadsheet holds their expected base forecast, suggested order quantity, unusual and level-shift weeks, warnings and confidence label (DR-3).
   - The script gives identical data on every run, the script and its output live in documented places (DR-2), and the README gives each company's customer number and password. *SM-7.*
-- **FR-4 (Must) — Data stored between sessions.** Products, sales history, stock on hand and settings are stored in PostgreSQL: locally a server on the same computer, started with one documented command and needing no online service; when published, a hosted PostgreSQL loaded with the same load command (DR-4). After the app and the database are stopped and started again, all data and settings are unchanged. *SM-5, SM-9. Under the §8.1 cut line the published part lapses, and FR-4 is reported as partly built.*
+- **FR-4 (Must) — Data stored between sessions.** Products, sales history, stock on hand and settings are stored in PostgreSQL: locally a server on the same computer, started with one documented command and needing no online service. After the app and the database are stopped and started again, all data and settings are unchanged. *SM-5.*
 - **FR-5 (Must) — Moving average.** The base forecast is the mean of the last N calculation weeks, with the window N from 2 to 12 (default 3). Stockout weeks and excluded unusual weeks are skipped, looking further back until N calculation weeks are found. Matches E1, E7, E8, E15–E20 and E28. *R-3.*
 - **FR-6 (Must) — Exponential smoothing.** Smoothing over the calculation weeks in time order with a factor from 0.1 to 0.9 (default 0.3). The first calculation week's sales are the start level (R-4), and skipped weeks are not treated as zero sales. Matches E2 and E17.
 - **FR-7 (Must) — Three-week forecast horizon.** The product shows the week forecasts for weeks 1, 2 and 3 after the latest data week. Without seasonal adjustment they are equal, and the product screen shows «Uke 2 og 3 viser samme tall som uke 1 fordi metoden ikke tar hensyn til trend eller sesong.» Only week 1 feeds the suggested order quantity. The trend lag (E28) is a stated limitation (DR-1). *R-5.*
@@ -223,19 +228,18 @@ The Must gate in SM-1 is E1–E13, E15–E21, E23, E24, E28 and E29 (24 examples
 
 ### NonFunctional Requirements
 
-All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1). DR-10 is the only one with a cut line.
+All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1), except DR-10, which is not in version 1 (D-1).
 
 **Cross-cutting (PRD §6.1)**
 
-- **NFR-1 Local and free to run.** The app and every Must feature run on one computer without paid services, API keys or third-party accounts, and every tool the README asks for is free for personal and educational use. After installation, the local app and its database run without an internet connection, with every asset served locally and none from a CDN. The README covers macOS and Windows. The published version uses free plans only; only the group member who publishes it needs accounts there.
-- **NFR-2 Correct, testable calculations.** All §5 rules live in one calculation module with no dependency on the user interface or the database. Automated unit tests check every rule and every reference example for the features built (SM-1). All tests run with one documented command that needs nothing beyond the README installation and the started local database, and the README shows the expected result.
-- **NFR-3 Security.** Passwords are hashed as FR-1 describes, and the logged-in company is checked on the server on every request (FR-2). The session-signing secret is created by the load command (DR-4) when it is missing, stored in a local file that `.gitignore` excludes, and never committed; setup needs no manual file editing. On Vercel the secret is an environment variable. The repository holds no secrets, and `.env.example` lists the optional configuration. The local database has no stored password and accepts connections only from the same computer.
+- **NFR-1 Local and free to run.** The app and every Must feature run on one computer without paid services, API keys or third-party accounts, and every tool the README asks for is free for personal and educational use. After installation, the local app and its database run without an internet connection, with every asset served locally and none from a CDN. The README covers macOS and Windows.- **NFR-2 Correct, testable calculations.** All §5 rules live in one calculation module with no dependency on the user interface or the database. Automated unit tests check every rule and every reference example for the features built (SM-1). All tests run with one documented command that needs nothing beyond the README installation and the started local database, and the README shows the expected result.
+- **NFR-3 Security.** Passwords are hashed as FR-1 describes, and the logged-in company is checked on the server on every request (FR-2). The session-signing secret is created by the load command (DR-4) when it is missing, stored in a local file that `.gitignore` excludes, and never committed; setup needs no manual file editing. The repository holds no secrets, and `.env.example` lists the optional configuration. The local database has no stored password and accepts connections only from the same computer.
 - **NFR-4 Privacy.** Only synthetic data is used. Files in the repository contain no personal data and no local file paths. Saved AI sessions are cleaned before they are committed. Before submission, the group scans the whole repository history for secrets, personal data and local paths and records the result in the QA log (DR-9).
 - **NFR-5 Language and number format.** All screens, messages, warnings, notes and explanations are in Norwegian `[ASSUMPTION: bokmål]`. Numbers use a decimal comma; percentages are whole numbers with «%».
-- **NFR-6 Platform and screen size.** Prognose is a responsive website with the same functions on a PC or laptop (the main case, UJ-1), an iPad and a phone. From 320 px wide there is no horizontal page scrolling, no text overlaps or is cut off, and every control can be reached with the keyboard and used by touch; wide tables and the chart may scroll inside their own frame. In one column the product comes first and the product list below it. On touch screens every control has a target of at least 44 × 44 px, form fields use 16 px text, and nothing depends on hover. FR-25 sets what must be visible at 1366 × 768, and on smaller screens the same content comes first in the product area. The README lists the screen sizes, devices and browsers tested, with at least one current browser per desktop operating system, each marked as a real device or the browser's responsive view; unless the cut line applies, the phone sizes are also tested on a real phone at the published address.
+- **NFR-6 Platform and screen size.** Prognose is a responsive website with the same functions on a PC or laptop (the main case, UJ-1), an iPad and a phone. From 320 px wide there is no horizontal page scrolling, no text overlaps or is cut off, and every control can be reached with the keyboard and used by touch; wide tables and the chart may scroll inside their own frame. In one column the product comes first and the product list below it. On touch screens every control has a target of at least 44 × 44 px, form fields use 16 px text, and nothing depends on hover. FR-25 sets what must be visible at 1366 × 768, and on smaller screens the same content comes first in the product area. The README lists the screen sizes, devices and browsers tested, with at least one current browser per desktop operating system, each marked as a real device or the browser's responsive view; the phone sizes are also tested on a real phone that reaches the local app over the local network, only during the test.
 - **NFR-7 Readable markings.** In the chart, stockout, unusual and level-shift weeks differ by more than color, for example by shape, and a legend explains them.
-- **NFR-8 Responsiveness `[ASSUMPTION]`.** With 50 products of 104 weeks each, the product overview and the product screen open within 2 seconds on an ordinary laptop, and results update within 2 seconds after a settings change. The target applies to the local app; in the published version, the first request after a quiet period may take longer.
-- **NFR-9 Simple architecture.** One web application with one PostgreSQL database and no more parts than it needs: a local PostgreSQL server, and a hosted PostgreSQL on a free plan when published, both of the same major version. The binding choices are in the architecture spine.
+- **NFR-8 Responsiveness `[ASSUMPTION]`.** With 50 products of 104 weeks each, the product overview and the product screen open within 2 seconds on an ordinary laptop, and results update within 2 seconds after a settings change. The target applies to the local app.
+- **NFR-9 Simple architecture.** One web application with one PostgreSQL database and no more parts than it needs: a local PostgreSQL server. The binding choices are in the architecture spine.
 - **NFR-10 Robustness.** Numeric fields accept a decimal comma or a decimal point. Empty or non-numeric input is refused with a Norwegian message, and the previous value stays. No address or input shows a stack trace or a debug page. An unknown address shows a Norwegian "not found" page with a link to the product overview. Submitting the same change twice, reloading a page or going back gives the same result without errors.
 - **NFR-11 Basic accessibility.** Text contrast meets WCAG 2.2 AA. Every function works with the keyboard alone, with a visible focus. Every form field has a visible label. Pages declare Norwegian as their language. The chart has a text alternative: a short summary and a table with the plotted values, and its markings follow NFR-7.
 
@@ -253,9 +257,10 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1). DR-10 is
 - **DR-1 README.** It covers:
   - what Prognose does and for whom, with screenshots of at least the login page, the product overview and the product screen (a screen recording of UJ-1 steps 1–4, at most 2 minutes, is optional);
   - the prerequisites with minimum versions;
-  - setup on macOS and Windows, tested from a fresh clone: exact commands for macOS Terminal and Windows PowerShell run in the project's environment, how to start and stop the local database, how the session secret is created, fixes for the likely errors (a database that is not started, a port in use), and the setup time once SM-2 is confirmed;
+  - setup on macOS and Windows, tested from a fresh clone: exact commands for macOS Terminal and Windows PowerShell run in the project's environment, how to start and stop Prognose and its local database, how the session secret is created, fixes for the likely errors (a database that is not started, a port in use), and the setup time once SM-2 is confirmed;
   - the two test companies' customer numbers and passwords, how to generate and load the data, and how an explicit reset restores the seed state and also resets the settings and adjustments (DR-4);
-  - the published address, and the group's steps to publish and to load the seed data there (DR-10); under the cut line, that Prognose was not published and why;
+  - at the top, how to start Prognose locally, and that version 1 is not published, with the reason (DR-10);
+  - a section on keys and secrets: no API key, paid service or third-party account is needed, the session secret is created automatically and kept out of Git, the local database has no password, and `.env.example` lists only optional variables (NFR-1, NFR-3);
   - «Prøv selv» in 5–10 steps that follow UJ-1, and a table of the test products naming the rule, warning or confidence label each shows and its reference example. For UJ-1 step 4 it uses the rule test product built from E8, so switching unusual weeks changes the base forecast (41.0 → 21.333);
   - how to run the tests with the expected result (NFR-2), and the screen sizes, devices and browsers tested, each marked as a real device or the browser's responsive view (NFR-6);
   - how to switch on the optional language model as a separate step: the model, its download size and time, its license obligations, and what happens without it (FR-28);
@@ -275,14 +280,8 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1). DR-10 is
 - **DR-6 Deadline.** The submission deadline is 1 December 2026, and the work is planned backwards from it. Sprint planning sets the milestone dates; PRD §8.2 gives the order of the Should items. Should and Could items start only after the Must scope passes SM-1 and SM-3.
 - **DR-7 Workflow.** Each story is built on its own branch and merged through a pull request that names the story and its FR-n and says what was tested; review comments stay in the pull request. Defects and open points are tracked as issues. Commits are small and pushed as the work happens. **Definition of Done:** the story's tests and the linter pass; there is no commented-out, unused or duplicated code; the status table and the affected documents are updated; and the pull request has been reviewed.
 - **DR-8 Status table.** One table lists every FR, and DR-10, with its priority, its status at submission (built, partly built, not built or changed), its stories and tests, and the reason for any deviation. The README links it.
-- **DR-9 QA log.** Every defect in AI-generated code or text found by a test, the reference spreadsheet, a review or a manual test is recorded with how it was found, the fix, and the commit or pull request. A manual test checklist for NFR-6, NFR-7, NFR-8, NFR-11, SM-2 (with the offline start) and SM-9 (unless cut) runs on the final commit and is recorded with the date, operating system, browser and result, and for NFR-6 also the screen size and whether it ran on a real device or in the browser's responsive view.
-- **DR-10 Publishing.** Prognose is published on Vercel from `main`, with the same code as the local app and a PostgreSQL database, on free plans only.
-  - The examiner opens the address, logs in as a test company and sees the product overview without installing anything (SM-9).
-  - It holds only the synthetic seed data and is a shared demo; an explicit reset with the load command restores the seed state.
-  - Publishing a new version never deletes or overwrites data. A database change that could do so is applied only as a deliberate step by the group member who publishes.
-  - Debug pages are off, and secrets are environment variables on Vercel.
-  - The optional local language model is not available there.
-  - If publishing does not work in time, the §8.1 cut line applies.
+- **DR-9 QA log.** Every defect in AI-generated code or text found by a test, the reference spreadsheet, a review or a manual test is recorded with how it was found, the fix, and the commit or pull request. A manual test checklist for NFR-6, NFR-7, NFR-8, NFR-11 and SM-2 (with the offline start) runs on the final commit and is recorded with the date, operating system, browser and result, and for NFR-6 also the screen size and whether it ran on a real device or in the browser's responsive view.
+- **DR-10 Publishing (not in version 1).** Version 1 is not published: on Canvas on 2026-11-19 the teacher clarified that publishing is not mandatory, so publishing on Vercel with Neon was removed together with Story 1.9 (D-1). The status table lists DR-10 as not built, with this reason (DR-8).
 
 **Success metrics that shape stories (PRD §9)**
 
@@ -294,15 +293,15 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1). DR-10 is
 - **SM-6 Explanation integrity.** Every number in every template explanation is allowed, and no rephrased text that fails an FR-28 check is accepted.
 - **SM-7 Rule coverage.** Every warning and every confidence label, including «høy», is triggered by at least one test product (FR-17b and FR-36 once built).
 - **SM-8 Traceable process.** Decisions and AI use are documented, the AI steering log has at least five cases linked to commits or pull requests, every story was merged through a reviewed pull request, and the status table traces every FR to its stories and tests.
-- **SM-9 Published version works.** On the published address, a person logs in as each test company, sees the product overview and runs the SM-3 flow by hand, after the first deployment and on the final commit. It lapses under the cut line.
+- **SM-9 Published version works (not in version 1).** Removed with DR-10 on 2026-11-19 (D-1); SM-2 and SM-3 check the local version.
 - **SM-10 Confidence label understood.** Two people outside the group see the product screen of a test product labeled «lav», and each explains, without reading the reason aloud, why it has that label. It passes when both name the deciding condition (R-16). It is checked by hand when the Must scope passes SM-3 and recorded in the QA log.
 - **Counter-metrics.** SM-C1: no accuracy gains through models that cannot be checked by hand. SM-C2: no Should or Could item starts before the Must scope passes SM-1 and SM-3. SM-C3: warnings are never weakened to get more «høy» labels.
 
 ### Additional Requirements
 
-**Starter template: none. The first story builds the skeleton by hand (affects Epic 1 Story 1).** The architecture names no third-party starter template. Its delivery order, aligned on 2026-11-18 (D-1, D-3), says that the first stories prove the local path (Story 1.1) and CI (Story 1.2), and that the first deploy to Vercel (Story 1.9) and the setup test on Windows and offline (Story 1.3) are stories of their own:
+**Starter template: none. The first story builds the skeleton by hand (affects Epic 1 Story 1).** The architecture names no third-party starter template. Its delivery order, aligned on 2026-11-18 (D-1, D-3), says that the first stories prove the local path (Story 1.1) and CI (Story 1.2), and that the setup test on Windows and offline (Story 1.3) is a story of its own; version 1 is not published (D-1):
 - the Structural Seed: `src/` with `manage.py`, the Django project `prognose/` and the packages `forecasting/`, `explanation/` and `web/`; `tests/`, `data/`, `reference/` and `docs/`;
-- `pyproject.toml` with exact pins, `uv.lock`, `.python-version` (3.13), `compose.yaml`, `vercel.json`, `.env.example` and `.gitignore`;
+- `pyproject.toml` with exact pins, `uv.lock`, `.python-version` (3.13), `compose.yaml`, `.env.example` and `.gitignore`;
 - the custom user model `web.Company` in the first migration (AD-6), so it exists before the first `migrate`;
 - GitHub Actions that run the tests and Ruff on Linux, with the database from `compose.yaml` (AD-17).
 
@@ -317,7 +316,7 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1). DR-10 is
   - The database stores inputs only; results are computed on every request and never stored. Nothing outside the core calculates, rounds, sorts or groups domain values.
 - **AD-3 One rounding and one Norwegian number format.** The core keeps full float precision and returns numbers, never formatted strings. Every rounding goes through `forecasting/rounding.py`: first to 6 decimals, then up to whole units (R-8) or half away from zero for display (R-9), with the `decimal` module, never `round()`. Norwegian display text comes only from `forecasting/display.py`: a decimal comma, the minus sign U+2212, no thousands grouping, a no-break space before «%», and week labels with the year at New Year and in lists that reach before the recent period. The template filters, the explanation and the chart all call it.
 - **AD-4 Result wording in one place.** Every Norwegian sentence that depends on a result comes from `explanation/`, with the EXPERIENCE.md Message Catalogue as its copy source: warnings, notes, confidence reasons, the forecast and order calculation lines, the FR-21 confirmation, the chart summary and the template explanation. Templates place these strings and never compose them; fixed interface text lives in the templates.
-- **AD-5 Explanation guardrails.** Explanation templates use named placeholders, filled from `ProductResult` through `forecasting/display.py`. `ProductResult` exposes the FR-27 allowed numbers as display strings, and a test checks every number in every template explanation against them. The FR-28 checks are pure functions in `explanation/`. The only network call in the app is `web/rephrase.py`: standard library only, a 10-second timeout, off unless the local `.env` names a model URL, never run on Vercel, and the template text on any failure.
+- **AD-5 Explanation guardrails.** Explanation templates use named placeholders, filled from `ProductResult` through `forecasting/display.py`. `ProductResult` exposes the FR-27 allowed numbers as display strings, and a test checks every number in every template explanation against them. The FR-28 checks are pure functions in `explanation/`. The only network call in the app is `web/rephrase.py`: standard library only, a 10-second timeout, off unless the local `.env` names a model URL, and the template text on any failure.
 - **AD-6 The company is the authenticated principal.** The custom user model `web.Company` has `customer_number` as its login field and is created in the first migration. Passwords use Django's default PBKDF2 hasher. `LoginRequiredMiddleware` denies by default; only the login page at the app root and the error pages are exempt. Logging out is a POST.
 - **AD-7 Company isolation in one data-access module.** Every read or write of company data goes through functions in `web/queries.py` that take the logged-in company as their first argument and filter by it. Views, forms and the chart never use model managers for company data; only `load_seed` and the migrations touch the tables directly. A lookup outside the company raises `Http404` and renders the same page as an unknown address. The two-account test covers every route in the URL map and every list.
 - **AD-8 Weeks by ISO week and position.** A week is an ISO 8601 week (ISO year and week number). A sales week is identified by its product and its position, 1 to N, which orders every calculation and measures every distance. Each product's history is a run of consecutive weeks without gaps that ends at the company's latest data week, and `load_seed` refuses seed files that break this. The latest data week is derived, never stored. Calendar arithmetic only labels weeks 1–3, and no domain code reads today's date.
@@ -330,16 +329,15 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1). DR-10 is
   - URL map: `/` login (GET and POST); `/logg-ut/` log out (POST); `/produkter/` the product overview, with `?sok=` for search; `/produkter/<varenummer>/` the product screen; `/produkter/<varenummer>/mengde/` set or reset an adjusted quantity (POST, FR-29); `/innstillinger/` the settings (GET and POST), returning to the in-app path it came from; `/innstillinger/uvanlige-uker/` the unusual-weeks switch (POST); `/bestillingsoversikt/` the combined order overview (FR-30).
   - DESIGN.md and EXPERIENCE.md win over the mockup.
 - **AD-12 Norwegian error pages.** DEBUG is off unless the local `.env` turns it on. The responses 400, 403 (including a failed CSRF check), 404, 405 and 500 render Norwegian pages with the Message Catalogue texts in the not-found panel. A database connection error renders the «Database unavailable» page with status 503 wherever it is raised, also in middleware, and that page reads nothing from the database (amended 2026-11-18). Errors are logged to the console without request bodies, passwords, secrets or database URLs.
-- **AD-13 Run modes and configuration.** Settings read only environment variables; locally they first load an optional `.env`, which Vercel never reads, and nothing in `.env` is needed for the basic setup.
-  - Local mode (no `VERCEL` variable): `DATABASE_URL` defaults to `postgresql://prognose@127.0.0.1:15432/prognose`. The session secret comes from the git-ignored file `.secret_key`, which `load_seed` creates when it is missing and never overwrites. The app runs with `uv run python src/manage.py runserver --insecure` on 127.0.0.1.
-  - Published mode (`VERCEL` set): DEBUG is forced off. `ALLOWED_HOSTS` and the https `CSRF_TRUSTED_ORIGINS` come from `VERCEL_PROJECT_PRODUCTION_URL` and `VERCEL_URL`. Secure cookies and `SECURE_PROXY_SSL_HEADER` are on. Startup stops with a clear error when `SECRET_KEY` or `DATABASE_URL` is missing. `load_seed` never writes a secret file, and the local language model is never used.
+- **AD-13 Local run mode and configuration.** One run mode, the local one. Settings read only environment variables, after loading an optional local `.env`, and neither `.env` nor an API key is needed for the basic setup.
+  - `DATABASE_URL` defaults to `postgresql://prognose@127.0.0.1:15432/prognose`. The session secret comes from the git-ignored file `.secret_key`, which `load_seed` creates when it is missing and never overwrites. The app runs with `uv run python src/manage.py runserver --insecure` on 127.0.0.1.
+  - Phone test over the local network (NFR-6): only for the manual test on a real phone, the optional local variable `PROGNOSE_LAN_HOST` names the computer's address on a private network, and the app is started with `runserver --insecure 0.0.0.0:8000`. That address is added to `ALLOWED_HOSTS`; without the variable only `127.0.0.1` and `localhost` are allowed. DEBUG stays off, and the database port stays on `127.0.0.1`.
   - `LANGUAGE_CODE` is `nb` and `TIME_ZONE` is `Europe/Oslo` in both modes.
-- **AD-14 PostgreSQL in both run modes.** PostgreSQL 18 everywhere: the image `postgres:18.7` in `compose.yaml` locally and in CI, and a Neon Free project with Postgres 18 in AWS Frankfurt when published. Data access goes through the Django ORM and migrations with psycopg 3, without raw SQL.
+- **AD-14 PostgreSQL locally and in CI.** PostgreSQL 18 everywhere: the image `postgres:18.7` in `compose.yaml` locally and in CI. Data access goes through the Django ORM and migrations with psycopg 3, without raw SQL.
   - `compose.yaml` holds only the database: user and database `prognose`, trust authentication, the port `127.0.0.1:15432`, a named volume at `/var/lib/postgresql`, `restart: unless-stopped` and a `pg_isready` health check. It is started with `docker compose up -d --wait`.
-  - Web requests use the pooled `DATABASE_URL` with `CONN_MAX_AGE = 0` and `DISABLE_SERVER_SIDE_CURSORS = True`. Every `manage.py` command uses `DATABASE_URL_UNPOOLED` when it is set. Published connections require TLS (`sslmode=require`).
   - The tests run against the local PostgreSQL, and the app writes no files at request time.
 - **AD-15 Seed data and the explicit reset.** `data/generate_seed.py` writes the versioned JSON files in `data/seed/` and gives identical output on every run. The files hold inputs and password hashes made with Django's hasher and a fixed salt per company. The rule test products take their series from the reference spreadsheet, and the two test companies have disjoint product numbers. `load_seed` without options loads into an empty database only; when any company exists, it stops with a Norwegian message and changes nothing. `load_seed --reset` is the only command that deletes data: it asks for typed confirmation, then, in one transaction, deletes the companies with their data and all sessions and loads the seed. Nothing runs it automatically.
-- **AD-16 Publishing on Vercel without data loss.** One group member owns the Vercel Hobby project, connected to the public GitHub repository, with its functions in `fra1`. Only `main` deploys: `vercel.json` sets `"git": {"deploymentEnabled": {"**": false, "main": true}}`. The Neon variables exist only for Production, and the group sets only `SECRET_KEY` on Vercel. The build script in `pyproject.toml` (`[tool.vercel.scripts] build`) runs the migration step and then `load_seed`, both over the direct URL. The migration step applies pending migrations only when the database has none applied yet, or when every pending operation is `CreateModel`, `AddField`, `AddIndex`, `AddConstraint` or `AlterModelOptions`; any other operation stops the build before anything is applied, and the owner decides by hand. A deploy never runs `load_seed --reset`, `flush` or a data migration.
+- **AD-16 Publishing on Vercel (removed from v1).** Removed on 2026-11-19 together with Story 1.9 (D-1); the spine keeps the decision as history.
 - **AD-17 One test command and one answer key.** `uv run pytest` runs every test against the local PostgreSQL: the core rules, a snapshot of each explanation template, the FR-27 number test, web tests through Django's test client (including the SM-3 core flow and the SM-4 two-account test), the AD-1 import test, and `makemigrations --check`. The reference spreadsheet in `reference/` is the single answer key: the tests and the seed generator read its inputs and expected values with openpyxl, and no expected value is copied into test code. When a test and the spreadsheet disagree, the case is calculated again by hand, whichever was wrong is corrected, and the finding goes into the QA log. Every test names the FR-n or E-n it verifies. `uv run ruff check` and `uv run ruff format --check` cover Python files only. GitHub Actions runs the tests and Ruff on every pull request on Linux, and a pull request is merged only when they pass.
 
 **Consistency conventions**
@@ -355,13 +353,13 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1). DR-10 is
 - **Optional features:** Should and Could items exist in code only once they are built, with no runtime feature flags except the FR-28 switch. A story that builds an item updates every place EXPERIENCE.md ties to it, for example the header link, step 3 of the week path and the last-product button for FR-30.
 - **Checks before a pull request:** `uv run pytest`, `uv run ruff check` and `uv run ruff format --check` pass locally and in CI.
 - **Documents:** `docs/` holds `PRODUCT.md`, the `DESIGN.md` link, `arbeidslogg.md`, `qa-logg.md` (DR-9), `ki-styringslogg.md` (DR-5) and `statustabell.md` (DR-8). Session logs are in `.logs/<bruker>/`, exported AI sessions in `.logs/<bruker>/sessions/` (the routine for AI sessions), and story specifications in `_bmad-output/implementation-artifacts/`.
-- **Delivery order** (aligned on 2026-11-18, D-1 and D-3): the first stories prove the local path and CI (Stories 1.1 and 1.2); publishing (Story 1.9) and the setup test on Windows and offline (Story 1.3) are stories of their own, and neither blocks other development; then the Must items; Should and Could items only after the Must scope passes SM-1 and SM-3.
+- **Delivery order** (aligned on 2026-11-18 and 2026-11-19, D-1 and D-3): the first stories prove the local path and CI (Stories 1.1 and 1.2); the setup test on Windows and offline (Story 1.3) is a story of its own and blocks no other development; version 1 is not published; then the Must items; Should and Could items only after the Must scope passes SM-1 and SM-3.
 
-**Stack (exact versions):** Python 3.13 (from `.python-version`, installed by uv); Django 5.2.19 LTS; psycopg[binary] 3.3.9; PostgreSQL 18.7 (`postgres:18.7`) locally and in CI, Postgres 18 on Neon; Docker Desktop 4.99.0 with Docker Compose v5.7.0 as the local prerequisite; uv 0.13.9 at authoring (0.12.13 tested); pytest 9.2.0; pytest-django 4.14.0; Ruff 0.17.5; openpyxl 3.1.5 (development only); Vercel Hobby with the Python runtime in `fra1`; Neon Free in AWS Frankfurt.
+**Stack (exact versions):** Python 3.13 (from `.python-version`, installed by uv); Django 5.2.19 LTS; psycopg[binary] 3.3.9; PostgreSQL 18.7 (`postgres:18.7`) locally and in CI; Docker Desktop 4.99.0 with Docker Compose v5.7.0 as the local prerequisite; uv 0.13.9 at authoring (0.12.13 tested); pytest 9.2.0; pytest-django 4.14.0; Ruff 0.17.5; openpyxl 3.1.5 (development only).
 
 **Deferred in the spine, settled in stories**
 
-- **Checks before publishing** (aligned on 2026-11-18, D-1). In Story 1.2: that GitHub Actions is allowed in the organization. In the publishing story, Story 1.9: that the IBE160-2026 organization allows the Vercel GitHub app (otherwise the owner deploys `main` with the Vercel CLI); Vercel Hobby's commit-author rule; that Vercel detects `manage.py` in `src/` and runs the build script with `DATABASE_URL_UNPOOLED`; and that Neon offers Postgres 18 in AWS Frankfurt.
+- **Publishing (removed from v1, D-1).** Vercel with Neon was planned as Story 1.9 until 2026-11-19. Story 1.2 still checks that GitHub Actions is allowed in the organization.
 - **Tests not run yet** (`docs/qa-logg.md`): the offline start with Docker Desktop, and the whole README setup on Windows x64. Both run in Story 1.3, which blocks no other story, and again on the final commit (DR-9, SM-2, D-3).
 - **Schemas** of the seed JSON and of the spreadsheet's answer-key sheet: set in the data story.
 - **Validation messages the Message Catalogue lacks,** for a percentage with decimals or a smoothing factor with two decimals: settled in the settings story under the UX copy rules.
@@ -369,14 +367,14 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1). DR-10 is
 - **Could items:** FR-31 replaces only the storage behind `web/adjustments.py`; FR-23 needs an amendment to AD-9; FR-32 to FR-34 are decided when scheduled.
 - **Caching** only if the NFR-8 check fails, with an amendment to AD-2.
 - **Not in v1:** a Content Security Policy, browser end-to-end tests (Playwright), rate limiting, and monitoring, backup or alerting services.
-- **Free-plan terms** are checked again before submission: Vercel Hobby is for non-commercial use, Neon Free has usage limits, and Docker Desktop is free for personal use and education.
+- **Docker Desktop's terms** are checked again before submission: it is free for personal use and education.
 
 **Planning constraints (PRD §8, DR-6 and the teacher's feedback)**
 
 - **One priority per story.** A story takes its priority from its FRs and never mixes Must with Should or Could (teacher's feedback 4.3).
-- **Order.** The Must scope comes first. Should and Could items start only after the Must scope passes SM-1 and SM-3 (DR-6, SM-C2). The Should order is fixed (PRD §8.2): 1. FR-9; 2. FR-36 and FR-17b; 3. FR-13 and FR-14; 4. FR-29; 5. FR-30; 6. FR-28. The Could items (FR-23, FR-31 to FR-34) follow only if time allows. The teacher asked that the epics build on this order and on the cut line.
-- **Publishing cut line (PRD §8.1).** DR-10 must work by the time the rest of the Must scope passes SM-1 and SM-3, and no later than the date that sprint planning sets for completing the Must scope. Otherwise the group stops working on publishing: SM-9 and FR-4's published part lapse, DR-10 is reported as not built and FR-4 as partly built, and SM-2 and SM-3 count as met on the local version. **Decision (the user, 2026-11-18):** publishing on Vercel with Neon is planned as a story of its own that can be postponed, as the cut line requires. Stories 1.1 and 1.2 therefore cover the local path and CI, and publishing is Story 1.9. The spine's delivery order was aligned with this on 2026-11-18 (D-1). **Scheduling (the user, 2026-11-18):** Story 1.9 comes right after Story 1.8, before any Epic 2 story, so that the examiner gets a working website and Vercel or Neon problems show up while there is time to fix them; the cut line is the fallback, not the plan.
-- **Done when** the Must scope passes SM-1 and SM-3, and SM-2 and SM-9 hold on the final commit (SM-9 lapses under the cut line).
+- **Order.** The Must scope comes first. Should and Could items start only after the Must scope passes SM-1 and SM-3 (DR-6, SM-C2). The Should order is fixed (PRD §8.2): 1. FR-9; 2. FR-36 and FR-17b; 3. FR-13 and FR-14; 4. FR-29; 5. FR-30; 6. FR-28. The Could items (FR-23, FR-31 to FR-34) follow only if time allows. The teacher asked that the epics build on this order and on the cut line; the cut line no longer applies, because publishing is not in version 1 (D-1).
+- **Publishing (not in version 1).** Until 2026-11-19 the PRD's cut line applied to publishing on Vercel with Neon, planned as Story 1.9 right after Story 1.8 (the user's decisions of 2026-11-18). On 2026-11-19 the teacher clarified on Canvas that publishing is not mandatory, and the user removed it from version 1 together with Story 1.9; the cut line no longer applies (D-1).
+- **Done when** the Must scope passes SM-1 and SM-3, and SM-2 holds on the final commit.
 - **If time runs short in the Must scope:** sprint planning sets the order in which the remaining Must stories are finished, with the stories needed for SM-1, SM-2, SM-3 and DR-1 first. A Must story that is not built is marked as not built in the status table and the README, with the reason (DR-8). No priority changes (the teacher's feedback, 4.1).
 - **Deadline.** 1 December 2026 (DR-6), 13 days after this document was started. Sprint planning sets the milestone dates.
 - **Could items** get testable consequences when they are planned (PRD §4).
@@ -387,7 +385,7 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1). DR-10 is
 - The reference spreadsheet with the hand-calculated E1–E30 (DR-3) does not exist yet (open since 2026-11-03). It is the single answer key that the tests and the seed generator read (AD-15, AD-17), so it comes before the rule tests and the seed data.
 - The README setup sequence has to be written and tested (open since 2026-11-01): the database starts with Docker Compose, the commands run with `uv run` without activating a virtual environment, and the README says that Windows on ARM is not supported.
 - The setup-time test: at most 15 minutes from the clone with the prerequisites installed, on clean macOS and Windows machines, including the offline start, and again on the final commit (SM-2, PRD §10 question 2). The database part is tested on macOS; Windows and the offline start remain.
-- Publishing on Vercel (`fra1`) with Neon (Frankfurt), with the Vercel and Neon checks listed under Deferred. `issues.md` places it in the first story; by the decision of 2026-11-18 it is a story of its own. The build step migrates only additive changes and loads seed data only into an empty database (AD-16).
+- No publishing in version 1 (D-1). Vercel with Neon, first placed in the first story by `issues.md` and made Story 1.9 on 2026-11-18, was removed on 2026-11-19.
 - `.gitignore`: the Next.js part and `db.sqlite3*` can be removed in the first story.
 - The README links to the QA log (DR-1).
 - The final check before submission: repeat the privacy scan of the whole Git history on the final commit and record the result in `docs/qa-logg.md` (NFR-4, DR-9).
@@ -397,7 +395,7 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1). DR-10 is
 - Update the Product Brief with the changes listed in addendum §7 (DR-5).
 - Textbook sources for the inventory rules (research report B), or a note in the process documentation that they are missing (PRD §10 question 3).
 
-Not story work: asking, when Epic 1 starts, whether the IBE160-2026 organization allows the Vercel GitHub app, and requesting the approval if needed, so that a wait does not delay Story 1.9 (D-1); confirming Docker's terms in Docker Desktop; GitHub's «Keep my email addresses private» setting and the Git identity in other clones; the Impeccable settings file in the home folder; the relative links inside `DESIGN.md` when read through `docs/DESIGN.md`, which cannot be fixed without changing the approved design; and the optional polishing of the research reports.
+Not story work: confirming Docker's terms in Docker Desktop; GitHub's «Keep my email addresses private» setting and the Git identity in other clones; the Impeccable settings file in the home folder; the relative links inside `DESIGN.md` when read through `docs/DESIGN.md`, which cannot be fixed without changing the approved design; and the optional polishing of the research reports.
 
 ### UX Design Requirements
 
@@ -428,7 +426,7 @@ From `DESIGN.md` (how it looks) and `EXPERIENCE.md` (how it works), with copy fr
   - From 320 px there is no horizontal page scrolling, no text overlaps or is cut off, and every control is reachable with the keyboard and by touch (NFR-6). Only wide tables and the chart scroll sideways, inside their own frame; the chart's labels never shrink below 12 and 13 px, and calculation lines wrap between terms. The app header and the settings bar wrap onto more lines.
   - At 1366 × 768 (1366 × 640 px of content), the suggested order quantity, the confidence label and the active warnings are visible without scrolling, and the chart's heading and top edge show (FR-25). On smaller screens they come first in the product area, right after the product header.
   - Touch screens: every control has a target of at least 44 × 44 px, form fields use 16 px text, and the keyboard hint is hidden (UX-DR36).
-  - Test sizes: 1366 × 768 in the desktop browsers; 820 × 1180 and 1180 × 820 (iPad), 360 × 800 (Android) and 320 px wide in the browser's responsive view; and 390 × 844 (iPhone 13) in the responsive view and on the real phone at the published address, unless the cut line applies. A test on a real device and a test in the browser's responsive view are recorded apart.
+  - Test sizes: 1366 × 768 in the desktop browsers; 820 × 1180 and 1180 × 820 (iPad), 360 × 800 (Android) and 320 px wide in the browser's responsive view; and 390 × 844 (iPhone 13) in the responsive view and on the real phone over the local network. A test on a real device and a test in the browser's responsive view are recorded apart.
   - Dark mode and print are not designed.
 
 **Screens**
@@ -505,7 +503,7 @@ From `DESIGN.md` (how it looks) and `EXPERIENCE.md` (how it works), with copy fr
   - Content, in order: the method and settings; the number of calculation weeks and the week forecasts; the weeks left out and why; every active warning and note; the order calculation; the weeks of cover; the confidence label and its reason; the scenarios.
   - Numbers: only those FR-27 allows. Templates leave out sales figures and the week numbers of calculation weeks, included unusual weeks and level-shift weeks. A year appears only next to a week left out or a horizon week that lies in another year than the latest data week.
   - The Strøsand 25 kg example in EXPERIENCE.md is the reference text.
-  - Should, FR-28: «KI-omformulert forklaring» above the text; on any failure the template text, without an error. The published version always shows the template text.
+  - Should, FR-28: «KI-omformulert forklaring» above the text; on any failure the template text, without an error.
 - **UX-DR32 Week path («Denne uken» and Samlet bestillingsoversikt).** Three steps in a row, each a 30 px circle with the number (2 px field border, muted number), a 16 px title (weight 600, ink) and a meta muted line:
   1. «Se hva som haster»: «Produktene som bør bestilles snart, står øverst i listen, med lavest uker dekning først.»
   2. «Gå gjennom produktene»: «Sjekk forslaget, tilliten og utregningen for hvert produkt.»
@@ -543,7 +541,7 @@ From `DESIGN.md` (how it looks) and `EXPERIENCE.md` (how it works), with copy fr
 - FR-1: Epic 1 – log in with customer number and password, and log out
 - FR-2: Epic 1 – company isolation; every later story that adds a route or a list extends the two-account test
 - FR-3: Epic 1 – the synthetic dataset, built from the reference spreadsheet
-- FR-4: Epic 1 – PostgreSQL locally; the published part in the publishing story
+- FR-4: Epic 1 – PostgreSQL locally
 - FR-5: Epic 2 – moving average
 - FR-6: Epic 2 – exponential smoothing
 - FR-7: Epic 2 – three-week horizon and the flat-weeks note
@@ -594,7 +592,6 @@ Eight epics, approved by the user on 2026-11-18. Epics 1 to 4 are Must, 5 to 7 S
 - Every new route or list extends the two-account test (FR-2, AD-7).
 - Every page it adds or changes follows UX-DR7 on a PC, an iPad and a phone, and is checked in the browser's responsive view at least at 320 px, 390 × 844 (iPhone 13) and 820 × 1180 (iPad); the pull request names these as checks in the responsive view, and tests on the real iPhone 13 are recorded apart in the QA log (NFR-6).
 - Result-dependent Norwegian text comes from `explanation/`, with the Message Catalogue as its copy source (AD-4), and numbers and week labels are formatted by `forecasting/display.py` (AD-3).
-- Once Story 1.9 has published Prognose, migrations stay additive (AD-16), and a deploy of `main` that fails is fixed before the next merge, so that the published address runs the latest `main` (DR-10).
 - The story's prompts, relevant AI sessions and AI corrections follow the routine below (DR-5, DR-9, NFR-4).
 
 **Routine for AI sessions and AI corrections** (approved by the user on 2026-11-18)
@@ -614,15 +611,13 @@ Eight epics, approved by the user on 2026-11-18. Epics 1 to 4 are Must, 5 to 7 S
 
 ### Epic 1: Log in and see only your own company's data (Must)
 
-The examiner sets up Prognose from a fresh clone, starts the database with one command, logs in as either test company and sees only that company's products. The data stays in PostgreSQL between restarts. The published version follows in a story of its own right after login, so that the examiner gets a working website early; it blocks no other story and is cut only under the cut line.
+The examiner sets up Prognose from a fresh clone, starts the database with one command, logs in as either test company and sees only that company's products. The data stays in PostgreSQL between restarts. Version 1 is not published (D-1).
 
 **FRs covered:** FR-1, FR-2, FR-3, FR-4.
-**Also covers:** NFR-1, NFR-3, NFR-4, NFR-6 (the viewport and touch rules, and the first test on the real iPhone), NFR-9, NFR-10 (the error pages), DR-2, DR-3, DR-4, DR-5, DR-8, DR-9 (the process documents), DR-10, SM-4, SM-5 and SM-9 (the first check); AD-1, AD-6 to AD-8 and AD-12 to AD-17; UX-DR1 to UX-DR5, UX-DR7, UX-DR8, UX-DR13, UX-DR14, UX-DR21, UX-DR38, UX-DR41, UX-DR43, UX-DR44 and UX-DR46.
+**Also covers:** NFR-1, NFR-3, NFR-4, NFR-6 (the viewport and touch rules, and the first test on the real iPhone), NFR-9, NFR-10 (the error pages), DR-2, DR-3, DR-4, DR-5, DR-8, DR-9 (the process documents), DR-10 (as not built, in the status table), SM-4 and SM-5; AD-1, AD-6 to AD-8, AD-12 to AD-15 and AD-17; UX-DR1 to UX-DR5, UX-DR7, UX-DR8, UX-DR13, UX-DR14, UX-DR21, UX-DR38, UX-DR41, UX-DR43, UX-DR44 and UX-DR46.
 **Implementation notes:**
-- Order: the local start (1.1); CI (1.2); the setup test on Windows and offline (1.3), which blocks nothing; the app shell (1.4); the reference spreadsheet (1.5), which can start alongside 1.1 and must be done before the seed data, because the generator reads it (AD-15, AD-17); the seed data (1.6, 1.7); login and isolation (1.8); and publishing (1.9) right after it, before any Epic 2 story, so that the examiner gets a working website early (D-1).
+- Order: the local start (1.1); CI (1.2); the setup test on Windows and offline (1.3), which blocks nothing; the app shell (1.4); the reference spreadsheet (1.5), which can start alongside 1.1 and must be done before the seed data, because the generator reads it (AD-15, AD-17); the seed data (1.6, 1.7); and login and isolation (1.8).
 - There is no starter template. The first story builds the skeleton by hand, with `web.Company` in the first migration, and starts the status table and the AI steering log so that every story can update them.
-- No other story depends on the publishing story. If it waits on something outside the group's control, such as the organization's approval of the Vercel app, Epic 2 goes on, and the group returns to publishing as soon as the wait is over; it is cut only under the cut line (D-1).
-- Once publishing works, every merge to `main` deploys, so migrations must stay additive (AD-16).
 
 ### Epic 2: See what to order, how it was calculated and whether to trust it (Must)
 
@@ -646,10 +641,10 @@ Mounia changes the forecasting method, the window, the smoothing factor, the sce
 
 ### Epic 4: Ready for the examiner (Must)
 
-The examiner opens the published address at the top of the README, or installs Prognose from the README on macOS or Windows within 15 minutes once the prerequisites are installed, follows «Prøv selv», compares the results with the reference spreadsheet and traces every FR to its stories and tests. The final commit passes every check.
+The examiner installs Prognose from the README on macOS or Windows within 15 minutes once the prerequisites are installed, follows «Prøv selv», compares the results with the reference spreadsheet and traces every FR to its stories and tests. The final commit passes every check.
 
 **FRs covered:** none directly; the README parts of other FRs belong to DR-1.
-**Also covers:** DR-1, DR-2, DR-5, DR-8 and DR-9; NFR-4, and the manual checks of NFR-6, NFR-7, NFR-8 and NFR-11; SM-2, SM-8, SM-9 (the final check) and SM-10; UX-DR7 (the test sizes) and UX-DR45 (the state checks); the `issues.md` points on the README, the Product Brief, the textbook sources, the Impeccable finish review and the final privacy scan.
+**Also covers:** DR-1, DR-2, DR-5, DR-8 and DR-9; NFR-4, and the manual checks of NFR-6, NFR-7, NFR-8 and NFR-11; SM-2, SM-8 and SM-10; UX-DR7 (the test sizes) and UX-DR45 (the state checks); the `issues.md` points on the README, the Product Brief, the textbook sources, the Impeccable finish review and the final privacy scan.
 **Implementation notes:** Stories 4.1 to 4.3 come right after Epic 3 and before any Should work, so the Must scope can be submitted even if no Should item is built, and a failed SM-10 can still be fixed. Story 4.4 comes last in the sprint plan, on the final commit, after every story that is actually implemented.
 
 ### Epic 5: Seasonal products and clearer warnings (Should, items 1 and 2)
@@ -670,7 +665,7 @@ Mounia sees the order quantity per scenario and the overstock note, adjusts a su
 
 ### Epic 7: Optional local language model (Should, item 6)
 
-A group member can switch on a local language model that rephrases the explanation, under the FR-28 checks. Prognose works fully without it, and the published version always shows the template text.
+A group member can switch on a local language model that rephrases the explanation, under the FR-28 checks. Prognose works fully without it.
 
 **FRs covered:** FR-28.
 **Also covers:** AG-3, AG-5 and SM-6; AD-5; the AI label in UX-DR31; PRD §10 question 5.
@@ -685,7 +680,7 @@ Small additions to the weekly routine: settings per product, saved and approved 
 
 ## Epic 1: Log in and see only your own company's data
 
-The examiner sets up Prognose from a fresh clone, starts the database with one command, logs in as either test company and sees only that company's products. The data stays in PostgreSQL between restarts. The published version follows in a story of its own right after login, so that the examiner gets a working website early; it blocks no other story and is cut only under the cut line.
+The examiner sets up Prognose from a fresh clone, starts the database with one command, logs in as either test company and sees only that company's products. The data stays in PostgreSQL between restarts. Version 1 is not published (D-1).
 
 ### Story 1.1: Start Prognose locally from a fresh clone
 
@@ -693,12 +688,12 @@ As an examiner,
 I want to start Prognose from a fresh clone with one command for the database and the documented `uv run` commands,
 So that I can run it on my own computer without paid services, keys or file editing.
 
-**Priority:** Must. **Requirements:** NFR-1, NFR-3, NFR-4, NFR-9, DR-2, DR-5, DR-8, DR-9; AD-6, AD-13, AD-14, AD-17; the Consistency Conventions; the routine for AI sessions.
+**Priority:** Must. **Requirements:** NFR-1, NFR-3, NFR-4, NFR-6 (the setting for the phone test), NFR-9, DR-1 (the setup part), DR-2, DR-5, DR-8, DR-9; AD-6, AD-13, AD-14, AD-17; the Consistency Conventions; the routine for AI sessions.
 
 **Tasks,** each with the check that proves it:
 1. The repository layout from the Structural Seed, with `pyproject.toml`, `uv.lock` and `.python-version`: `uv sync --locked` installs the pinned versions.
 2. `compose.yaml` with only the database: `docker compose up -d --wait` reports the database as healthy.
-3. The settings for local mode: a test checks the default `DATABASE_URL`, `LANGUAGE_CODE` and `TIME_ZONE`.
+3. The settings for the local run mode: a test checks the default `DATABASE_URL`, `LANGUAGE_CODE`, `TIME_ZONE` and `ALLOWED_HOSTS`, with and without `PROGNOSE_LAN_HOST`.
 4. The custom user model `web.Company` in the first migration: `migrate` runs on an empty database, and `makemigrations --check` finds nothing missing.
 5. `load_seed`, which creates `.secret_key` and never overwrites it: a test with and without an existing file.
 6. The first page at `/`: a test of the response.
@@ -724,9 +719,14 @@ So that I can run it on my own computer without paid services, keys or file edit
 **And** the first migration creates the custom user model `web.Company`, with `customer_number` as its login field and the company name (AD-6)
 
 **Given** no `.secret_key` file
-**When** `load_seed` runs in local mode
+**When** `load_seed` runs
 **Then** it creates `.secret_key`, which `.gitignore` excludes (AD-13)
 **And** when `.secret_key` already exists, `load_seed` never overwrites it and leaves its content unchanged; a test covers both cases, and in this story the command loads no data (Story 1.7 adds the loading)
+
+**Given** the settings
+**When** `PROGNOSE_LAN_HOST` is not set
+**Then** `ALLOWED_HOSTS` holds only `127.0.0.1` and `localhost`, and the documented start command listens only on `127.0.0.1` (AD-13)
+**And** when the variable names an address, that address is added for the phone test over the local network while DEBUG stays off, and a test covers both cases (NFR-6)
 
 **Given** `pyproject.toml` and `uv.lock`
 **When** the dependencies are installed with `uv sync --locked`
@@ -741,7 +741,7 @@ So that I can run it on my own computer without paid services, keys or file edit
 **Given** `.gitignore` and `.env.example`
 **When** they are read
 **Then** `.gitignore` keeps out the virtual environment, caches, test and coverage output, the local database data, `.env`, `.secret_key`, and operating-system and editor files, and its Next.js part and `db.sqlite3*` are gone (DR-2)
-**And** `.env.example` lists `PROGNOSE_DEBUG` and `DATABASE_URL`, each marked as optional or secret; the language-model variables are added only with FR-28 (Optional features convention)
+**And** `.env.example` lists `PROGNOSE_DEBUG`, `DATABASE_URL` and `PROGNOSE_LAN_HOST`, each marked as optional or secret; the language-model variables are added only with FR-28 (Optional features convention)
 
 **Given** the process documents
 **When** this story is done
@@ -757,6 +757,7 @@ So that I can run it on my own computer without paid services, keys or file edit
 **Given** the README
 **When** this story is done
 **Then** its setup section lists the commands above, which are the same in macOS Terminal and Windows PowerShell, and says that Windows on ARM is not supported
+**And** it says that no API key, paid service or third-party account is needed, that `load_seed` creates the session secret in `.secret_key`, which Git ignores, and that every variable in `.env.example` is optional (NFR-1, NFR-3)
 **And** `docs/qa-logg.md` records the first setup on macOS with the date, the Docker Desktop version, the result and the time taken; the tests on Windows and offline are Story 1.3
 
 ### Story 1.2: Check every pull request automatically
@@ -997,7 +998,7 @@ As a purchasing manager,
 I want to log in with my company's customer number and password and see my company's products,
 So that I work with my own company's data and nobody else's.
 
-**Priority:** Must. **Requirements:** FR-1, FR-2, NFR-3, NFR-10, SM-4; AD-3, AD-6, AD-7, AD-10, AD-11; UX-DR8, UX-DR14, UX-DR38.
+**Priority:** Must. **Requirements:** FR-1, FR-2, NFR-3, NFR-6 (the first test on the real iPhone), NFR-10, SM-4; AD-3, AD-6, AD-7, AD-10, AD-11, AD-13; UX-DR8, UX-DR14, UX-DR38.
 
 **Acceptance Criteria:**
 
@@ -1046,57 +1047,10 @@ So that I work with my own company's data and nobody else's.
 **When** any page is requested
 **Then** the 503 page from Story 1.4 appears, without the parts of the layout that read the database, and a test covers it (AD-12)
 
-### Story 1.9: Publish Prognose on Vercel with Neon
-
-As an examiner,
-I want to open Prognose at a published address and log in as a test company without installing anything,
-So that I can try it in a browser before, or instead of, setting it up myself.
-
-**Priority:** Must, with the cut line in PRD §8.1. It is scheduled right after Story 1.8, before any Epic 2 story, so that the examiner gets a working website and problems with Vercel or Neon show up while there is time to fix them. No other story depends on it: it is postponed only while it waits on something outside the group's control, and cut only under the cut line (D-1). **Requirements:** DR-1, DR-10, FR-4 (the published part), SM-9 (the first check), NFR-1, NFR-3, NFR-6; AD-13, AD-14, AD-16.
-
-**Acceptance Criteria:**
-
-**Given** the publishing checks in D-1
-**When** the group sets up publishing
-**Then** it confirms, and records in the QA log, that the IBE160-2026 organization allows the Vercel GitHub app (otherwise the owner deploys `main` with the Vercel CLI), that Vercel Hobby accepts the repository's commits, including those with Claude as co-author, that Vercel detects `manage.py` in `src/` and runs the build script with `DATABASE_URL_UNPOOLED`, and that Neon offers Postgres 18 in AWS Frankfurt
-
-**Given** the Vercel Hobby project, owned by one group member and connected to the public GitHub repository, with its functions in `fra1`
-**When** `vercel.json` and the project settings are inspected
-**Then** only `main` deploys (`"git": {"deploymentEnabled": {"**": false, "main": true}}`), the Neon variables exist only for Production, and the group has set only `SECRET_KEY` (AD-16)
-
-**Given** a deploy of `main`
-**When** the build script in `pyproject.toml` (`[tool.vercel.scripts] build`) runs
-**Then** it runs the migration step and then `load_seed`, both over the direct URL (AD-16)
-**And** the migration step applies the pending migrations only when none are applied yet, or when every pending operation is `CreateModel`, `AddField`, `AddIndex`, `AddConstraint` or `AlterModelOptions`; any other operation stops the build before anything is applied, and a test covers both cases
-
-**Given** a published database that already holds data
-**When** a deploy runs
-**Then** `load_seed` changes nothing, and no deploy runs `load_seed --reset`, `flush` or a data migration (AD-16, DR-10)
-
-**Given** published mode (`VERCEL` set)
-**When** the settings load
-**Then** DEBUG is off; `ALLOWED_HOSTS` and the https `CSRF_TRUSTED_ORIGINS` come from `VERCEL_PROJECT_PRODUCTION_URL` and `VERCEL_URL`; secure cookies and `SECURE_PROXY_SSL_HEADER` are on; connections require TLS; web requests use the pooled `DATABASE_URL` with `CONN_MAX_AGE = 0` and `DISABLE_SERVER_SIDE_CURSORS = True`; and `load_seed` writes no secret file (AD-13, AD-14)
-**And** startup stops with a clear error when `SECRET_KEY` or `DATABASE_URL` is missing, and tests cover the settings in both run modes
-
-**Given** the published address
-**When** a person logs in as each test company
-**Then** the product overview opens with only that company's products (SM-9, the first check)
-**And** the QA log records the date, browser and result; the full SM-9 check, with the core flow, runs in the final checks of Epic 4
-**And** the same login runs once more on the real iPhone 13 in Safari, and the QA log records it as a test on a real device, with the iOS version (NFR-6)
-
-**Given** the README
-**When** this story is done
-**Then** it gives the published address at the top and, for the group, the steps to publish and to load the seed data into the published database (DR-1, DR-10)
-
-**Given** the published database
-**When** the owner needs to restore the seed state
-**Then** the README describes how to run `load_seed --reset` over the direct URL from the Vercel project settings, entered at a hidden prompt for that one command and never written to a file, a commit or the shell history (DR-4, DR-10)
-**And** the QA log records a test of the procedure
-
-**Given** that publishing does not work by the date that sprint planning sets for completing the Must scope
-**When** the cut line applies
-**Then** the group stops work on this story, the status table marks DR-10 as not built and FR-4 as partly built, and the README says that Prognose was not published and why (PRD §8.1)
-**And** the phone sizes are then tested only in the browser's responsive view, and the README and the QA log say so (NFR-6)
+**Given** the login on a real phone
+**When** a group member starts Prognose for the phone test over the local network (AD-13) and logs in as each test company on the real iPhone 13 in Safari
+**Then** the product overview opens with only that company's products, and the QA log records it as a test on a real device, with the date and the iOS version (NFR-6)
+**And** after the test the app is stopped and `PROGNOSE_LAN_HOST` is removed
 
 ## Epic 2: See what to order, how it was calculated and whether to trust it
 
@@ -1749,21 +1703,21 @@ So that I see in one step how much the unusual weeks matter.
 
 ## Epic 4: Ready for the examiner
 
-The examiner opens the published address at the top of the README, or installs Prognose from the README on macOS or Windows within 15 minutes once the prerequisites are installed, follows «Prøv selv», compares the results with the reference spreadsheet and traces every FR to its stories and tests. The final commit passes every check.
+The examiner installs Prognose from the README on macOS or Windows within 15 minutes once the prerequisites are installed, follows «Prøv selv», compares the results with the reference spreadsheet and traces every FR to its stories and tests. The final commit passes every check.
 
 ### Story 4.1: Set up and try Prognose from the README
 
 As an examiner,
 I want a README that takes me from a fresh clone to a logged-in test company and then through «Prøv selv»,
-So that I can try Prognose at once at the published address, or install and check it on my own computer within 15 minutes once the prerequisites are installed.
+So that I can install and check Prognose on my own computer within 15 minutes once the prerequisites are installed.
 
-**Priority:** Must. **Requirements:** DR-1, DR-2, DR-4, DR-7, DR-9, DR-10, SM-2, SM-9, NFR-1, NFR-2, NFR-3, NFR-6; D-1, D-3; the examiner guidelines, criterion 1 («Arbeidsflyt»), criterion 2 («Funksjonalitet og omfang») and criterion 6 («README og kjørbarhet»); the Product Brief and the teacher's feedback on it; the `issues.md` points on the README sequence and the link to the QA log. It runs right after Epic 3, before any Should work.
+**Priority:** Must. **Requirements:** DR-1, DR-2, DR-4, DR-7, DR-9, DR-10, SM-2, NFR-1, NFR-2, NFR-3, NFR-6; D-1, D-3; the examiner guidelines, criterion 1 («Arbeidsflyt»), criterion 2 («Funksjonalitet og omfang») and criterion 6 («README og kjørbarhet»); the Product Brief and the teacher's feedback on it; the teacher's clarification on Canvas of 2026-11-19 (D-1); the `issues.md` points on the README sequence and the link to the QA log. It runs right after Epic 3, before any Should work.
 
 **Acceptance Criteria:**
 
 **Given** the README
 **When** the examiner opens it
-**Then** the published address stands right under the title, with a link to the test companies' login details and a note that it needs no installation, works on a PC, an iPad and a phone, and is a shared demo with synthetic data only; under the cut line, the top says instead that Prognose was not published and why (DR-10, SM-9, D-1)
+**Then** right under the title it says how to start Prognose locally, with the commands from the clone to a logged-in test company or a link to them, gives a link to the test companies' login details, and notes that version 1 is not published, with the reason (DR-1, DR-10, D-1)
 **And** it says what Prognose does and for whom, with screenshots of at least the login page, the product overview and the product screen (DR-1)
 **And** a screen recording of UJ-1 steps 1 to 4, at most 2 minutes long, is optional
 
@@ -1782,6 +1736,11 @@ So that I can try Prognose at once at the published address, or install and chec
 **When** it is followed
 **Then** it says how to install each program, with a link to its official installation guide, and then gives the exact commands from the clone to a logged-in test company, the same in macOS Terminal and Windows PowerShell, how to start and stop the local database, how the session secret is created, and the fixes for a database that is not started and for a port that is in use (DR-1, NFR-3)
 
+**Given** the section «Nøkler og hemmeligheter»
+**When** the examiner reads it before the setup
+**Then** it says that Prognose needs no API key, paid service or third-party account, and that every variable in `.env.example` is optional (NFR-1, SM-2)
+**And** it says that `load_seed` creates the session secret in `.secret_key`, which Git ignores and nobody edits, that the local database has no password and listens only on `127.0.0.1`, and that the optional local language model needs no key (NFR-3, FR-28)
+
 **Given** the expected setup time
 **When** the examiner plans the installation
 **Then** the README says, before the setup section, how long installing the prerequisites takes, with Docker Desktop's download size and, on Windows, WSL 2 and a possible restart, as measured in Story 1.3, or that this time was not measured (SM-2, D-3)
@@ -1793,7 +1752,7 @@ So that I can try Prognose at once at the published address, or install and chec
 
 **Given** «Prøv selv»
 **When** the examiner follows it
-**Then** it has 5 to 10 steps that follow UJ-1, with the E8 product for UJ-1 step 4, so that switching unusual weeks changes the base forecast from 41,0 to 21,3 (DR-1); its first step checks the settings bar against the defaults and sets them back on Innstillinger if they differ, because the published demo is shared (DR-10)
+**Then** it has 5 to 10 steps that follow UJ-1, with the E8 product for UJ-1 step 4, so that switching unusual weeks changes the base forecast from 41,0 to 21,3 (DR-1); its first step checks the settings bar against the defaults and sets them back on Innstillinger if they differ, because an earlier session may have changed them (DR-4)
 **And** a table lists the test products with the rule, warning or confidence label that each one shows and its reference example
 
 **Given** the sections on tests and folders
@@ -1803,18 +1762,19 @@ So that I can try Prognose at once at the published address, or install and chec
 
 **Given** the section on tested screens and browsers
 **When** it is read
-**Then** it lists the screen sizes, devices and browsers that were actually tested, taken from the QA log: the desktop browsers, at least one per operating system; the real iPhone 13 with Safari at the published address; and the iPad and Android sizes and 320 px in the browser's responsive view (NFR-6, DR-1)
-**And** each entry says whether it was a real device or the responsive view, nothing is listed that was not tested, and under the cut line it says that the phone sizes were tested only in the responsive view
+**Then** it lists the screen sizes, devices and browsers that were actually tested, taken from the QA log: the desktop browsers, at least one per operating system; the real iPhone 13 with Safari over the local network; and the iPad and Android sizes and 320 px in the browser's responsive view (NFR-6, DR-1)
+**And** each entry says whether it was a real device or the responsive view, and nothing is listed that was not tested
+**And** it describes the phone test over the local network as an optional step for a private network, with `PROGNOSE_LAN_HOST` and the start command, and says that the app is stopped after the test (AD-13)
 
 **Given** the project's list of defects and open points
 **When** the examiner looks for issues, as the examiner guidelines say (criterion 1 and step 6)
 **Then** the README links clearly to `.logs/<bruker>/issues.md` as the project's issue list and explains how it is used: each defect or open point gets a dated line with a link to the session log it came from; a pull request that solves a point names it; a solved point is marked `[x]` with the date and the fix; and lines are never deleted (DR-7)
 **And** the README says that defects in AI-generated code or text are also recorded in the QA log, and that GitHub Issues is not used because the examiner guidelines accept issues or an equivalent (DR-9)
 
-**Given** the limitations and the publishing
+**Given** the limitations
 **When** they are read
 **Then** the README states the trend lag (FR-7), the assumptions behind the suggested order quantity (R-8) and the project-defined rules, and the limitations of R-14 once FR-9 is built (DR-1)
-**And** it gives the group's publishing steps, unless the cut line applies (DR-10); the section on the optional language model comes with FR-28, and the list of Should items not built with Story 4.4
+**And** the section on the optional language model comes with FR-28, and the list of Should items not built with Story 4.4
 
 **Given** a fresh clone with the prerequisites installed
 **When** a group member follows only the README on macOS, and on Windows where D-3 allows it
@@ -1894,30 +1854,26 @@ As an examiner,
 I want the submitted commit checked from end to end,
 So that what I receive works as documented.
 
-**Priority:** Must. **Requirements:** DR-1, DR-2, DR-7, DR-8, DR-9, NFR-4, NFR-6, NFR-7, NFR-8, NFR-11, SM-2, SM-9; D-2, D-3; UX-DR7. It comes last in the sprint plan, on the final commit, after every story that is actually implemented.
+**Priority:** Must. **Requirements:** DR-1, DR-2, DR-7, DR-8, DR-9, NFR-4, NFR-6, NFR-7, NFR-8, NFR-11, SM-2; D-2, D-3; UX-DR7. It comes last in the sprint plan, on the final commit, after every story that is actually implemented.
 
 **Acceptance Criteria:**
 
 **Given** the final commit
 **When** the manual test checklist runs
-**Then** it covers NFR-6, NFR-7, NFR-8, NFR-11, SM-2 with the offline start, and SM-9 unless the cut line applies, and the QA log records each result with the date, the operating system, the browser and the result (DR-9)
-**And** NFR-6 runs at the UX-DR7 test sizes: on the real iPhone 13 in Safari at the published address, unless the cut line applies, and in the browser's responsive view for the iPad and Android sizes and 320 px; the QA log records the two kinds of test apart, with the device or the size
+**Then** it covers NFR-6, NFR-7, NFR-8, NFR-11 and SM-2 with the offline start, and the QA log records each result with the date, the operating system, the browser and the result (DR-9)
+**And** NFR-6 runs at the UX-DR7 test sizes: on the real iPhone 13 in Safari over the local network (AD-13), and in the browser's responsive view for the iPad and Android sizes and 320 px; the QA log records the two kinds of test apart, with the device or the size
 
 **Given** a fresh clone of the final commit
 **When** a group member follows only the README on macOS, and on Windows where D-3 allows it
 **Then** a test company is logged in within 15 minutes, Prognose also starts with the network switched off after installation, and the setup time in the README matches (SM-2, D-3)
 
-**Given** the published address at the top of the README, unless the cut line applies
-**When** a person logs in as each test company
-**Then** the product overview opens, and the SM-3 core flow works by hand (SM-9)
-
 **Given** the whole Git history
 **When** the group scans it for secrets, personal data and local paths
 **Then** the QA log records the result (NFR-4)
 
-**Given** the free plans
+**Given** Docker Desktop's terms
 **When** they are checked again
-**Then** Vercel Hobby (non-commercial use), Neon Free (usage limits) and Docker Desktop (personal use and education) still fit, and the QA log records the check (Deferred in the spine)
+**Then** Docker Desktop is still free for personal use and education, and the QA log records the check (Deferred in the spine)
 
 **Given** the status table and the README
 **When** they are final
@@ -2151,7 +2107,7 @@ So that I can take the week's orders to the purchasing meeting.
 
 ## Epic 7: Optional local language model
 
-A group member can switch on a local language model that rephrases the explanation, under the FR-28 checks. Prognose works fully without it, and the published version always shows the template text.
+A group member can switch on a local language model that rephrases the explanation, under the FR-28 checks. Prognose works fully without it.
 
 ### Story 7.1: Rephrase the explanation with an optional local language model
 
@@ -2159,7 +2115,7 @@ As a purchasing manager,
 I want the explanation to read more naturally when a local language model is switched on, with no risk to the numbers,
 So that the text is easier to read while every number still comes from Prognose.
 
-**Priority:** Should (PRD §8.2, item 6, the last). **Requirements:** FR-28, FR-27, AG-1, AG-3, AG-4, AG-5, SM-6, NFR-1, NFR-8, DR-1, DR-10; AD-5, AD-13, AD-17; PRD §10 question 5; UX-DR31; the `issues.md` point on the model and its license. It can be implemented on its own, after the Should items before it, whether they were built or cut. The runtime and the model are decided at the start of the story (Deferred in the spine), and the timeout's fit with NFR-8 is decided in D-7; if that exception turns out not to fit the PRD or the teacher's requirements, the story is postponed rather than the architecture made more complex (the user's decision, 2026-11-18).
+**Priority:** Should (PRD §8.2, item 6, the last). **Requirements:** FR-28, FR-27, AG-1, AG-3, AG-4, AG-5, SM-6, NFR-1, NFR-8, DR-1; AD-5, AD-13, AD-17; PRD §10 question 5; UX-DR31; the `issues.md` point on the model and its license. It can be implemented on its own, after the Should items before it, whether they were built or cut. The runtime and the model are decided at the start of the story (Deferred in the spine), and the timeout's fit with NFR-8 is decided in D-7; if that exception turns out not to fit the PRD or the teacher's requirements, the story is postponed rather than the architecture made more complex (the user's decision, 2026-11-18).
 
 **Acceptance Criteria:**
 
@@ -2168,7 +2124,7 @@ So that the text is easier to read while every number still comes from Prognose.
 **Then** the story specification and the README record the choice, the model's license obligations, and its download size and expected download time (PRD §10 question 5, FR-28, DR-1)
 
 **Given** NFR-8
-**When** the model is off, which is the default, the basic setup and the published version
+**When** the model is off, which is the default and the basic setup
 **Then** every page meets NFR-8's 2 seconds, and the NFR-8 check in the QA log runs with the model off (NFR-8, D-7)
 **And** with the model switched on locally, a product screen may wait up to the 10-second timeout before it shows the rephrased text or the template text; the README states this exception, and no caching or background loading is added (AD-2, AD-10, D-7)
 
@@ -2196,7 +2152,7 @@ So that the text is easier to read while every number still comes from Prognose.
 
 **Given** `web/rephrase.py`
 **When** the code is reviewed
-**Then** it is the only network call in the application, uses the standard library and the 10-second timeout, and never runs on Vercel, where the template text is always shown (AD-5, AD-13, DR-10)
+**Then** it is the only network call in the application, uses the standard library and the 10-second timeout, and is off unless the local `.env` names a model URL (AD-5, AD-13)
 
 **Given** the README
 **When** this story is done
@@ -2354,3 +2310,4 @@ This document was approved by the user and set to `final` on 2026-11-18. Every l
 | 2026-11-18 | Story 4.1 requires the README to explain why Prognose covers only module 4.1 «Prognoser og Demand Management» of the proposal «KI-støttet MRP II», with links to the Product Brief and to the teacher's feedback on it of 2026-10-06, in the feedback's own words and without calling it an approval. No story or feature added. | Point 7 of the check against the examiner guidelines (criterion 2 measures the app against the proposal and the chosen task); the user's decision of 2026-11-18. The feedback assesses the narrowing, and the approval recorded on 2026-10-14 in `docs/arbeidslogg.md` is the user's own approval of the brief. | `9dee8b1` |
 | 2026-11-18 | Responsive design for PC, iPad and phone, following the updated NFR-6 in the PRD and the UX spines: NFR-6, DR-1 and DR-9 in the inventory; UX-DR7, UX-DR19, UX-DR36, UX-DR43 and UX-DR44; a rule for every story on checks in the responsive view; criteria in Stories 1.4, 1.9, 2.7, 2.8, 2.9, 2.10, 2.11, 3.1, 3.3, 4.1, 4.2 and 4.4. The README lists the screen sizes, devices and browsers that were actually tested, with the real iPhone 13 kept apart from the responsive view (point 8 of the check against the examiner guidelines). No story or feature added, and the architecture is unchanged. | The user's decision of 2026-11-18: the website must also work on a phone and an iPad; the user has an iPhone 13 for tests on a real device, and the iPad and Android sizes are tested in the browser's responsive view. | `9dee8b1` |
 | 2026-11-18 | Fixes from the final check before commit: NFR-2 in Story 2.6, whose criterion runs every Must reference example as a test; NFR-6 and UX-DR7 in «Also covers» for Epics 1, 3 and 4, and UX-DR7 in Stories 4.2 and 4.4; the UX-DR7 test sizes say which sizes run in the desktop browsers, which in the responsive view and which on the real iPhone 13. No story or feature added. | The user approved the proposals from the final check: Epic 2 named NFR-2 in «Also covers» without a story that names it, and the PC size was described as tested only in the responsive view. | `9dee8b1` |
+| 2026-11-19 | Publishing removed from version 1 (D-1): Story 1.9 is removed, so Epic 1 has 8 stories and the plan 38. Updated: D-1, kept with its history; D-7; the requirements inventory (FR-4, NFR-1, NFR-3, NFR-6, NFR-8, NFR-9, DR-1, DR-9, DR-10, SM-9); the architecture summary (AD-5, AD-13, AD-14, AD-16, the delivery order, the stack and the deferred items); the planning constraints; UX-DR7 and UX-DR31; the FR coverage map; the rules for every story; the work outside stories; the Epic 1, 4 and 7 texts; and Stories 1.1 (the setting for the phone test, and the keys in the README), 1.8 (the first test on the real iPhone over the local network), 4.1 (how to start Prognose at the top, and the section «Nøkler og hemmeligheter»), 4.4 and 7.1. No feature added. | The teacher's clarification on Canvas on 2026-11-19, as reported by the user: publishing is not mandatory; the application may run locally, but the README must explain how to start it and which API keys are needed. The user approved removing publishing and Story 1.9, and keeping the real iPhone test over the local network. | not committed yet |

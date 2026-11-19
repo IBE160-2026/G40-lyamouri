@@ -505,6 +505,27 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Planarbeidet er flettet inn i `main` (`8f0bb14`), og `epics.md` er `final`. Neste steg er sprintplanlegging (`bmad-sprint-planning`).
 
+### 19. november 2026 – Publisering tatt ut av v1
+
+* Godkjente flettingen av PR #4, som inneholdt loggene for flettingen av PR #3. Claude flettet lokalt med «Create a merge commit» og noreply-adressen (`fd422d0`) og pushet `main`.
+* Læreren avklarte på Canvas 19. november 2026 at publisering ikke er obligatorisk. Applikasjonen kan kjøres lokalt, men README.md må forklare hvordan den startes og hvilke API-nøkler som trengs. Beskjeden er gjengitt med egne ord, uten personopplysninger og ikke som ordrett sitat, i `_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/avklaring-publisering-2026-11-19.md`.
+* Claude undersøkte, uten å endre filer, hvilke krav, stories og dokumenter som ble berørt. Publiseringen var nevnt i ni filer, mest i `epics.md`, arkitekturspinen og PRD-en. NFR-1, SM-2 og FR-28 sa allerede at ingen API-nøkler trengs, men ingen story krevde at README-en sier det rett ut.
+* Godkjente anbefalingen:
+  * Vercel og Neon tas ut av v1, og story 1.9 fjernes, så epic 1 har 8 stories og planen 38;
+  * Prognose har bare lokal kjøremodus, og testen på ekte iPhone 13 gjøres over det lokale nettverket med den valgfrie variabelen `PROGNOSE_LAN_HOST`, første gang i story 1.8;
+  * README-en skal øverst forklare hvordan Prognose startes lokalt, og ha en egen del «Nøkler og hemmeligheter» om at ingen API-nøkler, betalte tjenester eller kontoer trengs.
+* Oppdaterte PRD-en, addendumet, arkitekturspinen, teknologinotatet, `EXPERIENCE.md`, `docs/PRODUCT.md`, `epics.md` og `issues.md`, med rader i endringsloggene:
+  * DR-10, SM-9, AD-16 og D-1 står igjen som historikk, merket som ikke i v1;
+  * alle dokumentene er fortsatt `final`;
+  * i `docs/PRODUCT.md` ble også linja om miljøet rettet, fordi den fortsatt sa at appen bare er for PC.
+* Kontroll:
+  * 38 stories, og alle krav er dekket, unntatt SM-9, som ikke er i v1;
+  * rettingene fra BMAD Review står, unntatt A14, som gjaldt tilbakestillingen av den publiserte databasen i story 1.9;
+  * «Also covers» stemmer for alle epicene, `lint_spine.py` fant 0 feil, og personvernskanningen fant ingenting.
+* Godkjente dokumentendringene og de to små tilleggene: README-en kan beskrive mobiltesten over lokalt nett som et valgfritt steg, og linja om miljøet i `docs/PRODUCT.md` er rettet. Endringene committes samlet på en egen gren og sendes som pull request mot `main`, som først flettes når jeg godkjenner det.
+
+**Status:** Publiseringen er tatt ut av v1, og planleggingsdokumentene er oppdatert. Neste steg er å flette pull requesten når jeg godkjenner den, og deretter sprintplanlegging (`bmad-sprint-planning`).
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

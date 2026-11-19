@@ -3,8 +3,8 @@
 <!-- impeccable:product-schema 1 -->
 
 Sources:
-- The final PRD and its addendum in `_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/`. The PRD was approved on 2026-11-03 and last updated on 2026-11-17, and every change is listed in PRD §12. The PRD wins on any conflict.
-- The final UX spines `DESIGN.md` (how Prognose looks) and `EXPERIENCE.md` (how it works) in `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/`, set to final on 2026-11-16 and last updated on 2026-11-17. `docs/DESIGN.md` is a symbolic link to that DESIGN.md, so Impeccable reads the approved file and no copy exists.
+- The final PRD and its addendum in `_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/`. The PRD was approved on 2026-11-03 and last updated on 2026-11-19, and every change is listed in PRD §12. The PRD wins on any conflict.
+- The final UX spines `DESIGN.md` (how Prognose looks) and `EXPERIENCE.md` (how it works) in `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/`, set to final on 2026-11-16 and last updated on 2026-11-19. `docs/DESIGN.md` is a symbolic link to that DESIGN.md, so Impeccable reads the approved file and no copy exists.
 
 This file records product facts only and does not repeat the spines. It lives in `docs/` because PRD DR-2 allows only the README, a license and configuration files as loose files in the root, and Impeccable finds PRODUCT.md and DESIGN.md there. The archived design of 2026-11-06 in `_bmad-output/planning-artifacts/archive/` is not a source.
 
@@ -16,7 +16,7 @@ web
 
 Decided in the architecture spine of 2026-11-17 (`_bmad-output/planning-artifacts/architecture/architecture-G40-lyamouri-2026-11-17/ARCHITECTURE-SPINE.md`), which owns the details and the URLs:
 - one Django 5.2 LTS web application with server-rendered templates, run with uv and Python 3.13;
-- PostgreSQL 18 in both run modes: locally in Docker Compose, and on Neon's free plan in the version published on Vercel, from the same code (NFR-9, DR-10);
+- PostgreSQL 18 locally in Docker Compose (NFR-9); version 1 is not published (DR-10);
 - the forecast chart as inline SVG rendered on the server, like the approved mockup, with no chart library.
 
 The UX assumes plain semantic HTML and CSS with no UI library. Every function works through links and forms, and scripts only enhance the page (EXPERIENCE.md, Foundation). The local app serves every asset itself, with no web fonts and no CDN, so it works offline after installation (NFR-1).
@@ -29,7 +29,7 @@ The UX assumes plain semantic HTML and CSS with no UI library. Every function wo
   - see at a glance which products need ordering soon;
   - have a basis for each decision that they can understand and explain;
   - know when the data behind a forecast is too thin or distorted to trust.
-- **Second audience:** the IBE160 teacher and examiner. They install Prognose from the README or open the published address, log in as a test company and check each forecast against a reference example (PRD §1, SM-2, SM-9, EXPERIENCE.md Flow 2).
+- **Second audience:** the IBE160 teacher and examiner. They install Prognose from the README, log in as a test company and check each forecast against a reference example (PRD §1, SM-2, EXPERIENCE.md Flow 2).
 - **Comprehension check:** two people outside the group see the product screen of a product with the confidence label «lav». Each must explain why it has that label without reading the reason aloud (SM-10, EXPERIENCE.md Flow 3).
 - **Not for (v1):**
   - large companies that need ERP or MRP planning;
@@ -38,7 +38,7 @@ The UX assumes plain semantic HTML and CSS with no UI library. Every function wo
 
 ## Product Purpose
 
-Prognose is a web application that helps the purchasing manager of a small business decide how much to order of each product next week. It runs locally from the README and as a published version on Vercel (DR-10).
+Prognose is a web application that helps the purchasing manager of a small business decide how much to order of each product next week. It runs locally from the README; version 1 is not published (DR-10).
 
 It forecasts weekly demand from the company's own sales history with established, hand-checkable methods (moving average and exponential smoothing). It shows normal, optimistic and pessimistic scenarios. It turns the normal forecast into a suggested order quantity: forecast plus safety margin minus stock on hand.
 
@@ -67,12 +67,11 @@ The explanation is built from fixed Norwegian templates. An optional local langu
   6. Finish with the combined order overview and take it to the meeting.
 
   Orders are placed outside Prognose. Steps 1 to 4 are Must. Adjusting quantities and the combined order overview are Should, so in a Must-only build the list for the meeting is made outside Prognose.
-- **Environment:** a desktop browser on a laptop or office PC, macOS or Windows (NFR-6).
+- **Environment:** a current browser on a laptop or office PC with macOS or Windows, which is the main case, and also on an iPad or a phone (NFR-6).
   - The local app and its database run offline after installation (NFR-1).
-  - The published version on Vercel is a shared demo on free plans (DR-10). Anyone with the logins in the README can change a test company's settings, and an explicit reset with the load command restores the seed state. The optional language model is not available there. If publishing does not work in time, the cut line in PRD §8.1 applies and the local version counts.
-  - Both versions use synthetic data only, with two test companies whose logins are in the README (FR-3).
+  - The app uses synthetic data only, with two test companies whose logins are in the README (FR-3).
 - **Examiner's scene:**
-  - a fresh clone and the README setup (target at most 15 minutes, SM-2), or the published address (SM-9);
+  - a fresh clone and the README setup (target at most 15 minutes, SM-2);
   - logging in as a test company;
   - following «Prøv selv» in the README;
   - comparing the values on screen with the reference spreadsheet (DR-1, DR-3).
@@ -157,7 +156,7 @@ The explanation is built from fixed Norwegian templates. An optional local langu
   - testimonials, user logos and press;
   - prices and accuracy benchmarks;
   - integrations;
-  - hosting claims beyond the free published demo in DR-10: no uptime guarantee, custom domain or paid hosting (PRD §7).
+  - hosting claims: version 1 is not published (DR-10, PRD §7).
 
 ## Product Principles
 
@@ -165,7 +164,7 @@ The explanation is built from fixed Norwegian templates. An optional local langu
 2. **Say when not to trust.** Warnings, notes and the confidence label are first-class information, never decoration and never softened.
 3. **Recommend, never decide.** The suggested order quantity is advice, and the user's adjustment is always shown as theirs.
 4. **One language, fixed terms.** Norwegian plain language with the glossary labels, using the same words on every screen and in every explanation.
-5. **Small, local and free.** The local app runs offline on one machine, and the published version runs the same code on free plans. There are no paid services and no more parts than the app needs (NFR-1, NFR-9, DR-10).
+5. **Small, local and free.** The app runs offline on one machine, with no paid services, no API keys and no more parts than it needs (NFR-1, NFR-9).
 
 ## Accessibility & Inclusion
 
