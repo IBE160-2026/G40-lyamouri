@@ -550,8 +550,14 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
   * kontrollskriptet viste samme dekning som før, og personvernskanningen av de nye linjene fant ingenting;
   * addendum §2 sa fortsatt at versjonene skal kontrolleres på nytt innen 2026-12-01. Etter min godkjenning ble datoen rettet til 2026-12-08, og PRD §12 nevner rettingen. Kontrollene ble kjørt på nytt uten funn.
 * Godkjente commit, push og pull request mot `main` fra grenen `plan/sprint-planning`, uten fletting. Endringene er committet i `67694f7` og sendt som [PR #6](https://github.com/IBE160-2026/G40-lyamouri/pull/6). Commit-hashen og PR-nummeret er ført inn i endringsloggene i en egen commit.
+* Godkjente flettingen av PR #6. Claude flettet lokalt med «Create a merge commit» (`git merge --no-ff`), uten squash eller rebase, og med noreply-adressen som forfatter:
+  * merge-commiten `41fe0cf` har den gamle `main` (`5445a2f`) og PR-hodet (`03c3630`) som foreldre;
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * etter pushen av `main` viser GitHub PR #6 som flettet 19. november kl. 21.23, med `41fe0cf` som merge-commit;
+  * lokal `main` og GitHub ble synkronisert og sto på samme commit, og arbeidskopien var ren;
+  * grenen `plan/sprint-planning` er beholdt.
 
-**Status:** Sprintplanen er sendt som PR #6 mot `main`, som ikke er flettet. Neste steg er å flette PR #6 når jeg godkjenner det, og deretter story 1.1 med `bmad-build`.
+**Status:** Sprintplanen er flettet inn i `main` (`41fe0cf`), og M0 i sprintplanen er nådd. Neste steg er story 1.1 med `bmad-build`.
 
 ## 4. Videre dokumentasjon
 

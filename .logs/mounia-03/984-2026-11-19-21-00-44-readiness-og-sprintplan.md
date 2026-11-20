@@ -54,7 +54,7 @@ Brukeren kjørte `bmad-help` for å se neste steg, og deretter `bmad-sprint-plan
   - punktet om nye epics og sprintplan er lukket;
   - punktene om README-sekvensen, oppsettstiden, Impeccable-gjennomgangen, sluttkontrollen og jobb-PC-en har fått merknader;
   - to nye punkter: ukeetiketten i story 1.8, som er åpent, og datoen i addendum §2, som ble lukket samme dag.
-- **Git:** alle endringene er laget på grenen `plan/sprint-planning`. Brukeren godkjente commit, push og pull request mot `main` etter at kontrollene besto og Git-status bare viste de avtalte filene. Endringene er committet i `67694f7` og pushet, og [PR #6](https://github.com/IBE160-2026/G40-lyamouri/pull/6) mot `main` er opprettet. Commit-hashen og PR-nummeret er ført inn i endringsloggene i en egen commit. PR #6 flettes ikke før brukeren godkjenner det.
+- **Git:** alle endringene er laget på grenen `plan/sprint-planning`. Brukeren godkjente commit, push og pull request mot `main` etter at kontrollene besto og Git-status bare viste de avtalte filene. Endringene er committet i `67694f7` og pushet, og [PR #6](https://github.com/IBE160-2026/G40-lyamouri/pull/6) mot `main` er opprettet. Commit-hashen og PR-nummeret er ført inn i endringsloggene i en egen commit. Etter brukerens godkjenning ble PR #6 flettet lokalt med «Create a merge commit» og noreply-adressen. Merge-commiten er `41fe0cf`, og GitHub viser PR #6 som flettet 19. november kl. 21.23. Lokal `main` og GitHub ble synkronisert på `41fe0cf`, og arbeidskopien var ren.
 
 ### Åpne punkter
 - Story 1.8 må selv lage ukeetiketten i `forecasting/display.py`, med test, fordi toppfeltet viser den før story 2.3 bygger ut modulen. Story 2.3 bygger videre på den.
