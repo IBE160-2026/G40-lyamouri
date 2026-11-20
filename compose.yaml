@@ -1,0 +1,26 @@
+# Prognose's local PostgreSQL, and nothing else (AD-14). Start it with:
+#   docker compose up -d --wait
+# Trust authentication: no password is stored, and the port is published on
+# 127.0.0.1 only, so only this computer can connect (NFR-3).
+services:
+  db:
+    image: postgres:18.7
+    environment:
+      POSTGRES_USER: prognose
+      POSTGRES_DB: prognose
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "127.0.0.1:15432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    restart: unless-stopped
+    healthcheck:
+      # Over TCP, so the check fails while the image's first-start setup runs a
+      # server that listens only on its socket.
+      test: ["CMD", "pg_isready", "--host=127.0.0.1", "--username=prognose", "--dbname=prognose"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  pgdata:

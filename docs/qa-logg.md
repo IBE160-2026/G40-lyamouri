@@ -76,3 +76,44 @@ Testcontaineren, volumet og de midlertidige filene ble slettet etterpå. Imaget 
 - **Oppsett på Windows (x64) med Docker Desktop:** ikke testet, fordi økten ikke hadde noen Windows-maskin.
 
 **Gjenstår.** Begge testene kjøres i første story og på nytt på siste commit (DR-9, SM-2).
+
+## 2026-11-20 – Første oppsett på macOS fra en ren kopi (Story 1.1; NFR-1, NFR-3, SM-2)
+
+**Hvorfor.** Story 1.1 krever at det første oppsettet på macOS føres med dato, Docker Desktop-versjon, resultat og tid. Oppsettet fulgte de fem kommandoene under «Kom i gang» i README.
+
+**Oppsett.**
+- Claude Code kjørte oppsettet tre ganger samme dag, med de samme kontrollene: to ganger før rettingene fra kodegjennomgangen, og én gang etter, på de endelige filene. Ingen person kjørte det.
+- macOS 15.6.1 på Apple M1 med 8 GB minne.
+- Docker Desktop 4.99.0 med Docker-motor 29.9.3 og Docker Compose v5.7.0. Imaget `postgres:18.7` lå allerede i Docker etter testen 17. november, så det ble ikke lastet ned.
+- uv 0.12.13. Python 3.13.15 var installert fra før, og pakkene lå i uv sin lokale hurtigbuffer.
+- En midlertidig kopi utenfor repoet med bare filene som skal committes, altså uten `.venv`, `.env` og `.secret_key`. Kopien fikk sitt eget Compose-prosjekt og volum, og begge ble slettet etterpå. Databasen til repoet var stoppet mens kopien kjørte, fordi begge bruker porten 15432.
+- Klient: `curl` 8.7.1 mot `http://127.0.0.1:8000/`, og `lsof` for adressene appen og databasen lyttet på. Ingen nettleser var med.
+
+**Resultat.**
+
+| Kommando | Resultat | Kjøring 1 (sekunder) | Kjøring 2 (sekunder) | Kjøring 3 (sekunder) |
+|---|---|---|---|---|
+| `docker compose up -d --wait` | databasen var klar («healthy») | 3,1 | 2,8 | 2,8 |
+| `uv sync --locked` | lagde `.venv` og installerte de 14 låste pakkene; `uv.lock` var uendret | 0,2 | 0,2 | 0,2 |
+| `uv run python src/manage.py migrate` | 16 migreringer, den siste `web.0001_initial` | 3,0 | 2,7 | 2,6 |
+| `uv run python src/manage.py load_seed` | «Lagde .secret_key med en ny hemmelig nøkkel.»; fila kan bare leses av eieren (modus 600) | 0,2 | 0,2 | 0,3 |
+| `uv run python src/manage.py runserver --insecure` | systemsjekken fant ingen feil, og appen svarte på første forespørsel | 1,0 | 1,1 | 1,1 |
+| Totalt, fra første kommando til første svar | | 7,8 | 7,2 | 7,2 |
+
+Alle tre kjøringene ga de samme resultatene. Totalen er litt større enn summen av stegene (7,5, 7,0 og 7,0 sekunder), fordi den også tar med tiden mellom kommandoene.
+
+| Kontroll | Resultat |
+|---|---|
+| `curl http://127.0.0.1:8000/` | status 200, med `<html lang="nb">` og ordmerket «Prognose» |
+| `lsof` på porten 8000 | appen lyttet bare på `127.0.0.1:8000` |
+| `lsof` på porten 15432 | Docker Desktop lyttet bare på `127.0.0.1:15432` |
+| Passord i databasen | rollen `prognose` har ikke lagret passord |
+| Virtuelt miljø, `.env`, nøkkel og redigering av filer | ingen av stegene trengte noe av dette |
+
+Tidene er lavere enn ved et første oppsett på en ny maskin, fordi imaget, Python og pakkene allerede lå lokalt. Testen 17. november målte 17 sekunder for `docker compose up -d --wait` med nedlasting av imaget.
+
+**Gjenstår.**
+- Brukeren sjekker `/` i Safari i responsiv visning ved 320 px, 390 × 844 og 820 × 1180 før pull requesten.
+- De fem kommandoene kjøres på nytt fra en `git clone` av den pushede grenen før pull requesten flettes.
+- Tidtakingen av hele oppsettet fra klonen, utført av en person (SM-2), hører til Story 4.1 og 4.4.
+- Oppsett på Windows x64 og oppstart uten nett hører til Story 1.3.
