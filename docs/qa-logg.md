@@ -117,3 +117,25 @@ Tidene er lavere enn ved et første oppsett på en ny maskin, fordi imaget, Pyth
 - De fem kommandoene kjøres på nytt fra en `git clone` av den pushede grenen før pull requesten flettes.
 - Tidtakingen av hele oppsettet fra klonen, utført av en person (SM-2), hører til Story 4.1 og 4.4.
 - Oppsett på Windows x64 og oppstart uten nett hører til Story 1.3.
+
+## 2026-11-20 – Feil i KI-generert kode og tekst fra reviewen av story 1.1 del A (DR-9)
+
+**Hvordan det ble funnet.** Claude Code skrev koden, testene og tekstene i story 1.1 del A med `bmad-build`. Før første commit gikk tre uavhengige KI-granskere gjennom diffen: Blind Hunter, Edge Case Hunter og Verification Gap. Claude kontrollerte hvert funn mot koden og gjenskapte de som kunne testes. Ruff fant i tillegg én feil under implementeringen. Alle 35 funnene står med vurdering og begrunnelse under «Review Triage Log» i `_bmad-output/implementation-artifacts/spec-1-1-start-prognose-locally-from-a-fresh-clone.md`. Av dem ble 20 rettet, 2 utsatt og 13 avvist.
+
+**Feilene som ble rettet.** Alle ble rettet før første commit og ligger i `93c9147`.
+
+| Feil | Funnet av | Retting |
+|---|---|---|
+| En kommentar etter en tom verdi i `.env`, for eksempel `PROGNOSE_LAN_HOST=   # fylles ut`, ble lest som verdien, så innstillingene stoppet | Blind Hunter og Edge Case Hunter; gjenskapt | En verdi uten anførselstegn som starter med `#`, teller som tom |
+| `export PROGNOSE_DEBUG=1` i `.env` ble lagret under et annet navn og oversett uten melding | Blind Hunter og Edge Case Hunter; gjenskapt | `export` foran navnet fjernes |
+| En `.env` eller `.secret_key` som ikke kan leses som fil, for eksempel en mappe, ga en engelsk traceback i stedet for en norsk melding | Blind Hunter og Edge Case Hunter; gjenskapt | En norsk `ImproperlyConfigured` som sier hva som må rettes |
+| Et `#` i passordet i `DATABASE_URL` ga den villedende meldingen «ugyldig vert eller port», og ingenting sa at parametere etter `?` ikke brukes | Blind Hunter og Edge Case Hunter; gjenskapt | Feilmeldingen og `.env.example` forklarer prosentkoding, og `.env.example` sier at parametere ikke brukes |
+| En `DJANGO_SETTINGS_MODULE` som var eksportert for et annet prosjekt, vant over `prognose.settings` i `manage.py` og pytest | Edge Case Hunter; gjenskapt | `manage.py` og pytest bruker alltid `prognose.settings` |
+| `requires-python` tillot nyere Python enn 3.13, og ingenting håndhevet minsteversjonen av uv som README oppgir | Blind Hunter | `requires-python = "==3.13.*"` og `required-version = ">=0.12.13"`; `uv.lock` er låst på nytt |
+| Tre testhull: et passord kunne lekke gjennom en kjedet feil, dekodingen av bruker og databasenavn var ikke testet, og README-kommandoen `runserver --insecure` var ikke testet | Verification Gap, med mutasjonstester | Nye testtilfeller og `tests/test_start_command.py` |
+| BOM-testen kunne ikke oppdage en feil, og BOM-tegnet var usynlig i kildekoden | Blind Hunter; bekreftet | En `KEY=VALUE`-linje rett etter BOM, og BOM skrevet som `"﻿"` |
+| To tester lovet mer enn de sjekket, eller viste til feil beslutning (AD-11 for svaret 405) | Blind Hunter | Navnene og docstringene beskriver det testene sjekker |
+| README og QA-loggen sa ikke hva som er testet, hvilken database testene bruker eller hva Ruff sjekker, og QA-loggen manglet én kjøring | Blind Hunter | Tekstene er rettet |
+| `REQUIRED_FIELDS` i `web.Company` var en liste, som Ruff flagget (RUF012) | Ruff under implementeringen | Endret til en tuppel |
+
+**Utsatt.** Telefontesten starter appen på `0.0.0.0`, slik AD-13 sier. Forslaget om å binde den til den private adressen står i `deferred-work.md`, fordi det krever en endring i arkitekturen som brukeren må godkjenne.
