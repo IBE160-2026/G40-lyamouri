@@ -393,8 +393,35 @@ Tidene er lave, fordi imaget, Python og pakkene allerede lå lokalt.
 | QA-loggen hadde et usynlig BOM-tegn i en tabellrad, sa «første story» om testene på Windows, hadde linjenumre som D-9 flyttet, og manglet de bekreftede feilene som ble avvist i del A | Edge Case Hunter, Acceptance Auditor og Blind Hunter | Rettet, og linjenumrene viser nå til en commit |
 | KI-styringsloggen sa at story 1.1 ga ingen tilfeller, selv om D-9 retter regler som Claude skrev | Blind Hunter | [Tilfelle 27](ki-styringslogg.md#27-regelen-om-ci-og-story-11-21-november-2026) og [tilfelle 28](ki-styringslogg.md#28-beslutningene-i-bmad-code-review-av-story-11-21-november-2026) i KI-styringsloggen |
 | Teksten i PR #8 sa «fire `uv run`-kommandoer», mens README kjører `uv sync --locked` og tre `uv run`, og to commits nevner ikke storyen | Edge Case Hunter og Acceptance Auditor | Teksten er rettet, og kommentaren i PR #8 nevner de to commitene |
-| Ingen resultater av testene og Ruff for siste commit var ført | Blind Hunter | De tre kontrollene kjøres i en ny klone av siste commit og føres i QA-loggen og PR #8 |
+| Ingen resultater av testene og Ruff for siste commit var ført | Blind Hunter | De tre kontrollene passerte i en ny klone av `c2a70a6` ([oppføringen om kontrollene](#2026-11-21--testene-og-ruff-i-en-ny-klone-av-story-11-d-9-dr-7)), og de kjøres på nytt på grenens siste commit før flettingen, med resultatet i PR #8 |
 
 **Utsatt.** At databaseporten bare publiseres på 127.0.0.1, sjekkes bare for hånd med `lsof`. En automatisk sjekk av `docker compose config` hører til CI i story 1.2 (`deferred-work.md`).
 
 **Avvist.** 11 funn, med begrunnelse under «Review Findings» i spesifikasjonen og i KI-styringsloggen ([tilfelle 28](ki-styringslogg.md#28-beslutningene-i-bmad-code-review-av-story-11-21-november-2026)).
+
+## 2026-11-21 – Testene og Ruff i en ny klone av story 1.1 (D-9, DR-7)
+
+**Hvorfor.** Etter D-9 kan story 1.1 flettes før CI finnes, når `uv run pytest`, `uv run ruff check` og `uv run ruff format --check` passerer lokalt på grenens siste commit. BMAD Code Review fant at ingen resultater for siste commit var ført (BH-11).
+
+**Oppsett.**
+- Claude Code kjørte kontrollene 21. november 2026, etter at brukeren hadde godkjent rettingene fra BMAD Code Review. Ingen person kjørte dem.
+- Grenen ble klonet fra GitHub med `git clone --branch story/1-1-start-prognose-locally https://github.com/IBE160-2026/G40-lyamouri.git` til en midlertidig mappe utenfor repoet, og klonen ble slettet etterpå.
+- Samme maskin som ved klonetesten: macOS 15.6.1 på Apple M1, med uv 0.12.13 og Python 3.13.15. Testene brukte repoets PostgreSQL 18.7 fra `compose.yaml`, som allerede kjørte, så klonen startet ingen egen database.
+- Ingen `DATABASE_URL`, `DJANGO_SETTINGS_MODULE` eller `PROGNOSE_`-variabel var satt i terminalen.
+
+**Resultat.**
+
+| Steg | Resultat | Tid (sekunder) |
+|---|---|---|
+| `git clone --branch story/1-1-start-prognose-locally` | HEAD var `c2a70a6`, den samme commiten som grenen på GitHub. Koden og testene er de samme som i `e36043a` | 1,1 |
+| `uv sync --locked` | fullførte uten feil | 0,2 |
+| `uv run pytest` | 82 beståtte tester, ingen hoppet over | 4,9 |
+| `uv run ruff check` | «All checks passed!» | 0,4 |
+| `uv run ruff format --check` | «22 files already formatted» | under 0,1 |
+
+| Kontroll | Resultat |
+|---|---|
+| Endrede eller usporede filer rett etter kloningen | ingen |
+| Endrede eller usporede filer etter kontrollene | ingen, så det kontrollene lager, for eksempel `.venv`, ignoreres av git |
+
+**Gjenstår.** Senere commits i PR #8 endrer bare dokumenter og logger. Etter D-9 kjøres de tre kontrollene på nytt på grenens siste commit rett før flettingen, og resultatet med den commiten står i PR #8.
