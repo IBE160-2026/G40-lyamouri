@@ -11,3 +11,4 @@
 ## Deferred from: code review of spec-1-1-start-prognose-locally-from-a-fresh-clone.md (2026-11-21)
 
 - Only a manual `lsof` checks that `compose.yaml` publishes the database port on 127.0.0.1 (VG-4). A passwordless database with the image's superuser would accept connections from the network if the mapping lost its address, and no test would fail. A check of `docker compose config` fits the CI of Story 1.2, because `docker` may be missing from PATH when pytest runs.
+  - Resolved 2026-11-21 in Story 1.2: `tests/test_compose.py` checks `docker compose --file compose.yaml config`, skips only without `docker` on PATH, and ran without a skip in the first CI run on PR #10 (`spec-1-2-check-every-pull-request-automatically.md`).
