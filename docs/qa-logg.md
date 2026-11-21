@@ -378,7 +378,7 @@ Tidene er lave, fordi imaget, Python og pakkene allerede lå lokalt.
 
 **Hvordan det ble funnet.** Brukeren kjørte BMAD Code Review (`bmad-code-review`) på hele grenen for story 1.1 21. november, etter rutinen for code review, med fire uavhengige KI-granskere: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Claude kontrollerte hvert funn mot koden og kildene, og funn som allerede var vurdert i reviewene av del A og del B, beholdt vurderingen sin. Alle 34 funnene står med vurdering under «Review Findings» i `_bmad-output/implementation-artifacts/spec-1-1-start-prognose-locally-from-a-fresh-clone.md`, og beslutningene står i kommentaren i PR #8. Brukeren bestemte selv tre funn. 21 ble rettet, 2 utsatt og 11 avvist.
 
-**Feilene som ble rettet.** Rettingene i kode og tester ligger i `e36043a`. Rettingene i dokumentene kommer i commiten etter den, i PR #8.
+**Feilene som ble rettet.** Rettingene i kode og tester ligger i `e36043a`. Rettingene i dokumentene ligger i `bcd8223`.
 
 | Feil | Funnet av | Retting |
 |---|---|---|
