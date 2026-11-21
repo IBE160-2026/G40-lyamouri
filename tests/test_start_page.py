@@ -6,6 +6,7 @@ data.
 
 import re
 
+from django.test import Client
 from pytest_django.asserts import assertContains, assertTemplateUsed
 
 
@@ -36,6 +37,12 @@ def test_start_page_has_a_data_icon_and_no_src_or_href_with_a_host(client):
 
 
 def test_start_page_only_answers_get_and_head(client):
-    """AD-10: the start page has no form, so a POST gets 405."""
+    """AD-10: the start page only shows information. A POST without a CSRF
+    token, as a browser or curl sends it, is refused by the CSRF check with 403,
+    and a method that passes that check, such as OPTIONS, gets 405, because the
+    page has no form."""
+    csrf_client = Client(enforce_csrf_checks=True)
+
     assert client.head("/").status_code == 200
-    assert client.post("/").status_code == 405
+    assert csrf_client.post("/").status_code == 403
+    assert csrf_client.options("/").status_code == 405

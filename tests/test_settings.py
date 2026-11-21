@@ -226,7 +226,8 @@ def test_dotenv_values_never_reach_os_environ(load_settings):
 
 def test_dotenv_with_byte_order_mark_comments_and_quotes(tmp_path):
     """AD-13: .env may be UTF-8 with a byte order mark and Windows line endings,
-    with comments, quoted values and export in front of a name."""
+    with comments, quoted values and export in front of a name, and reading it
+    never changes os.environ."""
     path = tmp_path / ".env"
     lines = [
         "DATABASE_URL=postgresql://u@h:5433/x",
@@ -240,6 +241,7 @@ def test_dotenv_with_byte_order_mark_comments_and_quotes(tmp_path):
         "UTEN_LIKHETSTEGN",
     ]
     path.write_bytes(("\ufeff" + "\r\n".join(lines) + "\r\n").encode("utf-8"))
+    before = dict(os.environ)
 
     assert env.read_dotenv(path) == {
         "DATABASE_URL": "postgresql://u@h:5433/x",
@@ -249,6 +251,7 @@ def test_dotenv_with_byte_order_mark_comments_and_quotes(tmp_path):
         "KORTNAVN": "A",
         "TOM": "",
     }
+    assert dict(os.environ) == before
 
 
 def test_missing_dotenv_gives_no_values(tmp_path):

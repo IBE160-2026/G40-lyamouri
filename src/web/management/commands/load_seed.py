@@ -21,7 +21,9 @@ class Command(BaseCommand):
         path = Path(settings.SECRET_KEY_FILE)
         try:
             # O_EXCL: create the file only if it does not exist, so an existing
-            # key is never rewritten. Only the owner may read or write it.
+            # key is never rewritten. On macOS and Linux only the owner may read
+            # or write it; on Windows the mode sets only the read-only flag, and
+            # the folder's access rules apply.
             descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         except FileExistsError:
             if not read_secret_key(path):
