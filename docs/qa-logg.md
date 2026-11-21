@@ -395,7 +395,7 @@ Tidene er lave, fordi imaget, Python og pakkene allerede lå lokalt.
 | Teksten i PR #8 sa «fire `uv run`-kommandoer», mens README kjører `uv sync --locked` og tre `uv run`, og to commits nevner ikke storyen | Edge Case Hunter og Acceptance Auditor | Teksten er rettet, og kommentaren i PR #8 nevner de to commitene |
 | Ingen resultater av testene og Ruff for siste commit var ført | Blind Hunter | De tre kontrollene passerte i en ny klone av `c2a70a6` ([oppføringen om kontrollene](#2026-11-21--testene-og-ruff-i-en-ny-klone-av-story-11-d-9-dr-7)), og de kjøres på nytt på grenens siste commit før flettingen, med resultatet i PR #8 |
 
-**Utsatt.** At databaseporten bare publiseres på 127.0.0.1, sjekkes bare for hånd med `lsof`. En automatisk sjekk av `docker compose config` hører til CI i story 1.2 (`deferred-work.md`).
+**Utsatt.** At databaseporten bare publiseres på 127.0.0.1, sjekkes bare for hånd med `lsof`. En automatisk sjekk av `docker compose config` hører til CI i story 1.2 (`deferred-work.md`). (Løst 21. november i story 1.2: compose-testen sjekker det, og CI kjører den. Se [den første CI-kjøringen](#2026-11-21--første-ci-kjøring-på-linux-story-12-ad-17-ad-1-nfr-2-dr-7-d-1-d-9).)
 
 **Avvist.** 11 funn, med begrunnelse under «Review Findings» i spesifikasjonen og i KI-styringsloggen ([tilfelle 28](ki-styringslogg.md#28-beslutningene-i-bmad-code-review-av-story-11-21-november-2026)).
 
@@ -424,4 +424,69 @@ Tidene er lave, fordi imaget, Python og pakkene allerede lå lokalt.
 | Endrede eller usporede filer rett etter kloningen | ingen |
 | Endrede eller usporede filer etter kontrollene | ingen, så det kontrollene lager, for eksempel `.venv`, ignoreres av git |
 
-**Gjenstår.** Senere commits i PR #8 endrer bare dokumenter og logger. Etter D-9 kjøres de tre kontrollene på nytt på grenens siste commit rett før flettingen, og resultatet med den commiten står i PR #8.
+**Gjenstår.** Senere commits i PR #8 endrer bare dokumenter og logger. Etter D-9 kjøres de tre kontrollene på nytt på grenens siste commit rett før flettingen, og resultatet med den commiten står i PR #8. (Gjort 21. november: kontrollene passerte i en ny klone av `9c8a5dd`, og resultatet står i PR #8. Den første CI-kjøringen kom med PR #10. Se [den første CI-kjøringen](#2026-11-21--første-ci-kjøring-på-linux-story-12-ad-17-ad-1-nfr-2-dr-7-d-1-d-9).)
+
+## 2026-11-21 – Første CI-kjøring på Linux (Story 1.2; AD-17, AD-1, NFR-2, DR-7, D-1, D-9)
+
+**Hvorfor.** Story 1.2 bygger CI med GitHub Actions. Etter D-9 skulle den første CI-kjøringen komme med pull requesten for story 1.2 og kjøre alle testene på Linux, også dem fra story 1.1. Kjøringen er også organisasjonssjekken i D-1. Den skulle dessuten vise at compose-testen kjører i CI. Testen kom fra funnet VG-4 i [BMAD Code Review av story 1.1](#2026-11-21--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-11-dr-9): bare en manuell `lsof` sjekket at databaseporten publiseres på 127.0.0.1.
+
+**Oppsett.**
+- Workflowen `.github/workflows/ci.yml` startet på `pull_request` for PR #10, på commit `b2dd344`, 21. november 2026 kl. 22.34 norsk tid (21.34 UTC). Det var kjøring nr. 1 av workflowen, med ID 44952275264: <https://github.com/IBE160-2026/G40-lyamouri/actions/runs/44952275264>. GitHub sletter loggene etter 90 dager som standard, så resultatene står her.
+- Runneren var `ubuntu-24.04` med runner 2.338.2. `actions/checkout` v7.0.1 og `astral-sh/setup-uv` v10.3.3 er låst til commit-hash, setup-uv installerte uv 0.12.13, og uv brukte CPython 3.13.15, samme versjon som lokalt.
+- Pushen: tokenet i nøkkelringen mangler rettigheten `workflow`, som GitHub krever for filer i `.github/workflows/`, og to forsøk på å gi `gh`-tokenet den med `gh auth refresh` endte med «context deadline exceeded». Brukeren laget derfor en SSH-nøkkel og registrerte den på GitHub, og grenen ble pushet én gang via SSH. Remoten er fortsatt HTTPS.
+
+**Organisasjonssjekken (D-1).** Endepunktene `repos/IBE160-2026/G40-lyamouri/actions/permissions` og `orgs/IBE160-2026/actions/permissions` svarte 403, fordi de krever admin-rettigheter. Etter brukerens beslutning er den første grønne kjøringen bekreftelsen. Kjøringen startet og passerte, så GitHub Actions er slått på for repoet i IBE160-2026, og begge actions er tillatt med disse commit-hashene. Andre actions er ikke prøvd.
+
+**Resultat.**
+
+| Steg | Resultat | Tid (sekunder) |
+|---|---|---|
+| `actions/checkout` og `astral-sh/setup-uv` | uv 0.12.13 installert | 5 |
+| `uv sync --locked` | CPython 3.13.15 og 14 pakker | 1 |
+| `docker compose up -d --wait` | `postgres:18.7` hentet, og databasen var klar («Healthy») | 15 |
+| `uv run pytest` | 99 tester samlet og bestått på Linux, ingen hoppet over | 3 |
+| `uv run ruff check` | «All checks passed!» | under 1 |
+| `uv run ruff format --check` | «25 files already formatted» | under 1 |
+| Hele kjøringen, med oppsett og opprydding | bestått | 36 |
+
+De 99 testene er de 82 fra story 1.1 og de 17 nye. Ingen ble hoppet over, så compose-testen kjørte og viste at oppsettet i `compose.yaml` bare publiserer databaseporten på 127.0.0.1. Testen leser oppsettet, ikke porten mens databasen kjører.
+
+**Mutasjonsbevis.** Lokalt på macOS, før commit, fikk hver av disse endringene sin test til å feile, og alle ble tilbakestilt:
+- `import django` i `src/forecasting/__init__.py`: importtesten (AD-1);
+- et nytt felt på `web.Company` uten migrering: `test_migrations_match_the_models` (AD-17);
+- `"15432:5432"` i `compose.yaml`: compose-testen (NFR-3, AD-14);
+- `if: false` på pytest-steget i workflowen: workflow-testen, som etter BMAD Code Review heter `test_no_check_can_be_skipped_or_ignored` (DR-7).
+
+**Gjenstår.** Tokenet i nøkkelringen mangler fortsatt `workflow`-rettigheten. Derfor må hver push som endrer `.github/workflows/`, også flettingen av PR #10 til `main`, gå via SSH, helt til tokenet får rettigheten (`issues.md`). CI kjører på nytt for hver ny commit på PR #10 og etter flettingen til `main`.
+
+## 2026-11-22 – Feil i KI-generert kode og tekst fra reviewene av story 1.2 (DR-9)
+
+**Hvordan det ble funnet.** Claude Code skrev koden, testene og tekstene i story 1.2 med `bmad-build`. Før første commit gikk byggeøkten selv gjennom diffen med Blind Hunter, Edge Case Hunter og Verification Gap, uten subagenter etter brukerens valg. Matrise-revisjonen i `bmad-build` sjekket i tillegg at hver rad i I/O-matrisen hadde en test som kjørte. 22. november kjørte BMAD Code Review med fire uavhengige KI-granskere på PR #10: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Claude kontrollerte hvert funn mot koden og gjenskapte feilene der tabellen sier det. Alle funnene står med vurdering under «Review Triage Log» og «Review Findings» i `_bmad-output/implementation-artifacts/spec-1-2-check-every-pull-request-automatically.md`.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Compose-testen leste fila som `COMPOSE_FILE` pekte på, ikke nødvendigvis `compose.yaml` | Blind Hunter og Edge Case Hunter i `bmad-build`; gjenskapt | Testen leste `compose.yaml` med `--file`, og BMAD Code Review endret det igjen (se nedenfor) | `b2dd344` |
+| Med `if: false` på pytest-steget passerte alle workflow-testene | Blind Hunter i `bmad-build`; gjenskapt | Testen sjekket `if` og `continue-on-error` på stegene for installasjon, database og pytest | `b2dd344` |
+| To rader i I/O-matrisen hadde ingen test som kjørte: compose-testen uten `docker`, og en pytest-feil i CI | Matrise-revisjonen i `bmad-build` | `test_compose_test_is_skipped_without_docker` og `tests/test_ci_workflow.py` | `b2dd344` |
+| Compose-testen så ikke oppsettet som `docker compose up` laster: en `compose.override.yaml` som publiserte 5432 på alle adresser, passerte. Testen kjørte også `docker` ved navn etter å ha funnet den med `shutil.which` | Edge Case Hunter og Blind Hunter i BMAD Code Review; gjenskapt | Testen leser oppsettet uten `--file` og uten `COMPOSE_FILE`, slik `up` gjør, og kjører den `docker` den fant | `e24727e` |
+| Workflow-testen så bare innstillinger på stegnivå. Disse endringene passerte alle tre testene: `if` eller `continue-on-error` på jobben, en fjernet `pull_request`-trigger, en annen runner, skriverettigheter, `persist-credentials: true`, `env` med `PYTEST_ADDOPTS`, en ekstra action og en ny kommando bare i README | Alle fire granskerne i BMAD Code Review; gjenskapt med mutasjoner | Testen sjekker hele workflow-fila: triggere, runner, rettigheter, actions, `if`, `continue-on-error`, `env` og README «Tester» begge veier | `e24727e` |
+| Importtesten godtok database- og nettverksmodulene i standardbiblioteket, som `sqlite3`, `urllib` og `socket` | Verification Gap, Edge Case Hunter og Blind Hunter i BMAD Code Review | Etter brukerens valg avvises modulene i kjernen, med eksempelrader i testen | `e24727e` |
+| Alle push til `main` delte én kø, så GitHub kunne avbryte en ventende kjøring | Acceptance Auditor, Edge Case Hunter og Blind Hunter i BMAD Code Review | Etter brukerens valg får hver kjøring utenfor en pull request sin egen gruppe | `e24727e` |
+| README lovet bare `passed` selv om en test kan hoppes over, og omtalte fletteregelen som om GitHub håndhevet den | Acceptance Auditor, Blind Hunter og Edge Case Hunter i BMAD Code Review | Teksten er rettet | `e24727e` |
+| QA-loggen manglet denne oppføringen og push-begrensningen, forklarte ikke VG-4, viste to oppføringer fra story 1.1 som åpne og hadde en upresis kjøringspost | Acceptance Auditor og Blind Hunter i BMAD Code Review | Rettet i QA-loggen, og push-begrensningen står i `issues.md` | PR #10 |
+| PR-teksten sa ikke hvorfor statustabellen er uendret | Acceptance Auditor i BMAD Code Review | PR-teksten er rettet | PR #10 |
+
+**Kjente feil som ikke ble rettet.**
+
+| Feil | Funnet av | Hvorfor den ikke ble rettet |
+|---|---|---|
+| Dynamiske importer, `importlib.import_module` og `__import__`, passerer importtesten | Blind Hunter i `bmad-build` og Edge Case Hunter i BMAD Code Review | Lite sannsynlig i kjernen, og en sjekk av kall gir en ny gren |
+| `docker compose config` kjører uten tidsgrense | Edge Case Hunter i begge reviewene | Kommandoen leser bare filer, og CI stopper jobben etter 15 minutter |
+| `network_mode: host` ville gått forbi sjekken av porten | Edge Case Hunter i BMAD Code Review | Lite sannsynlig i dette oppsettet, og rettingen gir en ny sjekk |
+| Workflow-testen leser YAML som tekst, så en konstruksjon den ikke ser, for eksempel et anker, kan slippe gjennom | Claude, etter Blind Hunters funn | Ingen avhengighet leser YAML, og review fanger slike endringer |
+
+**Avvist.** De andre funnene fra `bmad-build` er avvist med begrunnelse i spesifikasjonen.
+
+**KI-styringsloggen:** [tilfelle 29](ki-styringslogg.md#29-beslutningene-i-reviewene-av-story-12-22-november-2026).

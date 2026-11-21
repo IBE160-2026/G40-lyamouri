@@ -276,4 +276,15 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Findings» i [spesifikasjonen for story 1.1 del A](../_bmad-output/implementation-artifacts/spec-1-1-start-prognose-locally-from-a-fresh-clone.md); kommentaren i PR #8; [sesjonsloggen for story 1.1](../.logs/mounia-03/983-2026-11-20-18-35-44-story-1-1-lokal-oppstart.md).
 - **QA-loggen:** [feilene fra BMAD Code Review](qa-logg.md#2026-11-21--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-11-dr-9).
 
+**Story 1.2.** Story 1.2 ga tilfelle 29. Ellers godtok brukeren hver anbefaling fra Claude i øktene 21. og 22. november 2026. Feilene som reviewene fant i KI-generert kode og tekst, står i QA-loggen, under [reviewene av story 1.2](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-reviewene-av-story-12-dr-9).
+
+### 29. Beslutningene i reviewene av story 1.2 (22. november 2026)
+
+- **Hva KI foreslo:** Claude skrev CI-workflowen og testene for story 1.2. Importtesten godtok hele standardbiblioteket, og alle kjøringer på `main` delte én kø. Reviewen i `bmad-build` og fire KI-granskere i `bmad-code-review` fant til sammen 45 funn, og Claude foreslo en vurdering og en beslutning for hvert av dem.
+- **Hva som var feil:** Importtesten slapp gjennom database- og nettverksmodulene i standardbiblioteket, selv om AD-1 holder dem utenfor kjernen, og køen kunne avbryte en kjøring på `main`. Ikke alle funnene skulle følges: 10 var lite sannsynlige med en retting som ville gitt mer kode, var vurdert før, eller var feil.
+- **Hva gruppen bestemte:** Brukeren valgte at importtesten også avviser database- og nettverksmodulene i standardbiblioteket, og at hver kjøring utenfor en pull request får sin egen gruppe. Brukeren godkjente resten av vurderingene: i BMAD Code Review ble 12 funn rettet og 3 avvist, og i `bmad-build` ble 7 avvist.
+- **Commit eller pull request:** `e24727e` og PR #10.
+- **Kilde:** «Review Triage Log» og «Review Findings» i [spesifikasjonen for story 1.2](../_bmad-output/implementation-artifacts/spec-1-2-check-every-pull-request-automatically.md); kommentaren i PR #10.
+- **QA-loggen:** [feilene fra reviewene av story 1.2](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-reviewene-av-story-12-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).

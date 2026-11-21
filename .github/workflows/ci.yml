@@ -1,0 +1,53 @@
+# The README's checks on Linux for every pull request and every push to main
+# (Story 1.2; AD-17, NFR-2, DR-7): the locked dependencies, the database from
+# the same compose.yaml, pytest and Ruff. Each action is pinned to a commit
+# SHA, with its version in the comment.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A new commit on a pull request cancels the older run of that pull request.
+# Every other run has its own group, so no push to main is cancelled.
+concurrency:
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  checks:
+    name: Tests and Ruff
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.12.13"
+
+      - name: uv sync --locked
+        id: sync
+        run: uv sync --locked
+
+      - name: docker compose up -d --wait
+        run: docker compose up -d --wait
+
+      - name: uv run pytest
+        run: uv run pytest
+
+      # Ruff also runs when pytest fails, so one run reports every broken check.
+      - name: uv run ruff check
+        if: ${{ !cancelled() && steps.sync.outcome == 'success' }}
+        run: uv run ruff check
+
+      - name: uv run ruff format --check
+        if: ${{ !cancelled() && steps.sync.outcome == 'success' }}
+        run: uv run ruff format --check
