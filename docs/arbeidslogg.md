@@ -593,6 +593,18 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 1.1 er flettet inn i `main` (`e8b82c0`). Neste steg er story 1.2, som ikke er startet.
 
+### 21.–22. november 2026 – Story 1.2: CI for hver pull request
+
+* Startet story 1.2 med `bmad-build` på grenen `story/1-2-check-every-pull-request`, laget fra `main` (`374db81`). Godkjente subagenter bare der reglene krever det: én til å kompilere epic-1-konteksten på nytt med D-9 og D-10, og fire i BMAD Code Review.
+* Godkjente spesifikasjonen og bestemte at den første grønne kjøringen er organisasjonssjekken (D-1), fordi API-et for reglene for Actions krever admin-rettigheter i IBE160-2026.
+* Claude bygde `.github/workflows/ci.yml`, importtesten for AD-1, compose-testen for VG-4 og en test av workflowen, og gjenbrukte `makemigrations --check` fra story 1.1. Reviewen i `bmad-build` ga 11 funn: 4 ble rettet og 7 avvist. Tre mutasjoner viste at testene feiler når de skal.
+* Godkjente commit, push og PR #10 (`668808b` og `b2dd344`). Tokenet i nøkkelringen manglet `workflow`-rettigheten, og `gh auth refresh` lyktes ikke. Jeg laget derfor en SSH-nøkkel og registrerte den på GitHub, og grenen ble pushet via SSH.
+* Den første CI-kjøringen passerte på Linux på 36 sekunder, med 99 tester, også de 82 fra story 1.1 (D-9).
+* Kjørte BMAD Code Review med fire KI-granskere: 34 funn, 31 rettet i 12 rettinger og 3 avvist. Bestemte at importtesten også avviser database- og nettverksmodulene i standardbiblioteket, og at hver push til `main` får sin egen kjøring. Rettingene ligger i `e24727e` og `5297ed0`, og den andre CI-kjøringen passerte med 103 tester.
+* Eksporterte økten med `/export`. Claude maskerte den og fjernet delen som allerede står i eksporten for story 1.1. Sesjonsloggen, `issues.md` og sprintstatusen er oppdatert.
+
+**Status:** Story 1.2 er ferdig etter BMAD Code Review og står som `done` i `sprint-status.yaml`. Flettingen av PR #10 venter på godkjenning, og story 1.3 er ikke startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
