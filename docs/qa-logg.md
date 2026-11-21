@@ -356,4 +356,4 @@ Tidene er lave, fordi imaget, Python og pakkene allerede lå lokalt.
 - Den første CI-kjøringen kommer med pull requesten for story 1.2 og kjører alle testene, også testene fra story 1.1. Alle senere stories følger regelen slik den står.
 - `epics.md` har fått D-9 og henvisninger i regelen for alle stories, i punkt 5 i rutinen og i sammendraget av «Checks before a pull request». Arkitekturspinen har fått en merknad i AD-17 og i raden «Checks before a pull request». Begge endringsloggene har fått en rad.
 
-**Commit eller pull request:** ikke committet ennå.
+**Commit eller pull request:** `fa237e7`.
