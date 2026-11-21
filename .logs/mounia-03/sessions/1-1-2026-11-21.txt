@@ -57,7 +57,7 @@
   Nå venter jeg på at subagenten blir ferdig med epic 1-konteksten. Deretter
   sjekker jeg resultatet og går videre til omfangssjekken og planen.
 
-✻ Worked for 3m 35s · done 1:04 PM
+✻ Worked for 3m 35s · done Friday 1:04 PM
 
 › Message from general-purpose
   The Epic 1 context file is written at <repo>/_bmad-
@@ -221,7 +221,7 @@
   andre vurderer det arkiverte skjelettet. Så skriver jeg spesifikasjonen og
   viser deg planen.
 
-✻ Churned for 7m 40s · done 1:29 PM
+✻ Churned for 7m 40s · done Friday 1:29 PM
 
 › Message from general-purpose
   I checked the five sources against Story 1.1 part A. Their requirements mostly
@@ -361,7 +361,7 @@
   faktisk bruker. Jeg venter nå bare på vurderingen av det arkiverte skjelettet
   før jeg skriver spesifikasjonen.
 
-✻ Cooked for 49s · done 1:29 PM
+✻ Cooked for 49s · done Friday 1:29 PM
 
 › Message from general-purpose
   I only read the archived tag. No files were created or changed, and I ran no
@@ -745,7 +745,7 @@
   og hver rad i kanttilfelle-tabellen. Rapporten til agenten er ikke nok.
   Deretter kommer review-steget. Ingenting blir committet.
 
-✻ Sautéed for 5m 4s · done 1:40 PM
+✻ Sautéed for 5m 4s · done Friday 1:40 PM
 
 › Message from general-purpose
   Part A of Story 1.1 is implemented as the spec describes, and every
@@ -1102,7 +1102,7 @@
   loggen i spesifikasjonen og retter det som er reelt. Ingenting blir
   committet.
 
-✻ Cogitated for 3m 54s · done 2:06 PM
+✻ Cogitated for 3m 54s · done Friday 2:06 PM
 
 ⏺ Agent "Verification Gap review" failed: Agent terminated early due to an API
 error: You've hit your 5-hour limit · resets 5:40pm (Europe/Oslo) (error type
@@ -1114,7 +1114,7 @@ API: claude-opus-5-5)
 ⏺ Usage limit reached · continuing automatically at 5:40pm · esc to 
   cancel
 
-✻ Baked for 0s · done 2:10 PM
+✻ Baked for 0s · done Friday 2:10 PM
 
 ⏺ Agent "Blind Hunter review" failed: Agent terminated early due to an API
 error: You've hit your 5-hour limit · resets 5:40pm (Europe/Oslo) (error type
@@ -1139,7 +1139,7 @@ API: claude-opus-5-5)
   kontrollerer jeg hvert funn mot koden, fører det i loggen i spesifikasjonen og
   retter det som er reelt. Fortsatt ingen commit eller push.
 
-✻ Brewed for 7m 23s · done 5:49 PM
+✻ Brewed for 7m 23s · done Friday 5:49 PM
 
 › Message from general-purpose
   N = min(floor(sqrt(77.7) + 1), 10) = min(floor(9.81), 10) = 9 (the diff is
@@ -1312,7 +1312,7 @@ API: claude-opus-5-5)
 ⏺ Blind Hunter har levert 17 funn. Jeg venter på Edge Case Hunter og
   Verification Gap før jeg vurderer noe, slik BMAD krever.
 
-✻ Cooked for 2s · done 6:10 PM
+✻ Cooked for 2s · done Friday 6:10 PM
 
 ⏺ Agent "Blind Hunter review" finished · 27m 59s
 
@@ -1403,7 +1403,7 @@ API: claude-opus-5-5)
 
 ⏺ Edge Case Hunter har levert 15 funn, og flere overlapper med Blind Hunter. Jeg
   venter fortsatt på Verification Gap før jeg vurderer noe.
-✻ Baked for 1s · done 6:10 PM
+✻ Baked for 1s · done Friday 6:10 PM
 
 ⏺ Agent "Edge Case Hunter review" finished · 28m 39s
 
@@ -1754,7 +1754,7 @@ API: claude-opus-5-5)
   på nytt og går videre til presentasjonen. Ingenting blir committet uten at du
   godkjenner det.
 
-✻ Brewed for 5m 35s · done 6:17 PM
+✻ Brewed for 5m 35s · done Friday 6:17 PM
 
 › Message from general-purpose
   I've fixed all 16 points. The affected test files (`test_settings.py`,
@@ -2518,4 +2518,2484 @@ API: claude-opus-5-5)
 
   Neste steg kan være del B med bmad-build på samme gren, eller en gjennomgang
   av endringen med bmad-walkthrough. Pull requesten kommer når del B er ferdig.
-✻ Baked for 5h 39m 42s · done 6:37 PM
+✻ Baked for 5h 39m 42s · done Friday 6:37 PM
+
+❯ /export                                                                       
+  ⎿  Conversation exported to: <repo>/.logs/mounia-03
+     /sessions/1-1-2026-11-20-184107.txt
+
+❯ Gi den eksporterte øktfilen navnet1-1-2026-11-20.txt i samme mappe. Ikke      
+  endre innholdet eller andre filer. Ingen commit eller push ennå.              
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg har gitt øktfilen nytt navn: .logs/mounia-03/sessions/1-1-2026-11-20.txt.
+  Innholdet er uendret (samme sha256), og ingen andre filer er rørt. Ingenting
+  er committet eller pushet.
+
+  Før du committer fila, krever rutinen for KI-økter en personvernsjekk. Fila
+  inneholder sikkert lokale stier som /Users/… fra kommandoene i økten, og de må
+  maskeres først.
+
+✻ Crunched for 21s · done Friday 6:50 PM
+
+❯ Kontroller den eksporterte øktfilen for personopplysninger og hemmeligheter.  
+  Masker private lokale stier og eventuelle sensitive opplysninger uten å endre 
+  det faglige innholdet. Vis kort resultatet. Ikke commit eller push.           
+
+  Made 1 scratchpad edit +129 (ctrl+o to expand)
+
+⏺ Jeg justerer skriptet så det aldri skriver ut en ukjent e-postadresse i
+  klartekst, bare en avkortet form, slik at ingenting sensitivt havner i denne
+  økten. Så kjører jeg først uten å skrive.
+
+  Made 1 scratchpad edit +7 -2, ran 1 shell command (ctrl+o to expand)
+
+⏺ Tørrkjøringen fant 33 treff, og ingen nøkler, tokens, e-postadresser eller
+  maskinnavn ligger i fila. Jeg maskerer funnene nå og viser de maskerte linjene
+  for å kontrollere at de fortsatt gir mening.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Eksporten har lange linjer som er brutt, og brukernavnet er maskert på linje
+  1548 fordi det er delt over to linjer. Jeg slår sammen de brutte linjene i
+  minnet og søker på nytt.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Øktfila er kontrollert og maskert:
+  .logs/mounia-03/sessions/1-1-2026-11-20.txt. Ingenting er committet eller
+  pushet.
+
+  Maskert, 33 treff:
+  - 28 stier til repoet er erstattet med <repo>, for eksempel
+    <repo>/src/prognose/env.py.
+  - 3 stier til midlertidige mapper inneholdt macOS-brukernavnet og bruker-ID-en
+    og er erstattet med <tmp>.
+  - 1 macOS-brukernavn sto i en sti som eksporten hadde delt over to linjer, og
+    er erstattet med <bruker>.
+  - 1 gammelt brukernavn, som er første del av en privat e-postadresse, er
+    erstattet med <gammelt-brukernavn>. QA-loggen behandler det som
+    personopplysning.
+
+  Ikke funnet: e-postadresser, nøkkelen i .secret_key, API-nøkler eller tokens,
+  private nøkler og maskinnavnet. Jeg søkte også med de brutte linjene slått
+  sammen, så et navn som er delt over to linjer, ville også blitt funnet.
+
+  Står uendret med vilje:
+  - «Mounia-03» står 4 ganger. QA-loggen har vurdert navnet som tillatt.
+  - Testpassord som «hemmelig» og eksempeladresser som 192.168.1.20 er
+    oppdiktede testdata, ikke hemmeligheter.
+
+  Bare de maskerte ordene er endret. Ledetekstene og resten av innholdet er som
+  før, og fila har fortsatt 2 520 linjer. Rutinen for KI-økter sier at
+  sesjonsloggen og pull requesten skal lenke til fila når den committes.
+
+✻ Crunched for 2m 38s · done Friday 6:56 PM
+
+❯ Fortsett med story 1.1 del B via bmad-build på samme gren.Bruk                
+  deferred-work.md og eksisterende dokumentasjon. Ikke gjenta del A eller       
+  testene. Ingen commit eller push uten mingodkjenning.                         
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+⏺ Repoet har nå en pyproject.toml, så uv run kan finne prosjektet, og jeg
+  sjekker skriptets hode før jeg kjører Steg 1 i BMAD én gang.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Skriptet har egne innebygde metadata, så uv run kjører det utenfor prosjektet
+  og rører ikke .venv. Jeg kjører kommandoen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Samme BMAD-snapshot som del A, så stegfilene er de samme. Nå sjekker jeg at
+  epic 1-konteksten fortsatt gjelder og ser på git-tilstanden før jeg velger
+  kilder for del B.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Steg 1 er ferdig: Epic 1-konteksten gjelder fortsatt, grenen er i takt med
+  GitHub, og del B holdes samlet. Steg 2, planleggingen, starter nå med å se
+  hvordan arbeidsloggen markerer KI-styring og feil.
+
+  Searched for 1 pattern, ran 1 shell command (ctrl+o to expand)
+
+⏺ Arbeidsloggen har to sakspunkter, og review-filene i PRD-, UX- og
+  arkitekturmappene er for store til å lese selv, så tre subagenter går gjennom
+  kildene og leverer korte oversikter med fil og linje.
+
+⏺ 3 background agents launched (↓ to manage)
+   ├ Map planning-phase AI steering cases
+   ├ Map planning-phase AI defects
+   └ Map FR inventory for status table
+
+⏺ Tre subagenter undersøker nå kildene for del B. Når alle har levert, skriver
+  jeg spesifikasjonen og viser deg planen kort før noe endres. Ingenting blir
+  committet eller pushet uten din godkjenning.
+
+✻ Sautéed for 2m 51s · done Friday 7:30 PM
+
+⏺ Agent "Map FR inventory for status table" failed: Agent terminated early due
+to an API error: You've hit your 5-hour limit · resets 10:40pm (Europe/Oslo)
+(error type rate_limit, HTTP 429, request id req_011ChEf69H1Uq3NVQdWnW2Bi, model
+sent to the API: claude-opus-5-5)
+  ⎿  You've hit your 5-hour limit · resets 10:40pm (Europe/Oslo)
+     /upgrade or /usage-credits to finish what you’re working on.
+
+⏺ Usage limit reached · continuing automatically at 10:40pm · esc to 
+  cancel
+
+✻ Churned for 0s · done Friday 7:31 PM
+⏺ Agent "Map planning-phase AI defects" failed: Agent terminated early due to an
+API error: You've hit your 5-hour limit · resets 10:40pm (Europe/Oslo) (error
+type rate_limit, HTTP 429, request id req_011ChEf6wRQf2ed24Ex7kfiY, model sent
+to the API: claude-opus-5-5)
+
+⏺ Agent "Map planning-phase AI steering cases" failed: Agent terminated early
+due to an API error: You've hit your 5-hour limit · resets 10:40pm (Europe/Oslo)
+(error type rate_limit, HTTP 429, request id req_011ChEf9SAbZhs1FEZAiMP9k,
+model sent to the API: claude-opus-5-5)
+
+⏺ Usage limit reset · Continuing automatically
+
+⏺ Bruksgrensen stoppet de tre subagentene midt i undersøkelsen. Den er nå
+  nullstilt, og arbeidet deres er lagret, så jeg ber dem fortsette der de slapp.
+  ⎿  Resuming agent aceecef
+  ⎿  Resuming agent aea4678
+  ⎿  Resuming agent aadd3ee
+
+⏺ Alle tre subagentene fortsetter nå der de slapp. Når de har levert, skriver
+  jeg spesifikasjonen for del B og viser deg planen kort før noe endres.
+
+✻ Crunched for 30s · done Friday 10:41 PM
+
+› Message from general-purpose
+  I changed no project files and ran no state-changing git command. Line numbers
+  are prd.md L…, epics.md e:….
+
+  **1. DR-8 and the related requirements**
+  - **Where they are:** DR-8 is at L771, DR-5 at L758–764, DR-9 at L772 and
+  DR-10 at L773.
+  - **Related lines:** DR-1 makes the README link the status table (L747) and
+  list unbuilt Should items with the reason (L749, L818). The DR-7 Definition of
+  Done requires the table to be updated (L770). SM-8 makes it trace every FR to
+  its stories and tests (L898). The priority table per FR is §8.5, L842–884.
+  - **What DR-8 asks for:**
+    - **Rows:** every FR plus DR-10. No other DR or NFR goes in.
+    - **Columns:** priority, status at submission, stories, tests, and the
+  reason for any deviation.
+    - **Status values:** built, partly built, not built, or changed. There is no
+  "planned" value, so the plan must decide what unbuilt-yet rows show; «ikke
+  bygd» is the obvious choice.
+    - **«Not built»:** needs a reason. An unbuilt Should item is also listed in
+  the README. An unbuilt Must story is marked in the table and the README with
+  its reason, and its priority does not change (e:379). An unbuilt epic is
+  marked not built (D-2, e:47). If Windows cannot be tested, the table says so
+  (e:52, e:816).
+    - **Location and link:** `docs/statustabell.md` (e:356), and the README
+  links it.
+    - **Who updates it and when:** Story 1.1 starts it, every story updates it
+  under the Definition of Done (e:589), Story 4.3 completes it, and Story 4.4
+  gives the final state.
+  - **DR-10 today:** not in version 1.
+    - The teacher clarified on Canvas on 2026-11-19 that publishing is not
+  mandatory, the app may run locally, and the README must explain how to start
+  it and which API keys are needed.
+    - Publishing on Vercel with hosted PostgreSQL (Neon) was removed, together
+  with Story 1.9 (D-1, e:32–43). SM-9 lapses (L899) and the cut line no longer
+  applies (L808). §12 keeps the history (L963, L978).
+    - The table must list DR-10 as **not built, with this reason**.
+    - DR-10 has no Must/Should/Could: all DRs are Must "except DR-10" (L804,
+  e:231). The priority cell needs a value such as «ikke i versjon 1».
+    - `avklaring-publisering-2026-11-19.md` is in Norwegian and says it is "ikke
+  et ordrett sitat". Link to it rather than presenting it as the teacher's
+  words.
+  - **DR-5:** decisions recorded with their rationale; prompts and sessions
+  saved and cleaned; an AI steering log with at least 5 cases, one per
+  implemented epic; every story names its FR-n, every test its FR-n or E-n,
+  every commit its story.
+  - **DR-9:** a QA log of defects in AI output (how found, the fix, the commit
+  or PR), plus a manual checklist run on the final commit.
+
+  **2. FRs (PRD heading line · priority · epic: main story, then other
+  stories)**
+  FR-1 Log in with customer number and password · Must · L172 · E1: 1.8
+  FR-2 Company data isolation · Must · L184 · E1: 1.8 (+2.7, 2.8, 2.11, 3.1,
+  3.3, 6.2, 6.3, 8.2, 8.3)
+  FR-3 Synthetic dataset with known patterns · Must · L200 · E1: 1.6 (+1.5, 2.6)
+  FR-4 Data stored between sessions · Must · L212 · E1: 1.7
+  FR-5 Moving average · Must · L226 · E2: 2.2
+  FR-6 Exponential smoothing · Must · L234 · E2: 2.2
+  FR-7 Three-week forecast horizon · Must · L242 · E2: 2.4 (+2.5, 2.9)
+  FR-8 Insufficient data · Must · L251 · E2: 2.2 (+2.5, 2.7)
+  FR-9 Seasonal adjustment · Should · L261 · E5: 5.1
+  FR-10 Three scenarios · Must · L279 · E2: 2.4 (+2.9)
+  FR-11 Suggested order quantity · Must · L288 · E2: 2.4 (+2.7)
+  FR-12 Order calculation line · Must · L298 · E2: 2.4 (+2.9)
+  FR-13 Order quantity per scenario · Should · L309 · E6: 6.1
+  FR-14 Overstock note · Should · L316 · E6: 6.1
+  FR-15 Stockout weeks left out · Must · L329 · E2: 2.1 (+2.5, 2.9, 2.10)
+  FR-16 Unusual weeks · Must · L339 · E2: 2.1 (+2.2, 2.9, 2.10); the switch is
+  E3: 3.3
+  FR-17 Level shift · Must · L351 · E2: 2.1 (+2.2, 2.10, 5.2)
+  FR-17b Level-shift warning text · Should · L379 · E5: 5.2
+  FR-18 Old-data warning · Must · L362 · E2: 2.5 (named only through the range
+  "FR-15 to FR-19", e:1204)
+  FR-19 Confidence label · Must · L371 · E2: 2.5 (+2.7, 4.2, 5.2)
+  FR-20 Company-wide settings · Must · L401 · E3: 3.1 (+5.1, 8.1)
+  FR-21 Changes apply to all products at once · Must · L419 · E3: 3.2 (+1.5,
+  3.3, 5.1, 8.1)
+  FR-22 Settings saved between sessions · Must · L438 · E3: 3.1
+  FR-23 Settings per product · Could · L445 · E8: 8.1
+  FR-24 Product overview · Must · L455 · E2: 2.8 (+2.6, 2.11; the coverage map
+  says Epic 1 gives the first list)
+  FR-25 Product screen · Must · L464 · E2: 2.7 (+2.10, 4.2, 5.2); settings from
+  the screen are E3: 3.2, 3.3
+  FR-26 Template explanation in Norwegian · Must · L493 · E2: 2.12 (+5.1, 5.2,
+  6.1, 8.4)
+  FR-27 Explanation kept apart from calculated numbers · Must · L502 · E2: 2.12
+  (+5.1, 5.2, 6.1, 7.1, 8.4, 8.5)
+  FR-28 Optional local language model · Should · L524 · E7: 7.1
+  FR-29 Adjust an order quantity · Should · L546 · E6: 6.2
+  FR-30 Combined order overview · Should · L555 · E6: 6.3
+  FR-31 Save adjustments and mark products as approved · Could · L563 · E8: 8.2
+  FR-32 Export the combined order overview · Could · L567 · E8: 8.3
+  FR-33 Stock not lasting through weeks 2 and 3 · Could · L571 · E8: 8.4
+  FR-34 Forecast accuracy · Could · L575 · E8: 8.5
+  FR-35 Forecast calculation · Must · L476 · E2: 2.9 (+5.1)
+  FR-36 Seasonal-pattern warning · Should · L387 · E5: 5.2
+
+  - **Count:** 37 FRs (FR-1 to FR-36 plus FR-17b), with none missing and none
+  duplicated: 24 Must, 8 Should, 5 Could.
+  - **Priorities:** the "Priority:" line in each FR matches the §8.5 table for
+  all 37.
+  - **Order:** the PRD does not number its sections in sequence. FR-17b and
+  FR-36 come after FR-19, and FR-35 after FR-25. The table needs a chosen order.
+
+  **3. epics.md**
+  - **Coverage:** the coverage map (e:542–578) lists the same 37 FRs. The
+  per-epic FR lists are at e:613–680. Epic 4 covers no FR directly.
+  - **What it says about the table:** e:283 repeats the DR-8 text. e:285 says
+  the table "lists DR-10 as not built, with this reason". e:618 says Epic 1
+  covers DR-8 and "DR-10 (as not built, in the status table)". e:621 says the
+  first story "starts the status table… so that every story can update them".
+  - **Story 1.1 (e:749):** asks only that `docs/statustabell.md` "lists every FR
+  and DR-10 with its priority and status (DR-8)". It does not yet require the
+  stories, tests or reason columns. It does not require a README link: the
+  README criteria at e:758–762 cover only setup and keys. `deferred-work.md:4`
+  puts this in part B, on the same branch, so Story 1.1 stays one PR.
+  - **Story 4.1:** the README top says version 1 is not published, with the
+  reason (e:1721). The folder section links the status table (e:1762). The list
+  of unbuilt Should items comes with 4.4 (e:1778).
+  - **Story 4.3 (e:1829–1832):** every FR and DR-10 gets all the columns,
+  unbuilt epics are marked, and "the README links it".
+  - **Story 4.4 (e:1879–1881):** sets the final statuses, and unbuilt Should
+  items are listed with the reason in both the table and the README.
+  - **README link:** yes, it is required by PRD L771 and L747 and by Stories 4.1
+  and 4.3, but not before them. The current README has 69 lines and no links to
+  documents.
+
+  **4. Code on the branch**
+  - **Result:** no FR is built or partly built.
+  - **FR-1:** groundwork only, so «ikke bygd» is the honest status; Story 1.8
+  builds it. `src/web/models.py` has `Company` with `customer_number` as the
+  login field and a hashed password, and `tests/test_company.py` cites FR-1. But
+  `src/prognose/urls.py` has only `/`: there is no login view, route or logout.
+  - **FR-4:** not built; Story 1.7 builds it. `compose.yaml` runs PostgreSQL
+  18.7 with a named volume and the settings point at it, but only the `Company`
+  table exists: no products, sales, stock or settings are stored.
+  - **The rest:** `src/forecasting/` and `src/explanation/` hold only
+  docstrings. `load_seed` only creates `.secret_key`. `/` is a static page.
+  - **For the table:** every FR is «ikke bygd» for now, and DR-10 is «ikke bygd»
+  for good, with the reason. Neither `docs/statustabell.md` nor
+  `docs/ki-styringslogg.md` exists yet.
+
+⏺ Kartleggingen til statustabellen er inne:
+  - Antall: 37 FR-er, 24 Must, 8 Should og 5 Could, og ingen mangler.
+  - Kolonner: DR-8 krever prioritet, status, stories, tester og grunn for avvik.
+  - Statusverdier: bygd, delvis bygd, ikke bygd og endret.
+  - Status nå: ingen FR er bygd ennå. DR-10 skal stå som «ikke bygd» med grunnen
+    at publiseringen er tatt ut av versjon 1.
+  - Lenke i README: den hører til story 4.1 og 4.3, ikke 1.1.
+
+  Jeg venter på de to andre subagentene, som kartlegger KI-styringssakene og
+  planleggingsfeilene.
+
+✻ Baked for 12s · done Friday 10:45 PM
+
+⏺ Agent "Map FR inventory for status table" finished · 3m 46s
+
+› Message from general-purpose
+  I changed no files and ran only read-only git commands. Every commit hash
+  below exists (checked with `git log`). No original planning-phase prompt is
+  saved anywhere (S985:102), so every entry has to cite a log.
+
+  **Keys:** AL = docs/arbeidslogg.md. Snnn = .logs/mounia-03/nnn-*.md. The
+  memlogs are under _bmad-output/planning-artifacts/: Bml =
+  briefs/brief-…-2026-09-18, Pml = prds/prd-…-2026-11-02, Uml =
+  ux-designs/ux-…-2026-11-15, Aml = architecture/architecture-…-2026-11-17. RS =
+  prds/prd-…/review-sensorveiledning.md.
+  Each line reads: date | title | what the AI proposed → what was wrong → what
+  the group decided | commit | source.
+
+  **Labelled examples in AL**
+  1. 2.–3.11 | Prognosekonflikt R-10/R-11 | rules gave 51,0 or 70,333 → one pass
+  in time order | 4ada86d/d938baa | AL:72; Pml:66,75 [QA]
+  2. 2.–3.11 | Avrunding 70→71 (E5) | a float was rounded up to 71 → round to 6
+  decimals first | 4ada86d | AL:72; Pml:43 [QA]
+  3. 2.–3.11 | Oppsettsmål 10 min avvist | a review agent proposed 10 min → kept
+  15 (no reason recorded) | 4ada86d | AL:72; RS:97,142; Pml:79
+  4. 2.–3.11 | Språkmodell uten lærersvar | FR-28 waited on the teacher's answer
+  → made independent | 4ada86d | AL:72; Pml:69,81 [weak: no explicit AI
+  proposal]
+  5. 6.11 | Ti parallelle agenter stoppet | quota ran out twice → no restart;
+  one design, shown before detailing | 23a7589 (named only in S996:191; AL:88
+  says nothing was committed) | AL:84–85
+  6. 7.11 | Stor varseltrekant | a chart CSS rule also hit the icon → fixed |
+  23a7589 | AL:102; S996:65 [QA]
+  7. 7.11 | Feil bruddpunkt, Chart.js-tekst | 640 instead of 560 px → fixed in
+  the docs | 23a7589 | AL:122 [QA]
+  8. 8.11 | Django 6.1 → 5.2 LTS | 6.1.3 proposed → LTS for stability up to the
+  deadline | 29dd679 | AL:137; S995:19,46
+  9. 8.11 | Addendumdekning i epics | a check the group asked for found 4
+  missing items and 2 forward references → fixed | f74665b | AL:147; S994:15–20
+  [mostly QA]
+  10. 15.11 | FR-24 etter lærerens krav | Claude kept the UX layout → the
+  forecast column shows the reason, the order column «–» | 47a8857, PR #2
+  (AL:366) | AL:172; Pml:111,115
+  11. 15.–16.11 | Safari-faner | a Claude script closed a tab → only `open -a
+  Safari` | no commit of its own | AL:193; Uml:15; S988:44
+  12. 15.–16.11 | Stor bryter | `.chart svg` also hit the switch and the legend
+  icons → one CSS line | 5db2fe7 | AL:194; Uml:21–22 [QA]
+  13. 15.–16.11 | Grafen høyere | the group asked; Claude cited FR-25 → moved
+  about 70 px only | 5db2fe7 | AL:191,195; Uml:19–20 [the AI pushed back]
+  14. 17.11 | PostgreSQL i begge kjøremoduser | SQLite locally, as the PRD said
+  → PostgreSQL in both; consequences checked first | 1441c40/c76d6cd, PR #3 |
+  AL:422; Aml:9,35
+  15. 17.11 | Ingen automatisk sletting | automatic migration and seed →
+  additive migrations only, seed only into an empty database, deletion only on a
+  confirmed reset (DR-4, DR-10) | 1441c40 | AL:423–426; Aml:28,33,52–53
+  16. 17.11 | Docker bekreftet før godkjenning | port 54320 → the group demanded
+  proof; Claude separated documented, measured and untested → port 15432 |
+  1441c40 | AL:427; Aml:39,43–46 [the port fix was Claude's own]
+  17. 18.11 | Epic 2 slått sammen | 15 stories → three pairs merged, all
+  criteria and tests kept | 9dee8b1, PR #3 | AL:475; epics.md:631
+  18. 18.11 | NFR-8 kontrollert før endring | review finding A4 → checked first,
+  unchanged (D-7) | 9dee8b1 | AL:476; S985:60
+  19. 18.11 | Issues (A5) | judged from the summary → corrected from the full
+  examiner guidelines | 9dee8b1 | AL:477; S985:101; epics.md:2308
+  20. 18.11 | Ikke «godkjent» uten belegg | a link to "the teacher's approval" →
+  it is an assessment; nothing is called approved without proof | 9dee8b1 |
+  AL:478; epics.md:2311
+  21. 18.11 | Mobil og iPad | README "PC only" → NFR-6 widened | 9dee8b1 |
+  AL:479; epics.md:2312
+
+  **Other passages**
+  22. 14.10 | Hoppede BMAD-steg | fast path; memlog and closing steps skipped →
+  checked and completed | 5c4fb17 | AL:35; Bml:16,21–22
+  23. 14.10 | KI-tillegg i briefen avvist | four open gaps plus other additions
+  → the brief follows only the group's text; the addendum was deleted | 5c4fb17
+  | AL:36–37; Bml:17–20,24–26
+  24. 1.11 | Personvernregel | a local path in a file → removed; a standing rule
+  set | a55da02 | AL:61,63 [partly QA; S998 does not mention it]
+  25. 7.11 | Fem forbedringer av skissene | five fixes, design direction kept |
+  23a7589 | AL:94–101; S996:50–57
+  26. 8.11 | Vercel som løsning, ikke valg | AD-13 made publishing optional →
+  mandatory; reversed 19.11 | 21cd020 | AL:139; S995:59,118
+
+  Borderline (a choice or a conditional approval, not a correction): concept D
+  (AL:185; Uml:14; 5db2fe7) and the conditional approvals of 16.11 (AL:224–225;
+  Pml:117–118; 5373e7b). Too vague to use: AL:52.
+
+  **Flags**
+  - **QA log, not steering log:** 1, 2, 6, 7, 12 and most of 9. Items 16 and 24
+  also have a QA side.
+  - **QA-only items not in the list above:** AL:153 (425d818), AL:196, and the
+  «Kvalitetssikring» bullets AL:235, 256, 336, 353, 384, 430, 437. Also S994:18,
+  S988:196, and Bml:27–28 (a review run logged but never made).
+  - **Conflict:** PRD DR-5 (prd.md:761) names E5 and R-10/R-11 as the first
+  steering-log cases, but epics.md:754 puts them in the QA log. epics.md:603
+  allows both, so they can sit in the QA log with a cross-reference.
+  - **Conflict:** qa-logg.md:10 says planning-phase defects stay in AL and are
+  not repeated. epics.md:604, epics.md:754 and deferred-work.md:4 require
+  copying them into the QA log.
+  - **Appears twice:**
+    - Same case twice in AL: 132/137 (case 8), 420/423 (15), 455/476 (18),
+  466/479 (21), 191/194–195 (12, 13), 36/37 (23).
+    - AL:457 overlaps case 19.
+    - Cases 6 and 12 are the same type of defect (AL:194 says so).
+    - The no-subagent rule at AL:197, 209 and 439 follows on from case 5.
+
+  **Point 3: does a document already say how the planning phase is documented?**
+  - **Where it is stated:** fully only in epics.md:604 (routine item 6) and its
+  change-log row epics.md:2307 (9dee8b1). AL:458 mentions it only as a decision
+  inside the 18.11 entry, not as a standing rule. S985:104 also mentions it.
+  - **What is required:** epics.md:755 requires the process documentation itself
+  to say it.
+  - **Where it is missing:**
+    - README.md says nothing about the logs or about documenting AI use.
+    - qa-logg.md has only line 10, which conflicts with the routine.
+    - AL §1 (lines 7–9) and §4 (line 564) don't state it.
+    - docs/ki-styringslogg.md doesn't exist yet. Its introduction is the natural
+  place for the statement.
+
+⏺ Kartleggingen av KI-styringen er inne. Arbeidsloggen har 21 merkede eksempler,
+  og 5 andre steder i loggen beskriver også styring. Noen av sakene er feil i
+  KI-generert tekst, som E5-avrundingen og CSS-regelen.
+
+  Rutinen i epics.md løser dette: en rettet feil føres i begge loggene, med
+  kryssreferanse. PRD-en nevner også E5 og R-10/R-11 som de første sakene i
+  KI-styringsloggen. Ingen dokument sier ennå hvordan planleggingsfasen er
+  dokumentert, og innledningen til KI-styringsloggen er det naturlige stedet.
+
+  Jeg venter på den siste subagenten, som kartlegger feilene fra
+  planleggingsfasen.
+
+✻ Worked for 40s · done Friday 10:50 PM
+
+⏺ Agent "Map planning-phase AI steering cases" finished · 8m 43s
+
+› Message from general-purpose
+  **Key.** AL = <repo>/docs/arbeidslogg.md · QA =
+  <repo>/docs/qa-logg.md · S9xx =
+  <repo>/.logs/mounia-03/9xx-*.md · PRD/ =
+  <repo>/_bmad-output/planning-artifacts/prds/prd-G40
+  -lyamouri-2026-11-02/ · UX/ = <repo>/_bmad-output/p
+  lanning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/ · EP =
+  <repo>/_bmad-output/planning-artifacts/epics.md. I
+  checked every commit with `git log`, changed nothing and opened nothing under
+  archive/.
+
+  **Headline.** QA records no defect from the planning phase. QA:10 is also
+  wrong: the four named examples are «Eksempel på styring av KI» bullets (AL:72,
+  :102, :122, :194), not «Kvalitetssikring» bullets. The requirement is EP:754
+  (Story 1.1). `docs/ki-styringslogg.md` does not exist yet, and EP:277 and
+  EP:750 put E5 and R-10/R-11 there too, so the two files should link to each
+  other rather than copy.
+
+  **1. Defects in AL** (dato · defekt · funnet · retting · commit · kilde)
+
+  «Kvalitetssikring»:
+  - 15.11 · 10 avvik i PRD-oppdateringen · konsistensreview · rettet · `47a8857`
+  · AL:171
+  - 16.11 · kontrollskript meldte «ingen funn» uten å lese filene · Claude ·
+  kjørt på nytt · `5373e7b` (S988:152) · AL:235
+  - 16.11 · «för» for «for» i fast tekst · Claude · rettet · `e549c78` · AL:256
+  - 16.11 · arkiv-README sa at alle sprintdatoer var passert · kontroll · rettet
+  · `652f747` (S987:130) · AL:336
+  - 16.11 · `sed`-kommando feilet på macOS · kjøringen · Python · – · AL:353
+  - 16.11 · feilskrevet sikkerhetssjekk i slettekommando · stoppet før sletting
+  · ny sjekk · `d2bfad2` · AL:384
+  - 17.11 · PostgreSQL-test utenom Docker (atferd, ikke tekst) ·
+  tillatelsessystemet · ikke gjentatt · – · AL:430
+
+  Other passages:
+  - 2.–3.11 · R-10/R-11 ga 51,0 eller 70,333; 70 ble 71 · beregningskontroll ·
+  én gjennomgang i tidsrekkefølge; R-9 · `4ada86d`, `d938baa` (S997:22) · AL:72
+  - 6.11 · Chrome-test skrev utenfor prosjektet · Claude · stoppet · – · AL:87
+  - 7.11 · grafregel gjorde varseltrekanten like bred som grafen · bruker ·
+  regelen gjelder bare grafen · `23a7589` (S996:65, :191) · AL:102
+  - 7.11 · bruddpunkt 640 i stedet for 560 px; grafbeskrivelse passet ikke
+  Chart.js · gjennomgang · dokumentene rettet · `23a7589` · AL:122
+  - 8.11 · fire krav manglet; to fremoverhenvisninger (og FR-1-kriterium,
+  S994:18) · kontroll · rettet · `f74665b` · AL:147
+  - 8.11 · story 1.1 uten kilde for sesjonshemmeligheten · klarhetskontroll ·
+  rettet · `425d818` (S993:22) · AL:153
+  - 15.11 · FR-24 fulgte UX, ikke lærerens krav · bruker · endret · `47a8857` ·
+  AL:172
+  - 15.–16.11 · skript lukket en Safari-fane · bruker · bare `open -a Safari` ·
+  – · AL:193
+  - 15.–16.11 · `.chart svg` gjorde bryteren fullbred · bruker · én CSS-linje ·
+  `5db2fe7` · AL:194
+  - 15.–16.11 · A–C brukte ukenummer FR-27 forbød; mockup viser bare 12 uker ·
+  Claude · D og spinene følger PRD · `5db2fe7` · AL:196, :201
+  - 16.11 · `.gitignore` uten `.secret_key`/`db.sqlite3`; feil dato i
+  arkiv-README · gjennomgang · rettet · `d67211c` · AL:287, :289
+  - 17.11 · arkivert arkitektur utdatert og selvmotsigende; port 54320;
+  utdaterte utsagn; 12 hull · Claude, sluttkontroll, inline review · ny spine,
+  port 15432 · `1441c40` · AL:405–410, :427, :437, :439
+  - 18.11 · 29 feil (A1–A14, E1–E15); A5 bygget på sammendrag; udokumentert
+  «godkjenning»; 1366 × 768 og NFR-2 · BMAD Review, bruker, sluttkontroll ·
+  rettet · `9dee8b1` · AL:456, :477–478, :486
+  - 19.11 · `PRODUCT.md` sa at appen bare er for PC · kontroll · rettet ·
+  `ea06f01` (PR #5) · AL:520
+  - 19.11 · publiseringsrester (AD-16), `uv sync` mot `--locked`, story 1.8 før
+  2.3, frist 2026-12-01 · readiness · rettet · `67694f7` (PR #6) · AL:535–538,
+  :551
+
+  Borderline: AL:35, AL:61 (`a55da02`), and the old username in S987:118–120
+  (`3f6d417`).
+
+  **2. The four named examples**
+  - **E5:** AL:72; S997:19; PRD/.memlog.md:43 (rule set while drafting §5,
+  before the reviews); PRD/reconcile-brainstorm.md:29 (the brainstorm rounded
+  straight up). review-calculations.md:15 and review-rubric.md:68 only confirm
+  that the guard works. Fix: R-9 (prd.md:612) and E5 (prd.md:671), already in
+  `4ada86d`. No source says who found it.
+  - **R-10/R-11:** AL:72; S997:19; review-calculations.md:30 (F1, critical) and
+  :74 (M1); review-rubric.md:101–105, which gives 71,0 for the other reading,
+  not 70,333. Fix: memlog:74–75, E15 (prd.md:682), addendum.md:189; `4ada86d`.
+  - **Legend icons:** the rule is at UX/mockups/konsept-d-kombinert.html:182.
+  Sources: S988:117; UX/.memlog.md:21–22; review-coverage.md:49, :98;
+  EXPERIENCE.md:347; DESIGN.md:476; EP:492 and EP:1444 (Story 2.10). AL names
+  only the switch (:194) and the similar triangle (:102). The switch was fixed
+  (mockup :183, `5db2fe7`). The icons were left as they were at the user's
+  instruction, and the rule moved to the spines (`5db2fe7`) and to Story 2.10
+  (`9dee8b1`), so **this fix is still open**.
+  - **Breakpoint:** AL:122 is the only source outside the archive. S996:77 shows
+  the mockup rule ("under 640 px"), and S996:119 says the coverage check made
+  two small fixes. They are probably these two, but that review file is archived
+  and I did not open it. The fix is in `23a7589`.
+
+  **3. Review files** (findings; defects; fixes recorded?; top defects). None
+  names a commit.
+  - review-calculations.md: 19 findings plus 16 missing examples; ~9; no. F1
+  (order), F2 (a product is both «lav» and «middels»), F4 (0/0 in R-14).
+  - review-rubric.md: 21 (3 high, 11 medium, 7 low); ~10; no. Must gate includes
+  E14; two readings of level shift; FR-12 line sums to 20, not 21.
+  - review-consistency.md: 38 (1/12/25); ~20; no. PR-1, IC-3, IC-2.
+  - review-sensorveiledning.md: 29 (8/16/5); 1 (1.7, wrong addendum references);
+  its Outcome section lists the fixes.
+  - review-structure-prd.md: 15 plus 13 minor; ~3 (S5, S15); no.
+  - review-prose-prd.md: 22 plus 22; ~5 (P3, P8, P11); no.
+  - review-structure-addendum.md: 9 plus 2; ~3 (A1, A6); no.
+  - review-prose-addendum.md: 23 plus 14; ~4 (P1 misstates its source, P19
+  misquotes); no.
+  - review-consistency-2026-11-15.md: 10 (0/3/7) plus 11 downstream; all 10; no
+  (fixed in `47a8857`, AL:171). C-2, C-1, C-3.
+  - review-rubric-2026-11-15.md: 12 (1/6/5); ~7; no. FR-27 allowed numbers;
+  FR-28 misses swapped placeholders; downstream documents contradict it.
+  - UX review-coverage.md: no numbered findings; 1 gap fixed (:27); 2 mockup
+  defects kept; the "eight fixes" (:3) are not listed.
+  - review-inline.md (architecture): 12 (8 holes, 4 gaps), each with its fix;
+  `1441c40` only through AL:441. Hole 6 (secret file in the deployment), hole 7
+  (open redirect), hole 3 (no company filter).
+
+  "~n" is my count of contradictions, wrong results and wrong claims; the rest
+  are gaps or style.
+
+  **4. Already in QA:** only the Git-identity entry (QA:27 overlaps the
+  old-username fix) and the 11 code defects from Story 1.1 (`93c9147`). Nothing
+  above duplicates them.
+
+⏺ Alle tre kartleggingene er inne. Den siste viste noe viktig:
+  - QA-loggen linje 10 er feil. Den sier at feilene fra planleggingsfasen står
+    under «Kvalitetssikring» i arbeidsloggen. De fire eksemplene story 1.1
+    nevner, står derimot under «Eksempel på styring av KI», og QA-loggen har
+    ingen av dem.
+  - Feilen med symbolene i forklaringen er fortsatt åpen. Du valgte å la den stå
+    i mockupen, og byggingen skal unngå den i story 2.10.
+  - Review-filene oppgir ingen commits.
+
+  Før jeg bygger spesifikasjonen på rapportene, kontrollerer jeg et utvalg selv:
+  at alle commit-hashene finnes, og at de fire eksemplene står der rapportene
+  sier.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Map planning-phase AI defects" finished · 9m 59s
+
+⏺ Alle 22 commit-hashene er verifisert, og PRD-en peker på E5 og R-10/R-11 som
+  de første KI-styringssakene. Jeg flytter undersøkelsens oversikter til en egen
+  kildefil, slik at spesifikasjonen blir kortere.
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-do
+       cuments-sources.md)
+  ⎿  Wrote 129 lines to _bmad-output/implementation-artifacts/spec-1-1-plan
+     ning-phase-process-documents-sources.md
+      1 # Sources for Story 1.1 part B
+      2 
+      3 Compiled on 2026-11-20 from three read-only investigations, for [
+        spec-1-1-planning-phase-process-documents.md](spec-1-1-planning-p
+        hase-process-documents.md). Every commit hash below exists in git
+        . Check each entry against its cited source before using it, and 
+        leave out or correct anything the source does not support.
+      4 
+      5 **Keys.** AL = `docs/arbeidslogg.md`. QA = `docs/qa-logg.md`. S9n
+        n = `.logs/mounia-03/9nn-*.md`. PRD = `_bmad-output/planning-arti
+     … +125 lines (~17 KB) (ctrl+o to expand)
+
+⏺ Kildefila er skrevet. Nå skriver jeg selve spesifikasjonen for del B. Ett
+  spørsmål kan bare du avgjøre, og det står under «Open Questions».
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-do
+       cuments.md)
+  ⎿  Wrote 77 lines to _bmad-output/implementation-artifacts/spec-1-1-plann
+     ing-phase-process-documents.md
+       1 ---
+       2 title: 'Story 1.1 part B: Record the planning phase in the proce
+         ss documents'
+       3 type: 'feature'
+       4 created: '2026-11-20'
+       5 status: 'draft'
+       6 route: 'dispatch'
+       7 review_loop_iteration: 0
+       8 context:
+       9   - '{project-root}/_bmad-output/implementation-artifacts/spec-1
+     … +69 lines (~6 KB) (ctrl+o to expand)
+
+⏺ Spesifikasjonen er skrevet. Før jeg viser planen, sjekker jeg størrelsen mot
+  grensen på 1 600 tokens.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Spesifikasjonen ligger på rundt 1 400–1 650 tokens, altså nær BMADs grense, og
+  har ett åpent spørsmål. Jeg lager nå planen for del B: statustabellen,
+  KI-styringsloggen og QA-loggen.
+
+⏺ User answered Claude's questions:
+  ⎿  · Hvordan skal de 12 review-filene fra planleggingsfasen føres i QA-loggen 
+     i story 1.1 del B? → Én rad per review-fil (Recommended)
+     · Godkjenner du planen for story 1.1 del B i _bmad-output/implementation-ar
+     tifacts/spec-1-1-planning-phase-process-documents.md? → Godkjenn og 
+     fortsett (Recommended)
+
+⏺ Du valgte én rad per review-fil og godkjente planen. Først leser jeg
+  spesifikasjonen fra disk for å fange opp eventuelle endringer du har gjort.
+
+  Read 1 file (ctrl+o to expand)
+⏺ Ingen endringer utenfra. Jeg fører beslutningen inn i den låste delen, fjerner
+  det åpne spørsmålet og setter spesifikasjonen til ready-for-dev.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-d
+        ocuments.md)
+  ⎿  Added 1 line
+      25  - Summaries in own words: no planning-phase prompt is reconstru
+          cted or quoted as original, and the Canvas clarification is lin
+          ked, not quoted.
+      26  - A defect that the group corrected appears in both logs, the c
+          ase in the AI steering log and the defect in the QA log, each l
+          inking to the other.
+      27  - The status table uses only the DR-8 statuses (bygd, delvis by
+          gd, ikke bygd, endret); today every FR is «ikke bygd».
+      28 +- Decision (the user, 2026-11-20): in the QA log each review fi
+         +le gets one row, with its number of findings, its most importan
+         +t defects and a link, while every defect from the work log gets
+         + its own row; the review files stay the detailed record.       
+      29  
+      30  **Never:** changes to code, tests, the README, `docs/arbeidslog
+          g.md`, the planning artifacts, the review files or the memlogs;
+           README links (Stories 4.1 and 4.3); running part A's tests aga
+          in; cases from the sessions of 2026-11-20, because the user acc
+          epted every recommendation and their review defects are already
+           in the QA log; personal data, e-mail addresses, local paths or
+           secrets.
+      31  
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-d
+        ocuments.md)
+  ⎿  Removed 4 lines
+      31  
+      32  </frozen-after-approval>
+      33  
+      34 -## Open Questions                                              
+      35 -                                                               
+      36 -- How the review files go into the QA log — options: one row pe
+         -r review file, with its number of findings, its most important 
+         -defects and a link, while every defect from the work log gets i
+         -ts own row (the review files stay the detailed record; about 30
+         - rows in all) / one row per defect in every review file too (ab
+         -out 100 rows, most of them without a commit, copied from the re
+         -view files).                                                   
+      37 -                                                               
+      34  ## Code Map
+      35  
+      36  - `_bmad-output/implementation-artifacts/spec-1-1-planning-phas
+          e-process-documents-sources.md` -- the inventories for each doc
+          ument (A status table, B cases, C defects), with their sources;
+           check each entry against its source before use.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-d
+        ocuments.md)
+  ⎿  Added 1 line, removed 1 line
+      43  **Execution:**
+      44  - [ ] `docs/statustabell.md` -- create it: an introduction (DR-
+          8; the four statuses; «ikke bygd» without a reason means not bu
+          ilt yet; every story updates the table, Story 4.3 completes it 
+          and Story 4.4 sets the final statuses); one table with the colu
+          mns Krav, Navn, Prioritet, Status, Stories, Tester and Grunn ti
+          l avvik; FR-1 to FR-36 in number order with FR-17b after FR-17,
+           then DR-10; names translated from the PRD headings; stories fr
+          om section A; tests «–»; DR-10 with the priority «ikke i versjo
+          n 1» and its reason linked to the clarification -- DR-8 and Sto
+          ry 1.1
+      45  - [ ] `docs/ki-styringslogg.md` -- create it: an introduction (
+          DR-5; the routine for AI sessions; the planning phase is docume
+          nted by the work log, the memlogs and the session logs, and no 
+          prompt is reconstructed); cases 1–26 from section B in date ord
+          er, each with «Hva KI foreslo», «Hva som var feil», «Hva gruppe
+          n bestemte», «Commit eller pull request» and «Kilde», and a lin
+          k to the QA-log entry for every [QA] case -- DR-5
+      46 -- [ ] `docs/qa-logg.md` -- replace the «Tidligere funn» paragra
+         -ph with one saying that the planning-phase defects are recorded
+         - in the new entry with their sources, linking to the introducti
+         -on of the AI steering log; append «2026-11-20 – Feil i KI-gener
+         -ert tekst og kode fra planleggingsfasen (DR-9)» with section C:
+         - the work-log defects, without behaviour that is not text or co
+         -de; the four examples, with the legend-icon rule marked as not 
+         -fixed in the mockup and handed to Story 2.10; and the review fi
+         -les as the open question decides -- DR-9                       
+      46 +- [ ] `docs/qa-logg.md` -- replace the «Tidligere funn» paragra
+         +ph with one saying that the planning-phase defects are recorded
+         + in the new entry with their sources, linking to the introducti
+         +on of the AI steering log; append «2026-11-20 – Feil i KI-gener
+         +ert tekst og kode fra planleggingsfasen (DR-9)» with section C:
+         + the work-log defects, without behaviour that is not text or co
+         +de; the four examples, with the legend-icon rule marked as not 
+         +fixed in the mockup and handed to Story 2.10; and one row per r
+         +eview file -- DR-9                                             
+      47  
+      48  **Acceptance Criteria:**
+      49  - Given `docs/statustabell.md`, when it is read, then each of F
+          R-1 to FR-36 and FR-17b appears exactly once with the PRD's pri
+          ority and «ikke bygd», and DR-10 appears once with its reason.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-d
+        ocuments.md)
+  ⎿  Added 1 line, removed 1 line
+      2  title: 'Story 1.1 part B: Record the planning phase in the proce
+         ss documents'
+      3  type: 'feature'
+      4  created: '2026-11-20'
+      5 -status: 'draft'                                                 
+      5 +status: 'ready-for-dev'                                         
+      6  route: 'dispatch'
+      7  review_loop_iteration: 0
+      8  context:
+
+⏺ Steg 3 er implementeringen. Jeg registrerer baseline_commit, setter status til
+  in-progress og sjekker sprint-status. Story 1.1 står allerede som
+  in-progress, så der endres ingenting.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-d
+        ocuments.md)
+  ⎿  Added 2 lines, removed 1 line
+      2  title: 'Story 1.1 part B: Record the planning phase in the proce
+         ss documents'
+      3  type: 'feature'
+      4  created: '2026-11-20'
+      5 -status: 'ready-for-dev'                                         
+      5 +status: 'in-progress'                                           
+      6 +baseline_commit: 'd8674addfaf3d789699f401ebfbc861df389b5b3'     
+      7  route: 'dispatch'
+      8  review_loop_iteration: 0
+      9  context:
+
+⏺ Agent(Implement story 1.1 part B)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ Implementeringsagenten skriver nå de tre dokumentene etter spesifikasjonen.
+  Når den er ferdig, kontrollerer jeg selv diffen mot oppgavene og
+  akseptkriteriene:
+  - hver FR skal stå nøyaktig én gang i statustabellen;
+  - alle commit-hashene skal finnes;
+  - kildene skal stemme;
+  - ingen personopplysninger.
+
+  Deretter kommer review med tre granskere. Ingenting blir committet.
+
+✻ Brewed for 5m 27s · done Friday 10:59 PM
+
+› Message from general-purpose
+  I built all three documents from the spec. Every planned check passes. Nothing
+  is committed, and I did not run the `sesjonslogg` skill, as the spec says.
+
+  **What I changed**
+  - **`<repo>/docs/statustabell.md`** (new): an
+  introduction covering DR-8, the four statuses, what «ikke bygd» without a
+  reason means, and who updates the table (every story, then 4.3 and 4.4). The
+  table has FR-1 to FR-36 in number order with FR-17b after FR-17, then DR-10.
+    - Names are translated from the PRD headings using the PRD glossary terms.
+    - Every FR is «ikke bygd» and tests are «–».
+    - DR-10 has «ikke i versjon 1», and its reason links to the Canvas
+  clarification without quoting it.
+  - **`<repo>/docs/ki-styringslogg.md`** (new): an
+  introduction covering DR-5, the routine for AI sessions, and how the planning
+  phase is documented with no prompt rebuilt.
+    - The 26 cases are renumbered in date order. Each has the five fields, plus
+  a link to the QA log where the defect is also recorded.
+    - A table at the top maps short source names to file links. Line numbers
+  refer to commit `d8674ad`.
+  - **`<repo>/docs/qa-logg.md`**: line 10 («Tidligere
+  funn») is replaced and the new entry is appended. The existing entries are
+  unchanged.
+    - The four examples (E5, R-10/R-11, the legend-icon CSS rule marked not
+  fixed and handed to Story 2.10, and the 640/560 px breakpoint) each have how
+  found, fix, commit and source.
+    - A work-log table has one row per defect (30 rows), and a review-file table
+  has one row per file (14 rows).
+    - It ends with a short list of what remains open.
+  - **The spec** (`<repo>/_bmad-output/implementation
+  -artifacts/spec-1-1-planning-phase-process-documents.md`): I ticked the three
+  tasks and filled in Implementation Notes, as the part A build did. The frozen
+  block and the status field are untouched.
+
+  **How I verified it**
+  - The spec's count check: all 38 IDs appear exactly once. A script also
+  confirmed the priorities match PRD §8.5 (24 må-ha, 8 bør-ha, 5 kan-ha) and the
+  number order.
+  - All 25 backticked hashes resolve to commits, and the privacy grep prints
+  nothing.
+  - A script checked every table row against its header's column count, every
+  link target and every heading anchor: no problems.
+  - I printed every cited line from every source and read it against its claim.
+  - `git diff` on the QA log shows one line replaced and 120 lines appended.
+
+  **Where I departed from the sources file**
+  - **Missing stories:** FR-16 and FR-17 also list Story 2.5, FR-29 also lists
+  6.3 and 8.2, and FR-30 also lists 8.3. These come from each story's
+  Requirements line in `epics.md`.
+  - **Wrong count:** `review-rubric-2026-11-15.md` has 1 high, 5 medium and 6
+  low findings, not "1, 6, 5".
+  - **Wrong commit:** the delete-check fix has no commit. `d2bfad2` was
+  committed before the deletion (session log 987, lines 162–180), so the row
+  says «ikke oppgitt i kilden».
+  - **Wrong "how found" for E5:** the rule was set while PRD §5 was drafted (PRD
+  memlog, line 43), not found by the calculation check, and no source says who
+  found it.
+  - **Not fixed:** "Story 1.8 before 2.3" was never fixed; it is an open point
+  in `issues.md`, line 87.
+
+  **Judgment calls you may want to review**
+  - Priorities are written in Norwegian (må-ha, bør-ha, kan-ha), with the
+  mapping to Must, Should and Could stated once in the introduction.
+  - The review-file table has two rows beyond section C's 12: the archived UX
+  review files from 7 November. Example 4 (the breakpoint) comes from one of
+  them.
+  - I included the local file path from 1 November (case 3) as a QA row, though
+  the sources marked it borderline. The other borderline items stay out: the
+  skipped BMAD steps are process behaviour, and the old user name is already
+  covered by the QA log's Git-identity entry.
+  - Cases 15, 21, 24 and 25 also link both ways with QA rows, because section C
+  lists those defects.
+  - The `ea06f01` (PR #5) commit for the `PRODUCT.md` row is sourced from PRD
+  §12 and the work log, not from a line about `PRODUCT.md` itself. Git confirms
+  the file is in that commit.
+  - For the failed check commands, the commit column names the commit that
+  followed the corrected check (`5373e7b`, `1a0709e`).
+
+  **Risks and what is left**
+  - Line references are pinned to `d8674ad`. They will drift if anyone edits the
+  middle of a source file.
+  - Anchors were computed with an approximation of GitHub's heading rules, and I
+  kept every linked anchor ASCII-only. They have not been checked on GitHub
+  itself.
+  - No case comes from Story 1.1's own sessions on 20 November, per the spec.
+  Epic 1 still needs at least one case from work built later (D-2 in
+  `epics.md`).
+  - Still to do: commit, push and the session log are for you and the user.
+
+⏺ Implementeringsagenten er ferdig. Underveis rettet den fem feil i kildefila
+  mot de opprinnelige kildene, blant annet en telling, en commit som var feil,
+  og hvordan E5-feilen ble funnet. Nå vurderer jeg selve diffen. Øktfila fra
+  eksporten holdes utenfor, fordi den ikke hører til del B.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Implement story 1.1 part B" finished · 40m 20s
+
+⏺ Diffen har 678 linjer i fem filer. Kildefila skrev jeg selv, så jeg leser
+  QA-loggen, spesifikasjonen og de to nye dokumentene.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ De tre dokumentene ser grundige ut, med kilder og linjenummer på alle
+  tilfeller og feil. Én feil ble ikke rettet, og står nå som åpen. Jeg kjører
+  verifiseringen fra spesifikasjonen og sjekker PRD §8.1 selv.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Skallet er zsh, så de tre sjekkene leste ingen filer, og jeg kjører dem på
+  nytt med filene skrevet ut. PRD §8.1-påstanden stemmer, og alle 38 ID-ene står
+  nøyaktig én gang.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle sjekkene er grønne, og alle tre oppgavene og akseptkriteriene er oppfylt.
+  Jeg setter status til in-review og lager diffen for granskerne, med de tre
+  dokumentene alene.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-d
+        ocuments.md)
+  ⎿  Added 1 line, removed 1 line
+      2  title: 'Story 1.1 part B: Record the planning phase in the proce
+         ss documents'
+      3  type: 'feature'
+      4  created: '2026-11-20'
+      5 -status: 'in-progress'                                           
+      5 +status: 'in-review'                                             
+      6  baseline_commit: 'd8674addfaf3d789699f401ebfbc861df389b5b3'
+      7  route: 'dispatch'
+      8  review_loop_iteration: 0
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Diffen for review har de tre dokumentene og er på 59,2 kB. Alle tre lagene
+  kjører, ingen hoppes over. Jeg starter dem samtidig med samme modell som denne
+  økten.
+
+⏺ 3 background agents launched (↓ to manage)
+   ├ Blind Hunter review, part B
+   ├ Edge Case Hunter review, part B
+   └ Verification Gap review, part B
+
+⏺ Alle tre granskerne kjører nå på dokumentene for del B. Når alle har
+  rapportert, kontrollerer jeg hvert funn mot kildene, fører det i loggen i
+  spesifikasjonen og sender de reelle rettingene tilbake til
+  implementeringsagenten. Ingenting blir committet eller pushet uten din
+  godkjenning.
+
+✻ Baked for 1m 45s · done Friday 11:41 PM
+
+⏺ Agent "Verification Gap review, part B" failed: Agent terminated early due to
+an API error: You've hit your 5-hour limit · resets 3:40am (Europe/Oslo) (error
+type rate_limit, HTTP 429, request id req_011ChEzDqPvL9jckfLkUERnd, model sent
+to the API: claude-opus-5-5)
+  ⎿  You've hit your 5-hour limit · resets 3:40am (Europe/Oslo)
+     /upgrade or /usage-credits to finish what you’re working on.
+
+⏺ Usage limit reached · continuing automatically at 3:40am · esc to 
+  cancel
+✻ Sautéed for 0s · done Friday 11:42 PM
+
+⏺ Agent "Blind Hunter review, part B" failed: Agent terminated early due to an
+API error: You've hit your 5-hour limit · resets 3:40am (Europe/Oslo) (error
+type rate_limit, HTTP 429, request id req_011ChEzJ6njRnAvfe7Ws4E2w, model sent
+to the API: claude-opus-5-5)
+
+⏺ Agent "Edge Case Hunter review, part B" failed: Agent terminated early due to
+an API error: You've hit your 5-hour limit · resets 3:40am (Europe/Oslo) (error
+type rate_limit, HTTP 429, request id req_011ChEzNC189T43kdVUMYhCD, model sent
+to the API: claude-opus-5-5)
+
+⏺ Usage limit reset · Continuing automatically
+
+⏺ Bruksgrensen stoppet de tre granskerne igjen. Den er nå nullstilt, og arbeidet
+  deres er lagret, så jeg ber dem fortsette der de slapp.
+  ⎿  Not run · auto mode's check had no usable answer (ctrl+o to expand)
+
+⏺ API Error: Your computer went to sleep mid-response. The response 
+  above may be incomplete.
+
+⏺ Sikkerhetskontrollen ga ikke svar denne gangen. Feilen er forbigående, så jeg
+  prøver igjen én gang.
+  ⎿  Not run · auto mode's check had no usable answer (ctrl+o to expand)
+
+⏺ API Error: Your computer went to sleep mid-response. The response 
+  above may be incomplete.
+
+⏺ Sikkerhetskontrollen svarte ikke på andre forsøk heller. Feilen er
+  forbigående. Mens jeg venter, gjør jeg en kort kontroll som bare leser, av at
+  arbeidskopien er urørt, og prøver så på nytt.
+
+  Ran 1 shell command (ctrl+o to expand)
+  ⎿  Resuming agent ac6b6e3
+
+⏺ Blind Hunter fortsetter nå. Jeg sender den samme beskjeden til de to andre
+  granskerne.
+  ⎿  Resuming agent a763650
+  ⎿  Resuming agent a605400
+
+⏺ Alle tre granskerne fortsetter nå der de slapp. Når alle har rapportert,
+  kontrollerer jeg funnene mot kildene og sender de reelle rettingene tilbake
+  til implementeringsagenten. Arbeidskopien er urørt siden sist, og ingenting er
+  committet.
+
+✻ Cooked for 50m 52s · done 4:32 AM
+
+❯ /rate-limit-options                                                           
+  ⎿  Claude Code will continue automatically at 8:40am. Keep this session open;
+     it may still pause for permission prompts. Press esc to cancel the wait.
+
+⏺ Agent "Verification Gap review, part B" failed: Agent terminated early due to
+an API error: You've hit your 5-hour limit · resets 8:40am (Europe/Oslo) (error
+type rate_limit, HTTP 429, request id req_011ChFYTPiwAvp935CD8PZ13, model sent
+to the API: claude-opus-5-5)
+
+⏺ Agent "Blind Hunter review, part B" failed: Agent terminated early due to an
+API error: You've hit your 5-hour limit · resets 8:40am (Europe/Oslo) (error
+type rate_limit, HTTP 429, request id req_011ChFYTPjSV5snF6j52M5sQ, model sent
+to the API: claude-opus-5-5)
+
+⏺ Agent "Edge Case Hunter review, part B" failed: Agent terminated early due to
+an API error: You've hit your 5-hour limit · resets 8:40am (Europe/Oslo) (error
+type rate_limit, HTTP 429, request id req_011ChFYTPa1uJyuovQtr8XDF, model sent
+to the API: claude-opus-5-5)
+  ⎿  You've hit your 5-hour limit · resets 8:40am (Europe/Oslo)
+     /upgrade or /usage-credits to finish what you’re working on.
+
+✻ Churned for 11h 26m 55s · done 6:55 AM
+
+⏺ Usage limit reset · Continuing automatically
+
+⏺ Bruksgrensen stoppet granskerne enda en gang. Den er nå nullstilt, og arbeidet
+  deres er lagret, så jeg ber alle tre fortsette der de slapp.
+  ⎿  Not run · auto mode's check had no usable answer (ctrl+o to expand)
+  ⎿  Not run · auto mode's check had no usable answer (ctrl+o to expand)
+  ⎿  Not run · auto mode's check had no usable answer (ctrl+o to expand)
+
+⏺ API Error: Your computer went to sleep mid-response. The response 
+  above may be incomplete.
+⏺ Sikkerhetskontrollen svarte ikke på noen av de tre meldingene. Feilen er
+  forbigående. Jeg gjør en kort kontroll som bare leser, og prøver så én melding
+  om gangen.
+
+  Ran 1 shell command (ctrl+o to expand)
+  ⎿  Resuming agent ac6b6e3
+  ⎿  Resuming agent a763650
+  ⎿  Resuming agent a605400
+
+⏺ Alle tre granskerne fortsetter nå der de slapp. Når de har rapportert,
+  kontrollerer jeg hvert funn mot kildene og retter det som er reelt.
+  Arbeidskopien er urørt, og ingenting er committet.
+
+✻ Cogitated for 27m 47s · done 9:15 AM
+
+› Message from general-purpose
+  I didn't find any verification gaps, but the new status table has one problem.
+  Its FR-1 row says no tests exist, while three tests in the repo say they
+  check FR-1.
+
+  **Why there are no gap findings.** Every part of the patch is static Markdown.
+  `docs/qa-logg.md` has its line 10 replaced and a new 2026-11-20 entry added
+  at the end. `docs/ki-styringslogg.md` and `docs/statustabell.md` are new
+  files. No code, test or CI step reads them:
+  - **Search for anything that reads them:** I searched every non-Markdown file
+  in the repo (skipping `.git`, `.venv` and caches) for `statustabell`,
+  `ki-styringslogg` and `qa-logg`. The only hit was the session export `/Users/<bruker>
+  /G40-lyamouri/.logs/mounia-03/sessions/1-1-2026-11-20.txt`, which
+  is not code.
+  - **Test and CI setup:** there is no `.github/` directory and no active git
+  hook. `pyproject.toml` runs pytest on `tests/` only, and none of the five test
+  files refers to `docs/`.
+
+  So all three files are skipped under the instructions' rule that static text
+  is not worth testing.
+
+  **The spec's own checks pass.** I ran the three commands listed in the spec's
+  Verification section:
+  - All 38 IDs (FR-1 to FR-36, FR-17b and DR-10) appear exactly once in the
+  status table.
+  - All 25 commit hashes in backticks resolve to commits with `git cat-file -t`.
+  - The privacy grep prints nothing.
+
+  These are checks on the text itself, so they don't count as tests here. I
+  mention them only so you know they were run.
+
+  ## Other findings
+
+  - **The FR-1 row in the status table lists no tests, but three tests name
+  FR-1.**
+    - **The table's own rule:**
+  `<repo>/docs/statustabell.md:13` says the Tester
+  column «fylles ut når testene finnes», and that each test names the FR-n or
+  E-n it checks (DR-5). The PRD backs this. DR-5 says every test names the FR-n
+  or E-n it verifies, so each FR can be traced from the PRD to code and tests
+  (`<repo>/_bmad-output/planning-artifacts/prds/prd-G
+  40-lyamouri-2026-11-02/prd.md:762`). DR-8 says the table lists each FR's
+  stories and tests (line 771).
+    - **The row:** the FR-1 row at `statustabell.md:19` shows `–` in the Tester
+  column.
+    - **The tests:** `<repo>/tests/test_company.py`
+  has three tests whose docstrings name FR-1. They are
+  `test_company_is_the_user_model_with_customer_number_as_login` (lines 14–16),
+  `test_password_is_stored_as_a_pbkdf2_hash` (lines 50–52) and
+  `test_customer_number_is_required` (lines 66–67). The module docstring at line
+  1 also names FR-1. None has a skip marker, and the normal `pytest` run
+  collects them.
+    - **Result:** following FR-1 from the table finds no test, which breaks the
+  trace from FR to test that DR-5 and DR-8 ask for. The status paragraph at line
+  15 names `web.Company` as what FR-1 builds on, but not its tests.
+    - **Where the dash comes from:** it follows the spec's task line, which says
+  «tests «–»» for every row (`<repo>/_bmad-output/im
+  plementation-artifacts/spec-1-1-planning-phase-process-documents.md:45`). So
+  the conflict starts in the spec, not only in the built file.
+    - **What is not affected:**
+      - The status «ikke bygd» follows the spec's locked rule at line 28, so it
+  is outside this finding.
+      - The Stories column "1.8" matches `epics.md`, whose Requirements line for
+  Story 1.1 does not list FR-1.
+      - The test module's own docstring does say "Story 1.1 … FR-1", but that
+  mismatch with `epics.md` existed before this patch.
+
+  I changed no repository files. The only file I wrote is a scratch list of the
+  hashes I checked, at `<tmp>/-Users-<bruker>-G40-lyamour
+  i/adf59768-389e-4c07-adbd-26798701f1f5/scratchpad/hashes.txt`.
+
+⏺ Verification Gap har rapportert. Den fant ingen testhull, siden alt i del B er
+  tekst, men den har ett annet funn: FR-1-raden i statustabellen viser «–» i
+  kolonnen for tester, selv om tre tester i tests/test_company.py sier at de
+  kontrollerer FR-1. Jeg venter på de to andre granskerne før jeg vurderer noe.
+
+✻ Churned for 5s · done 9:16 AM
+
+⏺ Agent "Verification Gap review, part B" finished · 48s
+
+› Message from general-purpose
+  N = min(floor(sqrt(60.6) + 1), 10) = min(floor(8.78), 10) = 8 (the patch is
+  60,600 bytes, about 60.6 kB).
+
+  All line numbers below are as of `d8674ad`.
+
+  - **Example 1 and case 4 credit the E5 round-up rule to the brainstorm, and
+  the source says the user decided it.** The logs cite
+  `reconcile-brainstorm.md:29`, which points to brainstorm memlog line 65. That
+  line, `_bmad-output/brainstorming/brainstorm-prognose-pre-prd-2026-10-31/.meml
+  og.md:65`, reads "(decision by user) … rounded up to whole units". So «Hva KI
+  foreslo» names a user decision, and case 4's «Kildene sier ikke hvem som
+  foreslo regelen» is wrong. Example 1 calls it a defect in AI-generated text,
+  but no cited source shows an AI-generated version that had the bug. PRD memlog
+  line 43 puts the guard in while §5 was being drafted, and the first committed
+  draft `4ada86d` already has R-9. Fix: cite the brainstorm memlog, say what
+  the AI's part actually was, and say the case is included because DR-5
+  (PRD:761) and Story 1.1 (EP:754) name E5. Case 7 has the same flaw. Its «Hva
+  KI foreslo» opens with «Kildene nevner ikke et eget forslag», but PRD memlog
+  line 15 shows the AI-written `extract-brainstorm.md` made the teacher's answer
+  decide the priority.
+
+  - **Example 4 and case 11 say the review found the 640 px breakpoint, and the
+  review file says otherwise.**
+    - The archived `review-structure-prose.md` has the wrong value in its own
+  proposed table at line 49: "640 px and below | … the filter becomes 2 × 2".
+    - The archived UX memlog line 43 records that 560 px came in only when that
+  proposal was applied "with the real breakpoints".
+    - The ground truth is the archived mockup `key-produktoversikt.html:165`
+  (`@media (max-width: 560px)`), and neither log cites it.
+    - The QA log's own row for this file («ble rettet da forslaget om egne
+  tabeller … ble tatt inn») contradicts Example 4.
+    - The cited line 138 covers only Chart.js, and the file calls that "not an
+  editorial finding" for the architecture step.
+
+    Fix: make «Hvordan det ble funnet» match the file, and note that work log
+  line 122 is the only source that credits the review.
+
+  - **The QA entry leaves out two wrong calculated numbers in the AI-built
+  concept D mockup.** `EXPERIENCE.md:347` lists two mockup values that "cannot
+  occur under the rules":
+    - Skruer's week-1 forecast of 21,5, where a 3-week moving average of whole
+  units gives 21,3 or 21,7.
+    - Kabelstrips' weeks of cover of 3,7, where 25 ÷ 6,667 gives 3,8 under R-9.
+
+    Both are still in `konsept-d-kombinert.html` (lines 292 and 407, and 316 and
+  431). The correct demo values came in through the 18 November BMAD Review
+  (session log 985 line 64; EP:2305). Neither defect appears in the examples,
+  the 30 rows or the review-file rows. The UX coverage row says there are only
+  «to kjente avvik».
+
+  - **«Gjenstår» names the legend icons as the only open mockup point.** The
+  mockup also still shows only 12 weeks, the two impossible values above, and
+  «Denne uken» with 3 products with warnings instead of 4 (`EXPERIENCE.md:347`).
+  The spines govern all of these, just as they govern the icons. Either list
+  them or say why only the icons count as open.
+
+  - **Two deferred review findings have no recorded outcome.** PRD memlog line
+  111 defers four findings from `review-rubric-2026-11-15.md`: the §10 Q4 pass
+  criterion, the FR-35 hand check, E30 and the year in week lists. The QA row
+  reports only that the FR-35 check and the years were closed (memlog line 117).
+  I found no closing record for the §10 Q4 criterion or E30 in the PRD memlog,
+  PRD §12 or `issues.md`. The QA row doesn't name them, and «Gjenstår» doesn't
+  list them, so they look silently dropped.
+
+  - **The 18 November BMAD Review row is the only record of 29 defects (A1–A14,
+  E1–E15), and it names none of them.** No review file backs it, so the rule
+  that the review files hold the detail does not apply. The row says only «blant
+  annet motsigelser og manglende akseptansekriterier», while every review-file
+  row names its most important defects. Session log 985 lines 59–74 and EP:2305
+  list them: the demo values and the split between the test companies, the 405
+  and 503 criteria, zero decimals (E14), and the AD-12 middleware.
+
+  - **AD IDs from the archived architecture are not marked as archived.** The 8
+  November QA row cites «(NFR-3, AD-12)», and case 13 cites AD-13 and AD-16. All
+  three belong to the archived 8 November architecture, where AD-12 is "Seed
+  data and secrets" and AD-16 is "Deploys from main; database changes by the
+  owner". In the current spine, AD-12 is "Norwegian error pages" and AD-16 is
+  "Publishing on Vercel (removed from v1)". The QA table note warns only that
+  the story numbers in the 8 November rows are archived, and the KI log has no
+  note at all. A reader who looks up AD-12 lands on the wrong decision.
+
+  - **`docs/statustabell.md` has nowhere to mark an epic as not built.** D-2
+  (EP:47) says "an epic that is not built is marked as not built in the status
+  table (DR-8)", and Story 4.3 (EP:1831) requires it. The KI log relies on D-2
+  for its "per built epic" rule. The table, though, has only FR and DR-10 rows,
+  and its introduction never mentions epics. D-3 (EP:52) also sends a Windows
+  test limitation to the status table, and there is no place for that either.
+  Add an epic section or column and a line for limitations before later stories
+  start filling the table.
+
+  - **`docs/ki-styringslogg.md` has no structure for the build phase.** There is
+  no section for Epic 1 onwards and no per-epic count to show D-2 coverage.
+  Nothing says that Story 1.1 part A gave no cases. The spec left out the 20
+  November sessions because the user accepted every recommendation, but the log
+  doesn't say so. A reader can't tell "no cases" from "not recorded", even
+  though the routine says cases go in "at once" (EP:603).
+
+  - **Links from the KI log to QA rows land on the whole table, not on the
+  row.** Every one targets `qa-logg.md#andre-feil-fra-arbeidsloggen`, a 30-row
+  table where many rows share a date: five for 18 November, seven for 16
+  November and four for 15–16 November. Links from QA to the KI log reach the
+  exact case. Give the rows stable IDs, either a Nr. column or `<a id>` anchors,
+  and link to those. «Gjenstår» and the review-file rows could then cite rows
+  by ID instead of «raden for 19. november».
+
+  - **The line citations will drift.** They are pinned to `d8674ad`, but the key
+  tables in both logs link to the working-tree files, and some of those keep
+  changing (`epics.md`, `issues.md`, `docs/arbeidslogg.md`). Clicking a link
+  will soon show different lines from the ones cited. Use links pinned to the
+  commit (`…/blob/d8674ad/…#L72`), or at least repeat the commit next to each
+  linked key.
+
+  - **The «Utvalget» rule is applied unevenly.** In case 2 (work log lines
+  36–37), the AI's first draft of `brief.md` added its own open points and an
+  addendum, and the user rejected them. That is corrected AI-generated text, but
+  it is not in the QA entry, while smaller text defects are: the undocumented
+  «godkjenning» (case 25) and the «för» typo. Either add a row and cross-links
+  for case 2, or state the rule that leaves it out, as the spec does for case 1
+  (work log line 35).
+
+⏺ Blind Hunter har levert 12 funn. Flere gjelder kildetroskap:
+  - om E5-regelen var brukerens egen beslutning;
+  - om reviewen fant bruddpunktet;
+  - to feil tall i mockupen som mangler.
+
+  Jeg venter på Edge Case Hunter før jeg vurderer noe, slik BMAD krever.
+
+✻ Cogitated for 5s · done 9:22 AM
+
+⏺ Agent "Blind Hunter review, part B" finished · 6m 47s
+
+› Message from general-purpose
+  [{"location":"docs/qa-logg.md:253, 259-261","trigger_condition":"Two of four
+  deferred rubric findings (§10 Q4 pass criterion, E30) never
+  closed","guard_snippet":"In the review-rubric-2026-11-15 row add 'Q4-kriteriet
+  og E30 er fortsatt åpne (PRD-memloggen, linje 111)', and list both under
+  Gjenstår and in issues.md","potential_consequence":"Two PRD findings stay
+  unresolved with no tracker; Gjenstår looks complete."},
+  {"location":"docs/statustabell.md:5-7","trigger_condition":"Status «delvis
+  bygd» or «endret», or a kan-ha requirement unbuilt at
+  submission","guard_snippet":"Require a reason for every «delvis bygd» or
+  «endret» row and for unbuilt kan-ha rows at submission, as DR-8 ('the reason
+  for any deviation') and Story 4.3 require","potential_consequence":"No reason
+  is required; unbuilt kan-ha rows read as 'not built yet' after submission."},
+  {"location":"docs/statustabell.md:3-7;
+  docs/ki-styringslogg.md:3","trigger_condition":"An epic is not built; Epic 4
+  has no FR row at all","guard_snippet":"Add an epic status table (Epic 1-8:
+  bygd or ikke bygd), as D-2 and Stories 4.3 and 4.4 require: 'an epic that was
+  not built is marked as not built'","potential_consequence":"D-2 marking has
+  nowhere to go; the per-built-epic case minimum cannot be checked."},
+  {"location":"docs/qa-logg.md:227;
+  docs/ki-styringslogg.md:219-225","trigger_condition":"User-ordered A4 check
+  (KI case 23) is in the 29-findings row, unlinked","guard_snippet":"Add
+  '[KI-tilfelle
+  23](ki-styringslogg.md#23-nfr-8-kontrollert-før-endring-18-november-2026)' to
+  the row's Kilde, and a QA-loggen field to case
+  23","potential_consequence":"Breaks the stated two-way linking rule
+  (qa-logg.md:147); A4's steering stays hidden from QA readers."},
+  {"location":"docs/ki-styringslogg.md:161-167;
+  docs/qa-logg.md:162","trigger_condition":"Case 16's wrong action came from a
+  Claude-written script, which is KI-generated code","guard_snippet":"Add a QA
+  row and a QA-loggen link for case 16, or state in Utvalget why a script's side
+  effect counts as behaviour while the sed and slettekommando rows count as
+  code","potential_consequence":"The rule at ki-styringslogg.md:32 is broken, or
+  the code-versus-behaviour line is applied inconsistently."},
+  {"location":"docs/qa-logg.md:147, 203","trigger_condition":"A defect recorded
+  only in a session log, e.g. sesjonslogg 985 lines 55-58","guard_snippet":"Add
+  rows for session-log-only defects (E20 in Story 2.2, rule test products in
+  2.6, R-14/R-17 in 5.1/5.2, fixed in the final validation), or drop session
+  logs from «Kildene»","potential_consequence":"DR-9's 'every defect a review
+  finds' is unmet; three fixed epics.md gaps go unrecorded."},
+  {"location":"docs/qa-logg.md:147-160;
+  docs/ki-styringslogg.md:14-28","trigger_condition":"A cited file is edited
+  after d8674ad, while the links still open its current
+  version","guard_snippet":"Use commit-pinned links such as https://github.com/I
+  BE160-2026/G40-lyamouri/blob/d8674ad/docs/arbeidslogg.md#L72, or tell readers
+  to open the files at d8674ad","potential_consequence":"Line references
+  silently point at wrong text once a cited file is edited."}]
+
+⏺ Alle tre granskerne har rapportert:
+  - Verification Gap: ingen testhull, men ett funn om FR-1.
+  - Blind Hunter: 12 funn.
+  - Edge Case Hunter: 7 funn.
+
+  Flere funn overlapper. To eksempler er de to utsatte rubrikk-funnene uten
+  utfall og at statustabellen mangler en plass for epics som ikke blir bygd. Nå
+  kontrollerer jeg påstandene mot kildene, før jeg vurderer noe.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Edge Case Hunter review, part B" finished · 12m 47s
+
+⏺ De fleste påstandene stemmer med kildene: regelen om å runde opp var brukerens
+  egen beslutning, og 560 px kom fra mockupen. Mockupen lister fire avvik mens
+  QA-loggen bare nevner to, og to av de fire rubrikk-funnene mangler avslutning.
+  Jeg sjekker nå de siste kildene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Funnene holder stand: 29 feil fra 18. november og tre rettede hull mangler i
+  QA-loggen, og D-2, D-3 og FR-1-testene trenger rettinger i statustabellen.
+  Ingen krever ny plan eller spørsmål til deg, så jeg legger til en henvisning
+  til story 4.3 og fører de 20 funnene i loggen.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-d
+        ocuments.md)
+  ⎿  Added 25 lines
+      64  
+      65  ## Review Triage Log
+      66  
+      67 +Review pass 1 (2026-11-21): Blind Hunter (BH), Edge Case Hunter
+         + (EC) and Verification Gap (VG; no gap findings, one other find
+         +ing). Patches P1–P16 went back to the implementation agent.    
+      68 +                                                               
+      69 +| ID | Finding | Verdict | Evidence | Route |                  
+      70 +|---|---|---|---|---|                                          
+      71 +| BH-1 | E5 (example 1, case 4) and case 7 misstate who propose
+         +d what | medium | The brainstorm memlog (line 65) records the r
+         +ound-up rule as the user's decision, and the PRD memlog (line 4
+         +3) records the 6-decimal guard as a decision the user approved 
+         +while §5 was drafted, so «Kildene sier ikke hvem som foreslo re
+         +gelen» is wrong; case 7 says no AI proposal exists, while the P
+         +RD memlog (line 15) shows the AI-written `extract-brainstorm.md
+         +` made the teacher's answer decide the priority | patch P1 |   
+      72 +| BH-2 | Example 4 and case 11 say the review found the 640 px 
+         +breakpoint | low | The archived `review-structure-prose.md` (li
+         +ne 49) itself proposes 640 px; 560 px came from the archived mo
+         +ckup (`key-produktoversikt.html`, line 165) when the proposal w
+         +as applied (archived UX memlog, line 43), as the QA row for tha
+         +t file already says | patch P2 |                               
+      73 +| BH-3 | The impossible mockup values (Skruer 21,5, Kabelstrips
+         + 3,7) are missing | low | EXPERIENCE.md (line 347) lists them, 
+         +and session log 985 (lines 59–74) shows the 18 November review 
+         +corrected the demo values; same root cause as BH-6 | patch P3 (
+         +with BH-6) |                                                   
+      74 +| BH-4 | «Gjenstår» names only the legend icons as open in the 
+         +mockup | low | EXPERIENCE.md (line 347) lists four mockup diffe
+         +rences that the spines govern: 12 weeks, the legend icons, two 
+         +impossible values, and 3 instead of 4 products with warnings | 
+         +patch P4 |                                                     
+      75 +| BH-5 | Two deferred rubric findings have no outcome | medium 
+         +| The PRD memlog defers four findings (line 111) and closes two
+         + (line 117); §10 question 4 was tied to Story 2.6 in the final 
+         +validation (session log 985, line 57) but no source closes it, 
+         +and E30 (`review-rubric-2026-11-15.md`, line 101) has no closin
+         +g record | patch P5 (with EC-1) |                              
+      76 +| BH-6 | The row for the 18 November BMAD Review names none of 
+         +its 29 defects | low | No review file backs that row, while ses
+         +sion log 985 (lines 59–74) and `epics.md` (line 2305) list them
+         + | patch P3 |                                                  
+      77 +| BH-7 | AD numbers from the archived architecture are not mark
+         +ed | low | The 8 November QA row (AD-12) and case 13 (AD-13, AD
+         +-16) use the numbering of the archived architecture, where they
+         + are other decisions than in the current spine; only story numb
+         +ers are flagged | patch P6 |                                   
+      78 +| BH-8 | The status table has no place for an unbuilt epic or a
+         +n untested Windows setup | low | D-2 (`epics.md`, line 47) and 
+         +D-3 (line 52) put both in the status table; the structure is St
+         +ory 4.3's work (lines 1829–1832), but the introduction does not
+         + mention either duty | patch P7 (introduction only, with EC-3);
+         + the structure is rejected as Story 4.3's |                    
+      79 +| BH-9 | The AI steering log does not say that Story 1.1 gave n
+         +o case | low | It has only the planning phase, so a reader cann
+         +ot tell «no case» from «not recorded» | patch P8 |             
+      80 +| BH-10 | Links from the AI steering log to QA rows land on the
+         + whole table | low | Every such link goes to `#andre-feil-fra-a
+         +rbeidsloggen`, a table of 30 rows with several rows per date | 
+         +patch P9 |                                                     
+      81 +| BH-11 | The cited line numbers will drift | low | They are pi
+         +nned to `d8674ad`, but the key tables link to the working-tree 
+         +files, and `docs/arbeidslogg.md`, `epics.md` and `issues.md` ke
+         +ep changing | patch P10 (with EC-7) |                          
+      82 +| BH-12 | Case 2 is corrected AI text without a QA row | low | 
+         +The rejected additions to the Product Brief are AI-generated te
+         +xt, which the «Utvalget» rule covers | patch P11 |             
+      83 +| EC-1 | Two deferred rubric findings were never closed | mediu
+         +m | Same as BH-5 | patch P5 |                                  
+      84 +| EC-2 | The status table promises a reason only for unbuilt må
+         +-ha and bør-ha rows | low | DR-8 asks for «the reason for any d
+         +eviation», which also covers «delvis bygd», «endret» and unbuil
+         +t kan-ha rows | patch P12 |                                    
+      85 +| EC-3 | No place to mark an unbuilt epic | low | Same as BH-8 
+         +| patch P7 |                                                   
+      86 +| EC-4 | Case 23 and the row for the 29 defects do not link to 
+         +each other | low | The row names the A4 check that case 23 reco
+         +rds, against the two-way rule in the QA entry's «Kildene» | pat
+         +ch P13 |                                                       
+      87 +| EC-5 | Case 16 has no QA row | low | The tab was closed by a 
+         +script Claude wrote, and the QA entry counts other faulty Claud
+         +e commands (`sed`, the delete check) as code defects | patch P1
+         +4 |                                                            
+      88 +| EC-6 | Defects recorded only in a session log are missing | l
+         +ow | Session log 985 (lines 55–58) records three gaps the final
+         + validation fixed (E20 in Story 2.2, the rule test products in 
+         +2.6, R-14 and R-17 in 5.1 and 5.2), and «Kildene» names the ses
+         +sion logs as sources | patch P15 |                             
+      89 +| EC-7 | Line references drift | low | Same as BH-11 | patch P1
+         +0 |                                                            
+      90 +| VG-O1 | The FR-1 row lists no tests, but three tests name FR-
+         +1 | low | `tests/test_company.py` (lines 15, 51 and 67) names F
+         +R-1; the row says «–» because the spec's task line said «–» for
+         + every row, and listing the three tests is a one-cell correctio
+         +n | patch P16 |                                                
+      91 +                                                               
+      92  ## Design Notes
+      93  
+      94  The session export of 2026-11-20, and the links to it from the 
+          session log and the pull request, belong to the session-log ste
+          p, not to this build.
+
+⏺ Loggen har nå én rad per funn, 20 rader i alt. Nå sender jeg de 16 rettingene
+  til den samme implementeringsagenten, i formatet BMAD foreskriver.
+  ⎿  Resuming agent a4ff80e
+
+⏺ Implementeringsagenten jobber nå med de 16 rettingene. Når den er ferdig,
+  kjører jeg verifiseringen av dokumentene på nytt:
+  - hver FR nøyaktig én gang;
+  - at alle commit-hashene finnes;
+  - at alle lenker og ankre virker;
+  - at alle tabellradene har like mange kolonner som overskriften;
+  - personvern.
+
+  Deretter viser jeg deg resultatet og ber om godkjenning før commit.
+
+✻ Cogitated for 4m 31s · done 9:32 AM
+
+› Message from general-purpose
+  I fixed all 16 review items, each with a small edit. Nothing is committed. The
+  checks that cover these files all pass: links, anchors and table column
+  counts; the 38-ID count; all hashes resolve to commits; the privacy grep
+  prints nothing. A script confirmed every case-to-row link points back the
+  other way, and I read each newly cited line against its claim.
+
+  **`docs/statustabell.md`**
+  - **Reason sentence:** every row that is «delvis bygd», «endret» or «ikke
+  bygd» at submission gets a reason, kan-ha included (DR-8).
+  - **New sentence on two more duties:** an unbuilt epic (D-2, added in Story
+  4.3) and a Windows setup that could not be tested (D-3, added in Story 1.3,
+  `epics.md` line 816). No structure added.
+  - **FR-1 row:** the Tester cell lists the three tests in
+  `tests/test_company.py`. Status stays «ikke bygd».
+
+  **`docs/ki-styringslogg.md`**
+  - **«Kildene»:** links to the repo at `d8674ad` on GitHub, says the cited
+  lines are read there, and adds the brainstorm memlog and
+  `extract-brainstorm.md` to the key table.
+  - **Case 4 (E5):**
+    - The AI coach proposed rounding up to whole units and the user decided it
+  (brainstorm memlog, lines 61 and 65). The AI-written extract carried the rule
+  into the PRD work (line 40).
+    - The 6-decimal guard was added while §5 was drafted, and the user approved
+  it (PRD memlog, line 43).
+    - No source says who noticed the floating-point problem.
+    - E5 is in both logs because DR-5 (PRD line 761) and Story 1.1 (`epics.md`
+  line 754) name it.
+    - I also cited line 61, because it shows the round-up rule began as the
+  coach's proposal.
+  - **Case 7:** says what the AI-written extract did: it made the teacher's
+  answer decide must-ha versus bør-ha (PRD memlog, line 15;
+  `extract-brainstorm.md`, line 133).
+  - **Case 11:** the review's own table proposed 640 px (line 49, from the
+  current table, line 39). 560 px came from the archived mockup
+  (`key-produktoversikt.html`, line 165) when the proposal was applied. Only the
+  work log credits the review.
+  - **Case 13:** AD-13 and AD-16 are marked as the archived architecture's.
+  - **QA links:** every link now names a row number. Cases 2, 16 and 23 got new
+  two-way links.
+  - **Case 23 heading** is now ASCII-only («NFR-8 kontrollert mot kildene»), so
+  its new anchor carries no «ø».
+  - **New «Byggefasen» section:** the Story 1.1 sessions of 20 November gave no
+  case, because the user accepted each recommendation and the review defects are
+  in the QA log. Every built epic needs at least one case (D-2).
+
+  **`docs/qa-logg.md`**
+  - **«Kildene»:** the same GitHub link. The key table adds the brainstorm and
+  brief memlogs, `extract-brainstorm.md` and the archived mockup.
+  - **Examples 1 and 4:** rewritten like cases 4 and 11. Example 3 now names
+  rows 9 and 3.
+  - **Work-log table:** a «Nr.» column and 33 rows. New rows:
+    - Row 1: the Product Brief additions (14 October).
+    - Row 8: the Safari script.
+    - Row 23: the three final-validation gaps, with `9dee8b1` from session log
+  985, line 84.
+  - **Row 6:** AD-12 is marked as the archived architecture's. The note above
+  the table now covers AD numbers in rows 4–6 and says row 23 rests only on the
+  session log.
+  - **Row 24 (the 29 defects):** names the main defects: the impossible mockup
+  values (21,5 and 3,7, now 21,3 and 3,8), the split between the test companies,
+  the 405 and 503 criteria, finding E14 (zero decimals) and the AD-12
+  middleware. It links both ways with case 23.
+  - **Review-file rows:**
+    - `review-rubric-2026-11-15.md`: §10 question 4 was tied to Story 2.6 (row
+  23), but no source closes the finding; E30 has no closing record.
+    - UX `review-coverage.md`: notes that `EXPERIENCE.md` line 347 now lists
+  four mockup differences.
+    - Archived `review-structure-prose.md`: corrected breakpoint wording.
+  - **«Gjenstår»:** all four mockup differences, with Story 2.10 still carrying
+  the icon rule; Story 1.8 (row 32); §10 question 4; E30.
+
+  **The spec:** I corrected "30 rows" to "33 rows" in my Implementation Notes.
+  That is the only edit outside the three files.
+
+  **Decision for you or the user:**
+  - **Part B spec not committed yet:** the «Byggefasen» section links to that
+  spec's «Never» section, because no committed file says the user accepted each
+  recommendation. The link will break on GitHub unless the spec is committed.
+  - **Defects found in this review:** this review on 21 November found defects
+  in my AI-generated text. «Byggefasen» covers only the sessions of 20 November.
+  Whether these become a case or QA rows is for you or the user to decide.
+
+⏺ Alle 16 rettingene er gjort. Implementeringsagenten tok opp to punkter:
+  - Lenken fra «Byggefasen» peker på spesifikasjonen for del B. Den virker når
+    spesifikasjonen committes sammen med del B, slik spesifikasjonen for del A
+    ble.
+  - Feilene denne reviewen fant i KI-generert tekst skal føres i QA-loggen, slik
+    DR-9 krever. Jeg foreslår å gjøre det som for del A, i en egen commit med
+    hashen.
+
+  Først kjører jeg verifiseringen av dokumentene på nytt. Agenten kjørte bare de
+  berørte sjekkene, og BMAD krever at jeg verifiserer selv.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Implement story 1.1 part B" finished · 10m 39s
+⏺ Alle kontrollene passerer nå: ID-ene, hashene, personvernsjekken og tabellene
+  og lenkene. Jeg legger inn en notat-linje om rettingene i spesifikasjonen og
+  retter datoen for byggefasen i QA-commiten for del B.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-d
+        ocuments.md)
+  ⎿  Added 2 lines
+      59  - Borderline items: AL:61 (the local path) is a QA row linked t
+          o case 3; AL:35 stays out as process behaviour; the old user na
+          me is covered by the Git-identity entry. Cases 15, 21, 24 and 2
+          5 also link to their QA rows, because section C lists those def
+          ects.
+      60  - Corrections to the sources file: FR-16 and FR-17 also list St
+          ory 2.5 («FR-15 to FR-19»), FR-29 also 6.3 and 8.2, and FR-30 a
+          lso 8.3, from each story's Requirements line; `review-rubric-20
+          26-11-15.md` has 1 high, 5 medium and 6 low findings; the delet
+          e-check fix has no commit, because `d2bfad2` was committed befo
+          re the deletion (S987:162–180); E5 was not found by the calcula
+          tion check (Pml:43, and no source says who found it); Story 1.8
+           before 2.3 (AL:538) is not fixed but an open point (`issues.md
+          `:87).
+      61  - Verification: all 38 IDs appear exactly once in the status ta
+          ble, with the PRD §8.5 priorities and in number order; all 25 b
+          ackticked hashes resolve to commits; the privacy grep prints no
+          thing; a script found every table row with its header's column 
+          count, every link target and every heading anchor; every cited 
+          line was printed and read against its claim; `git diff` shows o
+          nly line 10 replaced and the new entry appended in `docs/qa-log
+          g.md`.
+      62 +- Review pass 1 (2026-11-21) applied P1–P16: E5, case 7 and the
+         + breakpoint now match their sources; the QA work-log table has 
+         +a «Nr.» column and 33 rows, including the Product Brief additio
+         +ns, the Safari script and the three final-validation gaps; the 
+         +row for the 29 defects names its main defects; «Gjenstår» lists
+         + all four mockup differences, §10 question 4 and E30; both logs
+         + link to the repository at `d8674ad`; the AI steering log has a
+         + «Byggefasen» section; the status table's introduction covers e
+         +very deviation and the D-2 and D-3 duties, and the FR-1 row lis
+         +ts its three tests.                                            
+      63 +- Verification after the patches, by the parent session: all 38
+         + IDs appear exactly once, all 25 hashes resolve to commits, the
+         + privacy grep prints nothing, and every table row, linked file 
+         +and anchor checks out.                                         
+      64  
+      65  ## Spec Change Log
+      66  
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Kommandoen avsluttet med kode 1. git diff --no-index gir 1 når filene er
+  ulike, og da stoppet && utskriften. Jeg sjekker at diff-fila likevel ble
+  skrevet.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Diff-filen er ferdig, og jeg setter story 1.1 til review i sprint-status.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-d
+        ocuments.md)
+  ⎿  Added 1 line, removed 1 line
+      2  title: 'Story 1.1 part B: Record the planning phase in the proce
+         ss documents'
+      3  type: 'feature'
+      4  created: '2026-11-20'
+      5 -status: 'in-review'                                             
+      5 +status: 'done'                                                  
+      6  baseline_commit: 'd8674addfaf3d789699f401ebfbc861df389b5b3'
+      7  route: 'dispatch'
+      8  review_loop_iteration: 0
+
+⏺ Update(_bmad-output/implementation-artifacts/sprint-status.yaml)
+  ⎿  Added 1 line, removed 1 line
+      29  # - Dev moves story to 'review', then runs code-review (fresh c
+          ontext, different LLM recommended)
+      30  # - Retrospective appends its action items to action_items; the
+           status view surfaces open ones
+      31  generated: 11-19-2026 20:56
+      32 -last_updated: 11-20-2026 13:39                                 
+      32 +last_updated: 11-21-2026 09:44                                 
+      33  project: G40-lyamouri
+      34  project_key: NOKEY
+      35  tracking_system: file-system
+
+⏺ Update(_bmad-output/implementation-artifacts/sprint-status.yaml)
+  ⎿  Added 1 line, removed 1 line
+      36  story_location: _bmad-output/implementation-artifacts
+      37  development_status:
+      38    epic-1: in-progress
+      39 -  1-1-start-prognose-locally-from-a-fresh-clone: in-progress   
+      39 +  1-1-start-prognose-locally-from-a-fresh-clone: review        
+      40    1-2-check-every-pull-request-automatically: backlog
+      41    1-3-confirm-the-setup-on-windows-and-without-a-network: backl
+          og
+      42    1-4-norwegian-app-shell-and-error-pages: backlog
+
+⏺ Story 1.1 er klar for commit: tre dokumenter er skrevet og verifisert, med
+  alle ID-er, hashene og lenkene i orden. Jeg foreslår en egen commit for
+  QA-loggen etter Del B-reviewen, slik som for del A.
+
+⏺ User answered Claude's questions:
+  ⎿  · Story 1.1 del B er ferdig og verifisert, og ingenting er committet. Skal 
+     jeg committe på grenen story/1-1-start-prognose-locally? Forslag: 1) «Legg 
+     til spesifikasjonen for story 1.1 del B» (spesifikasjonen, kildefila og 
+     sprint-status), 2) «Legg til statustabellen og KI-styringsloggen, og før 
+     inn planleggingsfasen i QA-loggen», 3) «Før inn feilene fra reviewen av 
+     story 1.1 del B i QA-loggen» (DR-9, med hashen fra commit 2), 4) «Legg til 
+     den eksporterte økten for story 1.1» (den maskerte eksporten) og 5) 
+     sesjonsloggen. → Commit og push grenen (Recommended)
+
+⏺ Godkjent: fem commits og push av grenen, uten pull request. Først kommer
+  commit 1 med spesifikasjonen, kildefila og sprint-status. Før hver commit
+  kjører jeg personvernsjekken.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Den ene treffen i personvernsjekken var søkemønsteret i
+  verifiseringskommandoen, ikke en sti eller personopplysning. Commit 1 er
+  d2b887d, og nå går jeg videre til commit 2 med de tre dokumentene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Commit 2 er 79c9154. Nå skriver jeg QA-oppføringen for feilene som reviewen av
+  del B fant, med denne hashen. Først leser jeg slutten av QA-loggen og
+  «Byggefasen».
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Nå skriver jeg QA-oppføringen for reviewen av del B. Jeg oppdaterer også
+  «Byggefasen», så den dekker 20.–21. november og lenker til begge
+  review-oppføringene.
+
+⏺ Update(docs/qa-logg.md)
+  ⎿  Added 20 lines
+      266  - Story 1.8 må selv lage ukeetiketten i `forecasting/display.p
+           y`, med test, fordi toppfeltet viser den før story 2.3 bygger 
+           ut modulen (rad 32; åpent punkt i `issues.md`).
+      267  - Spørsmål 4 i PRD §10: sluttvalideringen 18. november knyttet
+            det til regeltestproduktene i story 2.6 (rad 23), men ingen k
+           ilde lukker funnet om det i `review-rubric-2026-11-15.md` (lin
+           je 35).
+      268  - E30: funnet i `review-rubric-2026-11-15.md` om at E30 ikke k
+           an vise at varselet om sesongmønster påvirker tillitsmerket (l
+           inje 101), har ingen registrert lukking.
+      269 +                                                              
+      270 +## 2026-11-21 – Feil i KI-generert tekst fra reviewen av story
+          + 1.1 del B (DR-9)                                             
+      271 +                                                              
+      272 +**Hvordan det ble funnet.** Claude Code skrev statustabellen, 
+          +KI-styringsloggen og oppføringen over om planleggingsfasen i s
+          +tory 1.1 del B med `bmad-build`. Før første commit gikk tre ua
+          +vhengige KI-granskere gjennom diffen: Blind Hunter, Edge Case 
+          +Hunter og Verification Gap. Claude kontrollerte hvert funn mot
+          + kildene. Alle 20 funnene står med vurdering og begrunnelse un
+          +der «Review Triage Log» i `_bmad-output/implementation-artifac
+          +ts/spec-1-1-planning-phase-process-documents.md`, og alle ble 
+          +rettet. Selve plassen for epics som ikke blir bygd i statustab
+          +ellen, hører til story 4.3, og innledningen viser nå til den. 
+      273 +                                                              
+      274 +**Feilene som ble rettet.** Alle ble rettet før første commit 
+          +og ligger i `79c9154`.                                        
+      275 +                                                              
+      276 +| Feil | Funnet av | Retting |                                
+      277 +|---|---|---|                                                 
+      278 +| Eksempel 1 og tilfellene 4 og 7 sa feil om hvem som foreslo 
+          +hva: regelen om å runde opp var brukerens beslutning i brainst
+          +ormingen, og det KI-skrevne sammendraget gjorde lærerens svar 
+          +avgjørende for språkmodellen | Blind Hunter; bekreftet mot mem
+          +loggene | Tekstene følger kildene og sier hvorfor E5 står i be
+          +gge loggene |                                                 
+      279 +| Eksempel 4 og tilfelle 11 sa at gjennomgangen fant bruddpunk
+          +tet, men forslaget i gjennomgangen hadde selv 640 px, og 560 p
+          +x kom fra skissen | Blind Hunter; bekreftet mot den arkiverte 
+          +gjennomgangen og skissen | Tekstene følger gjennomgangsfila og
+          + memloggen |                                                  
+      280 +| Raden for de 29 feilene 18. november nevnte ingen av dem, så
+          + de to verdiene i mockupen som ikke kan oppstå etter reglene, 
+          +sto ingen steder | Blind Hunter; bekreftet mot sesjonslogg 985
+          + | Raden nevner de viktigste feilene |                        
+      281 +| «Gjenstår» nevnte bare symbolene i tegnforklaringen, mens `E
+          +XPERIENCE.md` fører fire avvik fra mockupen | Blind Hunter | A
+          +lle fire står i «Gjenstår» |                                  
+      282 +| To utsatte funn fra rubrikken 15. november, spørsmål 4 i PRD
+          + §10 og E30, var verken ført som lukket eller som åpne | Blind
+          + Hunter og Edge Case Hunter | Raden og «Gjenstår» sier hva kil
+          +dene viser |                                                  
+      283 +| AD-numre fra den arkiverte arkitekturen fra 8. november var 
+          +ikke merket | Blind Hunter | Merket som den arkiverte arkitekt
+          +urens |                                                       
+      284 +| Statustabellen lovet en grunn bare for må-ha- og bør-ha-krav
+          + som ikke er bygd, og nevnte ikke epics som ikke blir bygd (D-
+          +2) eller et oppsett som ikke kunne testes på Windows (D-3) | E
+          +dge Case Hunter og Blind Hunter | Innledningen dekker hvert av
+          +vik og de to pliktene |                                       
+      285 +| KI-styringsloggen sa ikke at story 1.1 ga ingen tilfeller | 
+          +Blind Hunter | En del om byggefasen |                         
+      286 +| Lenkene fra KI-styringsloggen til QA-loggen landet på en tab
+          +ell med 30 rader, og linjenumrene viste til filer som endres |
+          + Blind Hunter og Edge Case Hunter | En kolonne med radnummer, 
+          +og lenker til repoet i `d8674ad` |                            
+      287 +| Tre feil manglet i QA-loggen: tilleggene i Product Brief, Sa
+          +fari-skriptet og tre hull fra sluttvalideringen 18. november, 
+          +og to tilfeller manglet lenker begge veier | Blind Hunter og E
+          +dge Case Hunter | Tre nye rader og lenker begge veier |       
+      288 +| FR-1-raden viste ingen tester, selv om tre tester i `tests/t
+          +est_company.py` nevner FR-1 | Verification Gap | Cellen viser 
+          +de tre testene |                                              
+
+⏺ Update(docs/ki-styringslogg.md)
+  ⎿  Added 1 line, removed 1 line
+      256  
+      257  ## Byggefasen
+      258  
+      259 -**Story 1.1.** Øktene for story 1.1 20. november 2026 ga ingen
+          - tilfeller, fordi brukeren godtok hver anbefaling fra Claude. 
+          -Feilene som reviewen fant i KI-generert kode og tekst, står i 
+          -[QA-loggen](qa-logg.md#2026-11-20--feil-i-ki-generert-kode-og-
+          -tekst-fra-reviewen-av-story-11-del-a-dr-9). Kilden er avsnitte
+          -t «Never» i [spesifikasjonen for story 1.1 del B](../_bmad-out
+          -put/implementation-artifacts/spec-1-1-planning-phase-process-d
+          -ocuments.md).                                                 
+      259 +**Story 1.1.** Øktene for story 1.1 20. og 21. november 2026 g
+          +a ingen tilfeller, fordi brukeren godtok hver anbefaling fra C
+          +laude. Feilene som reviewene fant i KI-generert kode og tekst,
+          + står i QA-loggen, for [del A](qa-logg.md#2026-11-20--feil-i-k
+          +i-generert-kode-og-tekst-fra-reviewen-av-story-11-del-a-dr-9) 
+          +og [del B](qa-logg.md#2026-11-21--feil-i-ki-generert-tekst-fra
+          +-reviewen-av-story-11-del-b-dr-9). Kilden er avsnittet «Never»
+          + i [spesifikasjonen for story 1.1 del B](../_bmad-output/imple
+          +mentation-artifacts/spec-1-1-planning-phase-process-documents.
+          +md).                                                          
+      260  
+      261  Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics
+           .md`, linje 45–47).
+
+⏺ Før commit 3 kontrollerer jeg de to endringene: at det nye ankeret finnes, at
+  den nye tabellen har riktig antall kolonner, og at teksten ikke har
+  personopplysninger.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Commit 3 er c8da9ff. Nå kommer commit 4 med den maskerte øktfila. Jeg kjører
+  personvernsjekken på nytt rett før, og den skriver bare ut antall treff, ingen
+  verdier.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Commit 4 er 477a687 og inneholder bare den maskerte øktfila. Personvernsjekken
+  var ren. Til slutt skriver jeg sesjonsloggen for del B med
+  sesjonslogg-skillen, som CLAUDE.md krever.
+
+⏺ Skill(sesjonslogg)
+  ⎿  Successfully loaded skill
+
+⏺ Del B fortsetter samme arbeid som fila 983 (story 1.1), så jeg legger til en
+  ny dato-seksjon nederst i den. Jeg henter tidspunktet og sjekker at issues.md
+  er uendret siden sist.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ issues.md er uendret siden forrige loggcommit, og arbeidskopien er ren. Jeg
+  legger til seksjonen for 21. november i sesjonsloggen og oppdaterer issues.md.
+
+⏺ Update(.logs/mounia-03/983-2026-11-20-18-35-44-story-1-1-lokal-oppstart.md)  ⎿  Added 51 lines
+       47  - Avgjøre forslaget om å endre AD-13, slik at telefontesten st
+           arter appen med `runserver --insecure <PROGNOSE_LAN_HOST>:8000
+           ` i stedet for `0.0.0.0:8000` (`deferred-work.md`).
+       48  - Story 1.7: `load_seed` må lage `.secret_key` før den stopper
+            på en database som ikke er tom, fordi et gjenbrukt Docker-vol
+           um kan ha data mens fila mangler.
+       49  - Story 1.8: vurdere en advarsel når `.secret_key` mangler. Ut
+           en fila får hver prosess en tilfeldig nøkkel, så brukeren logg
+           es ut ved hver omstart av utviklingsserveren (review-funnet BH
+           -13).
+       50 +                                                              
+       51 +## 2026-11-21 kl. 09:49 — Mounia-03                           
+       52 +                                                              
+       53 +### Oppgave                                                   
+       54 +Fortsette story 1.1 med del B via `bmad-build` på samme gren: 
+          +prosessdokumentene fra planleggingsfasen, bygd på `deferred-wo
+          +rk.md` og den eksisterende dokumentasjonen, uten å gjenta del 
+          +A eller testene. Ingenting skulle committes eller pushes uten 
+          +godkjenning. Først ba brukeren om å gi den eksporterte øktfila
+          + et nytt navn og maskere personopplysninger i den.            
+       55 +                                                              
+       56 +### Plan                                                      
+       57 +- Øktfila fra `/export` fikk navnet `1-1-2026-11-20.txt` og bl
+          +e maskert:                                                    
+       58 +  - 28 stier til repoet og 3 stier til midlertidige mapper;   
+       59 +  - macOS-brukernavnet og det gamle brukernavnet.             
+       60 +                                                              
+       61 +  Den hadde ingen nøkler eller e-postadresser.                
+       62 +- `bmad-build` steg 1–5 for del B:                            
+       63 +  - Tre subagenter undersøkte kildene, og oversiktene står i [
+          +kildefila](../../_bmad-output/implementation-artifacts/spec-1-
+          +1-planning-phase-process-documents-sources.md).               
+       64 +  - Spesifikasjonen er [spec-1-1-planning-phase-process-docume
+          +nts.md](../../_bmad-output/implementation-artifacts/spec-1-1-p
+          +lanning-phase-process-documents.md). Brukeren godkjente den og
+          + valgte én rad per review-fil i QA-loggen.                    
+       65 +  - En implementeringsagent skrev dokumentene, og tre review-a
+          +genter gikk gjennom dem.                                      
+       66 +  - Bruksgrensen stoppet agentene flere ganger, og de fortsatt
+          +e der de slapp.                                               
+       67 +                                                              
+       68 +### Resultat                                                  
+       69 +- Commits på `story/1-1-start-prognose-locally`:              
+       70 +  - `d2b887d` Legg til spesifikasjonen for story 1.1 del B, me
+          +d kildefila og sprint-status.                                 
+       71 +  - `79c9154` Legg til statustabellen og KI-styringsloggen, og
+          + før inn planleggingsfasen i QA-loggen.                       
+       72 +  - `c8da9ff` Før inn feilene fra reviewen av story 1.1 del B 
+          +i QA-loggen.                                                  
+       73 +  - `477a687` Legg til den eksporterte økten for story 1.1 ([1
+          +-1-2026-11-20.txt](sessions/1-1-2026-11-20.txt)).             
+       74 +- `docs/statustabell.md`: alle 37 FR-ene og DR-10, med priorit
+          +et, status, stories, tester og grunn for avvik (DR-8).        
+       75 +  - Ingen FR er bygd ennå.                                    
+       76 +  - DR-10 er ikke bygd, fordi publiseringen er tatt ut av vers
+          +jon 1.                                                        
+       77 +  - FR-1 viser de tre testene fra del A.                      
+       78 +- `docs/ki-styringslogg.md`: 26 saker fra planleggingsfasen, h
+          +ver med fem felt og kilde (DR-5).                             
+       79 +  - Innledningen sier at planleggingsfasen er dokumentert med 
+          +arbeidsloggen, memloggene og sesjonsloggene, uten gjenskapte p
+          +rompter.                                                      
+       80 +  - Delen om byggefasen sier at øktene for story 1.1 ga ingen 
+          +saker.                                                        
+       81 +- `docs/qa-logg.md`: avsnittet «Tidligere funn» er rettet.    
+       82 +  - Feilene fra planleggingsfasen er ført med kilde: fire ekse
+          +mpler, 33 rader fra arbeidsloggen og 14 review-filer (DR-9).  
+       83 +  - Feilene fra reviewen av del B står i en egen oppføring.   
+       84 +- Verifisert:                                                 
+       85 +  - alle 38 ID-ene står én gang;                              
+       86 +  - alle 25 commit-hashene finnes;                            
+       87 +  - alle tabellrader, lenker og ankre stemmer;                
+       88 +  - dokumentene har ingen personopplysninger.                 
+       89 +                                                              
+       90 +  Testene fra del A ble ikke kjørt på nytt, slik brukeren ba o
+          +m.                                                            
+       91 +- Review: 20 funn, alle rettet i 16 rettinger. Plassen for epi
+          +cs som ikke bygges, i statustabellen, hører til story 4.3.    
+       92 +- `sprint-status.yaml`: story 1.1 står som `review`, fordi del
+          + A og del B er ferdige.                                       
+       93 +- Lukket i `issues.md`: del B av story 1.1, og eksporten av øk
+          +ten fram til 20. november. Punktet om symbolene i mockupen har
+          + fått en merknad.                                             
+       94 +- Grenen pushes til GitHub sammen med denne loggen, etter bruk
+          +erens godkjenning. Det er ingen pull request ennå.            
+       95 +                                                              
+       96 +### Åpne punkter                                              
+       97 +- Eksportere resten av Claude Code-økten for story 1.1 (del B,
+          + 21. november) med `/export` til `.logs/mounia-03/sessions/1-1
+          +-2026-11-21.txt`, maskere den og committe den før pull request
+          +en flettes.                                                   
+       98 +- Spørsmål 4 i PRD §10: funnet i `review-rubric-2026-11-15.md`
+          + (linje 35) er ikke lukket. Sluttvalideringen 18. november kny
+          +ttet det til regeltestproduktene i story 2.6. Avgjøre om story
+          + 2.6 lukker det.                                              
+       99 +- E30: funnet i `review-rubric-2026-11-15.md` (linje 101) om a
+          +t E30 ikke kan vise at varselet om sesongmønster påvirker till
+          +itsmerket, er ikke lukket. Avgjøre det før referanseregnearket
+          + lages i story 1.5.                                           
+      100 +- Disse punktene fra 20. november gjelder fortsatt: Safari-sje
+          +kken før pull requesten, oppsettet fra en ekte `git clone` før
+          + flettingen, BMAD Code Review før flettingen og forslaget om å
+          + endre AD-13.                                                 
+
+⏺ Update(.logs/mounia-03/issues.md)
+  ⎿  Added 1 line, removed 1 line
+      86  - [x] 2026-11-18 [nye-epics-og-stories](985-2026-11-18-14-47-43
+          -nye-epics-og-stories.md) — bekrefte demoendringen: Testbedrift
+           A får 4 produkter med varsel, fordi E8-produktet er med, og de
+           andre regeltestproduktene ligger i Testbedrift B (BMAD Review 
+          A2) (løst 2026-11-18: godkjent, sammen med de andre enkle løsni
+          ngene)
+      87  - [ ] 2026-11-19 [readiness-og-sprintplan](984-2026-11-19-21-00
+          -44-readiness-og-sprintplan.md) — story 1.8 må selv lage ukeeti
+          ketten i `forecasting/display.py`, med test, fordi toppfeltet v
+          iser den før story 2.3 bygger ut modulen; story 2.3 bygger vide
+          re på den (funn 4 i Implementation Readiness)
+      88  - [x] 2026-11-19 [readiness-og-sprintplan](984-2026-11-19-21-00
+          -44-readiness-og-sprintplan.md) — addendum §2 (linje 55) sier f
+          ortsatt at versjonene skal kontrolleres på nytt innen 2026-12-0
+          1, mens §5 nå sier 2026-12-08; linjen var ikke med i de godkjen
+          te endringene og rettes bare etter brukerens godkjenning (løst 
+          2026-11-19: rettet til 2026-12-08 etter brukerens godkjenning, 
+          og PRD §12 nevner rettingen)
+      89 -- [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+         -5-44-story-1-1-lokal-oppstart.md) — bygge del B av story 1.1 me
+         -d `bmad-build` på grenen `story/1-1-start-prognose-locally`: `d
+         -ocs/statustabell.md`, `docs/ki-styringslogg.md` med planlegging
+         -scasene og planleggingsfeilene i `docs/qa-logg.md` (`deferred-w
+         -ork.md`); vurder samtidig om økten 20. november har saker til K
+         -I-styringsloggen                                               
+      89 +- [x] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+         +5-44-story-1-1-lokal-oppstart.md) — bygge del B av story 1.1 me
+         +d `bmad-build` på grenen `story/1-1-start-prognose-locally`: `d
+         +ocs/statustabell.md`, `docs/ki-styringslogg.md` med planlegging
+         +scasene og planleggingsfeilene i `docs/qa-logg.md` (`deferred-w
+         +ork.md`); vurder samtidig om økten 20. november har saker til K
+         +I-styringsloggen (løst 2026-11-21: `79c9154` og `c8da9ff`; økte
+         +ne 20. og 21. november ga ingen saker til KI-styringsloggen)   
+      90  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — sjekke `/` i Safari i respo
+          nsiv visning ved 320 px, 390 × 844 og 820 × 1180 før pull reque
+          sten for story 1.1
+      91  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — kjøre de fem README-kommand
+          oene fra en `git clone` av den pushede grenen før pull requeste
+          n for story 1.1 flettes
+      92  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — eksportere Claude Code-økte
+          n for story 1.1 med `/export` til `.logs/mounia-03/sessions/1-1
+          -2026-11-20.txt`, sjekke den for personopplysninger og committe
+           den i pull requesten (rutinen for KI-økter)
+
+⏺ Update(.logs/mounia-03/issues.md)
+  ⎿  Added 1 line, removed 1 line
+      89  - [x] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — bygge del B av story 1.1 me
+          d `bmad-build` på grenen `story/1-1-start-prognose-locally`: `d
+          ocs/statustabell.md`, `docs/ki-styringslogg.md` med planlegging
+          scasene og planleggingsfeilene i `docs/qa-logg.md` (`deferred-w
+          ork.md`); vurder samtidig om økten 20. november har saker til K
+          I-styringsloggen (løst 2026-11-21: `79c9154` og `c8da9ff`; økte
+          ne 20. og 21. november ga ingen saker til KI-styringsloggen)
+      90  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — sjekke `/` i Safari i respo
+          nsiv visning ved 320 px, 390 × 844 og 820 × 1180 før pull reque
+          sten for story 1.1
+      91  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — kjøre de fem README-kommand
+          oene fra en `git clone` av den pushede grenen før pull requeste
+          n for story 1.1 flettes
+      92 -- [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+         -5-44-story-1-1-lokal-oppstart.md) — eksportere Claude Code-økte
+         -n for story 1.1 med `/export` til `.logs/mounia-03/sessions/1-1
+         --2026-11-20.txt`, sjekke den for personopplysninger og committe
+         - den i pull requesten (rutinen for KI-økter)                   
+      92 +- [x] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+         +5-44-story-1-1-lokal-oppstart.md) — eksportere Claude Code-økte
+         +n for story 1.1 med `/export` til `.logs/mounia-03/sessions/1-1
+         +-2026-11-20.txt`, sjekke den for personopplysninger og committe
+         + den i pull requesten (rutinen for KI-økter) (løst 2026-11-21: 
+         +eksportert, maskert og committet på grenen i `477a687`; resten 
+         +av økten er et eget punkt)                                     
+      93  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — kjøre BMAD Code Review (`bm
+          ad-code-review`) på grenen med spesifikasjonen før flettingen a
+          v story 1.1, og føre funnene med beslutningene i en kommentar i
+           pull requesten
+      94  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — avgjøre forslaget om å endr
+          e AD-13, slik at telefontesten starter appen med `runserver --i
+          nsecure <PROGNOSE_LAN_HOST>:8000` i stedet for `0.0.0.0:8000` (
+          `deferred-work.md`)
+      95  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — story 1.7: `load_seed` må l
+          age `.secret_key` før den stopper på en database som ikke er to
+          m, fordi et gjenbrukt Docker-volum kan ha data mens fila mangle
+          r
+
+⏺ Update(.logs/mounia-03/issues.md)
+  ⎿  Added 1 line, removed 1 line
+      52  - [x] 2026-11-16 [ux-konsepter](988-2026-11-15-22-25-10-ux-kons
+          epter.md) — vurdere konsept D «Kombinert» (`.working/konsept-d-
+          kombinert/`), og deretter fortsette `bmad-ux` mot endelig `DESI
+          GN.md` og `EXPERIENCE.md` (løst 2026-11-16: D er godkjent, og `
+          DESIGN.md` og `EXPERIENCE.md` er `final` i `5db2fe7`)
+      53  - [x] 2026-11-16 [ux-konsepter](988-2026-11-15-22-25-10-ux-kons
+          epter.md) — UJ-1 steg 4: med eksempeltallene endres ikke grunnp
+          rognosen for Strøsand (14,3 → 14,3) når uvanlige uker holdes ut
+          enfor, fordi uke 42 ligger utenfor vinduet på 3 uker; velge tek
+          st for «ingen endring» i bekreftelsen (FR-21) eller et demoprod
+          ukt med en uvanlig uke inne i vinduet (som E8) (endret 2026-11-
+          16: «(uendret)» står som antakelse i `EXPERIENCE.md`; demoprodu
+          ktet gjenstår) (løst 2026-11-16: E8 er demoen i DR-1 og flyt 1,
+           og «(uendret)» er godkjent, `5373e7b`)
+      54  - [x] 2026-11-16 [ux-konsepter](988-2026-11-15-22-25-10-ux-kons
+          epter.md) — tegne innloggingssiden og samlet bestillingsoversik
+          t (PRD §0), og innstillingsskjemaet med bekreftelsen etter en e
+          ndring (FR-21) (løst 2026-11-16: tekstskisser og tabeller i `EX
+          PERIENCE.md`, `5db2fe7`)
+      55 -- [ ] 2026-11-16 [ux-konsepter](988-2026-11-15-22-25-10-ux-kons
+         -epter.md) — sjekke symbolene i forklaringen under grafen i kons
+         -ept D: regelen `.chart svg{width:100%}` treffer dem også, så de
+         - kan bli vist større enn 14 og 24 piksler; rettes bare hvis bru
+         -keren ber om det (merknad 2026-11-18: story 2.10 krever at bygg
+         -ingen ikke gjentar feilen; mockupen er uendret)                
+      55 +- [ ] 2026-11-16 [ux-konsepter](988-2026-11-15-22-25-10-ux-kons
+         +epter.md) — sjekke symbolene i forklaringen under grafen i kons
+         +ept D: regelen `.chart svg{width:100%}` treffer dem også, så de
+         + kan bli vist større enn 14 og 24 piksler; rettes bare hvis bru
+         +keren ber om det (merknad 2026-11-18: story 2.10 krever at bygg
+         +ingen ikke gjentar feilen; mockupen er uendret) (merknad 2026-1
+         +1-21: QA-loggen fører nå alle fire avvik fra mockupen som `EXPE
+         +RIENCE.md` linje 347 lister, i `79c9154`)                      
+      56  - [x] 2026-11-16 [ux-konsepter](988-2026-11-15-22-25-10-ux-kons
+          epter.md) — git-identiteten er ikke satt i skallet Claude bruke
+          r, så `f28ca71` og `f543d6e` fikk en automatisk forfatter med b
+          rukernavnet og maskinnavnet på Mac-en; avklare om det er greit,
+           og sette `user.name` og `user.email` før neste commit (endret 
+          2026-11-16: gjelder alle 37 tidligere lokale commits i repoet o
+          g de tre nye, ikke bare disse to; historikken er ikke endret) (
+          merknad 2026-11-16: gjelder også commitene fra beslutningene fø
+          r arkitekturen) (merknad 2026-11-16: gjelder også commitene for
+           `PRODUCT.md`) (merknad 2026-11-16: 58 commits på alle grener h
+          ar automatisk forfatter; det kan bare rettes ved å skrive om hi
+          storikken, som ikke er gjort) (løst 2026-11-16: brukeren valgte
+           identiteten `Mounia-03` med GitHubs noreply-adresse, satt loka
+          lt i `.git/config`; gamle commits er ikke endret, se punktet om
+           QA-loggen)
+      57  - [x] 2026-11-16 [ux-konsepter](988-2026-11-15-22-25-10-ux-kons
+          epter.md) — bekrefte avviket fra mockupen: spinene sier at graf
+          en viser hele salgshistorikken (FR-15–FR-17), mens mockupen vis
+          er 12 uker (løst 2026-11-16: brukeren vil ha hele salgshistorik
+          ken i grafen; det er innenfor FR-25)
+      58  - [x] 2026-11-16 [ux-konsepter](988-2026-11-15-22-25-10-ux-kons
+          epter.md) — bekrefte antakelsene i `EXPERIENCE.md`: sortering i
+           «Uten prognose», «(uendret)», «Uten prognose» i samlet bestill
+          ingsoversikt, avrundingsnotat ved eksponentiell glatting og ses
+          ongjustering, og årstall i ukelister (løst 2026-11-16: alle fem
+           er godkjent, og PRD-en og UX-en er oppdatert i `5373e7b`)
+
+⏺ Update(.logs/mounia-03/issues.md)
+  ⎿  Added 3 lines
+      94  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — avgjøre forslaget om å endr
+          e AD-13, slik at telefontesten starter appen med `runserver --i
+          nsecure <PROGNOSE_LAN_HOST>:8000` i stedet for `0.0.0.0:8000` (
+          `deferred-work.md`)
+      95  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — story 1.7: `load_seed` må l
+          age `.secret_key` før den stopper på en database som ikke er to
+          m, fordi et gjenbrukt Docker-volum kan ha data mens fila mangle
+          r
+      96  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — story 1.8: vurdere en advar
+          sel når `.secret_key` mangler, fordi hver prosess da får en til
+          feldig nøkkel og brukeren logges ut ved hver omstart av utvikli
+          ngsserveren (review-funnet BH-13)
+      97 +- [ ] 2026-11-21 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+         +5-44-story-1-1-lokal-oppstart.md) — eksportere resten av Claude
+         + Code-økten for story 1.1 (del B, 21. november) med `/export` t
+         +il `.logs/mounia-03/sessions/1-1-2026-11-21.txt`, maskere den o
+         +g committe den før pull requesten flettes (rutinen for KI-økter
+         +)                                                              
+      98 +- [ ] 2026-11-21 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+         +5-44-story-1-1-lokal-oppstart.md) — spørsmål 4 i PRD §10: funne
+         +t i `review-rubric-2026-11-15.md` (linje 35) er ikke lukket; sl
+         +uttvalideringen 18. november knyttet det til regeltestprodukten
+         +e i story 2.6, så avgjør om story 2.6 lukker det               
+      99 +- [ ] 2026-11-21 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+         +5-44-story-1-1-lokal-oppstart.md) — E30: funnet i `review-rubri
+         +c-2026-11-15.md` (linje 101) om at E30 ikke kan vise at varsele
+         +t om sesongmønster påvirker tillitsmerket, er ikke lukket; avgj
+         +ør det før referanseregnearket lages i story 1.5               
+
+⏺ Loggen og issues.md er oppdatert. Jeg kjører personvernsjekken, committer bare
+  de to filene og kontrollerer innholdet i commiten. Deretter pusher jeg
+  grenen, som du har godkjent.
+
+  Pushed to story/1-1-start-prognose-locally, ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg har bygd, committet og pushet story 1.1 del B på grenen
+  story/1-1-start-prognose-locally, uten pull request. Del A og del B er
+  ferdige, og story 1.1 står som review i sprint-status.
+
+  - Dokumentene: docs/statustabell.md viser alle 37 FR-ene og DR-10, og
+    docs/ki-styringslogg.md har 26 saker fra planleggingsfasen. docs/qa-logg.md
+    fører nå feilene fra planleggingsfasen med kilde, og avsnittet som sa at de
+    ikke skulle stå der, er rettet.
+  - Verifisering: alle ID-er står én gang, alle commit-hashene finnes, og alle
+    lenker og ankre virker. Dokumentene har ingen personopplysninger. Testene
+    fra del A kjørte jeg ikke på nytt, slik du ba om.
+  - Review: alle 20 funnene er rettet. Plassen for epics som ikke blir bygd, i
+    statustabellen, hører til story 4.3.
+  - Commits:
+    - d2b887d spesifikasjonen;
+    - 79c9154 dokumentene;
+    - c8da9ff feilene fra reviewen i QA-loggen;
+    - 477a687 den maskerte øktfila;
+    - 3edf54b sesjonsloggen.
+
+  Før pull requesten flettes:
+  - Ny eksport: resten av økten (del B, 21. november) må eksporteres med /export
+    til .logs/mounia-03/sessions/1-1-2026-11-21.txt. Så maskerer jeg den, og
+    den committes.
+  - Safari: sjekk / i responsiv visning før pull requesten.
+  - Klonetest: kjør oppsettet fra en ekte git clone av grenen.
+  - Code review: kjør bmad-code-review på grenen og før funnene i pull
+    requesten.
+
+  Venter på deg: om AD-13 skal endres for telefontesten (deferred-work.md).
+  Avgjør også to utsatte funn fra PRD-reviewen 15. november: spørsmål 4 i PRD
+  §10 og E30. Begge står i issues.md.
+
+  Neste steg kan være pull requesten når sjekkene over er gjort, en gjennomgang
+  med bmad-walkthrough, eller story 1.2.
+
+✻ Worked for 1h 2m 49s · done 9:50 AM
+
+❯ Sjekk først om klonetesten for story 1.1 allerede er dokumentert og godkjent. 
+  Hvis den er tilstrekkelig, ikke gjenta den. Hvis ikke forklar kort hva som    
+  mangler før du gjør noe. Ingen subagenter, commit eller push.                 
+
+⏺ Jeg sjekker dokumentasjonen først. Jeg søker bare i filene og endrer
+  ingenting.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nei, den er ikke dokumentert som gjort. Testen fra en ren kopi er dokumentert,
+  men prosjektet selv krever i tillegg en kjøring fra en ekte git clone.
+
+  Dette er dokumentert:
+  - QA-loggen (2026-11-20) har tre vellykkede kjøringer fra en ren kopi av
+    filene, ikke fra en klon.
+  - Spesifikasjonen du godkjente for del A, brukte en slik kopi i
+    akseptkriterium 1.
+  - Koden og konfigurasjonen er uendret siden den siste kjøringen. Del B endret
+    bare dokumenter.
+
+  Derfor er det ikke nok:
+  - Story 1.1 krever «a fresh clone» i epics.md.
+  - QA-loggen (linje 117) og issues.md (linje 91) sier begge at de fem
+    kommandoene skal kjøres på nytt fra en git clone av den pushede grenen før
+    pull requesten flettes.
+  - Ingen fil sier at klonetesten er gjort, eller at kopien ble godkjent i
+    stedet for den.
+
+  Dette mangler:
+  - En kjøring fra en ekte klon av grenen på GitHub. Den viser det kopien ikke
+    kan vise:
+    - at pushen inneholder alt, også uv.lock, migreringen og lenken
+      docs/DESIGN.md;
+    - at git ikke endrer filene ved utsjekking;
+    - at git clone og cd fra README virker.
+  - En linje i QA-loggen med resultatet, og at punktet i issues.md lukkes. Det
+    krever en commit når du godkjenner den.
+
+  README kloner main, som ennå ikke har story 1.1. Før flettingen må testen
+  derfor klone grenen med git clone --branch story/1-1-start-prognose-locally.
+
+  Kjøringen tar under et minutt. Repoets database må stoppes mens den pågår, og
+  klonen og dens database slettes etterpå. Jeg kan kjøre den uten subagenter og
+  uten commit når du sier fra.
+
+✻ Crunched for 1m 2s · done 10:05 AM
+
+❯ Godkjent. Gjennomfør klonetesten fra GitHub grenen uten subagenter. Ikke      
+  endre prosjektfiler, commit eller push. Rapporter kort resultatet og          
+  eventuelle feil.                                                              
+
+⏺ Godkjent. Jeg kloner grenen fra GitHub inn i en egen mappe i scratchpad-mappen
+  og kjører de fem README-kommandoene der. Prosjektfilene røres ikke.
+
+  Klonen får et annet mappenavn enn repoet. Ellers ville Docker Compose brukt
+  samme prosjektnavn og dermed repoets egen database og volum, og oppryddingen
+  kunne slettet dem. Repoets database stoppes mens testen kjører, og startes
+  igjen etterpå.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Klonetesten fra GitHub passerte uten feil, og jeg har ikke endret noen
+  prosjektfiler.
+
+  ┌────────────────────────────────────────┬──────────────────────────┬─────┐
+  │                  Steg                  │         Resultat         │ Tid │
+  ├────────────────────────────────────────┼──────────────────────────┼─────┤
+  │ git clone --branch                     │ HEAD 3edf54b, samme som  │ 1,3 │
+  │ story/1-1-start-prognose-locally       │ grenen på GitHub         │  s  │
+  ├────────────────────────────────────────┼──────────────────────────┼─────┤
+  │ docker compose up -d --wait            │ databasen var klar       │ 2,8 │
+  │                                        │                          │  s  │
+  ├────────────────────────────────────────┼──────────────────────────┼─────┤
+  │ uv sync --locked                       │ installerte de låste     │ 0,2 │
+  │                                        │ pakkene                  │  s  │
+  ├────────────────────────────────────────┼──────────────────────────┼─────┤
+  │ migrate                                │ migreringene kjørte,     │ 2,6 │
+  │                                        │ også web.0001_initial    │  s  │
+  ├────────────────────────────────────────┼──────────────────────────┼─────┤
+  │ load_seed                              │ lagde .secret_key med    │ 0,2 │
+  │                                        │ modus 600                │  s  │
+  ├────────────────────────────────────────┼──────────────────────────┼─────┤
+  │ runserver --insecure                   │ siden svarte             │ 1,0 │
+  │                                        │                          │  s  │
+  ├────────────────────────────────────────┼──────────────────────────┼─────┤
+  │ De fem kommandoene, totalt             │                          │ 7,1 │
+  │                                        │                          │  s  │
+  └────────────────────────────────────────┴──────────────────────────┴─────┘
+
+  Kontrollene som en kopi ikke kunne vise:
+  - Ingen filer var endret rett etter utsjekkingen.
+  - Alle 458 sporede filer var med, også uv.lock og migreringen.
+  - docs/DESIGN.md var en symbolsk lenke med et mål som finnes.
+
+  Det samme som før:
+  - / svarte med status 200, lang="nb" og «Prognose».
+  - Appen lyttet bare på 127.0.0.1:8000 og databasen bare på 127.0.0.1:15432.
+  - Rollen prognose har ikke passord, og ingen steg trengte .env.
+
+  Opprydding: klonen, databasen og volumet dens er slettet. Repoets database
+  kjører igjen, og arbeidskopien er urørt.
+
+  Tidene er lave fordi Docker-imaget, Python og pakkene allerede lå på maskinen.
+  Tidtakingen med en person hører til story 4.1 og 4.4.
+
+  Resultatet er ikke ført noe sted ennå, siden du ba meg ikke endre filer. Med
+  din godkjenning fører jeg det i QA-loggen og lukker punktet i issues.md, med
+  en commit.
+
+✻ Baked for 1m 2s · done 10:10 AM
+
+❯ Godkjent. Før klonetesten i QA loggen og lukk tilhørende punkt i issues.md.   
+  Commit og push kun disse endringene på story-grenen. Ingen subagenter elle    
+  nye tester.                                                                   
+
+⏺ Godkjent. Før jeg skriver, retter jeg én ting i rapporten min. Jeg skrev at
+  web.0001_initial kjørte i klonetesten. Utskriften av migreringene var filtrert
+  bort i den kjøringen, så det jeg faktisk vet, er at migrate fullførte uten
+  feil. Skriptet stopper ved første feil, og de neste stegene kjørte. QA-loggen
+  sier derfor bare det.
+
+  Jeg legger til en ny oppføring nederst i QA-loggen og en henvisning fra
+  punktet under «Gjenstår» fra 20. november. Deretter lukker jeg punktet i
+  issues.md.
+
+⏺ Update(docs/qa-logg.md)
+  ⎿  Added 1 line, removed 1 line
+      114  
+      115  **Gjenstår.**
+      116  - Brukeren sjekker `/` i Safari i responsiv visning ved 320 px
+           , 390 × 844 og 820 × 1180 før pull requesten.
+      117 -- De fem kommandoene kjøres på nytt fra en `git clone` av den 
+          -pushede grenen før pull requesten flettes.                    
+      117 +- De fem kommandoene kjøres på nytt fra en `git clone` av den 
+          +pushede grenen før pull requesten flettes. (Gjort 21. november
+          +, se [klonetesten fra GitHub](#2026-11-21--klonetest-fra-githu
+          +b-story-11-nfr-1-nfr-3-sm-2).)                                
+      118  - Tidtakingen av hele oppsettet fra klonen, utført av en perso
+           n (SM-2), hører til Story 4.1 og 4.4.
+      119  - Oppsett på Windows x64 og oppstart uten nett hører til Story
+            1.3.
+      120  
+
+⏺ Update(docs/qa-logg.md)
+  ⎿  Added 39 lines
+      286  | Lenkene fra KI-styringsloggen til QA-loggen landet på en tab
+           ell med 30 rader, og linjenumrene viste til filer som endres |
+            Blind Hunter og Edge Case Hunter | En kolonne med radnummer, 
+           og lenker til repoet i `d8674ad` |
+      287  | Tre feil manglet i QA-loggen: tilleggene i Product Brief, Sa
+           fari-skriptet og tre hull fra sluttvalideringen 18. november, 
+           og to tilfeller manglet lenker begge veier | Blind Hunter og E
+           dge Case Hunter | Tre nye rader og lenker begge veier |
+      288  | FR-1-raden viste ingen tester, selv om tre tester i `tests/t
+           est_company.py` nevner FR-1 | Verification Gap | Cellen viser 
+           de tre testene |
+      289 +                                                              
+      290 +## 2026-11-21 – Klonetest fra GitHub (Story 1.1; NFR-1, NFR-3,
+          + SM-2)                                                        
+      291 +                                                              
+      292 +**Hvorfor.** Story 1.1 krever at Prognose starter fra en ny kl
+          +one (`epics.md`, linje 707–710). Det første oppsettet 20. nove
+          +mber brukte en ren kopi av filene, så QA-loggen og `issues.md`
+          + krevde en kjøring fra en ekte `git clone` av den pushede gren
+          +en før pull requesten flettes.                                
+      293 +                                                              
+      294 +**Oppsett.**                                                  
+      295 +- Claude Code kjørte testen 21. november 2026 etter brukerens 
+          +godkjenning. Ingen person kjørte den.                         
+      296 +- Samme maskin og programvare som 20. november: macOS 15.6.1 p
+          +å Apple M1, Docker Desktop 4.99.0 med Docker Compose v5.7.0, o
+          +g uv 0.12.13. Imaget `postgres:18.7`, Python 3.13 og pakkene l
+          +å allerede lokalt.                                            
+      297 +- Grenen ble klonet fra GitHub med `git clone --branch story/1
+          +-1-start-prognose-locally https://github.com/IBE160-2026/G40-l
+          +yamouri.git` til en midlertidig mappe utenfor repoet. README k
+          +loner `main`, som ennå ikke har story 1.1, så testen klonet gr
+          +enen.                                                         
+      298 +- Mappa med klonen fikk et annet navn enn `G40-lyamouri`, slik
+          + at Docker Compose ikke brukte repoets database og volum. Repo
+          +ets database var stoppet mens testen kjørte, fordi begge bruke
+          +r porten 15432. Klonen, databasen og volumet til klonen ble sl
+          +ettet etterpå.                                                
+      299 +- Klient: `curl` mot `http://127.0.0.1:8000/`, og `lsof` for a
+          +dressene appen og databasen lyttet på. Ingen nettleser var med
+          +.                                                             
+      300 +                                                              
+      301 +**Resultat.**                                                 
+      302 +                                                              
+      303 +| Steg | Resultat | Tid (sekunder) |                          
+      304 +|---|---|---|                                                 
+      305 +| `git clone --branch story/1-1-start-prognose-locally` | HEAD
+          + var `3edf54b`, den samme commiten som grenen på GitHub | 1,3 
+          +|                                                             
+      306 +| `docker compose up -d --wait` | databasen var klar («healthy
+          +») | 2,8 |                                                    
+      307 +| `uv sync --locked` | fullførte uten feil | 0,2 |            
+      308 +| `uv run python src/manage.py migrate` | fullførte uten feil 
+          +| 2,6 |                                                       
+      309 +| `uv run python src/manage.py load_seed` | «Lagde .secret_key
+          + med en ny hemmelig nøkkel.»; fila kan bare leses av eieren (m
+          +odus 600) | 0,2 |                                             
+      310 +| `uv run python src/manage.py runserver --insecure` | appen s
+          +varte på første forespørsel | 1,0 |                           
+      311 +| Totalt for de fem kommandoene | | 7,1 |                     
+      312 +                                                              
+      313 +| Kontroll | Resultat |                                       
+      314 +|---|---|                                                     
+      315 +| Endrede filer rett etter utsjekkingen | ingen |             
+      316 +| Filer i klonen | alle 458 sporede filer, blant dem `uv.lock`
+          +, `.python-version`, `compose.yaml`, `.env.example` og `src/we
+          +b/migrations/0001_initial.py` |                               
+      317 +| `docs/DESIGN.md` | en symbolsk lenke, og målet finnes |     
+      318 +| `curl http://127.0.0.1:8000/` | status 200, med `<html lang=
+          +"nb">` og «Prognose» |                                        
+      319 +| `lsof` på porten 8000 og 15432 | appen lyttet bare på `127.0
+          +.0.1:8000`, og databasen bare på `127.0.0.1:15432` |          
+      320 +| Passord i databasen | rollen `prognose` har ikke lagret pass
+          +ord |                                                         
+      321 +| `.env`, nøkkel og redigering av filer | ingen av stegene tre
+          +ngte noe av dette |                                           
+      322 +                                                              
+      323 +Tidene er lave, fordi imaget, Python og pakkene allerede lå lo
+          +kalt.                                                         
+      324 +                                                              
+      325 +**Gjenstår.**                                                 
+      326 +- Tidtakingen av hele oppsettet fra klonen, utført av en perso
+          +n (SM-2), hører til Story 4.1 og 4.4.                         
+      327 +- Oppsett på Windows x64 og oppstart uten nett hører til Story
+          + 1.3.                                                         
+
+⏺ Update(.logs/mounia-03/issues.md)
+  ⎿  Added 1 line, removed 1 line
+      88  - [x] 2026-11-19 [readiness-og-sprintplan](984-2026-11-19-21-00
+          -44-readiness-og-sprintplan.md) — addendum §2 (linje 55) sier f
+          ortsatt at versjonene skal kontrolleres på nytt innen 2026-12-0
+          1, mens §5 nå sier 2026-12-08; linjen var ikke med i de godkjen
+          te endringene og rettes bare etter brukerens godkjenning (løst 
+          2026-11-19: rettet til 2026-12-08 etter brukerens godkjenning, 
+          og PRD §12 nevner rettingen)
+      89  - [x] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — bygge del B av story 1.1 me
+          d `bmad-build` på grenen `story/1-1-start-prognose-locally`: `d
+          ocs/statustabell.md`, `docs/ki-styringslogg.md` med planlegging
+          scasene og planleggingsfeilene i `docs/qa-logg.md` (`deferred-w
+          ork.md`); vurder samtidig om økten 20. november har saker til K
+          I-styringsloggen (løst 2026-11-21: `79c9154` og `c8da9ff`; økte
+          ne 20. og 21. november ga ingen saker til KI-styringsloggen)
+      90  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — sjekke `/` i Safari i respo
+          nsiv visning ved 320 px, 390 × 844 og 820 × 1180 før pull reque
+          sten for story 1.1
+      91 -- [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+         -5-44-story-1-1-lokal-oppstart.md) — kjøre de fem README-kommand
+         -oene fra en `git clone` av den pushede grenen før pull requeste
+         -n for story 1.1 flettes                                        
+      91 +- [x] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+         +5-44-story-1-1-lokal-oppstart.md) — kjøre de fem README-kommand
+         +oene fra en `git clone` av den pushede grenen før pull requeste
+         +n for story 1.1 flettes (løst 2026-11-21: kjørt fra en `git clo
+         +ne --branch` av grenen på GitHub, `3edf54b`, uten feil; resulta
+         +tet står i `docs/qa-logg.md`)                                  
+      92  - [x] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — eksportere Claude Code-økte
+          n for story 1.1 med `/export` til `.logs/mounia-03/sessions/1-1
+          -2026-11-20.txt`, sjekke den for personopplysninger og committe
+           den i pull requesten (rutinen for KI-økter) (løst 2026-11-21: 
+          eksportert, maskert og committet på grenen i `477a687`; resten 
+          av økten er et eget punkt)
+      93  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — kjøre BMAD Code Review (`bm
+          ad-code-review`) på grenen med spesifikasjonen før flettingen a
+          v story 1.1, og føre funnene med beslutningene i en kommentar i
+           pull requesten
+      94  - [ ] 2026-11-20 [story-1-1-lokal-oppstart](983-2026-11-20-18-3
+          5-44-story-1-1-lokal-oppstart.md) — avgjøre forslaget om å endr
+          e AD-13, slik at telefontesten starter appen med `runserver --i
+          nsecure <PROGNOSE_LAN_HOST>:8000` i stedet for `0.0.0.0:8000` (
+          `deferred-work.md`)
+
+⏺ Jeg kontrollerer det nye ankeret, tabellene og personvernet, committer bare de
+  to filene og pusher story-grenen.
+
+  Pushed to story/1-1-start-prognose-locally (ctrl+o to expand)
+
+⏺ Klonetesten står nå i QA-loggen, og punktet i issues.md er lukket. Endringen
+  ligger i 936f364, som bare inneholder de to filene og er pushet til
+  story/1-1-start-prognose-locally. Lenken, tabellene og personvernsjekken var i
+  orden.
+
+  - docs/qa-logg.md: en ny oppføring, «2026-11-21 – Klonetest fra GitHub», med
+    oppsett, tid og kontroller. Punktet under «Gjenstår» fra 20. november viser
+    nå til den.
+  - .logs/mounia-03/issues.md: punktet om å kjøre kommandoene fra en ekte klone
+    er krysset av som løst 21. november.
+
+  QA-loggen sier at uv sync --locked og migrate «fullførte uten feil».
+  Utskriften av hvilke migreringer som kjørte, var filtrert bort i denne testen.
+
+  CLAUDE.md ber meg vanligvis skrive en sesjonslogg når en oppgave er ferdig.
+  Det har jeg ikke gjort, fordi du ba meg committe bare disse to filene. Jeg kan
+  legge den til i en egen commit hvis du vil.
+
+✻ Churned for 1m 27s · done 10:16 AM
+
+❯ Vi skal fullføre dokumentasjonen samlet, ikke i flere omgang. Hjelp meg først 
+  med /export for 21november. Deretter skal du maskere personopplysninger,      
+  oppdatere sesjonsloggen med dagens arbeid inkludert klonetesten, og           
+  kontrollere at ingenting er dokumentert dobbelt. Til slutt en samlet commit   
+  og push etter min godkjenning. Ingen subagenter                               
+⏺ /export kan jeg ikke kjøre selv, fordi det er en kommando i Claude Code. Skriv
+  dette i ledeteksten:
+
+  /export .logs/mounia-03/sessions/1-1-2026-11-21.txt
+
+  Si fra når fila er laget. Hvis Claude Code legger et klokkeslett til i navnet,
+  slik det gjorde 20. november, gir jeg fila riktig navn uten å endre
+  innholdet.
+
+  Eksporten vil trolig inneholde hele samtalen, også delen fra 20. november som
+  allerede ligger i 1-1-2026-11-20.txt. Det sjekker jeg når fila finnes. Før den
+  samlede commiten foreslår jeg hvordan vi unngår at den delen står to ganger.
+
+  Etter eksporten tar jeg resten uten subagenter, i denne rekkefølgen:
+  1. Jeg maskerer personopplysninger og lokale stier i den nye fila.
+  2. Jeg oppdaterer dagens seksjon i sesjonsloggen med del B, klonetesten og
+     eksporten, og lukker eksportpunktet i issues.md.
+  3. Jeg sjekker at ingenting står dobbelt i sesjonsloggen, issues.md, QA-loggen
+     og øktfilene.
+  4. Jeg viser deg resultatet og venter på godkjenning før én samlet commit og
+     push.
+
+✻ Cooked for 39s · done 10:24 AM
