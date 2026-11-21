@@ -114,7 +114,7 @@ Tidene er lavere enn ved et første oppsett på en ny maskin, fordi imaget, Pyth
 
 **Gjenstår.**
 - Brukeren sjekker `/` i Safari i responsiv visning ved 320 px, 390 × 844 og 820 × 1180 før pull requesten.
-- De fem kommandoene kjøres på nytt fra en `git clone` av den pushede grenen før pull requesten flettes.
+- De fem kommandoene kjøres på nytt fra en `git clone` av den pushede grenen før pull requesten flettes. (Gjort 21. november, se [klonetesten fra GitHub](#2026-11-21--klonetest-fra-github-story-11-nfr-1-nfr-3-sm-2).)
 - Tidtakingen av hele oppsettet fra klonen, utført av en person (SM-2), hører til Story 4.1 og 4.4.
 - Oppsett på Windows x64 og oppstart uten nett hører til Story 1.3.
 
@@ -286,3 +286,42 @@ Hver gjennomgangsfil har én rad med antall funn, de viktigste feilene og en len
 | Lenkene fra KI-styringsloggen til QA-loggen landet på en tabell med 30 rader, og linjenumrene viste til filer som endres | Blind Hunter og Edge Case Hunter | En kolonne med radnummer, og lenker til repoet i `d8674ad` |
 | Tre feil manglet i QA-loggen: tilleggene i Product Brief, Safari-skriptet og tre hull fra sluttvalideringen 18. november, og to tilfeller manglet lenker begge veier | Blind Hunter og Edge Case Hunter | Tre nye rader og lenker begge veier |
 | FR-1-raden viste ingen tester, selv om tre tester i `tests/test_company.py` nevner FR-1 | Verification Gap | Cellen viser de tre testene |
+
+## 2026-11-21 – Klonetest fra GitHub (Story 1.1; NFR-1, NFR-3, SM-2)
+
+**Hvorfor.** Story 1.1 krever at Prognose starter fra en ny klone (`epics.md`, linje 707–710). Det første oppsettet 20. november brukte en ren kopi av filene, så QA-loggen og `issues.md` krevde en kjøring fra en ekte `git clone` av den pushede grenen før pull requesten flettes.
+
+**Oppsett.**
+- Claude Code kjørte testen 21. november 2026 etter brukerens godkjenning. Ingen person kjørte den.
+- Samme maskin og programvare som 20. november: macOS 15.6.1 på Apple M1, Docker Desktop 4.99.0 med Docker Compose v5.7.0, og uv 0.12.13. Imaget `postgres:18.7`, Python 3.13 og pakkene lå allerede lokalt.
+- Grenen ble klonet fra GitHub med `git clone --branch story/1-1-start-prognose-locally https://github.com/IBE160-2026/G40-lyamouri.git` til en midlertidig mappe utenfor repoet. README kloner `main`, som ennå ikke har story 1.1, så testen klonet grenen.
+- Mappa med klonen fikk et annet navn enn `G40-lyamouri`, slik at Docker Compose ikke brukte repoets database og volum. Repoets database var stoppet mens testen kjørte, fordi begge bruker porten 15432. Klonen, databasen og volumet til klonen ble slettet etterpå.
+- Klient: `curl` mot `http://127.0.0.1:8000/`, og `lsof` for adressene appen og databasen lyttet på. Ingen nettleser var med.
+
+**Resultat.**
+
+| Steg | Resultat | Tid (sekunder) |
+|---|---|---|
+| `git clone --branch story/1-1-start-prognose-locally` | HEAD var `3edf54b`, den samme commiten som grenen på GitHub | 1,3 |
+| `docker compose up -d --wait` | databasen var klar («healthy») | 2,8 |
+| `uv sync --locked` | fullførte uten feil | 0,2 |
+| `uv run python src/manage.py migrate` | fullførte uten feil | 2,6 |
+| `uv run python src/manage.py load_seed` | «Lagde .secret_key med en ny hemmelig nøkkel.»; fila kan bare leses av eieren (modus 600) | 0,2 |
+| `uv run python src/manage.py runserver --insecure` | appen svarte på første forespørsel | 1,0 |
+| Totalt for de fem kommandoene | | 7,1 |
+
+| Kontroll | Resultat |
+|---|---|
+| Endrede filer rett etter utsjekkingen | ingen |
+| Filer i klonen | alle 458 sporede filer, blant dem `uv.lock`, `.python-version`, `compose.yaml`, `.env.example` og `src/web/migrations/0001_initial.py` |
+| `docs/DESIGN.md` | en symbolsk lenke, og målet finnes |
+| `curl http://127.0.0.1:8000/` | status 200, med `<html lang="nb">` og «Prognose» |
+| `lsof` på porten 8000 og 15432 | appen lyttet bare på `127.0.0.1:8000`, og databasen bare på `127.0.0.1:15432` |
+| Passord i databasen | rollen `prognose` har ikke lagret passord |
+| `.env`, nøkkel og redigering av filer | ingen av stegene trengte noe av dette |
+
+Tidene er lave, fordi imaget, Python og pakkene allerede lå lokalt.
+
+**Gjenstår.**
+- Tidtakingen av hele oppsettet fra klonen, utført av en person (SM-2), hører til Story 4.1 og 4.4.
+- Oppsett på Windows x64 og oppstart uten nett hører til Story 1.3.
