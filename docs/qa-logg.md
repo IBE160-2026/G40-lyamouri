@@ -113,7 +113,7 @@ Alle tre kjøringene ga de samme resultatene. Totalen er litt større enn summen
 Tidene er lavere enn ved et første oppsett på en ny maskin, fordi imaget, Python og pakkene allerede lå lokalt. Testen 17. november målte 17 sekunder for `docker compose up -d --wait` med nedlasting av imaget.
 
 **Gjenstår.**
-- Brukeren sjekker `/` i Safari i responsiv visning ved 320 px, 390 × 844 og 820 × 1180 før pull requesten.
+- Brukeren sjekker `/` i Safari i responsiv visning ved 320 px, 390 × 844 og 820 × 1180 før pull requesten. (Gjort 20. november og på nytt 21. november, se [responsiv visning i Safari](#2026-11-20-og-2026-11-21--responsiv-visning-av-startsiden-i-safari-story-11-nfr-6-ux-dr7).)
 - De fem kommandoene kjøres på nytt fra en `git clone` av den pushede grenen før pull requesten flettes. (Gjort 21. november, se [klonetesten fra GitHub](#2026-11-21--klonetest-fra-github-story-11-nfr-1-nfr-3-sm-2).)
 - Tidtakingen av hele oppsettet fra klonen, utført av en person (SM-2), hører til Story 4.1 og 4.4.
 - Oppsett på Windows x64 og oppstart uten nett hører til Story 1.3.
@@ -322,6 +322,25 @@ Hver gjennomgangsfil har én rad med antall funn, de viktigste feilene og en len
 
 Tidene er lave, fordi imaget, Python og pakkene allerede lå lokalt.
 
+**Gjenstår.** Det samme som etter det første oppsettet 20. november; se «Gjenstår» i den oppføringen.
+
+## 2026-11-20 og 2026-11-21 – Responsiv visning av startsiden i Safari (Story 1.1; NFR-6, UX-DR7)
+
+**Hvorfor.** Hver side en story legger til, skal sjekkes i nettleserens responsive visning minst ved 320 px, 390 × 844 (iPhone 13) og 820 × 1180 (iPad), og pull requesten skal nevne sjekkene (reglene for hver story i `epics.md`, linje 594; NFR-6, UX-DR7). Story 1.1 la til siden `/`.
+
+**Oppsett.**
+- Brukeren testet selv i den responsive visningen i Safari, først 20. november 2026 og på nytt 21. november etter del B. Begge resultatene ble ført 21. november etter brukerens bekreftelse.
+- Safari 18.6 på macOS 15.6.1, på Mac-en der Prognose kjører, fordi appen bare svarer på 127.0.0.1. Versjonen er lest fra programmet 21. november.
+- Siden `/` fra `93c9147`. Malen, viewet og URL-en er ikke endret siden, fordi del B bare endret dokumenter.
+
+**Resultat.** Begge dagene viste alle tre størrelsene «Prognose» og teksten.
+
+| Tilsvarer | 20. november | 21. november, etter del B |
+|---|---|---|
+| Den minste bredden i NFR-6 | 320 px bred: ingen sidelengs rulling eller avkuttet tekst | 320 × 844: ingen avkuttet tekst eller synlig sidelengs rulling |
+| iPhone 13 | 390 × 844: ingen sidelengs rulling eller avkuttet tekst | 390 × 844: ingen avkuttet tekst eller synlig sidelengs rulling |
+| iPad | 820 × 1180: ingen sidelengs rulling eller avkuttet tekst | 820 × 1180: ingen avkuttet tekst eller synlig sidelengs rulling |
+
 **Gjenstår.**
-- Tidtakingen av hele oppsettet fra klonen, utført av en person (SM-2), hører til Story 4.1 og 4.4.
-- Oppsett på Windows x64 og oppstart uten nett hører til Story 1.3.
+- Pull requesten for story 1.1 skal nevne de tre størrelsene som sjekker i responsiv visning.
+- Testen på en ekte iPhone 13 over det lokale nettet hører til story 1.8 (NFR-6).
