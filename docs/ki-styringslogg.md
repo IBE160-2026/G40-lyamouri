@@ -2,14 +2,14 @@
 
 KI-styringsloggen oppfyller DR-5 i PRD-en. Den fører tilfeller der gruppen avklarte, avviste eller rettet det KI foreslo. Hvert tilfelle har fem felt: hva KI foreslo, hva som var feil, hva gruppen bestemte, commiten eller pull requesten, og kilden. PRD-en krever minst fem tilfeller, og minst ett for hver epic som blir bygd (D-2 i `epics.md`).
 
-**Rutinen for KI-økter.** Brukeren godkjente rutinen 18. november 2026. Den står i `epics.md` (linje 598–604) og gjelder for hver story:
+**Rutinen for KI-økter.** Brukeren godkjente rutinen 18. november 2026. Den står i `epics.md` (linje 598–604 i `d8674ad`) og gjelder for hver story:
 - En Claude Code-økt for en story begynner med å nevne storyen.
 - Når økten er ferdig, eksporteres samtalen med `/export` til `.logs/<bruker>/sessions/`, med storyen og datoen i filnavnet. En økt som ikke formet storyens kode, tester eller dokumenter, trenger ikke lagres.
 - Før commit får eksporten den samme personvernkontrollen som alle commits. Bare treffene fjernes eller maskeres, så promptene forblir originale.
 - Eksporten committes i storyens pull request, og sesjonsloggen og pull requesten lenker til den.
 - Når KI-output blir avvist, rettet eller presisert, føres et tilfelle her med en gang. En feil i KI-generert kode eller tekst føres også i [QA-loggen](qa-logg.md).
 
-**Planleggingsfasen.** Da rutinen ble innført, var ingen prompts eller KI-økter fra planleggingsfasen lagret (sesjonslogg 985, linje 102). Planleggingsfasen er derfor dokumentert av arbeidsloggen, memloggene og sesjonsloggene, slik rutinen sier (`epics.md`, linje 604). Tilfellene fra planleggingsfasen er sammendrag med egne ord av det disse kildene beskriver, og hvert tilfelle viser til kildene med fil og linje. Ingen prompt er rekonstruert eller gjengitt som original.
+**Planleggingsfasen.** Da rutinen ble innført, var ingen prompts eller KI-økter fra planleggingsfasen lagret (sesjonslogg 985, linje 102). Planleggingsfasen er derfor dokumentert av arbeidsloggen, memloggene og sesjonsloggene, slik rutinen sier (`epics.md`, linje 604 i `d8674ad`). Tilfellene fra planleggingsfasen er sammendrag med egne ord av det disse kildene beskriver, og hvert tilfelle viser til kildene med fil og linje. Ingen prompt er rekonstruert eller gjengitt som original.
 
 **Kildene.** Linjenumrene gjelder filene i commit `d8674ad`, og de siterte linjene leses i [repoet ved `d8674ad` på GitHub](https://github.com/IBE160-2026/G40-lyamouri/tree/d8674ad). Lenkene i tabellen under går til filene slik de er nå, og de kan ha endret seg. En commit eller pull request står bare der en kilde nevner den; ellers står det «ikke oppgitt i kilden». Kortnavnene viser til disse filene:
 
@@ -256,6 +256,24 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 
 ## Byggefasen
 
-**Story 1.1.** Øktene for story 1.1 20. og 21. november 2026 ga ingen tilfeller, fordi brukeren godtok hver anbefaling fra Claude. Feilene som reviewene fant i KI-generert kode og tekst, står i QA-loggen, for [del A](qa-logg.md#2026-11-20--feil-i-ki-generert-kode-og-tekst-fra-reviewen-av-story-11-del-a-dr-9) og [del B](qa-logg.md#2026-11-21--feil-i-ki-generert-tekst-fra-reviewen-av-story-11-del-b-dr-9). Kilden er avsnittet «Never» i [spesifikasjonen for story 1.1 del B](../_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-documents.md).
+**Story 1.1.** Story 1.1 ga to tilfeller, 27 og 28. Ellers godtok brukeren hver anbefaling fra Claude i øktene 20. og 21. november 2026. Feilene som reviewene fant i KI-generert kode og tekst, står i QA-loggen, for [del A](qa-logg.md#2026-11-20--feil-i-ki-generert-kode-og-tekst-fra-reviewen-av-story-11-del-a-dr-9), [del B](qa-logg.md#2026-11-21--feil-i-ki-generert-tekst-fra-reviewen-av-story-11-del-b-dr-9) og [BMAD Code Review](qa-logg.md#2026-11-21--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-11-dr-9).
+
+### 27. Regelen om CI og story 1.1 (21. november 2026)
+
+- **Hva KI foreslo:** Reglene som Claude skrev i `epics.md`, og AD-17 i arkitekturspinen, krevde at CI passerer før hver story flettes. Den samme planen la CI i story 1.2, etter story 1.1. Claude fant motsigelsen da brukeren ba om en sjekk, og foreslo unntaket D-9.
+- **Hva som var feil:** Story 1.1 kunne aldri oppfylle regelen.
+- **Hva gruppen bestemte:** Brukeren godkjente D-9: story 1.1 flettes når testene og Ruff passerer lokalt på siste commit, og den første CI-kjøringen kommer med story 1.2.
+- **Commit eller pull request:** `fa237e7` og `5268fe0` (PR #8).
+- **Kilde:** D-9 i `epics.md`; [sesjonsloggen for story 1.1](../.logs/mounia-03/983-2026-11-20-18-35-44-story-1-1-lokal-oppstart.md).
+- **QA-loggen:** [motsigelsen i planen om CI](qa-logg.md#2026-11-21--motsigelse-i-planen-om-ci-før-story-12-dr-7-dr-9).
+
+### 28. Beslutningene i BMAD Code Review av story 1.1 (21. november 2026)
+
+- **Hva KI foreslo:** Fire KI-granskere i `bmad-code-review` fant 34 funn, og Claude foreslo en vurdering og en beslutning for hvert av dem.
+- **Hva som var feil:** Ikke alle funnene skulle følges. 11 lå utenfor storyen etter spesifikasjonen, var lite sannsynlige med en retting som ville gitt mer kode, krevde en endring i spesifikasjonen eller var vurdert før. Tre krevde et valg som bare brukeren kunne ta.
+- **Hva gruppen bestemte:** Brukeren godkjente vurderingene: 21 funn ble rettet, 2 utsatt og 11 avvist. Brukeren valgte selv en test for `.gitignore`, som var avvist i del A, beslutningen D-10 om hvilke ID-er testene nevner, og en advarsel om `DATABASE_URL` i stedet for et nytt navn på variabelen.
+- **Commit eller pull request:** PR #8.
+- **Kilde:** «Review Findings» i [spesifikasjonen for story 1.1 del A](../_bmad-output/implementation-artifacts/spec-1-1-start-prognose-locally-from-a-fresh-clone.md); kommentaren i PR #8; [sesjonsloggen for story 1.1](../.logs/mounia-03/983-2026-11-20-18-35-44-story-1-1-lokal-oppstart.md).
+- **QA-loggen:** [feilene fra BMAD Code Review](qa-logg.md#2026-11-21--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-11-dr-9).
 
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).

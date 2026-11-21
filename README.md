@@ -43,6 +43,8 @@ uv run python src/manage.py runserver --insecure
 
 Både appen og databasen svarer bare på din egen maskin (127.0.0.1).
 
+Er en `DATABASE_URL` eksportert i terminalen, for eksempel for et annet prosjekt, bruker Prognose og testene den databasen i stedet for databasen fra `compose.yaml`, og pytest lager og sletter da testdatabasen sin der. Fjern variabelen først, med `unset DATABASE_URL` i Terminal på macOS eller `Remove-Item Env:DATABASE_URL` i PowerShell.
+
 ## Nøkler og hemmeligheter
 
 - Prognose trenger ingen API-nøkkel, betalt tjeneste eller tredjepartskonto.

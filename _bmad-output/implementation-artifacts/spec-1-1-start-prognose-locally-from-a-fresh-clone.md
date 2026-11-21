@@ -74,6 +74,43 @@ context:
 - Given the repository, when `uv run pytest`, `uv run ruff check` and `uv run ruff format --check` run, then they pass, and Ruff reads only the Python in `src/` and `tests/`.
 - Given `.gitignore`, `.env.example` and the README, when they are read, then they meet Story 1.1's criteria; DR-1's other README parts (stop commands, fixes, «not published») are Story 4.1.
 
+### Review Findings
+
+BMAD Code Review of the whole story branch (2026-11-21; PR #8): Blind Hunter (BH), Edge Case Hunter (EC), Verification Gap (VG) and Acceptance Auditor (AA), on 32 files from `ae7b72c` to `5268fe0`. Findings with the same location and claim as a row in a Review Triage Log of part A or part B keep that verdict («carried»).
+
+- [x] [Review][Decision] Guard the `.gitignore` rules for `.secret_key` and `.env` with a test (VG-3; carried BH-1 from review pass 1, rejected then as unlikely) — The rules hold today, but no test fails if a later edit drops them, and the QA log records that the design branch's `.gitignore` lacked `.secret_key` on 2026-11-16. Options: a `git check-ignore` test that skips outside a git working tree, or keep the earlier rejection. Resolved 2026-11-21: the user chose the test (patched).
+- [x] [Review][Decision] Tests that verify no FR name only NFR, DR or AD IDs (AA-2) — DR-5 says every test names the FR-n or E-n it verifies; 34 of the 37 tests verify no FR and name NFR, DR or AD IDs instead, which Story 4.3's check would flag. Options: decide now in `epics.md` (D-10) that such tests name their NFR, DR or AD IDs, or leave it to Story 4.3 as an open point. Resolved 2026-11-21: the user chose D-10 (patched).
+- [x] [Review][Decision] A `DATABASE_URL` exported for another project wins (BH-2) — The environment wins over `.env` and the Compose default, so `migrate` and `uv run pytest` would use the other project's server, where pytest-django drops and recreates an existing `test_<name>` without asking. Options: a warning in the README and `.env.example`; a Prognose-specific variable name, which amends AD-13 and the Configuration convention; or no change. Resolved 2026-11-21: the user chose the warning (patched).
+- [x] [Review][Patch] The 405 test passes only because the test client skips CSRF; a real POST to `/` gets Django's English CSRF 403 page (AA-1, BH-1) [tests/test_start_page.py:36]
+- [x] [Review][Patch] No test pins the forced `prognose.settings` in `manage.py` and the `--ds` option for pytest (VG-1, BH-6) [src/manage.py:13]
+- [x] [Review][Patch] `wsgi.py` still uses `setdefault` for `DJANGO_SETTINGS_MODULE` (EC-9, BH-4) [src/prognose/wsgi.py:7]
+- [x] [Review][Patch] The «only the owner» comment does not hold on Windows, where the mode sets only the read-only flag, and Story 1.3 should check the access there (EC-5, BH-7) [src/web/management/commands/load_seed.py:24]
+- [x] [Review][Patch] The test that `.env` never reaches `os.environ` stubs out the real reader (VG-2) [tests/test_settings.py:216]
+- [x] [Review][Patch] No test pins that the start command listens on 127.0.0.1:8000 by default (BH-5) [tests/test_start_command.py:11]
+- [x] [Review][Patch] A literal U+FEFF in a QA-log row hides the escape it documents (EC-11) [docs/qa-logg.md:136]
+- [x] [Review][Patch] The QA entry of 2026-11-17 still puts the Windows and offline tests in the first story (AA-4) [docs/qa-logg.md:78]
+- [x] [Review][Patch] Line references that D-9 shifted: `epics.md` lines 594 and 707–710 in the QA log, and 598–604 and 604 in the AI steering log (BH-10) [docs/qa-logg.md:292]
+- [x] [Review][Patch] The QA log does not list the confirmed defects that review pass 1 rejected (BH-12) [docs/qa-logg.md:122]
+- [x] [Review][Patch] D-9 corrects AI-written rules but is no case in the AI steering log, whose «Byggefasen» says Story 1.1 gave none (BH-9) [docs/ki-styringslogg.md:259]
+- [x] [Review][Patch] The pull request says «fire `uv run`-kommandoer», while the README runs `uv sync --locked` and three `uv run` commands (EC-13) [PR #8 description]
+- [x] [Review][Patch] Two branch commits do not name the story, to be noted in the pull request (AA-5) [79c9154, 5268fe0]
+- [x] [Review][Patch] No test or Ruff result for the final commit is recorded; run the three checks in a fresh clone of the final commit and record them (BH-11) [docs/qa-logg.md]
+- [x] [Review][Defer] Only a manual `lsof` checks that the database port is published on 127.0.0.1 (VG-4) [compose.yaml:13] — deferred: a check of `docker compose config` belongs in the CI of Story 1.2, because `docker` may be missing from PATH when pytest runs.
+- [x] [Review][Defer] The phone test binds `0.0.0.0` (EC-10; carried BH-8 and EC-13 from review pass 1) [.env.example:21] — deferred: already in `deferred-work.md` as a proposal to amend AD-13.
+
+**Rejected**
+- AA-3 — low: AC4 says Ruff reads only `src/` and `tests/`, while the configuration excludes folders; rejected because the fix edits the spec under review, and Ruff checks only those 20 files today.
+- EC-4 — low: `load_seed` in a read-only folder or on a full disk raises a raw `OSError`; unlikely in a project folder the user owns, a blank file left by a failed write is caught by the next run, and the fix adds a branch.
+- EC-6 — low: no connect timeout for a remote `DATABASE_URL`; version 1 runs only against the local Compose database, which refuses at once when stopped, and the fix adds a parameter.
+- EC-8 — low: a short `.secret_key` is accepted; it needs a manual edit of a generated file, and the fix adds a guard.
+- BH-3 — low: without `LOGGING`, tracebacks are not shown while DEBUG is off; out of scope by intent, because the frozen Never list leaves logging to Story 1.4, whose criteria cover it.
+- EC-1 — carried (EC-8, review pass 1): `createsuperuser` crashes; out of scope by intent.
+- EC-2 — carried (EC-9): a padded or blank customer number is accepted.
+- EC-3 — carried (BH-14, EC-10): `create_user` accepts a blank name.
+- EC-7 — carried (EC-3): an unclosed quote stays in a `.env` value.
+- EC-12 — carried (EC-14): `build/` and `dist/` are no longer ignored; false, because nothing builds a package.
+- BH-8 — carried (EC-12, BH-3): the README has no stop commands, and port 15432 can stay busy; DR-1 work in Story 4.1.
+
 ## Implementation Notes
 
 - Decisions within the spec: the environment can turn DEBUG off but never on; a `#` after whitespace ends an unquoted `.env` value, lines without `=` are skipped and `export` is not supported; `PROGNOSE_LAN_HOST` accepts only RFC 1918 IPv4 addresses; a `DATABASE_URL` without a port uses 5432, port 0 is refused and query parameters are ignored; a `.secret_key` that is not UTF-8 raises `ImproperlyConfigured`.
@@ -83,6 +120,7 @@ context:
 - Verification: 69 tests passed with none skipped, Ruff passed on the 19 Python files in `src/` and `tests/`, and the clean-copy run passed twice (7.8 s and 7.2 s in total, image and packages cached), with the app on `127.0.0.1:8000` only, the database on `127.0.0.1:15432` only and no password on the `prognose` role.
 - Review pass 1 changed three of the decisions above: `export ` is now stripped from `.env` keys, an unquoted value that is only a comment counts as empty, and an unreadable `.env` or `.secret_key` raises `ImproperlyConfigured`. It also narrowed `requires-python` to `==3.13.*`, added `required-version = ">=0.12.13"`, and made `manage.py` and pytest always use `prognose.settings`.
 - Verification after the patches: 75 tests passed with none skipped, Ruff passed on the 20 Python files in `src/` and `tests/`, `uv.lock` matched, `load_seed` twice left `.secret_key` unchanged, and a third clean-copy run on the patched files passed (7.2 s in total), with the same checks.
+- BMAD Code Review (2026-11-21) corrected the note above on POST: a POST to `/` without a CSRF token gets Django's CSRF 403 page, which Story 1.4 replaces with a Norwegian page, and only a method that passes the CSRF check, such as OPTIONS, gets 405. After its fixes, 82 tests passed with none skipped, and Ruff passed on the 22 Python files in `src/` and `tests/`.
 
 ## Spec Change Log
 

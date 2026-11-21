@@ -75,7 +75,7 @@ Testcontaineren, volumet og de midlertidige filene ble slettet etterpå. Imaget 
 - **Oppstart uten nett med Docker Desktop:** ikke testet. Claude Code trenger nett, så testen kunne ikke kjøres mens Claude arbeidet. Omstarten viste at Docker ikke trengte å laste ned noe, men Docker Desktop selv ble ikke startet uten nett.
 - **Oppsett på Windows (x64) med Docker Desktop:** ikke testet, fordi økten ikke hadde noen Windows-maskin.
 
-**Gjenstår.** Begge testene kjøres i første story og på nytt på siste commit (DR-9, SM-2).
+**Gjenstår.** Begge testene kjøres i første story og på nytt på siste commit (DR-9, SM-2). (Merknad 21. november: testene på Windows og uten nett er nå story 1.3.)
 
 ## 2026-11-20 – Første oppsett på macOS fra en ren kopi (Story 1.1; NFR-1, NFR-3, SM-2)
 
@@ -133,12 +133,26 @@ Tidene er lavere enn ved et første oppsett på en ny maskin, fordi imaget, Pyth
 | En `DJANGO_SETTINGS_MODULE` som var eksportert for et annet prosjekt, vant over `prognose.settings` i `manage.py` og pytest | Edge Case Hunter; gjenskapt | `manage.py` og pytest bruker alltid `prognose.settings` |
 | `requires-python` tillot nyere Python enn 3.13, og ingenting håndhevet minsteversjonen av uv som README oppgir | Blind Hunter | `requires-python = "==3.13.*"` og `required-version = ">=0.12.13"`; `uv.lock` er låst på nytt |
 | Tre testhull: et passord kunne lekke gjennom en kjedet feil, dekodingen av bruker og databasenavn var ikke testet, og README-kommandoen `runserver --insecure` var ikke testet | Verification Gap, med mutasjonstester | Nye testtilfeller og `tests/test_start_command.py` |
-| BOM-testen kunne ikke oppdage en feil, og BOM-tegnet var usynlig i kildekoden | Blind Hunter; bekreftet | En `KEY=VALUE`-linje rett etter BOM, og BOM skrevet som `"﻿"` |
+| BOM-testen kunne ikke oppdage en feil, og BOM-tegnet var usynlig i kildekoden | Blind Hunter; bekreftet | En `KEY=VALUE`-linje rett etter BOM, og BOM skrevet som `"\ufeff"` |
 | To tester lovet mer enn de sjekket, eller viste til feil beslutning (AD-11 for svaret 405) | Blind Hunter | Navnene og docstringene beskriver det testene sjekker |
 | README og QA-loggen sa ikke hva som er testet, hvilken database testene bruker eller hva Ruff sjekker, og QA-loggen manglet én kjøring | Blind Hunter | Tekstene er rettet |
 | `REQUIRED_FIELDS` i `web.Company` var en liste, som Ruff flagget (RUF012) | Ruff under implementeringen | Endret til en tuppel |
 
-**Utsatt.** Telefontesten starter appen på `0.0.0.0`, slik AD-13 sier. Forslaget om å binde den til den private adressen står i `deferred-work.md`, fordi det krever en endring i arkitekturen som brukeren må godkjenne.
+**Kjente feil som ikke ble rettet.** Reviewen bekreftet også disse feilene, men de ble avvist, fordi de er lite sannsynlige i vanlig bruk og rettingen ville gitt mer kode, eller fordi en senere story eier dem. Begrunnelsene står under «Review Triage Log» i spesifikasjonen, og BMAD Code Review 21. november beholdt vurderingene.
+
+| Feil | Funnet av | Hvorfor den ikke ble rettet |
+|---|---|---|
+| Mangler `.secret_key`, får hver prosess en tilfeldig nøkkel uten advarsel, så en innlogging ville ikke overlevd en omstart før `load_seed` har kjørt | Blind Hunter | Ufarlig til innloggingen kommer i story 1.8, som skal vurdere en advarsel (`issues.md`) |
+| `create_user` godtar et tomt navn | Blind Hunter og Edge Case Hunter | Bare seed-dataene i story 1.7 lager bedrifter, og de har navn |
+| Et anførselstegn som ikke lukkes i `.env`, blir stående i verdien, så `PROGNOSE_DEBUG='1` gir DEBUG av | Edge Case Hunter; gjenskapt | Krever en skrivefeil, og rettingen gir en ny gren |
+| To samtidige kjøringer av `load_seed` kan se en tom `.secret_key` | Edge Case Hunter | Krever to kjøringer i samme øyeblikk |
+| `createsuperuser` stopper med `AttributeError` | Edge Case Hunter | Superbrukere er utenfor storyen etter spesifikasjonen |
+| Et kundenummer med mellomrom foran eller bak, eller bare mellomrom, godtas | Edge Case Hunter | Bare seed-dataene lager bedrifter, og innloggingen kommer i story 1.8 |
+| Porten 15432 kan være opptatt av en annen klone | Edge Case Hunter | Docker sier selv hvilken port som er opptatt, og hjelpen for en opptatt port i README er story 4.1 |
+
+Testen av at git ignorerer `.secret_key` og `.env`, som også ble avvist i del A, ble lagt til i BMAD Code Review 21. november.
+
+**Utsatt.** Telefontesten starter appen på `0.0.0.0`, slik AD-13 sier. Det er ett punkt som to granskere fant. Forslaget om å binde den til den private adressen står i `deferred-work.md`, fordi det krever en endring i arkitekturen som brukeren må godkjenne.
 
 ## 2026-11-20 – Feil i KI-generert tekst og kode fra planleggingsfasen (DR-9)
 
@@ -289,7 +303,7 @@ Hver gjennomgangsfil har én rad med antall funn, de viktigste feilene og en len
 
 ## 2026-11-21 – Klonetest fra GitHub (Story 1.1; NFR-1, NFR-3, SM-2)
 
-**Hvorfor.** Story 1.1 krever at Prognose starter fra en ny klone (`epics.md`, linje 707–710). Det første oppsettet 20. november brukte en ren kopi av filene, så QA-loggen og `issues.md` krevde en kjøring fra en ekte `git clone` av den pushede grenen før pull requesten flettes.
+**Hvorfor.** Story 1.1 krever at Prognose starter fra en ny klone (`epics.md`, linje 707–710 i `2791949`). Det første oppsettet 20. november brukte en ren kopi av filene, så QA-loggen og `issues.md` krevde en kjøring fra en ekte `git clone` av den pushede grenen før pull requesten flettes.
 
 **Oppsett.**
 - Claude Code kjørte testen 21. november 2026 etter brukerens godkjenning. Ingen person kjørte den.
@@ -326,7 +340,7 @@ Tidene er lave, fordi imaget, Python og pakkene allerede lå lokalt.
 
 ## 2026-11-20 og 2026-11-21 – Responsiv visning av startsiden i Safari (Story 1.1; NFR-6, UX-DR7)
 
-**Hvorfor.** Hver side en story legger til, skal sjekkes i nettleserens responsive visning minst ved 320 px, 390 × 844 (iPhone 13) og 820 × 1180 (iPad), og pull requesten skal nevne sjekkene (reglene for hver story i `epics.md`, linje 594; NFR-6, UX-DR7). Story 1.1 la til siden `/`.
+**Hvorfor.** Hver side en story legger til, skal sjekkes i nettleserens responsive visning minst ved 320 px, 390 × 844 (iPhone 13) og 820 × 1180 (iPad), og pull requesten skal nevne sjekkene (reglene for hver story i `epics.md`, linje 594 i `2791949`; NFR-6, UX-DR7). Story 1.1 la til siden `/`.
 
 **Oppsett.**
 - Brukeren testet selv i den responsive visningen i Safari, først 20. november 2026 og på nytt 21. november etter del B. Begge resultatene ble ført 21. november etter brukerens bekreftelse.
@@ -357,3 +371,30 @@ Tidene er lave, fordi imaget, Python og pakkene allerede lå lokalt.
 - `epics.md` har fått D-9 og henvisninger i regelen for alle stories, i punkt 5 i rutinen og i sammendraget av «Checks before a pull request». Arkitekturspinen har fått en merknad i AD-17 og i raden «Checks before a pull request». Begge endringsloggene har fått en rad.
 
 **Commit eller pull request:** `fa237e7`.
+
+**KI-styringsloggen:** [tilfelle 27](ki-styringslogg.md#27-regelen-om-ci-og-story-11-21-november-2026).
+
+## 2026-11-21 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 1.1 (DR-9)
+
+**Hvordan det ble funnet.** Brukeren kjørte BMAD Code Review (`bmad-code-review`) på hele grenen for story 1.1 21. november, etter rutinen for code review, med fire uavhengige KI-granskere: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Claude kontrollerte hvert funn mot koden og kildene, og funn som allerede var vurdert i reviewene av del A og del B, beholdt vurderingen sin. Alle 34 funnene står med vurdering under «Review Findings» i `_bmad-output/implementation-artifacts/spec-1-1-start-prognose-locally-from-a-fresh-clone.md`, og beslutningene står i kommentaren i PR #8. Brukeren bestemte selv tre funn. 21 ble rettet, 2 utsatt og 11 avvist.
+
+**Feilene som ble rettet.** Rettingene i kode og tester ligger i `e36043a`. Rettingene i dokumentene kommer i commiten etter den, i PR #8.
+
+| Feil | Funnet av | Retting |
+|---|---|---|
+| Testen av svaret på POST til `/` brukte en testklient uten CSRF-sjekk, så den viste 405, mens en nettleser eller curl får Djangos engelske CSRF-side med 403 | Acceptance Auditor og Blind Hunter; gjenskapt | Testen bruker en klient med CSRF-sjekk og forventer 403 for POST og 405 for OPTIONS. Den norske siden for 403 kommer i story 1.4 |
+| Ingen test sikret at `manage.py` og pytest alltid bruker `prognose.settings`, og `wsgi.py` brukte fortsatt `setdefault` | Verification Gap, Blind Hunter og Edge Case Hunter | Tre tester, og `wsgi.py` setter alltid `prognose.settings` |
+| Testen av at `.env` ikke endrer `os.environ`, kjørte ikke den ekte leseren | Verification Gap | Testen av den ekte leseren sammenligner `os.environ` før og etter |
+| Ingen test sikret at `runserver` som standard bare lytter på 127.0.0.1, port 8000 | Blind Hunter | En ny test |
+| Ingen test sikret at git ignorerer `.secret_key` og `.env`, selv om `.gitignore` på designgrenen manglet `.secret_key` 16. november | Verification Gap | Tester med `git check-ignore`, som hoppes over utenfor et git-repo, etter brukerens beslutning |
+| Kommentaren i `load_seed` lovet at bare eieren kan lese `.secret_key`, også på Windows, der modusen bare setter skrivebeskyttelse | Edge Case Hunter og Blind Hunter | Kommentaren gjelder macOS og Linux, og story 1.3 sjekker tilgangen på Windows (`issues.md`) |
+| En `DATABASE_URL` som er eksportert for et annet prosjekt, går foran uten at noe advarer om det | Blind Hunter | En advarsel i README og `.env.example`, etter brukerens beslutning |
+| DR-5 sier at hver test nevner FR-n eller E-n, men de fleste testene i story 1.1 kontrollerer ingen FR | Acceptance Auditor | D-10 i `epics.md`, etter brukerens beslutning |
+| QA-loggen hadde et usynlig BOM-tegn i en tabellrad, sa «første story» om testene på Windows, hadde linjenumre som D-9 flyttet, og manglet de bekreftede feilene som ble avvist i del A | Edge Case Hunter, Acceptance Auditor og Blind Hunter | Rettet, og linjenumrene viser nå til en commit |
+| KI-styringsloggen sa at story 1.1 ga ingen tilfeller, selv om D-9 retter regler som Claude skrev | Blind Hunter | [Tilfelle 27](ki-styringslogg.md#27-regelen-om-ci-og-story-11-21-november-2026) og [tilfelle 28](ki-styringslogg.md#28-beslutningene-i-bmad-code-review-av-story-11-21-november-2026) i KI-styringsloggen |
+| Teksten i PR #8 sa «fire `uv run`-kommandoer», mens README kjører `uv sync --locked` og tre `uv run`, og to commits nevner ikke storyen | Edge Case Hunter og Acceptance Auditor | Teksten er rettet, og kommentaren i PR #8 nevner de to commitene |
+| Ingen resultater av testene og Ruff for siste commit var ført | Blind Hunter | De tre kontrollene kjøres i en ny klone av siste commit og føres i QA-loggen og PR #8 |
+
+**Utsatt.** At databaseporten bare publiseres på 127.0.0.1, sjekkes bare for hånd med `lsof`. En automatisk sjekk av `docker compose config` hører til CI i story 1.2 (`deferred-work.md`).
+
+**Avvist.** 11 funn, med begrunnelse under «Review Findings» i spesifikasjonen og i KI-styringsloggen ([tilfelle 28](ki-styringslogg.md#28-beslutningene-i-bmad-code-review-av-story-11-21-november-2026)).

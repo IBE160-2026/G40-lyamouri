@@ -10,7 +10,7 @@ Statustabellen oppfyller DR-8 i PRD-en. Den viser hvert funksjonskrav (FR) og DR
 - **Navn:** overskriften til kravet i PRD-en, oversatt til norsk med ordene fra ordlisten i PRD §3.
 - **Prioritet:** prioriteten i [PRD-en](../_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md) (§8.5). Må-ha er Must, bør-ha er Should, og kan-ha er Could. DR-10 er ikke med i versjon 1 og har ingen av dem (PRD §8.1).
 - **Stories:** storyen som bygger kravet, står først. I parentes står de andre storyene i [`epics.md`](../_bmad-output/planning-artifacts/epics.md) som dekker en del av det.
-- **Tester:** fylles ut når testene finnes. Hver test nevner FR-n eller E-n som den kontrollerer (DR-5).
+- **Tester:** fylles ut når testene finnes. Hver test nevner FR-n eller E-n som den kontrollerer (DR-5), og en test som ikke kontrollerer noen FR, nevner NFR-, DR- eller AD-ID-ene sine (D-10).
 
 **Status 20. november 2026.** Ingen FR er bygd eller delvis bygd. Prosjektskjelettet fra story 1.1 del A har brukermodellen `web.Company` og databasen i Docker Compose, som FR-1 og FR-4 bygger på, men kravene bygges i story 1.8 og 1.7.
 
