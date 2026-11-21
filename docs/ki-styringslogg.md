@@ -256,6 +256,6 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 
 ## Byggefasen
 
-**Story 1.1.** Øktene for story 1.1 20. november 2026 ga ingen tilfeller, fordi brukeren godtok hver anbefaling fra Claude. Feilene som reviewen fant i KI-generert kode og tekst, står i [QA-loggen](qa-logg.md#2026-11-20--feil-i-ki-generert-kode-og-tekst-fra-reviewen-av-story-11-del-a-dr-9). Kilden er avsnittet «Never» i [spesifikasjonen for story 1.1 del B](../_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-documents.md).
+**Story 1.1.** Øktene for story 1.1 20. og 21. november 2026 ga ingen tilfeller, fordi brukeren godtok hver anbefaling fra Claude. Feilene som reviewene fant i KI-generert kode og tekst, står i QA-loggen, for [del A](qa-logg.md#2026-11-20--feil-i-ki-generert-kode-og-tekst-fra-reviewen-av-story-11-del-a-dr-9) og [del B](qa-logg.md#2026-11-21--feil-i-ki-generert-tekst-fra-reviewen-av-story-11-del-b-dr-9). Kilden er avsnittet «Never» i [spesifikasjonen for story 1.1 del B](../_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-documents.md).
 
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).

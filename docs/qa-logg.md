@@ -266,3 +266,23 @@ Hver gjennomgangsfil har én rad med antall funn, de viktigste feilene og en len
 - Story 1.8 må selv lage ukeetiketten i `forecasting/display.py`, med test, fordi toppfeltet viser den før story 2.3 bygger ut modulen (rad 32; åpent punkt i `issues.md`).
 - Spørsmål 4 i PRD §10: sluttvalideringen 18. november knyttet det til regeltestproduktene i story 2.6 (rad 23), men ingen kilde lukker funnet om det i `review-rubric-2026-11-15.md` (linje 35).
 - E30: funnet i `review-rubric-2026-11-15.md` om at E30 ikke kan vise at varselet om sesongmønster påvirker tillitsmerket (linje 101), har ingen registrert lukking.
+
+## 2026-11-21 – Feil i KI-generert tekst fra reviewen av story 1.1 del B (DR-9)
+
+**Hvordan det ble funnet.** Claude Code skrev statustabellen, KI-styringsloggen og oppføringen over om planleggingsfasen i story 1.1 del B med `bmad-build`. Før første commit gikk tre uavhengige KI-granskere gjennom diffen: Blind Hunter, Edge Case Hunter og Verification Gap. Claude kontrollerte hvert funn mot kildene. Alle 20 funnene står med vurdering og begrunnelse under «Review Triage Log» i `_bmad-output/implementation-artifacts/spec-1-1-planning-phase-process-documents.md`, og alle ble rettet. Selve plassen for epics som ikke blir bygd i statustabellen, hører til story 4.3, og innledningen viser nå til den.
+
+**Feilene som ble rettet.** Alle ble rettet før første commit og ligger i `79c9154`.
+
+| Feil | Funnet av | Retting |
+|---|---|---|
+| Eksempel 1 og tilfellene 4 og 7 sa feil om hvem som foreslo hva: regelen om å runde opp var brukerens beslutning i brainstormingen, og det KI-skrevne sammendraget gjorde lærerens svar avgjørende for språkmodellen | Blind Hunter; bekreftet mot memloggene | Tekstene følger kildene og sier hvorfor E5 står i begge loggene |
+| Eksempel 4 og tilfelle 11 sa at gjennomgangen fant bruddpunktet, men forslaget i gjennomgangen hadde selv 640 px, og 560 px kom fra skissen | Blind Hunter; bekreftet mot den arkiverte gjennomgangen og skissen | Tekstene følger gjennomgangsfila og memloggen |
+| Raden for de 29 feilene 18. november nevnte ingen av dem, så de to verdiene i mockupen som ikke kan oppstå etter reglene, sto ingen steder | Blind Hunter; bekreftet mot sesjonslogg 985 | Raden nevner de viktigste feilene |
+| «Gjenstår» nevnte bare symbolene i tegnforklaringen, mens `EXPERIENCE.md` fører fire avvik fra mockupen | Blind Hunter | Alle fire står i «Gjenstår» |
+| To utsatte funn fra rubrikken 15. november, spørsmål 4 i PRD §10 og E30, var verken ført som lukket eller som åpne | Blind Hunter og Edge Case Hunter | Raden og «Gjenstår» sier hva kildene viser |
+| AD-numre fra den arkiverte arkitekturen fra 8. november var ikke merket | Blind Hunter | Merket som den arkiverte arkitekturens |
+| Statustabellen lovet en grunn bare for må-ha- og bør-ha-krav som ikke er bygd, og nevnte ikke epics som ikke blir bygd (D-2) eller et oppsett som ikke kunne testes på Windows (D-3) | Edge Case Hunter og Blind Hunter | Innledningen dekker hvert avvik og de to pliktene |
+| KI-styringsloggen sa ikke at story 1.1 ga ingen tilfeller | Blind Hunter | En del om byggefasen |
+| Lenkene fra KI-styringsloggen til QA-loggen landet på en tabell med 30 rader, og linjenumrene viste til filer som endres | Blind Hunter og Edge Case Hunter | En kolonne med radnummer, og lenker til repoet i `d8674ad` |
+| Tre feil manglet i QA-loggen: tilleggene i Product Brief, Safari-skriptet og tre hull fra sluttvalideringen 18. november, og to tilfeller manglet lenker begge veier | Blind Hunter og Edge Case Hunter | Tre nye rader og lenker begge veier |
+| FR-1-raden viste ingen tester, selv om tre tester i `tests/test_company.py` nevner FR-1 | Verification Gap | Cellen viser de tre testene |
