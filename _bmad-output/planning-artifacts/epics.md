@@ -2,7 +2,7 @@
 title: 'Epics and Stories: Prognose (G40-lyamouri)'
 status: final
 created: '2026-11-18'
-updated: '2026-11-19'
+updated: '2026-11-21'
 stepsCompleted: [1, 2, 3, 4]
 inputDocuments:
   - '_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/prd.md'
@@ -87,6 +87,13 @@ DR-5 asks for at least one AI steering log case per epic. By the user's decision
 - **The PRD says:** DR-7's Definition of Done asks that a story's pull request has been reviewed, with the review comments kept in it, and SM-8 that every story was merged through a reviewed pull request. Neither says who reviews. The examiner guidelines look for traces of code review in pull requests (criterion 3).
 - **These epics do:** the user, who works alone, reviews each finished story with BMAD Code Review, and documents the findings, the decisions and the fixes, with their commits, in the pull request (the routine for code review). No second person is required.
 - **Why:** the user's decision of 2026-11-18: the user works alone, so no second reviewer is available. The PRD text is unchanged, because it does not ask for one.
+
+### D-9 Story 1.1 is merged before CI exists (decided 2026-11-21; spine aligned)
+
+- **The PRD says:** DR-7's Definition of Done asks that a story's tests and the linter pass. It does not ask for CI.
+- **These epics did:** the rule for every story and step 5 of the routine for code review asked that the tests and Ruff pass locally and in CI before a story is merged, and AD-17 in the spine merges a pull request only when GitHub Actions passes. CI is built in Story 1.2, after Story 1.1, so Story 1.1 could not meet that rule.
+- **These epics do:** Story 1.1 may be merged when `uv run pytest`, `uv run ruff check` and `uv run ruff format --check` pass locally on the branch's final commit, and its pull request names this decision and the results with that commit. The first CI run comes with the pull request for Story 1.2 and runs every test on Linux, including those from Story 1.1. Every later story follows the rule as written.
+- **Why:** the user's decision of 2026-11-21: Story 1.1 is finished before Story 1.2 starts, as the order of the stories and the sprint plan say. The PRD text is unchanged, because DR-7 does not ask for CI.
 
 ## Requirements Inventory
 
@@ -352,7 +359,7 @@ All NFRs, AI guardrails and delivery requirements are Must (PRD §8.1), except D
 - **Commands,** the same on macOS and Windows and run through `uv run` without activating a virtual environment: `docker compose up -d --wait`, `uv sync --locked`, `uv run python src/manage.py migrate`, `uv run python src/manage.py load_seed`, `uv run python src/manage.py runserver --insecure` and `uv run pytest`.
 - **Platforms:** macOS on Apple silicon or Intel, and Windows 10 22H2 or Windows 11 23H2 on x64, each with Docker Desktop; on Windows, Docker Desktop needs WSL 2 and hardware virtualization switched on. Windows on ARM is not supported in v1, because psycopg has no wheel for it.
 - **Optional features:** Should and Could items exist in code only once they are built, with no runtime feature flags except the FR-28 switch. A story that builds an item updates every place EXPERIENCE.md ties to it, for example the header link, step 3 of the week path and the last-product button for FR-30.
-- **Checks before a pull request:** `uv run pytest`, `uv run ruff check` and `uv run ruff format --check` pass locally and in CI.
+- **Checks before a pull request:** `uv run pytest`, `uv run ruff check` and `uv run ruff format --check` pass locally and in CI; Story 1.1 comes before CI and passes them locally (D-9).
 - **Documents:** `docs/` holds `PRODUCT.md`, the `DESIGN.md` link, `arbeidslogg.md`, `qa-logg.md` (DR-9), `ki-styringslogg.md` (DR-5) and `statustabell.md` (DR-8). Session logs are in `.logs/<bruker>/`, exported AI sessions in `.logs/<bruker>/sessions/` (the routine for AI sessions), and story specifications in `_bmad-output/implementation-artifacts/`.
 - **Delivery order** (aligned on 2026-11-18 and 2026-11-19, D-1 and D-3): the first stories prove the local path and CI (Stories 1.1 and 1.2); the setup test on Windows and offline (Story 1.3) is a story of its own and blocks no other development; version 1 is not published; then the Must items; Should and Could items only after the Must scope passes SM-1 and SM-3.
 
@@ -586,7 +593,7 @@ Eight epics, approved by the user on 2026-11-18. Epics 1 to 4 are Must, 5 to 7 S
 - **File overlap:** Epics 2, 3, 5 and 6 all change the core and the product screen. Merging them was considered on 2026-11-18 and rejected, because the line between Must and Should and the order of the Should items in PRD §8.2 are real risk boundaries: the work must be able to stop after any of them.
 
 **Rules for every story**
-- It is built on its own branch and meets the DR-7 Definition of Done: its tests and Ruff pass locally and in CI; it leaves no commented-out, unused or duplicated code; the status table and the affected documents are updated; and its pull request names the story and its FR-n, says what was tested, and has been reviewed with BMAD Code Review by the routine for code review below. Because the user works alone, no second person reviews (D-8).
+- It is built on its own branch and meets the DR-7 Definition of Done: its tests and Ruff pass locally and in CI (Story 1.1 comes before CI and passes them locally, D-9); it leaves no commented-out, unused or duplicated code; the status table and the affected documents are updated; and its pull request names the story and its FR-n, says what was tested, and has been reviewed with BMAD Code Review by the routine for code review below. Because the user works alone, no second person reviews (D-8).
 - Its commits are small and pushed as the work happens, so that the history covers the whole build period, and defects and open points are tracked as issues in `.logs/<bruker>/issues.md`, as CLAUDE.md requires (DR-7). GitHub Issues is not required: the original IBE160 examiner guidelines for part 1 accept «branches, pull requests, issues eller tilsvarende» (criterion 1, «Arbeidsflyt»), and the examiner looks for issues in the history (step 6), so the README links to `issues.md` and explains how it is used (Story 4.1). The full guidelines were pasted by the user on 2026-11-18 and are not stored in the repository.
 - Every defect in AI-generated code or text that a test, the reference spreadsheet, a review or a manual test finds is recorded in `docs/qa-logg.md` with how it was found, the fix, and the commit or pull request (DR-9).
 - Every test names the FR-n or E-n it verifies (DR-5). Calculation tests read their inputs and expected values from the reference spreadsheet, and no expected result is hard-coded in the tests or in the calculation code (AD-17; the user's decision, 2026-11-18).
@@ -608,7 +615,7 @@ Eight epics, approved by the user on 2026-11-18. Epics 1 to 4 are Must, 5 to 7 S
 2. A comment in the pull request lists every finding with the user's decision: fixed, rejected with the reason, or postponed as an open point in `.logs/<bruker>/issues.md`.
 3. Each fix is a new commit on the same branch, and the comment names the commit for each fixed finding.
 4. A finding that is a defect in AI-generated code also goes into the QA log, and a rejected or corrected AI suggestion into the AI steering log (DR-9, the routine for AI sessions).
-5. The user merges only when the comment is complete and CI passes. No second reviewer is needed; the documented review in the pull request is the review trace that DR-7, SM-8 and the examiner guidelines (criterion 3) ask for.
+5. The user merges only when the comment is complete and CI passes; Story 1.1 comes before CI and is merged when the tests and Ruff pass locally on its final commit (D-9). No second reviewer is needed; the documented review in the pull request is the review trace that DR-7, SM-8 and the examiner guidelines (criterion 3) ask for.
 
 ### Epic 1: Log in and see only your own company's data (Must)
 
@@ -2314,3 +2321,4 @@ This document was approved by the user and set to `final` on 2026-11-18. Every l
 | 2026-11-19 | Publishing removed from version 1 (D-1): Story 1.9 is removed, so Epic 1 has 8 stories and the plan 38. Updated: D-1, kept with its history; D-7; the requirements inventory (FR-4, NFR-1, NFR-3, NFR-6, NFR-8, NFR-9, DR-1, DR-9, DR-10, SM-9); the architecture summary (AD-5, AD-13, AD-14, AD-16, the delivery order, the stack and the deferred items); the planning constraints; UX-DR7 and UX-DR31; the FR coverage map; the rules for every story; the work outside stories; the Epic 1, 4 and 7 texts; and Stories 1.1 (the setting for the phone test, and the keys in the README), 1.8 (the first test on the real iPhone over the local network), 4.1 (how to start Prognose at the top, and the section «Nøkler og hemmeligheter»), 4.4 and 7.1. No feature added. | The teacher's clarification on Canvas on 2026-11-19, as reported by the user: publishing is not mandatory; the application may run locally, but the README must explain how to start it and which API keys are needed. The user approved removing publishing and Story 1.9, and keeping the real iPhone test over the local network. | `ea06f01` (PR #5) |
 | 2026-11-19 | The deadline moves to 8 December 2026 at 23:59 (DR-6 and the planning constraints), and the planning constraints name the sprint plan that holds the milestone dates. | The new submission deadline of 8 December 2026 at 23:59 and the sprint planning of 2026-11-19. | `67694f7` (PR #6) |
 | 2026-11-19 | Fixes from the implementation-readiness check: NFR-1 and NFR-2 on separate lines; the AD-13 summary without «in both modes»; the Configuration convention lists `PROGNOSE_LAN_HOST` as the spine does, without the production database URL; the Commands convention and Story 1.1 use `uv sync --locked`, as the spine now does; Stories 5.1 and 8.2 give AD-15 instead of the removed AD-16 as the reason why their migrations only add. | The implementation-readiness check of 2026-11-19 found text left from publishing that disagreed with the spine, and two different install commands. The user approved the fixes. No story, priority or requirement changes. | `67694f7` (PR #6) |
+| 2026-11-21 | D-9: Story 1.1 may be merged before CI exists, when `uv run pytest`, `uv run ruff check` and `uv run ruff format --check` pass locally on its final commit. The rule for every story, step 5 of the routine for code review and the «Checks before a pull request» summary refer to D-9. | The user's decision of 2026-11-21: the rules asked for CI before every merge, while CI comes in Story 1.2, after Story 1.1, so Story 1.1 could not meet them. The contradiction was found while checking whether Story 1.1 can be merged, and the QA log records it. No story, priority or requirement changes. | not committed yet |

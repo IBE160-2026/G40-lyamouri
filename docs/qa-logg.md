@@ -344,3 +344,16 @@ Tidene er lave, fordi imaget, Python og pakkene allerede lå lokalt.
 **Gjenstår.**
 - Pull requesten for story 1.1 skal nevne de tre størrelsene som sjekker i responsiv visning.
 - Testen på en ekte iPhone 13 over det lokale nettet hører til story 1.8 (NFR-6).
+
+## 2026-11-21 – Motsigelse i planen om CI før story 1.2 (DR-7, DR-9)
+
+**Hvordan det ble funnet.** Claude fant motsigelsen 21. november 2026, da brukeren ba om å få sjekket om story 1.1 kan flettes før CI finnes. Kontrollen av Implementation Readiness 19. november fant den ikke. Linjenumrene under gjelder filene i commit `2791949`.
+
+**Feil.** Reglene for alle stories i `epics.md` (linje 589) og punkt 5 i rutinen for code review (linje 611) krever at testene og Ruff passerer lokalt og i CI før en story flettes. AD-17 i arkitekturspinen fletter en pull request bare når GitHub Actions passerer (linje 207 og 222). Den samme planen legger CI i story 1.2, etter story 1.1 (`epics.md`, linje 357 og 620), så story 1.1 kunne aldri oppfylle regelen. Begge dokumentene er skrevet av Claude med BMAD og godkjent av brukeren. PRD-en krever ikke CI i DR-7.
+
+**Retting.** Brukeren godkjente unntaket D-9 21. november:
+- Story 1.1 kan flettes når `uv run pytest`, `uv run ruff check` og `uv run ruff format --check` passerer lokalt på grenens siste commit, og pull requesten nevner beslutningen og resultatene med commiten.
+- Den første CI-kjøringen kommer med pull requesten for story 1.2 og kjører alle testene, også testene fra story 1.1. Alle senere stories følger regelen slik den står.
+- `epics.md` har fått D-9 og henvisninger i regelen for alle stories, i punkt 5 i rutinen og i sammendraget av «Checks before a pull request». Arkitekturspinen har fått en merknad i AD-17 og i raden «Checks before a pull request». Begge endringsloggene har fått en rad.
+
+**Commit eller pull request:** ikke committet ennå.
