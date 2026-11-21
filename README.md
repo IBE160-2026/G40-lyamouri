@@ -4,6 +4,68 @@ Gruppeprosjekt i **IBE160 Programmering med KI** ved Høgskolen i Molde, høsten
 
 Repoet inneholder gruppens applikasjon og dokumentasjon av utvikling, testing og kvalitetssikring med KI.
 
+## Kom i gang
+
+Prognose kjører på din egen maskin: appen med uv, og databasen PostgreSQL i Docker. Kommandoene er de samme i Terminal på macOS og i PowerShell på Windows. Ingen av dem krever at du aktiverer et virtuelt miljø, lager en `.env`-fil, skaffer en nøkkel eller redigerer en fil.
+
+### Dette trenger du
+
+- **uv** 0.12.13 eller nyere ([installasjon](https://docs.astral.sh/uv/getting-started/installation/)). uv installerer selv Python 3.13 for prosjektet hvis maskinen mangler det.
+- **Docker Desktop** 4.99.0 eller nyere ([nedlasting](https://www.docker.com/products/docker-desktop/)), og det må være startet. Docker Desktop er gratis for personlig bruk og utdanning. Versjon 4.99.0 krever macOS 14 eller nyere. På Windows trenger det WSL 2 og maskinvarevirtualisering slått på.
+- **Git**, for å klone repoet.
+
+Prognose støtter macOS på Apple silicon eller Intel, og Windows 10 22H2 eller Windows 11 23H2 på x64. Windows på ARM støttes ikke i versjon 1, fordi databasedriveren psycopg ikke har en ferdig pakke for det. Så langt er oppsettet bare testet på macOS med Apple M1 (se [QA-loggen](docs/qa-logg.md)).
+
+### Start Prognose
+
+Klon repoet og gå inn i mappa:
+
+```
+git clone https://github.com/IBE160-2026/G40-lyamouri.git
+cd G40-lyamouri
+```
+
+Kjør så disse fem kommandoene, én om gangen:
+
+```
+docker compose up -d --wait
+uv sync --locked
+uv run python src/manage.py migrate
+uv run python src/manage.py load_seed
+uv run python src/manage.py runserver --insecure
+```
+
+1. `docker compose up -d --wait` starter databasen og venter til den er klar. Første gang laster Docker ned PostgreSQL-imaget.
+2. `uv sync --locked` installerer Python 3.13 hvis det mangler, og de nøyaktige pakkeversjonene i `uv.lock`.
+3. `migrate` lager tabellene i databasen.
+4. `load_seed` lager nøkkelen som signerer øktene (se [Nøkler og hemmeligheter](#nøkler-og-hemmeligheter)).
+5. `runserver --insecure` starter Prognose. Åpne http://127.0.0.1:8000/ i nettleseren. `--insecure` lar utviklingsserveren levere appens statiske filer, som stilark, selv om feilsøkingsmodus er av. Det åpner ikke appen for andre maskiner.
+
+Både appen og databasen svarer bare på din egen maskin (127.0.0.1).
+
+Er en `DATABASE_URL` eksportert i terminalen, for eksempel for et annet prosjekt, bruker Prognose og testene den databasen i stedet for databasen fra `compose.yaml`, og pytest lager og sletter da testdatabasen sin der. Fjern variabelen først, med `unset DATABASE_URL` i Terminal på macOS eller `Remove-Item Env:DATABASE_URL` i PowerShell.
+
+## Nøkler og hemmeligheter
+
+- Prognose trenger ingen API-nøkkel, betalt tjeneste eller tredjepartskonto.
+- `load_seed` lager nøkkelen som signerer øktene, i fila `.secret_key` i prosjektmappa, når fila mangler. En nøkkel som finnes, endres aldri. Git ignorerer fila, så nøkkelen kommer aldri inn i repoet. Er fila tom, stopper `load_seed` og ber deg slette den og kjøre kommandoen på nytt.
+- Den lokale databasen har ikke passord. Den tar bare imot tilkoblinger fra din egen maskin, på 127.0.0.1:15432.
+- Alle variablene i [`.env.example`](.env.example) er valgfrie, og ingen av dem trengs for oppsettet over. Fila forklarer hver av dem.
+
+## Tester
+
+Testene bruker den lokale PostgreSQL-serveren, så start den først med `docker compose up -d --wait`. pytest lager sin egen testdatabase, `test_prognose`, på den samme serveren og sletter den etterpå, så appens data blir ikke rørt. Databasebrukeren må derfor ha rett til å lage databaser, og det har brukeren `prognose` fra `compose.yaml`. Kjør så:
+
+```
+uv run pytest
+uv run ruff check
+uv run ruff format --check
+```
+
+- `uv run pytest` kjører alle testene. Forventet resultat er at siste linje bare melder `passed`, uten `failed` eller `error`.
+- `uv run ruff check` sjekker kodestilen i alle Python-filene i repoet, unntatt de genererte migreringene og skriptene som BMAD (`_bmad/`) og Claude Code (`.claude/`) har med seg, og skal svare `All checks passed!`.
+- `uv run ruff format --check` sjekker formateringen av de samme filene og skal svare at alle er formatert (`files already formatted`).
+
 ## Medlemmer
 
 - Flesche Mounia Lyamouri

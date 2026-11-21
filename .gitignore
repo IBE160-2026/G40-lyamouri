@@ -1,18 +1,3 @@
-# Next.js / Node
-node_modules/
-.next/
-out/
-dist/
-build/
-.vercel/
-.turbo/
-*.tsbuildinfo
-next-env.d.ts
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
 # Python environments, bytecode, packaging and caches
 .venv/
 venv/
@@ -66,7 +51,6 @@ Thumbs.db
 *.swo
 *~
 
-# Prognose: local database (with SQLite's journal files), collected static files and the local session secret
-db.sqlite3*
-staticfiles/
+# Prognose: the local session secret. The database data lives in a Docker volume,
+# outside the repository.
 .secret_key

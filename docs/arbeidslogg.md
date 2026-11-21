@@ -559,6 +559,33 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Sprintplanen er flettet inn i `main` (`41fe0cf`), og M0 i sprintplanen er nådd. Neste steg er story 1.1 med `bmad-build`.
 
+### 20. november 2026 – Story 1.1 del A: lokal oppstart
+
+* Startet story 1.1 med `bmad-build` på grenen `story/1-1-start-prognose-locally`, laget fra `main` (`ae7b72c`), etter sprintplanen og arkitekturspinen. Godkjente subagenter for hele kjøringen, og at storyen deles i del A, den lokale oppstarten, og del B, prosessdokumentene fra planleggingsfasen, med én pull request for begge.
+* Godkjente spesifikasjonen for del A. Claude bygde skjelettet med en implementeringsagent: Django 5.2.19 i `src/` med `web.Company` i første migrering, PostgreSQL 18.7 i `compose.yaml` på 127.0.0.1 uten passord, innstillinger fra miljøvariabler og en valgfri `.env`, `load_seed` som lager `.secret_key`, siden `/`, testene og Ruff, og oppsettet i README og `.env.example`.
+* Tre KI-granskere gikk gjennom del A og fant 35 funn: 20 ble rettet, 2 utsatt og 13 avvist med begrunnelse i spesifikasjonen. Feilene i KI-generert kode og tekst står i `docs/qa-logg.md`.
+* Kontroll: 75 tester og Ruff passerte, og de fem kommandoene i README virket tre ganger fra en ren kopi, på 7,2–7,8 sekunder.
+* Godkjente commit og push av del A (`25e04ea`, `93c9147` og `258dccd`) og sesjonsloggen (`d8674ad`).
+* Testet `/` i responsiv visning i Safari ved 320 px, 390 × 844 og 820 × 1180, uten avkuttet tekst eller sidelengs rulling. Resultatet ble ført i QA-loggen 21. november.
+* Eksporterte økten med `/export`, og Claude maskerte stier og brukernavn i fila.
+
+**Status:** Del A er pushet. Del B, klonetesten fra GitHub og BMAD Code Review gjenstår før flettingen.
+
+### 21. november 2026 – Story 1.1 del B, D-9 og BMAD Code Review
+
+* Claude bygde del B med `bmad-build`: `docs/statustabell.md`, `docs/ki-styringslogg.md` med 26 tilfeller fra planleggingsfasen, og feilene fra planleggingsfasen i `docs/qa-logg.md`. Tre KI-granskere fant 20 funn, og alle ble rettet. Godkjente commit og push (`d2b887d`, `79c9154`, `c8da9ff`, `477a687` og `3edf54b`).
+* Godkjente klonetesten: grenen ble klonet fra GitHub, og de fem kommandoene i README virket uten feil på 7,1 sekunder (`936f364`).
+* Gjentok Safari-sjekken etter del B ved 320 × 844, 390 × 844 og 820 × 1180, uten avkuttet tekst eller sidelengs rulling (`2791949`).
+* Claude fant at reglene krevde CI før flettingen, mens CI først bygges i story 1.2. Godkjente unntaket D-9: story 1.1 flettes når testene og Ruff passerer lokalt på grenens siste commit (`fa237e7` og `5268fe0`).
+* Opprettet PR #8 og kjørte `bmad-code-review` med fire KI-granskere på hele grenen:
+  * 34 funn: 21 ble rettet, 2 utsatt og 11 avvist, og funn som var vurdert i del A eller del B, beholdt vurderingen sin;
+  * avgjorde selv at `.gitignore` skal ha en test, at en test som ikke kontrollerer noen FR, nevner NFR-, DR- eller AD-ID-ene sine (D-10), og at README og `.env.example` skal advare mot en eksportert `DATABASE_URL`;
+  * rettingene ligger i `e36043a`, `bcd8223` og `c2a70a6`, og funnene med beslutningene står i kommentaren i PR #8.
+* Kontroll: `uv run pytest` med 82 tester, `uv run ruff check` og `uv run ruff format --check` passerte i en ny klone av `c2a70a6` fra GitHub (`5ba7016`). Kontrollene kjøres på nytt på grenens siste commit før flettingen, med resultatet i PR #8.
+* Story 1.1 står som `done` i `sprint-status.yaml`. Eksporterte hele økten på nytt, og Claude maskerte den (`77f1960`). Sesjonsloggen og `issues.md` er oppdatert (`b689ad2`).
+
+**Status:** Story 1.1 er ferdig etter BMAD Code Review. Flettingen av PR #8 venter på godkjenning, og story 1.2 er ikke startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

@@ -1,0 +1,40 @@
+[project]
+name = "prognose"
+version = "0.1.0"
+description = "Weekly sales forecasts and order suggestions for small businesses (IBE160, group G40)."
+requires-python = "==3.13.*"
+dependencies = [
+    "Django==5.2.19",
+    "psycopg[binary]==3.3.9",
+]
+
+[dependency-groups]
+dev = [
+    "openpyxl==3.1.5",
+    "pytest==9.2.0",
+    "pytest-django==4.14.0",
+    "ruff==0.17.5",
+]
+
+[tool.uv]
+# Prognose is an application, not a package to build or install.
+package = false
+required-version = ">=0.12.13"
+
+[tool.pytest.ini_options]
+# --ds wins over a DJANGO_SETTINGS_MODULE exported for another project.
+addopts = "--ds=prognose.settings"
+django_find_project = false
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+# Every *.py file in the repository except BMAD's and Claude Code's own scripts
+# and the generated migrations (AD-17). Without include, Ruff would also format
+# the Python examples in the Markdown files.
+include = ["*.py"]
+extend-exclude = ["_bmad", ".claude", "**/migrations"]
+
+[tool.ruff.lint]
+# Ruff's default rules plus bugbear (B), Django (DJ), import order (I) and pyupgrade (UP).
+extend-select = ["B", "DJ", "I", "UP"]
