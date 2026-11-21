@@ -602,8 +602,16 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Den første CI-kjøringen passerte på Linux på 36 sekunder, med 99 tester, også de 82 fra story 1.1 (D-9).
 * Kjørte BMAD Code Review med fire KI-granskere: 34 funn, 31 rettet i 12 rettinger og 3 avvist. Bestemte at importtesten også avviser database- og nettverksmodulene i standardbiblioteket, og at hver push til `main` får sin egen kjøring. Rettingene ligger i `e24727e` og `5297ed0`, og den andre CI-kjøringen passerte med 103 tester.
 * Eksporterte økten med `/export`. Claude maskerte den og fjernet delen som allerede står i eksporten for story 1.1. Sesjonsloggen, `issues.md` og sprintstatusen er oppdatert.
+* Godkjente commit og push av eksporten, sesjonsloggen og arbeidsloggen (`147a6c8`, `86a5db9` og `e864d02`). CI-kjøring nr. 3 på `e864d02` passerte med 103 tester, og kommentaren med alle 34 funnene ble lagt inn i PR #10.
+* Godkjente flettingen av PR #10. Claude flettet lokalt med «Create a merge commit» (`git merge --no-ff`), uten squash eller rebase, og med noreply-adressen som forfatter:
+  * merge-commiten `674c8fd` har den gamle `main` (`374db81`) og PR-hodet (`e864d02`) som foreldre;
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * `main` ble pushet via SSH, fordi `ci.yml` kom inn i `main`, og GitHub viser PR #10 som flettet 22. november kl. 00.48, med `674c8fd` som merge-commit;
+  * CI-kjøring nr. 4, den første på `main`, passerte med 103 tester;
+  * lokal `main` og GitHub ble synkronisert og sto på samme commit, og arbeidskopien var ren;
+  * grenen `story/1-2-check-every-pull-request` er beholdt.
 
-**Status:** Story 1.2 er ferdig etter BMAD Code Review og står som `done` i `sprint-status.yaml`. Flettingen av PR #10 venter på godkjenning, og story 1.3 er ikke startet.
+**Status:** Story 1.2 er flettet inn i `main` (`674c8fd`), og CI sjekker nå hver pull request. Neste story følger rekkefølgen i sprintplanen, og story 1.3 er ikke startet.
 
 ## 4. Videre dokumentasjon
 

@@ -40,7 +40,7 @@ Starte og fullføre story 1.2 («Check every pull request automatically») etter
   - De første 9422 linjene av den nye eksporten var de samme som den forrige, bortsett fra ukedagen i 25 tidsmerker, og de er fjernet.
   - Fila er maskert. Den har ingen stier, brukernavn, nøkler eller e-postadresser utenom `git@github.com`, og navnet fra medlemslista i README står én gang, i en diff av README.
 - Lukket i `issues.md`: VG-4. Nytt punkt: push via SSH for endringer i `.github/workflows/`.
-- Grenen pushes med denne loggen etter brukerens godkjenning. Etter en grønn kjøring legges kommentaren med alle funnene inn i PR #10, og PR-en flettes via SSH når brukeren godkjenner det.
+- Grenen ble pushet via SSH med eksporten, denne loggen og arbeidsloggen (`147a6c8`, `86a5db9` og `e864d02`), etter brukerens godkjenning. CI-kjøring nr. 3 på `e864d02` passerte med 103 tester, og kommentaren med alle 34 funnene ble lagt inn i PR #10. Etter brukerens godkjenning ble PR #10 flettet lokalt med «Create a merge commit» og noreply-adressen, og `main` ble pushet via SSH, fordi `ci.yml` kom inn i `main`. Merge-commiten er `674c8fd`, og GitHub viser PR #10 som flettet 22. november kl. 00.48. CI-kjøring nr. 4, den første på `main`, passerte med 103 tester. Lokal `main` og GitHub ble synkronisert på `674c8fd`, og arbeidskopien var ren. Grenen `story/1-2-check-every-pull-request` er beholdt.
 
 ### Åpne punkter
 - Push som endrer `.github/workflows/`, også flettingen av PR #10 til `main`, må gå via SSH, fordi tokenet i nøkkelringen mangler `workflow`-rettigheten. Gi tokenet rettigheten, eller bytt remoten til SSH.
