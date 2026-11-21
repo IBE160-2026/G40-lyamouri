@@ -581,10 +581,17 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
   * 34 funn: 21 ble rettet, 2 utsatt og 11 avvist, og funn som var vurdert i del A eller del B, beholdt vurderingen sin;
   * avgjorde selv at `.gitignore` skal ha en test, at en test som ikke kontrollerer noen FR, nevner NFR-, DR- eller AD-ID-ene sine (D-10), og at README og `.env.example` skal advare mot en eksportert `DATABASE_URL`;
   * rettingene ligger i `e36043a`, `bcd8223` og `c2a70a6`, og funnene med beslutningene står i kommentaren i PR #8.
-* Kontroll: `uv run pytest` med 82 tester, `uv run ruff check` og `uv run ruff format --check` passerte i en ny klone av `c2a70a6` fra GitHub (`5ba7016`). Kontrollene kjøres på nytt på grenens siste commit før flettingen, med resultatet i PR #8.
+* Kontroll: `uv run pytest` med 82 tester, `uv run ruff check` og `uv run ruff format --check` passerte i en ny klone av `c2a70a6` fra GitHub (`5ba7016`). De passerte på nytt i en ny klone av grenens siste commit, `9c8a5dd`, og resultatet står i PR #8.
 * Story 1.1 står som `done` i `sprint-status.yaml`. Eksporterte hele økten på nytt, og Claude maskerte den (`77f1960`). Sesjonsloggen og `issues.md` er oppdatert (`b689ad2`).
+* Godkjente at arbeidsloggen fikk oppføringene for 20. og 21. november, som manglet (`9c8a5dd`).
+* Godkjente flettingen av PR #8. Claude flettet lokalt med «Create a merge commit» (`git merge --no-ff`), uten squash eller rebase, og med noreply-adressen som forfatter:
+  * merge-commiten `e8b82c0` har den gamle `main` (`ae7b72c`) og PR-hodet (`9c8a5dd`) som foreldre;
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * etter pushen av `main` viser GitHub PR #8 som flettet 21. november kl. 19.32, med `e8b82c0` som merge-commit;
+  * lokal `main` og GitHub ble synkronisert og sto på samme commit, og arbeidskopien var ren;
+  * grenen `story/1-1-start-prognose-locally` er beholdt.
 
-**Status:** Story 1.1 er ferdig etter BMAD Code Review. Flettingen av PR #8 venter på godkjenning, og story 1.2 er ikke startet.
+**Status:** Story 1.1 er flettet inn i `main` (`e8b82c0`). Neste steg er story 1.2, som ikke er startet.
 
 ## 4. Videre dokumentasjon
 
