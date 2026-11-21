@@ -1,10 +1,10 @@
 """The pure core imports only the standard library (Story 1.2; AD-1, NFR-2).
 
-forecasting/ and explanation/ may import the Python standard library and their
-own modules, and explanation/ may also import forecasting/. Any other import,
-such as Django, a database driver, the web app or forecasting/ importing
-explanation/, fails the test. The test reads the source with ast, so it imports
-nothing from the core.
+forecasting/ and explanation/ may import the Python standard library, except
+its database and network modules, and their own modules, and explanation/ may
+also import forecasting/. Any other import, such as Django, sqlite3, urllib,
+the web app or forecasting/ importing explanation/, fails the test. The test
+reads the source with ast, so it imports nothing from the core.
 """
 
 import ast
@@ -18,6 +18,23 @@ SRC = Path(__file__).resolve().parents[1] / "src"
 ALLOWED = {
     "forecasting": {"forecasting"},
     "explanation": {"explanation", "forecasting"},
+}
+# The standard library's database drivers and network libraries, which AD-1
+# keeps out of the core as well.
+DATABASE_AND_NETWORK = {
+    "dbm",
+    "ftplib",
+    "http",
+    "imaplib",
+    "poplib",
+    "shelve",
+    "smtplib",
+    "socket",
+    "socketserver",
+    "sqlite3",
+    "ssl",
+    "urllib",
+    "xmlrpc",
 }
 CORE_FILES = sorted(
     path for package in ALLOWED for path in (SRC / package).rglob("*.py")
@@ -35,8 +52,8 @@ def forbidden_imports(source, package):
             imported.add(package if node.level else node.module.partition(".")[0])
     return sorted(
         name
-        for name in imported
-        if name not in sys.stdlib_module_names and name not in ALLOWED[package]
+        for name in imported - ALLOWED[package]
+        if name not in sys.stdlib_module_names or name in DATABASE_AND_NETWORK
     )
 
 
@@ -45,7 +62,8 @@ def forbidden_imports(source, package):
 )
 def test_core_imports_only_the_standard_library(path):
     """AD-1, NFR-2: no module in forecasting/ or explanation/ imports anything
-    outside the standard library, except explanation/ importing forecasting/."""
+    outside the standard library, or its database and network modules, except
+    explanation/ importing forecasting/."""
     package = path.relative_to(SRC).parts[0]
 
     assert forbidden_imports(path.read_text(encoding="utf-8"), package) == []
@@ -70,6 +88,13 @@ def test_the_import_test_reads_both_core_packages():
             ["psycopg", "requests"],
         ),
         ("forecasting", "def week():\n    import openpyxl\n", ["openpyxl"]),
+        ("forecasting", "import sqlite3\nimport dbm.dumb", ["dbm", "sqlite3"]),
+        (
+            "explanation",
+            "from urllib.request import urlopen\nimport http.client",
+            ["http", "urllib"],
+        ),
+        ("forecasting", "import socket\nfrom ssl import SSLContext", ["socket", "ssl"]),
         ("forecasting", "from __future__ import annotations\nimport datetime", []),
         ("forecasting", "from . import display\nfrom .display import week_label", []),
         (
@@ -81,5 +106,6 @@ def test_the_import_test_reads_both_core_packages():
 )
 def test_the_import_check_on_example_modules(package, source, expected):
     """AD-1: the check finds every import outside the standard library and the
-    allowed core package, also one inside a function, and allows relative imports."""
+    allowed core package, and every database or network module of the standard
+    library, also inside a function, and allows relative imports."""
     assert forbidden_imports(source, package) == expected

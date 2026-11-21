@@ -1,64 +1,108 @@
 """The CI workflow runs the README's checks (Story 1.2; AD-17, NFR-2, DR-7).
 
-The test reads .github/workflows/ci.yml as text, one step per `      - ` item,
-because none of the project's dependencies parses YAML.
+The tests read the workflow files as text, because none of the project's
+dependencies parses YAML. They check the spec's rules for CI: when and where it
+runs, its rights and actions, that it runs the README's commands and nothing
+else, and that no check can be skipped or ignored. A YAML construct that a
+line-based read does not see, such as an anchor, is left to review.
 """
 
 import re
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-WORKFLOW = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
-SETUP_AND_TESTS = ["uv sync --locked", "docker compose up -d --wait", "uv run pytest"]
-RUFF = ["uv run ruff check", "uv run ruff format --check"]
+WORKFLOW_DIR = REPO_ROOT / ".github" / "workflows"
+WORKFLOW = (WORKFLOW_DIR / "ci.yml").read_text(encoding="utf-8")
+SETUP = ["uv sync --locked", "docker compose up -d --wait"]
+CHECKS = ["uv run pytest", "uv run ruff check", "uv run ruff format --check"]
+RUFF_IF = "${{ !cancelled() && steps.sync.outcome == 'success' }}"
+
+
+def values(key, text=WORKFLOW):
+    """Every value of key in text, at any level and quoted or not."""
+    pattern = rf"""^\s*(?:-\s+)?['"]?{re.escape(key)}['"]?\s*:\s*(.*?)\s*$"""
+    return re.findall(pattern, text, re.MULTILINE)
+
+
+def block(key):
+    """The lines under a top-level key of the workflow."""
+    return WORKFLOW.split(f"\n{key}:\n", 1)[1].split("\n\n", 1)[0].splitlines()
 
 
 def steps():
     """The keys and values of each step in the workflow's job."""
-    blocks = re.findall(r"^      - (.*(?:\n        .*)*)", WORKFLOW, re.MULTILINE)
+    items = re.findall(r"^      - (.*(?:\n        .*)*)", WORKFLOW, re.MULTILINE)
     return [
         dict(
             line.strip().partition(": ")[::2]
-            for line in block.splitlines()
+            for line in item.splitlines()
             if ": " in line
         )
-        for block in blocks
+        for item in items
     ]
 
 
-def test_ci_runs_the_readme_commands():
+def readme_checks():
+    """The commands in the code block of the README's «Tester» section."""
+    readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+    section = readme.split("\n## Tester\n", 1)[1].split("\n## ", 1)[0]
+    return re.search(r"```\n(.*?)\n```", section, re.DOTALL).group(1).splitlines()
+
+
+def test_ci_runs_the_readme_commands_and_nothing_else():
     """AD-17, NFR-2: CI installs the locked dependencies, starts the database
-    from compose.yaml and runs the README's three checks, and nothing else."""
+    from compose.yaml and runs the README's checks, the same both ways."""
     readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8").splitlines()
-    commands = [step["run"] for step in steps() if "run" in step]
 
-    assert commands == [*SETUP_AND_TESTS, *RUFF]
-    assert [command for command in commands if command not in readme] == []
-
-
-def test_no_check_is_skipped_and_ruff_runs_after_a_pytest_failure():
-    """DR-7: the install, database and pytest steps always run, and a failure
-    fails the run; both Ruff steps still run when the install worked, so one
-    run reports every broken check."""
-    by_command = {step.get("run"): step for step in steps()}
-
-    assert by_command["uv sync --locked"].get("id") == "sync"
-    assert [
-        command
-        for command in SETUP_AND_TESTS
-        if {"if", "continue-on-error"} & by_command[command].keys()
-    ] == []
-    assert [by_command[command].get("if") for command in RUFF] == [
-        "${{ !cancelled() && steps.sync.outcome == 'success' }}"
-    ] * 2
+    assert readme_checks() == CHECKS
+    assert values("run") == [*SETUP, *readme_checks()]
+    assert [command for command in SETUP if command not in readme] == []
 
 
-def test_every_action_is_pinned_to_a_commit_sha():
-    """DR-7, AD-17: each action is pinned to a full commit SHA, so a moved tag
-    cannot change what CI runs."""
-    actions = [step["uses"].partition(" #")[0] for step in steps() if "uses" in step]
+def test_ci_runs_on_linux_for_every_pull_request_and_push_to_main():
+    """DR-7, AD-17: CI starts on every pull request and every push to main,
+    runs on Linux, and gives each run outside a pull request its own group,
+    so no push to main is cancelled."""
+    assert block("on") == [
+        "  pull_request:",
+        "  push:",
+        "    branches: [main]",
+        "  workflow_dispatch:",
+    ]
+    assert values("runs-on") == ["ubuntu-24.04"]
+    assert values("group") == [
+        "ci-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}"
+    ]
 
-    assert actions
-    assert [
-        a for a in actions if not re.fullmatch(r"[\w.-]+/[\w.-]+@[0-9a-f]{40}", a)
-    ] == []
+
+def test_no_check_can_be_skipped_or_ignored():
+    """DR-7: no job or step is skipped by a condition or allowed to fail, and no
+    environment variable can change the checks; only the two Ruff steps have
+    the condition that lets them run after a pytest failure, when the install
+    worked."""
+    ruff = [step.get("if") for step in steps() if step.get("run") in CHECKS[1:]]
+
+    assert values("if") == [RUFF_IF, RUFF_IF]
+    assert ruff == [RUFF_IF, RUFF_IF]
+    assert values("id") == ["sync"]
+    assert values("continue-on-error") == []
+    assert values("env") == []
+
+
+def test_ci_can_only_read_and_uses_only_the_pinned_setup_actions():
+    """DR-7, AD-17: CI may only read the repository, keeps no credentials and
+    uses no secrets. Every workflow file uses only actions pinned to a full
+    commit SHA, with the version in a comment, and CI uses only the two setup
+    actions."""
+    pinned = r"[\w.-]+/[\w.-]+(?:/[\w.-]+)*@[0-9a-f]{40} # v\d+\.\d+\.\d+"
+
+    assert block("permissions") == ["  contents: read"]
+    assert values("persist-credentials") == ["false"]
+    for path in sorted(WORKFLOW_DIR.glob("*.y*ml")):
+        text = path.read_text(encoding="utf-8")
+        assert "secrets." not in text, path.name
+        assert [a for a in values("uses", text) if not re.fullmatch(pinned, a)] == []
+    assert [action.split("@")[0] for action in values("uses")] == [
+        "actions/checkout",
+        "astral-sh/setup-uv",
+    ]

@@ -62,11 +62,11 @@ uv run ruff check
 uv run ruff format --check
 ```
 
-- `uv run pytest` kjører alle testene. Forventet resultat er at siste linje bare melder `passed`, uten `failed` eller `error`. Testen av `compose.yaml` bruker `docker compose config`, så den hoppes over (`skipped`) bare hvis `docker` ikke finnes i PATH.
+- `uv run pytest` kjører alle testene. Forventet resultat er at siste linje bare melder `passed`, uten `failed`, `error` eller `skipped`. En test hoppes bare over når den mangler et verktøy: testen av `compose.yaml` hvis `docker` ikke finnes i PATH, og testene av `.gitignore` utenfor en git-klone. Da melder siste linje også `skipped`, og den sjekken er ikke gjort på den maskinen.
 - `uv run ruff check` sjekker kodestilen i alle Python-filene i repoet, unntatt de genererte migreringene og skriptene som BMAD (`_bmad/`) og Claude Code (`.claude/`) har med seg, og skal svare `All checks passed!`.
 - `uv run ruff format --check` sjekker formateringen av de samme filene og skal svare at alle er formatert (`files already formatted`).
 
-GitHub Actions kjører de samme kommandoene på Linux for hver pull request og hver push til `main`, etter `uv sync --locked` og med databasen fra `compose.yaml` ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)). En pull request flettes først når kjøringen har bestått.
+GitHub Actions kjører de samme kommandoene på Linux for hver pull request og hver push til `main`, etter `uv sync --locked` og med databasen fra `compose.yaml` ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)). Gruppen fletter en pull request først når kjøringen på dens siste commit har bestått, og kjører den på nytt hvis `main` har endret seg siden. Det er gruppens rutine. GitHub håndhever den ikke, fordi gruppen ikke har admin-rettigheter i organisasjonen.
 
 ## Medlemmer
 
