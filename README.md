@@ -11,10 +11,10 @@ Prognose kjører på din egen maskin: appen med uv, og databasen PostgreSQL i Do
 ### Dette trenger du
 
 - **uv** 0.12.13 eller nyere ([installasjon](https://docs.astral.sh/uv/getting-started/installation/)). uv installerer selv Python 3.13 for prosjektet hvis maskinen mangler det.
-- **Docker Desktop** 4.99.0 eller nyere ([nedlasting](https://www.docker.com/products/docker-desktop/)), og det må være startet. Docker Desktop er gratis for personlig bruk og utdanning. Versjon 4.99.0 krever macOS 14 eller nyere. På Windows trenger det WSL 2 og maskinvarevirtualisering slått på.
+- **Docker Desktop** 4.99.0 eller nyere ([nedlasting](https://www.docker.com/products/docker-desktop/)), og det må være startet. Docker Desktop er gratis for personlig bruk og utdanning. Versjon 4.99.0 krever macOS 14 eller nyere. På Windows trenger det WSL 2 og maskinvarevirtualisering slått på. På macOS må Terminal finne `docker`. Svarer den `command not found: docker`, ligger verktøyene i `~/.docker/bin`. Velg da **System** under Docker Desktop → Settings → Advanced, eller legg mappa til i PATH med `echo 'export PATH="$HOME/.docker/bin:$PATH"' >> ~/.zprofile` og åpne et nytt Terminal-vindu.
 - **Git**, for å klone repoet.
 
-Prognose støtter macOS på Apple silicon eller Intel, og Windows 10 22H2 eller Windows 11 23H2 på x64. Windows på ARM støttes ikke i versjon 1, fordi databasedriveren psycopg ikke har en ferdig pakke for det. Så langt er oppsettet bare testet på macOS med Apple M1 (se [QA-loggen](docs/qa-logg.md)).
+Prognose støtter macOS på Apple silicon eller Intel, og Windows 10 22H2 eller Windows 11 23H2 på x64. Windows på ARM støttes ikke i versjon 1, fordi databasedriveren psycopg ikke har en ferdig pakke for det. Så langt er oppsettet bare testet på macOS med Apple M1 (se [QA-loggen](docs/qa-logg.md)). Etter første oppsett trenger Prognose ikke nett, fordi Docker-imaget, Python og pakkene da ligger på maskinen. Det er testet på macOS.
 
 ### Start Prognose
 
