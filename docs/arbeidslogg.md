@@ -651,7 +651,16 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Godkjente commit og push av rettingene (`5063f67`) og dokumentene (`b37c3b3`), og kommentaren med alle funnene i PR #14. CI-kjøring nr. 16 og Windows-testen nr. 7 passerte på `b37c3b3`.
 * Eksporterte økten med `/export`. Claude maskerte den: 27 stier til prosjektmappa ble `<repo>`, og 1 sti til den midlertidige mappa ble `<tmp>`. Sesjonsloggen og sju nye åpne punkter i `issues.md` er ført, og story 1.4 står som `done` i sprintstatusen.
 
-**Status:** Story 1.4 er ferdig på grenen, med eksporten, sesjonsloggen og de åpne punktene, og venter på flettingen av PR #14.
+* Godkjente commit og push av eksporten, sesjonsloggen og dokumentene (`a5b82cd`, `fde748f` og `990ee9d`). CI-kjøring nr. 17 og Windows-testen nr. 8 på `990ee9d` passerte.
+* Godkjente flettingen av PR #14. Claude flettet lokalt med «Create a merge commit» (`git merge --no-ff`), uten squash eller rebase, og med noreply-adressen som forfatter:
+  * merge-commiten `c5bd9cc` har den gamle `main` (`dc7673e`) og PR-hodet (`990ee9d`) som foreldre;
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * `main` ble pushet over HTTPS, fordi ingen workflow-filer var endret, og GitHub viser PR #14 som flettet 22. november kl. 19.57, med `c5bd9cc` som merge-commit;
+  * CI-kjøring nr. 18 på `main` passerte;
+  * lokal `main` og GitHub ble synkronisert og sto på samme commit, og arbeidskopien var ren;
+  * grenen `story/1-4-app-shell-and-error-pages` er beholdt.
+
+**Status:** Story 1.4 er flettet inn i `main` (`c5bd9cc`), og de åpne punktene står i `issues.md`. Neste story følger rekkefølgen i sprintplanen, og story 1.5 er ikke startet.
 
 ## 4. Videre dokumentasjon
 
