@@ -1,0 +1,159 @@
+---
+title: 'Story 1.4: Norwegian app shell and error pages'
+type: 'feature'
+created: '2026-11-22'
+status: 'done'
+route: 'dispatch'
+baseline_commit: 'dc7673ef04886aafc0d9797e6b24a07001a8e1d3'
+review_loop_iteration: 0
+context: ['{project-root}/_bmad-output/implementation-artifacts/epic-1-context.md']
+---
+
+<frozen-after-approval reason="human-owned intent — do not modify unless human renegotiates">
+
+## Intent
+
+**Problem:** The start page is unstyled, and every error shows a Django default page in English: «Not Found», «403 Forbidden» for a failed CSRF check, «Bad Request (400)», «Server Error (500)» for a stopped database, and an empty body for 405. With DEBUG off, Django sends errors only to e-mail, so nothing reaches the console (NFR-10, AD-12).
+
+**Approach:** One stylesheet with the DESIGN.md tokens and a base template with the logged-out app header give every page the approved look. Norwegian templates for Django's own error handlers, and an outermost middleware for 503 and 405, put the Message Catalogue texts in the not-found panel, and `LOGGING` sends errors to the console. The DEBUG rule in the last criterion is already built and tested in Story 1.1 (`env.debug_setting`, `test_only_dotenv_turns_debug_on`).
+
+## Boundaries & Constraints
+
+**Always:**
+- `web/static/web/app.css` defines exactly the frontmatter tokens, with the values copied verbatim: `--color-<name>` (26), `--font-<role>-family`, `-size`, `-weight` and `-line-height` (17 roles), `--radius-<key>` (5) and `--space-<key>` (13, `list-width` to `text-measure` included). Outside `:root`, colors, font families, font sizes and radii come only from these variables; the touch rule's `font-size: 16px` is the one exception.
+- Every page extends `web/base.html`: `lang="nb"`, the viewport tag, the `data:,` icon, the stylesheet through `{% static %}`, and a header with only the wordmark «Prognose». No script and no URL with a host; no `@import`, `url(` or `@font-face`.
+- Focus is `:focus-visible` with a 3 px `--color-blue` outline 2 px outside the element. No shadows, gradients, transitions or animation. The header wraps (`flex-wrap: wrap`). Touch screens are `@media (pointer: coarse)`: buttons, fields, selects, text areas and stand-alone links get at least 44 × 44 px, and fields 16 px text. Radio buttons and the switch get their target from their label in their own stories (DESIGN.md).
+- An error page shows the first sentence of its catalogue text, without the full stop, as the `h1` of the not-found panel, the rest as a paragraph, and the link «Til produktoversikten» only where the catalogue names it (Not found, Server error). The link goes to `/produkter/` (AD-11); Story 1.8 builds that page, so until then the link gives the 404 page. The panel is centered and at most 420 px wide, like the login panel, and `<title>` is the heading followed by « – Prognose». Error templates use no `request` or `user`, so they read nothing from the database.
+- The start page keeps its `h1` «Prognose» and its sentence, in the same panel.
+- New tests name an NFR-n or AD-n (D-10), plus the UX-DR-n they check, and use no database.
+
+**Never:**
+- No login, logged-in header, navigation, settings bar, `LoginRequiredMiddleware` or `/produkter/` route (Story 1.8); no `app.js`; no new dependency.
+- No change to `prognose/env.py`, the spine, DESIGN.md or EXPERIENCE.md.
+- No `try/except` around `get_response` for the 503 (Design Notes).
+
+## I/O & Edge-Case Matrix
+
+| Scenario | Input / State | Expected Output / Behavior | Error Handling |
+|----------|--------------|---------------------------|----------------|
+| Unknown address | `GET /finnes-ikke/` | 404, «Siden finnes ikke» and the link | N/A |
+| Database error in a view | a view raises `OperationalError` or `InterfaceError` | 503, the Database unavailable text, no link | the page reads nothing from the database |
+| Database error in middleware | another middleware raises `OperationalError` before or after the view | 503, as above | as above |
+| Failed CSRF check | `POST /` without a token | 403, «Skjemaet er utløpt» and «Last siden på nytt og prøv igjen.» | never the Server error text |
+| Other 403 | a view raises `PermissionDenied` | 403, the Server error text and the link | never the expired-form text |
+| Bad request | `GET /` with `Host: evil.example` | 400, the Server error text and the link | N/A |
+| Wrong method | `OPTIONS /` | 405, the Server error text and the link; `Allow: GET, HEAD` is kept | N/A |
+| Server error | a view raises `RuntimeError` on a POST with a password field | 500, the Server error text and the link | the console shows the error, but not the password, the secret or a database URL |
+
+</frozen-after-approval>
+
+## Code Map
+
+- `src/prognose/settings.py` -- add `web.middleware.ErrorPageMiddleware` first in `MIDDLEWARE`, and `LOGGING`; `DEBUG` stays as Story 1.1 built it. Django's default handlers and `CSRF_FAILURE_VIEW` already render `400.html`, `403.html`, `404.html`, `500.html` and `403_csrf.html` from the template root, so `urls.py` needs no `handler*` names.
+- `src/web/apps.py` -- `WebConfig`; connect the receiver in `ready()`.
+- `src/web/templates/web/start.html` and `src/web/views.py` (`start`, unchanged) -- the only page so far.
+- `tests/test_start_page.py` -- keep; its `POST /` → 403 and `OPTIONS /` → 405 test still holds. `tests/test_settings.py` covers DEBUG, and its `load_settings` runs settings.py again, so new settings stay plain data.
+- `_bmad-output/planning-artifacts/ux-designs/ux-G40-lyamouri-2026-11-15/DESIGN.md` lines 10–142 (tokens) and `EXPERIENCE.md` lines 155–158 (Message Catalogue) -- the tests read them; `docs/DESIGN.md` is a symlink, so the tests use the real path.
+- `…/mockups/konsept-d-kombinert.html` lines 33–37, 62–67 and 122–125 -- base, header and panel CSS to reuse; its variable names differ, and DESIGN.md wins.
+
+## Tasks & Acceptance
+
+**Execution:**
+- [x] `src/web/static/web/app.css` -- create: the tokens; the base (box-sizing, canvas, ink, body role, tabular numerals, `overflow-wrap: break-word`); headings by role with more space above than below; paragraphs up to the text measure; blue links; the focus rule; `.app-header` (header colors, 10 px × `--space-5` padding, wrapping) and the wordmark; the panel (UX-DR21) and the centered one-panel page; the touch block.
+- [x] `src/web/templates/web/base.html`, `src/web/templates/web/error.html` -- create the shell and the not-found panel layout.
+- [x] `src/web/templates/404.html`, `500.html`, `503.html`, `403_csrf.html` -- create with the catalogue texts; `400.html` and `403.html` extend `500.html`.
+- [x] `src/web/middleware.py` -- create `note_database_error`, which marks the request when `sys.exception()` is a connection error, and `ErrorPageMiddleware`, which returns the 503 page for a marked request and puts the Server error page in the body of a 405, keeping its headers.
+- [x] `src/web/apps.py`, `src/prognose/settings.py` -- as in the Code Map; `LOGGING` gives the `django.request` and `django.security` loggers a `console` `StreamHandler` at WARNING with the default format (the message and any traceback), without propagation (Implementation Notes).
+- [x] `src/web/templates/web/start.html`, `tests/test_start_page.py` -- extend the base; test the header.
+- [x] `tests/test_app_shell.py` -- create: the tokens equal the frontmatter (read by a small reader, no YAML package), the counts, nothing else in `:root`, every `var()` defined, no literals outside `:root`, no external loads, no shadow, gradient, animation, letter-spacing or uppercase, the focus, header and touch rules, and every page's `lang`, viewport, icon, stylesheet, header and single `h1`.
+- [x] `tests/test_error_pages.py` -- create: each matrix row, with the texts read from the catalogue; no English or debug text; test views and middleware in the module, with `pytest.mark.urls(__name__)` and `Client(raise_request_exception=False)`; the console text through the `console` handler.
+- [x] `docs/statustabell.md`, `docs/qa-logg.md`, `docs/ki-styringslogg.md`, `docs/arbeidslogg.md`, `sprint-status.yaml` -- the status paragraph, the manual check and the review defects, the middleware case, the work log and the story status.
+
+**Acceptance Criteria:**
+- Given `uv run pytest`, `uv run ruff check` and `uv run ruff format --check`, when they run locally and in CI, then they pass.
+- Given `runserver --insecure` with DEBUG off, when `/` and `/finnes-ikke/` open in Safari's responsive view at 320 px, 390 × 844 and 820 × 1180, then the stylesheet loads, nothing scrolls sideways or is cut off, and the QA log records the result.
+
+### Review Findings
+
+BMAD Code Review of PR #14 (2026-11-22): Blind Hunter (BH), Edge Case Hunter (EC), Verification Gap (VG) and Acceptance Auditor (AA), as four independent subagents, on the 22 files from `dc7673e` to `f3a10dd`. The usage limit stopped all four once, and each was resumed from its saved work. The IDs continue the bmad-build pass (BH-11 onward). 35 findings: 1 decision, 23 findings in 15 patches, 2 deferred and 9 rejected.
+
+- [x] [Review][Decision] The focus ring and the browser versions are not checked by hand (BH-20) — the QA log records the focus ring as not checked and carries Safari 18.6 and macOS 15.6.1 over from Story 1.1. `/finnes-ikke/` has one focusable element, the link, and Safari moves Tab to links only with Option-Tab or the setting «Press Tab to highlight each item on a webpage». Options: the user checks the ring and reads the versions now, or the QA log keeps its wording and the manual checklist in Story 4.4 covers the keyboard (NFR-11). Resolved: the user checked the ring with Option-Tab and approved it, and read Safari 18.6 and macOS 15.6 by hand; the QA log records both.
+- [x] [Review][Patch] Open points that the QA log and the triage log cite are not in `issues.md`, and the session export is not in the pull request yet (BH-11, AA-2) [.logs/mounia-03/issues.md]
+- [x] [Review][Patch] `replace_page` keeps the old `Content-Type`; with DEBUG on, Django's debug 500 is `text/plain` when the request does not accept HTML, so the 503 page would show as raw text (BH-13, EC-2) [src/web/middleware.py:55]
+- [x] [Review][Patch] No test runs the 503 path with DEBUG on, which the Design Notes claim (BH-14) [tests/test_error_pages.py:133]
+- [x] [Review][Patch] The leak test looks only for `postgresql://`, not for `postgres://`, the request body or the database password (BH-15, EC-15, AA-6) [tests/test_error_pages.py:214]
+- [x] [Review][Patch] A token can be redefined outside the top-level `:root`, in an `@media` block or another rule, and both token tests pass (BH-16, EC-11) [tests/test_app_shell.py:154]
+- [x] [Review][Patch] Case 31 and the QA log cite only PR #14, not the commit `9ae95fc`, and the work log still says the story waits for its commit (BH-17) [docs/ki-styringslogg.md, docs/qa-logg.md, docs/arbeidslogg.md]
+- [x] [Review][Patch] Tests do not name all the requirement IDs they check: UX-DR13 on the error pages, NFR-5 and UX-DR41 on the language and catalogue checks, and UX-DR2, UX-DR3 and UX-DR7 in the shell tests (BH-19, AA-1, AA-4) [tests/test_error_pages.py, tests/test_app_shell.py]
+- [x] [Review][Patch] The `var()` check misses a `var()` with a fallback or with spaces (EC-9, AA-7) [tests/test_app_shell.py:158]
+- [x] [Review][Patch] Radius longhands such as `border-top-left-radius` are not checked (EC-10) [tests/test_app_shell.py:46]
+- [x] [Review][Patch] The focus test misses `outline: 0px`, `!important`, `outline-style: none` and `outline-width: 0` (EC-12) [tests/test_app_shell.py:200]
+- [x] [Review][Patch] The external-load check is case-sensitive and misses `image-set(` (EC-13) [tests/test_app_shell.py:171]
+- [x] [Review][Patch] A fifth property in a typography role would be ignored (EC-14) [tests/test_app_shell.py:86]
+- [x] [Review][Patch] Nothing tests that `django.server` keeps its handler and that the two configured loggers do not propagate (VG-1) [tests/test_error_pages.py:191]
+- [x] [Review][Patch] No test shows a `django.request` warning, such as «Not Found», reaching the console (VG-2) [tests/test_error_pages.py:227]
+- [x] [Review][Patch] The touch rule exempts every checkbox, while its comment names only radio buttons and the switch; DESIGN.md lets the label make up the target of a small control, so the comment is widened, and the stories with radio buttons and checkboxes get an open point (AA-5) [src/web/static/web/app.css:250]
+- [x] [Review][Defer] The focus ring and the link color would fail on the navy header (BH-12) [src/web/static/web/app.css] — deferred: pre-existing in the design. DESIGN.md gives every focusable element a blue ring and the header no focus color, and blue on navy is about 2.4:1, under the 3:1 of WCAG 1.4.11. Nothing in the logged-out header can take focus; Story 1.8 adds the header navigation and needs a design decision.
+- [x] [Review][Defer] The database connection has no connect timeout (EC-6) [src/prognose/env.py] — deferred: pre-existing. `database_config` from Story 1.1 sets none, so psycopg waits up to 130 s when the port answers but the database does not, for example while the container is paused; Story 1.4 does not change `env.py`.
+
+**Rejected**
+- BH-18, EC-8 — the spec is `done` while its documents task is open: the fix edits the spec under review; the task is ticked when the documents are finished.
+- EC-1 — false: no 405 or marked response is streaming; the 405 comes from the method decorators, and a marked response from Django's error handling.
+- EC-3 — false: AD-12 gives every 405 the Norwegian page, and no view sends its own 405 body.
+- EC-4 — low: a deadlock or a cancelled query while the database runs also gives the 503 page; that is unlikely with one local user, the frozen matrix names `OperationalError`, and telling them apart needs SQLSTATE branches.
+- EC-5, VG-3 — low: the console says «Internal Server Error» for a database error that the client gets as 503; the traceback names the database error, and a fix needs Django's private `_has_been_logged` or a second log line.
+- EC-7 — false: the design uses only h1 to h3 (UX-DR44).
+- AA-3 — false: the spine's Logging row ties the console rules to NFR-4, so the leak test rightly names it.
+
+## Implementation Notes
+
+- 2026-11-22: built in the build session, not by a subagent, because the user approved subagents for the reviews only. The epic context was used as it was: the spine change from Story 1.3 that made it formally stale touches nothing in it (the user's decision).
+- `LOGGING`: the task first named the `django` logger. `dictConfig` resets the existing children of a logger it configures, so `django.server` would have lost its handler, and runserver's request lines at INFO would have disappeared. The settings configure `django.request` and `django.security` instead, without propagation, so a line is also not printed twice with DEBUG on. Checked with runserver: the request lines are unchanged, and «Not Found» and the CSRF warning reach the console with DEBUG off.
+- Mutations, each caught and then restored by a scratchpad script that is not committed: no outermost middleware, the receiver not connected, a token value changed, a literal color in a rule, the expired-form text changed, no loggers in `LOGGING`, and the 405 branch off.
+- runserver on 127.0.0.1:8765 with DEBUG off: `/` 200; `/finnes-ikke/` 404 with the Norwegian page; `/static/web/app.css` 200 `text/css`; a missing static file 404 with the Norwegian page; `DELETE /` 403, because the CSRF check comes before the method check.
+- Found in the check of the tasks, with curl through runserver: `OPTIONS /` gave 405 with `Content-Length: 0` and an empty body, because `CommonMiddleware`, inside `ErrorPageMiddleware`, had set the length of the empty body, so a browser would show a blank page. The test client does not check the length. `replace_page` now puts the page into the response that the other layers made and sets `Content-Length` to the new body. The 503 page goes the same way, so the security headers stay. `assert_error_page` checks that a `Content-Length` matches the body, and an eighth mutation (the length not updated) is caught. Afterwards `OPTIONS /` gave 405 with 717 bytes and a matching length.
+- The matrix row «Server error» was split across a page test and a log test; one test, `test_server_error_shows_its_page_and_is_logged_without_secrets`, now covers it.
+- 130 tests pass (104 earlier and 26 new) with `~/.docker/bin` on PATH; without `docker` on PATH, `test_compose.py` skips. Ruff passes after `ruff format` of the two new test files.
+- The documents task is finished after the review, because the QA log records the review findings and the user's check in Safari.
+- BMAD Code Review, 2026-11-22: the user chose to apply all 15 patches and to check the focus ring by hand. The new test `test_database_error_shows_the_503_page_also_with_debug_on` first failed with `text/plain; charset=utf-8`, and passed after `replace_page` set `Content-Type`. Six more mutations, one for each fix that guards behavior (BH-13, BH-16, EC-12, EC-13, VG-1 and VG-2), are caught, so all 14 are. 132 tests and Ruff pass. UX-DR5 has nothing to check in this story, because no page shows a signal yet.
+- 2026-11-22, the end of the session: the user exported it to `.logs/mounia-03/sessions/1-4-2026-11-22.txt`, which is masked (27 project paths became `<repo>`, 1 temporary path `<tmp>`). The session log `980-2026-11-22-19-51-47-story-1-4-app-skall-og-feilsider.md` and seven new open points in `issues.md` resolve BH-11 and AA-2, and the documents task is done.
+
+## Spec Change Log
+
+## Review Triage Log
+
+Review pass 1 (2026-11-22): Blind Hunter, run inline by the build session as in Stories 1.2 and 1.3, on the diff from `dc7673e` (51.3 kB, so at least 8 findings). Edge Case Hunter and Verification Gap were skipped here, because BMAD Code Review runs them as independent subagents on the pull request (D-8). The 405 length defect was found before this pass, in the task check (Implementation Notes).
+
+| ID | Finding | Verdict | Evidence | Route |
+|---|---|---|---|---|
+| BH-1 | `@media (pointer: coarse)` misses touch screens whose primary input is a mouse or touchpad, such as hybrid laptops; `any-pointer: coarse` would cover them | low | Real, but phones and iPads, the touch devices NFR-6 names, report a coarse primary pointer, and a hybrid laptop keeps the desktop sizes | reject: the approved Intent chose `pointer: coarse`; raised with the user at the presentation |
+| BH-2 | An error response other than 405 that a view returns without a body, such as an empty 400, gets no Norwegian page | low | No such view exists, and later stories re-render forms with their errors; a general branch adds complexity | reject |
+| BH-3 | A loaded and changed session whose save fails after the view becomes `SessionInterrupted`, a 400 that Django sends without `got_request_exception`, so it shows the Server error page instead of 503 | low | Real for a database that stops between loading and saving the session in one request; Django converts the error before any hook | reject |
+| BH-4 | The `var()` check in `test_app_shell.py` skips the `font` shorthand | low | A shorthand with a literal stack would pass | patch: `font` added to the checked properties |
+| BH-5 | The color check catches only the names `white` and `black` | low | Hex values copied from the mockup are the realistic risk; a full name list adds little | reject |
+| BH-6 | The link «Til produktoversikten» is a hard-coded `/produkter/`, which gives the 404 page until Story 1.8 | low | The approved Intent decides it (AD-11's URL map) | reject; the switch to `{% url %}` is an open point for Story 1.8 in `issues.md` |
+| BH-7 | With DEBUG on, the 503 page replaces Django's debug page for a database error | false | Intended (Design Notes): the traceback still reaches the console through `django.request` | reject |
+| BH-8 | `test_database_error_in_another_middleware_shows_the_503_page` checks the outermost entry after changing the settings | low | It checked the value captured before the change, but read as if it checked the new list | patch: the assertion comes first |
+| BH-9 | The path to the UX folder is repeated in both new test modules | low | A rename of the folder fails both tests loudly | reject |
+| BH-10 | «Last siden på nytt og prøv igjen.» after a POST: reloading resends the stale token | low | Real, but the text is the Message Catalogue's, verbatim, as the story requires | reject; the copy can be revised in Story 4.2 |
+
+## Design Notes
+
+Django wraps every middleware in `convert_exception_to_response`, so an exception becomes a response in the layer that raised it, and a `try/except` in an outer layer never sees it. Django sends `got_request_exception` inside that `except` block, so a receiver finds the exception in `sys.exception()` and marks the request, and the outermost middleware then replaces the finished response with the 503 page. This covers views, other middleware and DEBUG on, and the 503 page is rendered after every inner middleware has run.
+
+```python
+def note_database_error(sender, request=None, **kwargs):
+    if request is not None and isinstance(sys.exception(), DATABASE_ERRORS):
+        request.database_unavailable = True
+```
+
+No page reads the database before Story 1.8, so only the tests check the 503 page in this story; Story 1.8 tests it with a logged-in user.
+
+## Verification
+
+**Commands:**
+- `uv run pytest` -- expected: every test passes, the 104 earlier ones included
+- `uv run ruff check` and `uv run ruff format --check` -- expected: no findings
+
+**Manual checks:**
+- The second criterion, in Safari; `/static/web/app.css` answers 200 with DEBUG off.

@@ -1,0 +1,8 @@
+{% extends "web/error.html" %}
+{# Expired form: a failed CSRF check (AD-12). Any other 403 gets 403.html. #}
+{% block title %}Skjemaet er utløpt – Prognose{% endblock %}
+{% block heading %}Skjemaet er utløpt{% endblock %}
+{% block text %}
+      <p>Last siden på nytt og prøv igjen.</p>
+{% endblock %}
+{% block link %}{% endblock %}

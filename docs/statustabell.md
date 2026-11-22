@@ -12,7 +12,7 @@ Statustabellen oppfyller DR-8 i PRD-en. Den viser hvert funksjonskrav (FR) og DR
 - **Stories:** storyen som bygger kravet, står først. I parentes står de andre storyene i [`epics.md`](../_bmad-output/planning-artifacts/epics.md) som dekker en del av det.
 - **Tester:** fylles ut når testene finnes. Hver test nevner FR-n eller E-n som den kontrollerer (DR-5), og en test som ikke kontrollerer noen FR, nevner NFR-, DR- eller AD-ID-ene sine (D-10).
 
-**Status 20. november 2026.** Ingen FR er bygd eller delvis bygd. Prosjektskjelettet fra story 1.1 del A har brukermodellen `web.Company` og databasen i Docker Compose, som FR-1 og FR-4 bygger på, men kravene bygges i story 1.8 og 1.7.
+**Status 22. november 2026.** Ingen FR er bygd eller delvis bygd. Prosjektskjelettet fra story 1.1 del A har brukermodellen `web.Company` og databasen i Docker Compose, som FR-1 og FR-4 bygger på, men kravene bygges i story 1.8 og 1.7. Story 1.4 har laget app-skallet og de norske feilsidene (NFR-10, AD-12). FR-2 skal vise siden «Siden finnes ikke» for andre bedrifters produkter, men kravet bygges i story 1.8.
 
 **Oppsett på Windows (D-3).** Oppsettet med Docker Desktop og oppstarten uten nett er ikke testet på Windows, fordi gruppen ikke har en Windows x64-PC der uv og Docker Desktop kan installeres. Delen uten Docker testes automatisk på Windows Server 2025 x64 i GitHub Actions for hver pull request som endrer koden eller avhengighetene, og passerte første gang 22. november 2026 (se [QA-loggen](qa-logg.md#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3)).
 

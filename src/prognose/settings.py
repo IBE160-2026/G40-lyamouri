@@ -46,6 +46,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # AD-12: first, so that it also handles the database errors raised in the others.
+    "web.middleware.ErrorPageMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -77,5 +79,27 @@ LANGUAGE_CODE = "nb"
 TIME_ZONE = "Europe/Oslo"
 
 STATIC_URL = "static/"
+
+# AD-12: Django prints request and security errors to the console only with DEBUG
+# on. These two loggers print them in both run modes, as the message and the
+# traceback, never the request body. Configuring the parent logger "django"
+# instead would also reset "django.server", which prints runserver's requests.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "django.security": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+    },
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

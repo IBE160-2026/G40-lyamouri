@@ -636,6 +636,23 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 1.3 er flettet inn i `main` (`36e4035`). Oppsettet på Windows er bare testet uten Docker, og de åpne punktene står i `issues.md`. Neste story følger rekkefølgen i sprintplanen, og story 1.4 er ikke startet.
 
+### 22. november 2026 – Story 1.4: app-skall og norske feilsider
+
+* Startet story 1.4 med `bmad-build` på grenen `story/1-4-app-shell-and-error-pages`, laget fra `main` (`dc7673e`). Epic-1-konteksten var formelt utdatert etter en endring i spinen i story 1.3, men endringen gjaldt bare Windows-testen, så jeg valgte å bruke konteksten som den var. Godkjente subagenter bare til gjennomgangene.
+* Godkjente spesifikasjonen, også størrelsen på om lag 2 400 tokens, som er over den anbefalte grensen på 1 600.
+* Claude fant at AD-12 ikke kan bygges slik regelen vanligvis leses: Django gjør om et unntak til et svar i laget der det oppstår, så den ytterste mellomvaren ser bare svaret. Løsningen er et signal som merker forespørselen, og kravet og spinen er uendret ([tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-ytterste-mellomvaren-22-november-2026)).
+* Claude bygde stilarket med alle tokenene fra `DESIGN.md`, basismalen med toppfeltet, de norske feilsidene, mellomvaren for 503 og 405, loggingen til konsollen og 26 nye tester. Testene leser tokenene fra `DESIGN.md` og tekstene fra meldingskatalogen i `EXPERIENCE.md`. Åtte mutasjoner viste at testene feiler når de skal.
+* `curl` mot runserver viste at 405-siden ble sendt med `Content-Length: 0`, så nettleseren ville vist en blank side. Claude rettet mellomvaren og la til en sjekk i testene.
+* Reviewen i `bmad-build` (Blind Hunter) ga 10 funn: 2 ble rettet og 8 avvist. Jeg valgte å beholde berøringsreglene for skjermer der berøring er hovedinngangen (`pointer: coarse`).
+* Sjekket `/` og `/finnes-ikke/` i den responsive visningen i Safari ved 320 px, 390 × 844 og 820 × 1180, uten avkuttet tekst, overlapp eller sidelengs rulling.
+* Godkjente commit, push og PR #14 (`9ae95fc` og `f3a10dd`). CI-kjøring nr. 15 og Windows-testen nr. 6 passerte på `f3a10dd`.
+* Kjørte BMAD Code Review med fire KI-granskere. Bruksgrensen stoppet alle fire én gang, og de fortsatte fra arbeidet som var lagret da grensen var tilbakestilt. De fant 35 funn: 23 ble rettet i 15 punkter, 2 utsatt og 9 avvist. Den viktigste rettingen gjør at 503-siden også er HTML med DEBUG på, og resten strammer inn testene og dokumentene. Seks nye mutasjoner viste at rettingene virker, og 132 tester og Ruff passerte.
+* Bestemte å sjekke fokusringen for hånd. Den blå ringen rundt lenken på `/finnes-ikke/` var i orden, og versjonene var Safari 18.6 og macOS 15.6.
+* Godkjente commit og push av rettingene (`5063f67`) og dokumentene (`b37c3b3`), og kommentaren med alle funnene i PR #14. CI-kjøring nr. 16 og Windows-testen nr. 7 passerte på `b37c3b3`.
+* Eksporterte økten med `/export`. Claude maskerte den: 27 stier til prosjektmappa ble `<repo>`, og 1 sti til den midlertidige mappa ble `<tmp>`. Sesjonsloggen og sju nye åpne punkter i `issues.md` er ført, og story 1.4 står som `done` i sprintstatusen.
+
+**Status:** Story 1.4 er ferdig på grenen, med eksporten, sesjonsloggen og de åpne punktene, og venter på flettingen av PR #14.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

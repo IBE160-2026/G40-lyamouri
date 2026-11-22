@@ -1,15 +1,9 @@
-<!doctype html>
-<html lang="nb">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Prognose</title>
-  <link rel="icon" href="data:,">
-</head>
-<body>
-  <main>
-    <h1>Prognose</h1>
-    <p>Prognose foreslår hvor mye du bør bestille neste uke, og viser hvordan tallene er regnet.</p>
+{% extends "web/base.html" %}
+{% block main %}
+  <main class="panel-page">
+    <div class="panel">
+      <h1>Prognose</h1>
+      <p>Prognose foreslår hvor mye du bør bestille neste uke, og viser hvordan tallene er regnet.</p>
+    </div>
   </main>
-</body>
-</html>
+{% endblock %}

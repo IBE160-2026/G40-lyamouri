@@ -1,4 +1,4 @@
-"""The start page at / (Story 1.1; AD-10, AD-11, NFR-1, NFR-6, NFR-11).
+"""The start page at / (Stories 1.1 and 1.4; AD-10, AD-11, NFR-1, NFR-6, NFR-11).
 
 These tests have no database access, so they also show that the page reads no
 data.
@@ -12,7 +12,8 @@ from pytest_django.asserts import assertContains, assertTemplateUsed
 
 def test_start_page_is_norwegian_and_shows_the_wordmark(client):
     """NFR-11, NFR-6, AD-11: the page declares Norwegian, has the responsive
-    viewport tag and shows the wordmark «Prognose»."""
+    viewport tag and shows the wordmark «Prognose» in the app header and as its
+    page title."""
     response = client.get("/")
 
     assertTemplateUsed(response, "web/start.html")
@@ -21,6 +22,11 @@ def test_start_page_is_norwegian_and_shows_the_wordmark(client):
     assertContains(
         response,
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        html=True,
+    )
+    assertContains(
+        response,
+        '<header class="app-header"><span class="wordmark">Prognose</span></header>',
         html=True,
     )
     assertContains(response, "<h1>Prognose</h1>", html=True)

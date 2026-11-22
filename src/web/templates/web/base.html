@@ -1,0 +1,17 @@
+{% load static %}<!doctype html>
+{# The shell of every page (AD-11, UX-DR14). Without a login, the header shows only the wordmark. #}
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Prognose{% endblock %}</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="{% static 'web/app.css' %}">
+</head>
+<body>
+  <header class="app-header">
+    <span class="wordmark">Prognose</span>
+  </header>
+  {% block main %}{% endblock %}
+</body>
+</html>

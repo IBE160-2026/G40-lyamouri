@@ -1,0 +1,269 @@
+/* Prognose's one stylesheet (AD-11, UX-DR1). :root holds the tokens from the
+   DESIGN.md frontmatter with the same values, and the rules below take their
+   colors, fonts and radii only from these variables. Light mode only. */
+
+:root {
+  /* Colors */
+  --color-canvas: #EDF2F7;
+  --color-pane: #F4F7FA;
+  --color-surface: #FFFFFF;
+  --color-sunken: #F2F6FA;
+  --color-ink: #0E2236;
+  --color-muted: #4A5B6E;
+  --color-border: #D4DEE8;
+  --color-field: #738699;
+  --color-axis: #9AABBD;
+  --color-header: #0E2236;
+  --color-on-header: #FFFFFF;
+  --color-header-meta: #BFCDDB;
+  --color-blue: #1D56C4;
+  --color-on-blue: #FFFFFF;
+  --color-blue-tint: #E7EFFC;
+  --color-blue-ink: #1B3F86;
+  --color-turquoise: #08727A;
+  --color-turquoise-tint: #EBF7F8;
+  --color-turquoise-border: #BFE3E6;
+  --color-band: #C5EBEE;
+  --color-green: #15703F;
+  --color-green-tint: #E2F3E8;
+  --color-amber: #7A4B00;
+  --color-amber-tint: #FFF1D6;
+  --color-red: #B42318;
+  --color-red-tint: #FDE7E4;
+
+  /* Typography: four properties per role */
+  --font-wordmark-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-wordmark-size: 17px;
+  --font-wordmark-weight: 700;
+  --font-wordmark-line-height: 1.5;
+  --font-page-title-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-page-title-size: 26px;
+  --font-page-title-weight: 700;
+  --font-page-title-line-height: 1.3;
+  --font-section-title-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-section-title-size: 20px;
+  --font-section-title-weight: 700;
+  --font-section-title-line-height: 1.3;
+  --font-subsection-title-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-subsection-title-size: 16px;
+  --font-subsection-title-weight: 700;
+  --font-subsection-title-line-height: 1.3;
+  --font-card-title-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-card-title-size: 16px;
+  --font-card-title-weight: 600;
+  --font-card-title-line-height: 1.3;
+  --font-body-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-body-size: 15px;
+  --font-body-weight: 400;
+  --font-body-line-height: 1.5;
+  --font-body-sm-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-body-sm-size: 14px;
+  --font-body-sm-weight: 400;
+  --font-body-sm-line-height: 1.5;
+  --font-meta-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-meta-size: 13px;
+  --font-meta-weight: 400;
+  --font-meta-line-height: 1.5;
+  --font-label-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-label-size: 13px;
+  --font-label-weight: 600;
+  --font-label-line-height: 1.4;
+  --font-label-lg-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-label-lg-size: 15px;
+  --font-label-lg-weight: 600;
+  --font-label-lg-line-height: 1.4;
+  --font-order-number-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-order-number-size: 44px;
+  --font-order-number-weight: 700;
+  --font-order-number-line-height: 1.1;
+  --font-order-number-card-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-order-number-card-size: 28px;
+  --font-order-number-card-weight: 700;
+  --font-order-number-card-line-height: 1.15;
+  --font-order-number-row-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-order-number-row-size: 18px;
+  --font-order-number-row-weight: 700;
+  --font-order-number-row-line-height: 1.15;
+  --font-week-figure-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-week-figure-size: 30px;
+  --font-week-figure-weight: 700;
+  --font-week-figure-line-height: 1.2;
+  --font-formula-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-formula-size: 13.5px;
+  --font-formula-weight: 400;
+  --font-formula-line-height: 1.5;
+  --font-chart-label-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-chart-label-size: 12px;
+  --font-chart-label-weight: 400;
+  --font-chart-label-line-height: 1.3;
+  --font-chart-caption-family: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-chart-caption-size: 13px;
+  --font-chart-caption-weight: 400;
+  --font-chart-caption-line-height: 1.3;
+
+  /* Radii */
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-list-width: 392px;
+  --space-list-width-narrow: 340px;
+  --space-card-padding: 12px 14px;
+  --space-panel-padding: 16px 20px 20px;
+  --space-text-measure: 72ch;
+}
+
+/* Base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  font-weight: var(--font-body-weight);
+  line-height: var(--font-body-line-height);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+}
+
+/* Headings follow the roles in DESIGN.md and have more space above than below. */
+h1,
+h2,
+h3 {
+  margin: var(--space-6) 0 var(--space-2);
+}
+
+h1 {
+  font-family: var(--font-page-title-family);
+  font-size: var(--font-page-title-size);
+  font-weight: var(--font-page-title-weight);
+  line-height: var(--font-page-title-line-height);
+}
+
+h2 {
+  font-family: var(--font-section-title-family);
+  font-size: var(--font-section-title-size);
+  font-weight: var(--font-section-title-weight);
+  line-height: var(--font-section-title-line-height);
+}
+
+h3 {
+  font-family: var(--font-subsection-title-family);
+  font-size: var(--font-subsection-title-size);
+  font-weight: var(--font-subsection-title-weight);
+  line-height: var(--font-subsection-title-line-height);
+}
+
+p {
+  max-width: var(--space-text-measure);
+  margin: 0 0 var(--space-2);
+}
+
+a {
+  color: var(--color-blue);
+  text-underline-offset: 3px;
+}
+
+/* Focus: a 3 px blue outline 2 px outside every focusable element (UX-DR4). */
+:focus-visible {
+  outline: 3px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+/* App header: the only dark surface. It wraps instead of being cut off (UX-DR7, UX-DR14). */
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-6);
+  padding: 10px var(--space-5);
+  background: var(--color-header);
+  color: var(--color-on-header);
+}
+
+.wordmark {
+  font-family: var(--font-wordmark-family);
+  font-size: var(--font-wordmark-size);
+  font-weight: var(--font-wordmark-weight);
+  line-height: var(--font-wordmark-line-height);
+}
+
+/* Panel: one question or task per panel, never a panel inside a panel (UX-DR21). */
+
+.panel {
+  padding: var(--space-panel-padding);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.panel + .panel {
+  margin-top: var(--space-4);
+}
+
+/* The panel padding gives the first heading its space above. */
+.panel > :first-child {
+  margin-top: 0;
+}
+
+.panel > :last-child {
+  margin-bottom: 0;
+}
+
+/* A page with one panel of at most 420 px, centered below the header, like
+   the login panel; the error pages use it for the not-found panel (UX-DR13). */
+.panel-page {
+  max-width: calc(420px + 2 * var(--space-4));
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4);
+}
+
+/* Touch screens: every control has a target of at least 44 × 44 px, and form
+   fields use 16 px text, so that a phone does not zoom in (UX-DR7). Radio
+   buttons and checkboxes, the switch among them, are smaller than that, so
+   their label makes up the target, in the stories that add them (DESIGN.md). */
+@media (pointer: coarse) {
+  button,
+  input:not([type="radio"], [type="checkbox"]),
+  select,
+  textarea,
+  .standalone-link {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .standalone-link {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}

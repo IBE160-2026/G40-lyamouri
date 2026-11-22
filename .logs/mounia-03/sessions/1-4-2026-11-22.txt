@@ -1,0 +1,3211 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Opus 5.5 · Claude Pro
+ ▝▝   ▝▝   ~/G40-lyamouri
+
+
+❯ /clear                                                                        
+
+❯ Les prosjektregglene, sprintplanen, story 1,4 og relevante BMAD dokkumenter.  
+  Kontroller status på main og tidligere arbeid. Start story 1.4 etter BMAD     
+  metoden og sensorveiledningen. Hold deg til storyens scope, unngå             
+  dobbeltarbeid og unødvendig tokenbruk. Jobb selvstendig, men be om godkjnning 
+  før commit push,PR og fletting. Ikke les filer utenfor prosjektmappen eller   
+  eksponer hemmeligheter.                                                       
+
+⏺ Jeg starter med å kartlegge prosjektet: regler, sprintplan, story 1.4 og
+  loggene.
+
+  Searched for 1 pattern, read 7 files, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg har nå oversikten over status (story 1.1–1.3 er done, 1.4 er backlog, main
+  er ren og synkronisert). Nå laster jeg BMAD-byggeskillen, som styrer resten
+  av prosessen.
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+  Read 2 files, ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg følger BMAD-steg 1. Først sjekker jeg om den lagrede epic-1-konteksten
+  fortsatt er gyldig, og laster forrige spesifikasjon (story 1.3) for
+  kontinuitet.
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Spinen (ARCHITECTURE-SPINE.md) er nyere enn den lagrede epic-1-konteksten, så
+  etter BMAD-regelen er konteksten ugyldig. Jeg sjekker hva som er endret siden
+  konteksten ble laget.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Endringen i spinen gjelder bare Windows-teksten fra story 1.3 og berører ikke
+  noe i epic-1-konteksten. Jeg sjekker grenene og beslutningene om
+  kodegjennomgang (D-8) før jeg bestemmer neste steg.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ main er bekreftet ren og lik origin/main (dc7673e), med story 1.1–1.3 flettet,
+  så jeg oppretter en lokal gren for storyen (ingen commit eller push).
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ User answered Claude's questions:
+  ⎿  · Epic-1-konteksten (epic-1-context.md) er formelt ugyldig etter 
+     BMAD-regelen, fordi spinen ble endret i story 1.3 (PR #12). Jeg har sjekket
+     diffen: den er 3 linjer om Windows-testen og berører ingenting i 
+     konteksten. Skal den brukes som den er, eller kompileres på nytt? → Bruk 
+     den som den er (Anbefalt)
+     · BMAD bruker subagenter til uavhengige gjennomganger, for eksempel BMAD 
+     Code Review med fire granskere, som i story 1.1–1.3 (D-8, kriterium 3 i 
+     sensorveiledningen). Får jeg bruke subagenter i denne økten der BMAD krever
+     det? → Ja, der BMAD krever det (Anbefalt)
+
+⏺ Begge anbefalingene er valgt, og steg 1 er ferdig med story-nøkkelen
+  1-4-norwegian-app-shell-and-error-pages. Spesifikasjonen blir
+  spec-1-4-norwegian-app-shell-and-error-pages.md, og jeg går videre til
+  planleggingen.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Steg 2 er planleggingen. Brukeren har godkjent subagenter bare til
+  gjennomgangene, så jeg undersøker kodebasen selv. Først den eksisterende koden
+  fra story 1.1:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå kravene storyen viser til: NFR-ene, AD-11–13 og UX-DR-ene i epics.md.
+
+  Searched for 1 pattern, ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå tokenene i frontmatteren til DESIGN.md, som stilarket skal kopiere ordrett:
+
+  Listed 1 directory (ctrl+o to expand)
+
+⏺ Fargene, de 17 typografirollene, de 5 radiene og avstandsskalaen stemmer med
+  tellingen i storyen. Nå meldingskatalogen og feilsidene i EXPERIENCE.md, og
+  det DESIGN.md sier om CSS-variabler:
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Django pakker hvert mellomvarelag inn, så en vanlig try/except i den ytterste
+  mellomvaren ville aldri se databasefeilen; jeg tar det med i planen og ser på
+  de eksisterende testene og story 1.8 neste.
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Story 1.8 bekrefter at 503-siden også må virke når feilen kommer fra
+  innloggingssjekken, og produktoversikten blir /produkter/. Nå tar jeg den
+  godkjente mockupen for tokennavnene og CSS-en til toppfeltet, panelet og
+  fokus.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Nå sammendraget av sensorveiledningen og statustabellen, som storyen skal
+  oppdatere:
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Sensorveiledningen vekter sporbarhet (30 %), testing med kodegjennomgang (15
+  %) og design og tilgjengelighet (10 %), og storyen treffer særlig de to siste.
+  Jeg gjør noen tekniske kontroller før jeg skriver spesifikasjonen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Undersøkelsen er ferdig: Django 5.2.19 viser at databasefeilen bare er synlig
+  for den ytterste mellomvaren via got_request_exception-signalet. Jeg leser
+  malen for spesifikasjonen nå.
+  Read 1 file (ctrl+o to expand)
+
+⏺ Spesifikasjonen for story 1.2 brukte den fulle ruten. Jeg ser raskt på formen
+  dens, så den nye følger samme mønster:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Malen er lest. To siste kontroller før jeg skriver: om README beskriver noe
+  storyen endrer, og hvordan Django 5.2 lager 400-svaret (det må ikke lese
+  vertsnavnet på nytt):
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ README nevner ikke maler, statiske filer eller DEBUG, så den trenger ingen
+  endring. Jeg sjekker nå hva brukeren ser ved feil, slik at problembeskrivelsen
+  i spesifikasjonen blir presis.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Svarene i dag viser at problemet er reelt: engelske Django-feilsider, tom 405
+  og ingen konsollogg når DEBUG er av. Jeg sjekker linjenumrene i mockupen før
+  jeg skriver spesifikasjonen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-e
+       rror-pages.md)
+  ⎿  Wrote 101 lines to _bmad-output/implementation-artifacts/spec-1-4-norw
+     egian-app-shell-and-error-pages.md
+       1 ---
+       2 title: 'Story 1.4: Norwegian app shell and error pages'
+       3 type: 'feature'
+       4 created: '2026-11-22'
+       5 status: 'draft'
+       6 route: 'dispatch'
+       7 baseline_commit: 'dc7673ef04886aafc0d9797e6b24a07001a8e1d3'
+       8 review_loop_iteration: 0
+       9 context: ['{project-root}/_bmad-output/implementation-artifacts/
+         epic-1-context.md']
+     … +92 lines (ctrl+o to expand)
+
+⏺ Spesifikasjonen er ferdig, og jeg fant to hull i testoppgaven (UX-DR2 og
+  UX-DR44) som jeg nå legger til før jeg måler lengden.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 1 line, removed 1 line
+      65  - [ ] `src/web/middleware.py` -- create `note_database_error`, 
+          which marks the request when `sys.exception()` is a connection 
+          error, and `ErrorPageMiddleware`, which returns the 503 page fo
+          r a marked request and puts the Server error page in the body o
+          f a 405, keeping its headers.
+      66  - [ ] `src/web/apps.py`, `src/prognose/settings.py` -- as in th
+          e Code Map; `LOGGING` gives the `django` logger a `console` `St
+          reamHandler` at WARNING with the default format (the message an
+          d any traceback).
+      67  - [ ] `src/web/templates/web/start.html`, `tests/test_start_pag
+          e.py` -- extend the base; test the header.
+      68 -- [ ] `tests/test_app_shell.py` -- create: the tokens equal the
+         - frontmatter (read by a small reader, no YAML package), the cou
+         -nts, nothing else in `:root`, every `var()` defined, no literal
+         -s outside `:root`, no external loads, no shadow, gradient or an
+         -imation, the focus, header and touch rules, and every page's `l
+         -ang`, viewport, icon, stylesheet and header.                   
+      68 +- [ ] `tests/test_app_shell.py` -- create: the tokens equal the
+         + frontmatter (read by a small reader, no YAML package), the cou
+         +nts, nothing else in `:root`, every `var()` defined, no literal
+         +s outside `:root`, no external loads, no shadow, gradient, anim
+         +ation, letter-spacing or uppercase, the focus, header and touch
+         + rules, and every page's `lang`, viewport, icon, stylesheet, he
+         +ader and single `h1`.                                          
+      69  - [ ] `tests/test_error_pages.py` -- create: each matrix row, w
+          ith the texts read from the catalogue; no English or debug text
+          ; test views and middleware in the module, with `pytest.mark.ur
+          ls(__name__)` and `Client(raise_request_exception=False)`; the 
+          console text through the `console` handler.
+      70  - [ ] `docs/statustabell.md`, `docs/qa-logg.md`, `docs/ki-styri
+          ngslogg.md`, `docs/arbeidslogg.md`, `sprint-status.yaml` -- the
+           status paragraph, the manual check and the review defects, the
+           middleware case, the work log and the story status.
+      71  
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Spesifikasjonen er på ca. 9 800 tegn, omtrent 2 400 tokens. Det er over BMADs
+  anbefalte grense på 1 600, men på samme nivå som spesifikasjonen for story
+  1.2. Ingen åpne spørsmål gjenstår, så her er sammendraget før godkjenningen.
+
+  Plan for story 1.4
+
+  Spesifikasjon: _bmad-output/implementation-artifacts/spec-1-4-norwegian-app-sh
+  ell-and-error-pages.md
+  Gren: story/1-4-app-shell-and-error-pages (lokal, laget fra main på dc7673e).
+  Ruten er den fulle, fordi rundt 15 filer berøres.
+
+  Dette bygges:
+  1. Stilarket src/web/static/web/app.css: alle tokenene fra DESIGN.md som
+     CSS-variabler (26 farger, 17 typografiroller, 5 radier og 13 avstander). I
+     tillegg fokusringen, toppfeltet, panelet og reglene for berøringsskjermer.
+  2. Basismalen med lang="nb", viewport-taggen og et toppfelt med bare
+     «Prognose». Startsiden bruker den.
+  3. Norske feilsider for 400, 403, 404, 405, 500 og 503 og for utløpt skjema,
+     med tekstene fra meldingskatalogen.
+  4. Den ytterste mellomvaren for 503 og 405, og logging til konsollen.
+  5. To nye testfiler. De leser DESIGN.md og meldingskatalogen direkte, så
+     verken tokenene eller tekstene kan endre seg uten at en test feiler.
+
+  Viktig funn: Arkitekturen (AD-12) forutsetter at den ytterste mellomvaren
+  fanger databasefeil. Django gjør om et unntak til et svar i hvert lag, så en
+  vanlig try/except der ville aldri slått til. Løsningen er at Djangos signal
+  got_request_exception merker forespørselen, og at den ytterste mellomvaren så
+  bytter svaret med 503-siden. Akseptkriteriet oppfylles ordrett. Funnet føres
+  som et tilfelle i KI-styringsloggen.
+
+  Valg jeg har tatt (de står i spesifikasjonen og kan endres):
+  - Feilsidene får et sentrert panel på høyst 420 px, som innloggingspanelet.
+  - Lenken «Til produktoversikten» går til /produkter/, som story 1.8 lager.
+    Fram til da fører den til 404-siden.
+  - 503-siden og siden for utløpt skjema har ingen lenke, fordi
+    meldingskatalogen ikke nevner noen.
+  - Fokusringen bruker :focus-visible, og berøringsreglene bruker pointer: 
+    coarse.
+  - DEBUG-regelen er allerede bygd og testet i story 1.1, så storyen legger bare
+    til loggingen.
+
+  Begrensning: 503-siden kan bare kontrolleres med tester i denne storyen, fordi
+  ingen side leser databasen før story 1.8.
+
+  ---
+
+  Før du godkjenner, kan du åpne spesifikasjonen i en editor eller spørre meg og
+  si hva som skal endres. Du kan også bruke bmad-advanced-elicitation eller
+  bmad-party-mode, helst i en annen økt, så denne økten ikke får for mye
+  kontekst.
+
+  ---
+
+⏺ User answered Claude's questions:
+  ⎿  · Spesifikasjonen for story 1.4 (app-skall og norske feilsider) er på ca. 2
+     400 tokens, over BMADs anbefalte grense på 1 600. Lange spesifikasjoner 
+     gir større risiko for at detaljer glipper. Skal den beholdes samlet eller 
+     deles i to? → Behold samlet (Anbefalt)
+     · Godkjenner du spesifikasjonen for story 1.4, slik at jeg kan begynne å 
+     kode? Commit, push, PR og fletting spør jeg om hver for seg senere. → 
+     Godkjenn og fortsett (Anbefalt)
+
+⏺ Begge anbefalingene er valgt: spesifikasjonen holdes samlet og er godkjent.
+  Etter BMAD-regelen leser jeg den fra disk før jeg setter statusen, i tilfelle
+  den er endret utenfra:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Fila er uendret siden jeg redigerte den kl. 16.20 (samme størrelse, 9 824
+  byte). Jeg setter statusen til ready-for-dev og går videre til steg 3,
+  implementeringen.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 1 line, removed 1 line
+      2  title: 'Story 1.4: Norwegian app shell and error pages'
+      3  type: 'feature'
+      4  created: '2026-11-22'
+      5 -status: 'draft'                                                 
+      5 +status: 'ready-for-dev'                                         
+      6  route: 'dispatch'
+      7  baseline_commit: 'dc7673ef04886aafc0d9797e6b24a07001a8e1d3'
+      8  review_loop_iteration: 0
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Steg 3 skulle normalt gå til en subagent, men du godkjente subagenter bare for
+  gjennomgangene, så jeg implementerer selv fra spesifikasjonen. Jeg sjekker
+  sprintstatusen og synkroniseringen først.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 1 line, removed 1 line
+      2  title: 'Story 1.4: Norwegian app shell and error pages'
+      3  type: 'feature'
+      4  created: '2026-11-22'
+      5 -status: 'ready-for-dev'                                         
+      5 +status: 'in-progress'                                           
+      6  route: 'dispatch'
+      7  baseline_commit: 'dc7673ef04886aafc0d9797e6b24a07001a8e1d3'
+      8  review_loop_iteration: 0
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/sprint-status.yaml)
+  ⎿  Added 1 line, removed 1 line
+      29  # - Dev moves story to 'review', then runs code-review (fresh c
+          ontext, different LLM recommended)
+      30  # - Retrospective appends its action items to action_items; the
+           status view surfaces open ones
+      31  generated: 11-19-2026 20:56
+      32 -last_updated: 11-22-2026 15:12                                 
+      32 +last_updated: 11-22-2026 16:25                                 
+      33  project: G40-lyamouri
+      34  project_key: NOKEY
+      35  tracking_system: file-system
+
+⏺ Update(_bmad-output/implementation-artifacts/sprint-status.yaml)
+  ⎿  Added 1 line, removed 1 line
+      39    1-1-start-prognose-locally-from-a-fresh-clone: done
+      40    1-2-check-every-pull-request-automatically: done
+      41    1-3-confirm-the-setup-on-windows-and-without-a-network: done
+      42 -  1-4-norwegian-app-shell-and-error-pages: backlog             
+      42 +  1-4-norwegian-app-shell-and-error-pages: in-progress         
+      43    1-5-reference-spreadsheet-as-the-answer-key: backlog
+      44    1-6-generate-the-synthetic-seed-data: backlog
+      45    1-7-load-the-seed-data-into-an-empty-database-with-an-explici
+          t-r: backlog
+
+⏺ Epic 1 står allerede som in-progress. Før jeg endrer kode, kjører jeg testene
+  for å få en grunnlinje. Databasen må kjøre for det:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Grunnlinjen er 104 grønne tester. Før jeg skriver koden, sjekker jeg om noen
+  eksisterende tester er avhengige av MIDDLEWARE eller loggingen:
+
+  Searched for 2 patterns (ctrl+o to expand)
+
+⏺ Ingen avhengigheter. Nå stilarket, med tokenene kopiert ordrett fra
+  frontmatteren:
+
+⏺ Write(src/web/static/web/app.css)
+  ⎿  Wrote 268 lines to src/web/static/web/app.css
+       1 /* Prognose's one stylesheet (AD-11, UX-DR1). :root holds the to
+         kens from the
+       2    DESIGN.md frontmatter with the same values, and the rules bel
+         ow take their
+       3    colors, fonts and radii only from these variables. Light mode
+          only. */
+       4 
+       5 :root {
+       6   /* Colors */
+       7   --color-canvas: #EDF2F7;
+     … +261 lines (ctrl+o to expand)
+
+⏺ Impeccable-kroken fant ingen designfeil i stilarket. Nå basismalen og
+  panelmalen for feilsidene:
+⏺ Write(src/web/templates/web/base.html)
+  ⎿  Wrote 17 lines to src/web/templates/web/base.html
+       1 {% load static %}<!doctype html>
+       2 {# The shell of every page (AD-11, UX-DR14). Without a login, th
+         e header shows only the wordmark. #}
+       3 <html lang="nb">
+       4 <head>
+       5   <meta charset="utf-8">
+       6   <meta name="viewport" content="width=device-width, initial-sca
+         le=1">
+       7   <title>{% block title %}Prognose{% endblock %}</title>
+       8   <link rel="icon" href="data:,">
+     … +9 lines (ctrl+o to expand)
+
+⏺ Write(src/web/templates/web/error.html)
+  ⎿  Wrote 14 lines to src/web/templates/web/error.html
+       1 {% extends "web/base.html" %}
+       2 {# The not-found panel, which every error page uses (AD-12, UX-D
+         R13). The texts come from the Message Catalogue in EXPERIENCE.md
+         : the first sentence is the heading. No error page uses the requ
+         est, so none reads the database. #}
+       3 {% block main %}
+       4   <main class="panel-page">
+       5     <div class="panel">
+       6       <h1>{% block heading %}{% endblock %}</h1>
+       7       {% block text %}{% endblock %}
+     … +7 lines (ctrl+o to expand)
+
+⏺ Nå de seks feilmalene med tekstene fra meldingskatalogen:
+
+⏺ Write(src/web/templates/404.html)
+  ⎿  Wrote 4 lines to src/web/templates/404.html
+      1 {% extends "web/error.html" %}
+      2 {# Not found: an unknown address (NFR-10, UX-DR13). #}
+      3 {% block title %}Siden finnes ikke – Prognose{% endblock %}
+      4 {% block heading %}Siden finnes ikke{% endblock %}
+
+⏺ Write(src/web/templates/500.html)
+  ⎿  Wrote 7 lines to src/web/templates/500.html
+      1 {% extends "web/error.html" %}
+      2 {# Server error: any error without a page of its own, also 405 th
+        rough ErrorPageMiddleware (AD-12). #}
+      3 {% block title %}Noe gikk galt, og siden kunne ikke vises – Progn
+        ose{% endblock %}
+      4 {% block heading %}Noe gikk galt, og siden kunne ikke vises{% end
+        block %}
+      5 {% block text %}
+      6       <p>Prøv igjen, eller gå til produktoversikten.</p>
+      7 {% endblock %}
+
+⏺ Write(src/web/templates/503.html)
+  ⎿  Wrote 8 lines to src/web/templates/503.html
+      1 {% extends "web/error.html" %}
+      2 {# Database unavailable: rendered by ErrorPageMiddleware for a da
+        tabase error raised anywhere (AD-12). #}
+      3 {% block title %}Prognose får ikke kontakt med databasen – Progno
+        se{% endblock %}
+      4 {% block heading %}Prognose får ikke kontakt med databasen{% endb
+        lock %}
+      5 {% block text %}
+      6       <p>Prøv igjen om litt. Kjører du Prognose på din egen maski
+        n, må databasen være startet slik README beskriver.</p>
+     … +2 lines (ctrl+o to expand)
+
+⏺ Write(src/web/templates/403_csrf.html)
+  ⎿  Wrote 8 lines to src/web/templates/403_csrf.html
+      1 {% extends "web/error.html" %}
+      2 {# Expired form: a failed CSRF check (AD-12). Any other 403 gets 
+        403.html. #}
+      3 {% block title %}Skjemaet er utløpt – Prognose{% endblock %}
+      4 {% block heading %}Skjemaet er utløpt{% endblock %}
+      5 {% block text %}
+      6       <p>Last siden på nytt og prøv igjen.</p>
+      7 {% endblock %}
+      8 {% block link %}{% endblock %}
+
+⏺ Write(src/web/templates/403.html)
+  ⎿  Wrote 2 lines to src/web/templates/403.html
+      1 {% extends "500.html" %}
+      2 {# Any 403 other than a failed CSRF check gets the Server error p
+        age (AD-12). #}
+
+⏺ Write(src/web/templates/400.html)
+  ⎿  Wrote 2 lines to src/web/templates/400.html
+      1 {% extends "500.html" %}
+      2 {# A request the app cannot use, such as an unknown host, gets th
+        e Server error page (AD-12). #}
+
+⏺ Nå mellomvaren, koblingen av signalet i apps.py og innstillingene:
+
+⏺ Write(src/web/middleware.py)
+  ⎿  Wrote 47 lines to src/web/middleware.py
+      1 """The outermost middleware: the error pages that Django's handle
+        rs do not render (AD-12).
+      2 
+      3 Django turns an exception into a response in the layer that raise
+        d it, so no
+      4 middleware sees an exception from the layers inside it. Django se
+        nds
+      5 got_request_exception while it handles the exception, so note_dat
+        abase_error
+      6 can mark the request there, and ErrorPageMiddleware then shows th
+     … +42 lines (~2 KB) (ctrl+o to expand)
+
+⏺ Write(src/web/apps.py)
+  ⎿  Added 7 lines
+       1  from django.apps import AppConfig
+       2 +from django.core.signals import got_request_exception          
+       3  
+       4  
+       5  class WebConfig(AppConfig):
+       6      name = "web"
+       7 +                                                               
+       8 +    def ready(self):                                           
+       9 +        from web.middleware import note_database_error         
+      10 +                                                               
+      11 +        # AD-12: lets ErrorPageMiddleware see a database error 
+         +raised anywhere.                                               
+      12 +        got_request_exception.connect(note_database_error)     
+
+⏺ Update(src/prognose/settings.py)
+  ⎿  Added 2 lines
+      46  ]
+      47  
+      48  MIDDLEWARE = [
+      49 +    # AD-12: first, so that it also handles the database errors
+         + raised in the others.                                         
+      50 +    "web.middleware.ErrorPageMiddleware",                      
+      51      "django.middleware.security.SecurityMiddleware",
+      52      "django.contrib.sessions.middleware.SessionMiddleware",
+      53      "django.middleware.common.CommonMiddleware",
+
+⏺ Update(src/prognose/settings.py)
+  ⎿  Added 22 lines
+       80  
+       81  STATIC_URL = "static/"
+       82  
+       83 +# AD-12: Django prints request and security errors to the cons
+          +ole only with DEBUG                                           
+       84 +# on. These two loggers print them in both run modes, as the m
+          +essage and the                                                
+       85 +# traceback, never the request body. Configuring the parent lo
+          +gger "django"                                                 
+       86 +# instead would also reset "django.server", which prints runse
+          +rver's requests.                                              
+       87 +LOGGING = {                                                   
+       88 +    "version": 1,                                             
+       89 +    "disable_existing_loggers": False,                        
+       90 +    "handlers": {"console": {"class": "logging.StreamHandler"}
+          +},                                                            
+       91 +    "loggers": {                                              
+       92 +        "django.request": {                                   
+       93 +            "handlers": ["console"],                          
+       94 +            "level": "WARNING",                               
+       95 +            "propagate": False,                               
+       96 +        },                                                    
+       97 +        "django.security": {                                  
+       98 +            "handlers": ["console"],                          
+       99 +            "level": "WARNING",                               
+      100 +            "propagate": False,                               
+      101 +        },                                                    
+      102 +    },                                                        
+      103 +}                                                             
+      104 +                                                              
+      105  DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+⏺ Nå startsiden, som skal bruke basismalen:
+
+⏺ Write(src/web/templates/web/start.html)
+  ⎿  Added 8 lines, removed 14 lines
+       1 -<!doctype html>                                                
+       2 -<html lang="nb">                                               
+       3 -<head>                                                         
+       4 -  <meta charset="utf-8">                                       
+       5 -  <meta name="viewport" content="width=device-width, initial-sc
+         -ale=1">                                                        
+       6 -  <title>Prognose</title>                                      
+       7 -  <link rel="icon" href="data:,">                              
+       8 -</head>                                                        
+       9 -<body>                                                         
+      10 -  <main>                                                       
+      11 -    <h1>Prognose</h1>                                          
+      12 -    <p>Prognose foreslår hvor mye du bør bestille neste uke, og
+         - viser hvordan tallene er regnet.</p>                          
+       1 +{% extends "web/base.html" %}                                  
+       2 +{% block main %}                                               
+       3 +  <main class="panel-page">                                    
+       4 +    <div class="panel">                                        
+       5 +      <h1>Prognose</h1>                                        
+       6 +      <p>Prognose foreslår hvor mye du bør bestille neste uke, 
+         +og viser hvordan tallene er regnet.</p>                        
+       7 +    </div>                                                     
+       8    </main>
+      14 -</body>                                                        
+      15 -</html>                                                        
+       9 +{% endblock %}                                                 
+
+⏺ Før jeg skriver de nye testene, kjører jeg de eksisterende for å se at
+  ingenting er brutt:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Én test ble hoppet over. Jeg sjekker hvilken. Trolig docker compose 
+  config-testen, fordi docker ikke var på PATH i denne kjøringen:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Med docker på PATH passerer alle 104, og den hoppede testen var bare docker 
+  compose config-testen. Jeg bruker PATH-en videre. Nå testene for app-skallet:
+
+⏺ Write(tests/test_app_shell.py)
+  ⎿  Wrote 250 lines to tests/test_app_shell.py
+      1 """The app shell: the stylesheet and the layout every page shares
+         (Story 1.4;
+      2 AD-11, NFR-1, NFR-6, NFR-11).
+      3 
+      4 The tests read the tokens from the DESIGN.md frontmatter, the des
+        ign's single
+      5 source, and use no database.
+      6 """
+      7 
+      8 import re
+     … +242 lines (ctrl+o to expand)
+
+⏺ Nå testene for feilsidene, som leser tekstene fra meldingskatalogen:
+
+⏺ Write(tests/test_error_pages.py)
+  ⎿  Wrote 229 lines to tests/test_error_pages.py
+       1 """The Norwegian error pages and the error log (Story 1.4; AD-12
+         , NFR-10, NFR-5).
+       2 
+       3 Each page is checked against its text in the Message Catalogue i
+         n
+       4 EXPERIENCE.md, the copy source. The tests use no database, so th
+         ey also show
+       5 that no error page reads it.
+       6 """
+       7 
+     … +222 lines (ctrl+o to expand)
+
+⏺ Update(tests/test_start_page.py)  ⎿  Added 1 line, removed 1 line
+      1 -"""The start page at / (Story 1.1; AD-10, AD-11, NFR-1, NFR-6, N
+        -FR-11).                                                         
+      1 +"""The start page at / (Stories 1.1 and 1.4; AD-10, AD-11, NFR-1
+        +, NFR-6, NFR-11).                                               
+      2  
+      3  These tests have no database access, so they also show that the 
+         page reads no
+      4  data.
+
+⏺ Update(tests/test_start_page.py)
+  ⎿  Added 2 lines, removed 1 line
+      12  
+      13  def test_start_page_is_norwegian_and_shows_the_wordmark(client)
+          :
+      14      """NFR-11, NFR-6, AD-11: the page declares Norwegian, has t
+          he responsive
+      15 -    viewport tag and shows the wordmark «Prognose»."""         
+      15 +    viewport tag and shows the wordmark «Prognose» in the app h
+         +eader and as its                                               
+      16 +    page title."""                                             
+      17      response = client.get("/")
+      18  
+      19      assertTemplateUsed(response, "web/start.html")
+
+⏺ Update(tests/test_start_page.py)
+  ⎿  Added 5 lines
+      24          '<meta name="viewport" content="width=device-width, ini
+          tial-scale=1">',
+      25          html=True,
+      26      )
+      27 +    assertContains(                                            
+      28 +        response,                                              
+      29 +        '<header class="app-header"><span class="wordmark">Prog
+         +nose</span></header>',                                         
+      30 +        html=True,                                             
+      31 +    )                                                          
+      32      assertContains(response, "<h1>Prognose</h1>", html=True)
+      33  
+      34  
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle 30 testene er grønne, og nå kjører jeg fem midlertidige mutasjoner for å
+  bekrefte at testene faktisk fanger feil.
+
+  Made 1 scratchpad edit +46, ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle sju mutasjonene ble fanget og filene gjenopprettet. Nå kjører jeg hele
+  testsuiten og Ruff.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ 131 tester passerer, og Ruff-sjekken er ren. Formateringen må justeres i de to
+  nye testfilene, så jeg kjører Ruffs formatering på dem:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Ruff er nå ren. Så starter jeg appen slik README beskriver, med DEBUG av, og
+  sjekker sidene, stilarket og at runserver fortsatt skriver forespørselslinjene
+  sine til konsollen:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Appen kjører med DEBUG på, og forsiden, ukjente adresser og statiske filer
+  svarer som forventet. Nå går jeg gjennom Definition of Done-dokumentene.
+
+  Searched for 1 pattern, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Dokumentene skrives i én runde etter gjennomgangen. Nå kontrollerer jeg
+  oppgavene i steg 3, og jeg har konfigurert django.request og django.security i
+  stedet for django, fordi den ville nullstilt django.server.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 1 line, removed 1 line
+      63  - [ ] `src/web/templates/web/base.html`, `src/web/templates/web
+          /error.html` -- create the shell and the not-found panel layout
+          .
+      64  - [ ] `src/web/templates/404.html`, `500.html`, `503.html`, `40
+          3_csrf.html` -- create with the catalogue texts; `400.html` and
+           `403.html` extend `500.html`.
+      65  - [ ] `src/web/middleware.py` -- create `note_database_error`, 
+          which marks the request when `sys.exception()` is a connection 
+          error, and `ErrorPageMiddleware`, which returns the 503 page fo
+          r a marked request and puts the Server error page in the body o
+          f a 405, keeping its headers.
+      66 -- [ ] `src/web/apps.py`, `src/prognose/settings.py` -- as in th
+         -e Code Map; `LOGGING` gives the `django` logger a `console` `St
+         -reamHandler` at WARNING with the default format (the message an
+         -d any traceback).                                              
+      66 +- [ ] `src/web/apps.py`, `src/prognose/settings.py` -- as in th
+         +e Code Map; `LOGGING` gives the `django.request` and `django.se
+         +curity` loggers a `console` `StreamHandler` at WARNING with the
+         + default format (the message and any traceback), without propag
+         +ation (Implementation Notes).                                  
+      67  - [ ] `src/web/templates/web/start.html`, `tests/test_start_pag
+          e.py` -- extend the base; test the header.
+      68  - [ ] `tests/test_app_shell.py` -- create: the tokens equal the
+           frontmatter (read by a small reader, no YAML package), the cou
+          nts, nothing else in `:root`, every `var()` defined, no literal
+          s outside `:root`, no external loads, no shadow, gradient, anim
+          ation, letter-spacing or uppercase, the focus, header and touch
+           rules, and every page's `lang`, viewport, icon, stylesheet, he
+          ader and single `h1`.
+      69  - [ ] `tests/test_error_pages.py` -- create: each matrix row, w
+          ith the texts read from the catalogue; no English or debug text
+          ; test views and middleware in the module, with `pytest.mark.ur
+          ls(__name__)` and `Client(raise_request_exception=False)`; the 
+          console text through the `console` handler.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 7 lines
+      75  
+      76  ## Implementation Notes
+      77  
+      78 +- 2026-11-22: built in the build session, not by a subagent, be
+         +cause the user approved subagents for the reviews only. The epi
+         +c context was used as it was: the spine change from Story 1.3 t
+         +hat made it formally stale touches nothing in it (the user's de
+         +cision).                                                       
+      79 +- `LOGGING`: the task first named the `django` logger. `dictCon
+         +fig` resets the existing children of a logger it configures, so
+         + `django.server` would have lost its handler, and runserver's r
+         +equest lines at INFO would have disappeared. The settings confi
+         +gure `django.request` and `django.security` instead, without pr
+         +opagation, so a line is also not printed twice with DEBUG on. C
+         +hecked with runserver: the request lines are unchanged, and «No
+         +t Found» and the CSRF warning reach the console with DEBUG off.
+      80 +- Mutations, each caught and then restored by a scratchpad scri
+         +pt that is not committed: no outermost middleware, the receiver
+         + not connected, a token value changed, a literal color in a rul
+         +e, the expired-form text changed, no loggers in `LOGGING`, and 
+         +the 405 branch off.                                            
+      81 +- runserver on 127.0.0.1:8765 with DEBUG off: `/` 200; `/finnes
+         +-ikke/` 404 with the Norwegian page; `/static/web/app.css` 200 
+         +`text/css`; a missing static file 404 with the Norwegian page; 
+         +`DELETE /` 403, because the CSRF check comes before the method 
+         +check.                                                         
+      82 +- 131 tests pass (104 earlier and 27 new) with `~/.docker/bin` 
+         +on PATH; without `docker` on PATH, `test_compose.py` skips. Ruf
+         +f passes after `ruff format` of the two new test files.        
+      83 +- The documents task is finished after the review, because the 
+         +QA log records the review findings and the user's check in Safa
+         +ri.                                                            
+      84 +                                                               
+      85  ## Spec Change Log
+      86  
+      87  ## Review Triage Log
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Diffen er 1 191 linjer. Spesifikasjonen har jeg nettopp skrevet, og
+  token-blokken i stilarket kontrolleres av testen mot DESIGN.md. Jeg leser
+  derfor kodedelene av diffen og hopper over de to:
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Diffen viser to problemer: 405-svaret får en feil Content-Length fra
+  CommonMiddleware, noe som kan gi en blank side i nettleseren, og «Server
+  error» dekkes av to tester i stedet for én. Jeg sjekker Content-Length mot
+  runserver og fikser matrisen etterpå.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Bekreftet at 405-svaret fra runserver har Content-Length: 0, så siden ville
+  vært blank. Jeg retter mellomvaren slik at lengden oppdateres og 503-siden
+  legges inn i det eksisterende svaret.
+
+⏺ Update(src/web/middleware.py)
+  ⎿  Added 15 lines, removed 4 lines
+      39      def __call__(self, request):
+      40          response = self.get_response(request)
+      41          if getattr(request, "database_unavailable", False):
+      42 -            return HttpResponse(render_to_string("503.html"), s
+         -tatus=503)                                                     
+      42 +            return replace_page(response, "503.html", 503)     
+      43          if response.status_code == 405:
+      44 -            # The method decorators send 405 with an empty body
+         - and an Allow                                                  
+      45 -            # header, which stays.                             
+      46 -            response.content = render_to_string("500.html")    
+      44 +            # The method decorators send 405 with an empty body
+         +.                                                              
+      45 +            return replace_page(response, "500.html", 405)     
+      46          return response
+      47 +                                                               
+      48 +                                                               
+      49 +def replace_page(response, template, status):                  
+      50 +    """Put the page in the response that the other layers made,
+         + keeping its headers.                                          
+      51 +                                                               
+      52 +    The headers that stay are, for example, the security header
+         +s and Allow.                                                   
+      53 +    CommonMiddleware has already set Content-Length for the old
+         + body.                                                         
+      54 +    """                                                        
+      55 +    response.status_code = status                              
+      56 +    response.content = render_to_string(template)              
+      57 +    response["Content-Length"] = str(len(response.content))    
+      58 +    return response                                            
+
+⏺ Update(src/web/middleware.py)
+  ⎿  Removed 1 line
+       9  import sys
+      10  
+      11  from django.db import InterfaceError, OperationalError
+      12 -from django.http import HttpResponse                           
+      12  from django.template.loader import render_to_string
+      13  
+      14  # The errors Django raises when the database does not answer.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 3 lines, removed 1 line
+       94  
+       95      The first sentence is the page title, the rest of the text
+            is a paragraph,
+       96      and the link «Til produktoversikten» is there only when th
+           e catalogue names
+       97 -    it.                                                       
+       97 +    it. A Content-Length header must match the body, or a brow
+          +ser cuts it off.                                              
+       98      """
+       99      text, link = catalogue_text(message)
+      100      rest = text.partition(". ")[2]
+      101  
+      102      assert response.status_code == status
+      103      assert response["Content-Type"] == "text/html; charset=utf
+           -8"
+      104 +    if response.has_header("Content-Length"):                 
+      105 +        assert int(response["Content-Length"]) == len(response
+          +.content)                                                     
+      106      title = f"<title>{heading(message)} – Prognose</title>"
+      107      assertContains(response, title, html=True, status_code=sta
+           tus)
+      108      assertContains(
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Removed 6 lines
+      185      assert response["Allow"] == "GET, HEAD"
+      186  
+      187  
+      188 -def test_server_error_shows_the_server_error_page():          
+      189 -    """AD-12, NFR-10: an unexpected error gives 500 with the S
+          -erver error text                                              
+      190 -    and the link, and no traceback."""                        
+      191 -    assert_error_page(error_client().post("/feil/server/"), 50
+          -0, "Server error")                                            
+      192 -                                                              
+      193 -                                                              
+      188  @pytest.fixture
+      189  def console():
+      190      """Collect what the console handler from LOGGING writes du
+           ring the test."""
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 7 lines, removed 5 lines
+      195      handler.setStream(previous)
+      196  
+      197  
+      198 -def test_server_error_is_logged_without_the_request_body_or_se
+          -crets(console, settings):                                     
+      199 -    """AD-12, NFR-4: with DEBUG off, a server error reaches th
+          -e console with its                                            
+      200 -    traceback, but not the posted password, the session secret
+          - or a database                                                
+      201 -    URL. Only the names of leaked values are shown if the test
+          - fails."""                                                    
+      198 +def test_server_error_shows_its_page_and_is_logged_without_sec
+          +rets(console, settings):                                      
+      199 +    """AD-12, NFR-10, NFR-4: with DEBUG off, an unexpected err
+          +or in a POST gives                                            
+      200 +    500 with the Server error text and the link, and reaches t
+          +he console with                                               
+      201 +    its traceback, but not the posted password, the session se
+          +cret or a                                                     
+      202 +    database URL. Only the names of leaked values are shown if
+          + the test fails."""                                           
+      203      password = "hemmelig-passord-123"
+      203 -    error_client().post("/feil/server/", {"kundenummer": "1000
+          -1", "passord": password})                                     
+      204 +    data = {"kundenummer": "10001", "passord": password}      
+      205 +    response = error_client().post("/feil/server/", data)     
+      206      output = console.getvalue()
+      207      leaked = [
+      208          name
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 2 lines
+      215      ]
+      216  
+      217      assert not settings.DEBUG
+      218 +    assert_error_page(response, 500, "Server error")          
+      219 +    assertNotContains(response, password, status_code=500)    
+      220      assert "Internal Server Error: /feil/server/" in output
+      221      assert "RuntimeError: Testfeil" in output
+      222      assert leaked == []
+⏺ Jeg legger også til en sjekk for at X-Content-Type-Options er med på
+  503-siden, og kjører så testene og mutasjonene på nytt med en ekstra mutasjon
+  for lengderettingen.
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 3 lines, removed 1 line
+      132  @pytest.mark.parametrize("name", ["database", "grensesnitt"])
+      133  def test_database_error_in_a_view_shows_the_503_page(name):
+      134      """AD-12, NFR-10: a database error in a view gives 503 wit
+           h the Database
+      135 -    unavailable text and no link."""                          
+      135 +    unavailable text and no link, and keeps the headers that t
+          +he other                                                      
+      136 +    middleware set, such as the security headers."""          
+      137      response = error_client().get(f"/feil/{name}/")
+      138  
+      139      assert_error_page(response, 503, "Database unavailable")
+      140 +    assert response["X-Content-Type-Options"] == "nosniff"    
+      141  
+      142  
+      143  @pytest.mark.parametrize(
+
+  Made 1 scratchpad edit +5 -3, ran 1 shell command (ctrl+o to expand)
+
+⏺ 130 tester passerer nå, og alle åtte mutasjonene fanges, inkludert den som
+  fjerner lengderettingen. Jeg sjekker rettingen mot runserver i steg 3.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Det 405-svaret er rettet: det har nå Content-Length: 717 og 717 byte med den
+  norske feilsiden. Spesifikasjonen oppdateres, og dokumentasjonsoppgaven holder
+  jeg åpen til gjennomgangen er ferdig.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 3 lines, removed 1 line
+      79  - `LOGGING`: the task first named the `django` logger. `dictCon
+          fig` resets the existing children of a logger it configures, so
+           `django.server` would have lost its handler, and runserver's r
+          equest lines at INFO would have disappeared. The settings confi
+          gure `django.request` and `django.security` instead, without pr
+          opagation, so a line is also not printed twice with DEBUG on. C
+          hecked with runserver: the request lines are unchanged, and «No
+          t Found» and the CSRF warning reach the console with DEBUG off.
+      80  - Mutations, each caught and then restored by a scratchpad scri
+          pt that is not committed: no outermost middleware, the receiver
+           not connected, a token value changed, a literal color in a rul
+          e, the expired-form text changed, no loggers in `LOGGING`, and 
+          the 405 branch off.
+      81  - runserver on 127.0.0.1:8765 with DEBUG off: `/` 200; `/finnes
+          -ikke/` 404 with the Norwegian page; `/static/web/app.css` 200 
+          `text/css`; a missing static file 404 with the Norwegian page; 
+          `DELETE /` 403, because the CSRF check comes before the method 
+          check.
+      82 -- 131 tests pass (104 earlier and 27 new) with `~/.docker/bin` 
+         -on PATH; without `docker` on PATH, `test_compose.py` skips. Ruf
+         -f passes after `ruff format` of the two new test files.        
+      82 +- Found in the check of the tasks, with curl through runserver:
+         + `OPTIONS /` gave 405 with `Content-Length: 0` and an empty bod
+         +y, because `CommonMiddleware`, inside `ErrorPageMiddleware`, ha
+         +d set the length of the empty body, so a browser would show a b
+         +lank page. The test client does not check the length. `replace_
+         +page` now puts the page into the response that the other layers
+         + made and sets `Content-Length` to the new body. The 503 page g
+         +oes the same way, so the security headers stay. `assert_error_p
+         +age` checks that a `Content-Length` matches the body, and an ei
+         +ghth mutation (the length not updated) is caught. Afterwards `O
+         +PTIONS /` gave 405 with 717 bytes and a matching length.       
+      83 +- The matrix row «Server error» was split across a page test an
+         +d a log test; one test, `test_server_error_shows_its_page_and_i
+         +s_logged_without_secrets`, now covers it.                      
+      84 +- 130 tests pass (104 earlier and 26 new) with `~/.docker/bin` 
+         +on PATH; without `docker` on PATH, `test_compose.py` skips. Ruf
+         +f passes after `ruff format` of the two new test files.        
+      85  - The documents task is finished after the review, because the 
+          QA log records the review findings and the user's check in Safa
+          ri.
+      86  
+      87  ## Spec Change Log
+
+⏺ Steg 3 er ferdig: oppgavene er kontrollert mot diffen, og hver rad i matrisen
+  dekkes av en test som har kjørt og passert. Neste steg er 4, gjennomgangen:
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Steg 4 har tre gjennomgangslag, men Edge Case Hunter og Verification Gap
+  hopper jeg over fordi BMAD Code Review allerede kjører dem på pull requesten.
+  Jeg kjører Blind Hunter selv og henter først status og en ny diff.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 1 line, removed 1 line
+      2  title: 'Story 1.4: Norwegian app shell and error pages'
+      3  type: 'feature'
+      4  created: '2026-11-22'
+      5 -status: 'in-progress'                                           
+      5 +status: 'in-review'                                             
+      6  route: 'dispatch'
+      7  baseline_commit: 'dc7673ef04886aafc0d9797e6b24a07001a8e1d3'
+      8  review_loop_iteration: 0
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Blind Hunter fant 10 funn i diffen, der to av dem (BH-4 og BH-8) rettes nå,
+  mens de øvrige er vurdert og avvist med begrunnelse. Jeg retter BH-4 og BH-8
+  nå.
+
+⏺ Update(tests/test_app_shell.py)
+  ⎿  Added 1 line
+      44      re.IGNORECASE,
+      45  )
+      46  FONT_AND_RADIUS = {
+      47 +    "font",                                                    
+      48      "font-family",
+      49      "font-size",
+      50      "font-weight",
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 1 line, removed 1 line
+      148      error raised in another middleware, before or after the vi
+           ew, also gives
+      149      the 503 page."""
+      150      outermost, *others = settings.MIDDLEWARE
+      151 +    assert outermost == "web.middleware.ErrorPageMiddleware"  
+      152      settings.MIDDLEWARE = [outermost, f"{__name__}.{middleware
+           }", *others]
+      153  
+      153 -    assert outermost == "web.middleware.ErrorPageMiddleware"  
+      154      assert_error_page(error_client().get("/"), 503, "Database 
+           unavailable")
+      155  
+      156  
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Testene og Ruff passerer. Exit-koden 1 kom fra git diff --no-index, som alltid
+  gir 1 når filene er ulike, så diff-fila ble skrevet. Jeg kontrollerer den:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Diffen dekker alle 18 filene og inneholder rettingene. Nå fører jeg
+  triage-loggen i spesifikasjonen:
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 15 lines
+       88  
+       89  ## Review Triage Log
+       90  
+       91 +Review pass 1 (2026-11-22): Blind Hunter, run inline by the bu
+          +ild session as in Stories 1.2 and 1.3, on the diff from `dc767
+          +3e` (51.3 kB, so at least 8 findings). Edge Case Hunter and Ve
+          +rification Gap were skipped here, because BMAD Code Review run
+          +s them as independent subagents on the pull request (D-8). The
+          + 405 length defect was found before this pass, in the task che
+          +ck (Implementation Notes).                                    
+       92 +                                                              
+       93 +| ID | Finding | Verdict | Evidence | Route |                 
+       94 +|---|---|---|---|---|                                         
+       95 +| BH-1 | `@media (pointer: coarse)` misses touch screens whose
+          + primary input is a mouse or touchpad, such as hybrid laptops;
+          + `any-pointer: coarse` would cover them | low | Real, but phon
+          +es and iPads, the touch devices NFR-6 names, report a coarse p
+          +rimary pointer, and a hybrid laptop keeps the desktop sizes | 
+          +reject: the approved Intent chose `pointer: coarse`; raised wi
+          +th the user at the presentation |                             
+       96 +| BH-2 | An error response other than 405 that a view returns 
+          +without a body, such as an empty 400, gets no Norwegian page |
+          + low | No such view exists, and later stories re-render forms 
+          +with their errors; a general branch adds complexity | reject |
+       97 +| BH-3 | A loaded and changed session whose save fails after t
+          +he view becomes `SessionInterrupted`, a 400 that Django sends 
+          +without `got_request_exception`, so it shows the Server error 
+          +page instead of 503 | low | Real for a database that stops bet
+          +ween loading and saving the session in one request; Django con
+          +verts the error before any hook | reject |                    
+       98 +| BH-4 | The `var()` check in `test_app_shell.py` skips the `f
+          +ont` shorthand | low | A shorthand with a literal stack would 
+          +pass | patch: `font` added to the checked properties |        
+       99 +| BH-5 | The color check catches only the names `white` and `b
+          +lack` | low | Hex values copied from the mockup are the realis
+          +tic risk; a full name list adds little | reject |             
+      100 +| BH-6 | The link «Til produktoversikten» is a hard-coded `/pr
+          +odukter/`, which gives the 404 page until Story 1.8 | low | Th
+          +e approved Intent decides it (AD-11's URL map) | reject; the s
+          +witch to `{% url %}` is an open point for Story 1.8 in `issues
+          +.md` |                                                        
+      101 +| BH-7 | With DEBUG on, the 503 page replaces Django's debug p
+          +age for a database error | false | Intended (Design Notes): th
+          +e traceback still reaches the console through `django.request`
+          + | reject |                                                   
+      102 +| BH-8 | `test_database_error_in_another_middleware_shows_the_
+          +503_page` checks the outermost entry after changing the settin
+          +gs | low | It checked the value captured before the change, bu
+          +t read as if it checked the new list | patch: the assertion co
+          +mes first |                                                   
+      103 +| BH-9 | The path to the UX folder is repeated in both new tes
+          +t modules | low | A rename of the folder fails both tests loud
+          +ly | reject |                                                 
+      104 +| BH-10 | «Last siden på nytt og prøv igjen.» after a POST: re
+          +loading resends the stale token | low | Real, but the text is 
+          +the Message Catalogue's, verbatim, as the story requires | rej
+          +ect; the copy can be revised in Story 4.2 |                   
+      105 +                                                              
+      106  ## Design Notes
+      107  
+      108  Django wraps every middleware in `convert_exception_to_respons
+           e`, so an exception becomes a response in the layer that raise
+           d it, and a `try/except` in an outer layer never sees it. Djan
+           go sends `got_request_exception` inside that `except` block, s
+           o a receiver finds the exception in `sys.exception()` and mark
+           s the request, and the outermost middleware then replaces the 
+           finished response with the 503 page. This covers views, other 
+           middleware and DEBUG on, and the 503 page is rendered after ev
+           ery inner middleware has run.
+
+⏺ Ingen funn gjelder hull i intensjonen eller feil i spesifikasjonen. To ble
+  rettet, og ingen ble utsatt, så deferred-work.md er uendret. Videre til steg
+  5:
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Steg 5 markerer spesifikasjonen som ferdig og setter storyen til review, men
+  committer ikke automatisk siden du vil godkjenne commits først. Statusene
+  oppdateres nå.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 1 line, removed 1 line
+      2  title: 'Story 1.4: Norwegian app shell and error pages'
+      3  type: 'feature'
+      4  created: '2026-11-22'
+      5 -status: 'in-review'                                             
+      5 +status: 'done'                                                  
+      6  route: 'dispatch'
+      7  baseline_commit: 'dc7673ef04886aafc0d9797e6b24a07001a8e1d3'
+      8  review_loop_iteration: 0
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/sprint-status.yaml)
+  ⎿  Added 1 line, removed 1 line
+      29  # - Dev moves story to 'review', then runs code-review (fresh c
+          ontext, different LLM recommended)
+      30  # - Retrospective appends its action items to action_items; the
+           status view surfaces open ones
+      31  generated: 11-19-2026 20:56
+      32 -last_updated: 11-22-2026 16:25                                 
+      32 +last_updated: 11-22-2026 16:42                                 
+      33  project: G40-lyamouri
+      34  project_key: NOKEY
+      35  tracking_system: file-system
+
+⏺ Update(_bmad-output/implementation-artifacts/sprint-status.yaml)
+  ⎿  Added 1 line, removed 1 line
+      39    1-1-start-prognose-locally-from-a-fresh-clone: done
+      40    1-2-check-every-pull-request-automatically: done
+      41    1-3-confirm-the-setup-on-windows-and-without-a-network: done
+      42 -  1-4-norwegian-app-shell-and-error-pages: in-progress         
+      42 +  1-4-norwegian-app-shell-and-error-pages: review              
+      43    1-5-reference-spreadsheet-as-the-answer-key: backlog
+      44    1-6-generate-the-synthetic-seed-data: backlog
+      45    1-7-load-the-seed-data-into-an-empty-database-with-an-explici
+          t-r: backlog
+
+⏺ Nå dokumentene. Den neste pull requesten blir #14. Statustabellen og
+  KI-styringsloggen først:
+
+⏺ Update(docs/statustabell.md)  ⎿  Added 1 line, removed 1 line
+      12  - **Stories:** storyen som bygger kravet, står først. I parente
+          s står de andre storyene i [`epics.md`](../_bmad-output/plannin
+          g-artifacts/epics.md) som dekker en del av det.
+      13  - **Tester:** fylles ut når testene finnes. Hver test nevner FR
+          -n eller E-n som den kontrollerer (DR-5), og en test som ikke k
+          ontrollerer noen FR, nevner NFR-, DR- eller AD-ID-ene sine (D-1
+          0).
+      14  
+      15 -**Status 20. november 2026.** Ingen FR er bygd eller delvis byg
+         -d. Prosjektskjelettet fra story 1.1 del A har brukermodellen `w
+         -eb.Company` og databasen i Docker Compose, som FR-1 og FR-4 byg
+         -ger på, men kravene bygges i story 1.8 og 1.7.                 
+      15 +**Status 22. november 2026.** Ingen FR er bygd eller delvis byg
+         +d. Prosjektskjelettet fra story 1.1 del A har brukermodellen `w
+         +eb.Company` og databasen i Docker Compose, som FR-1 og FR-4 byg
+         +ger på, men kravene bygges i story 1.8 og 1.7. Story 1.4 har la
+         +get app-skallet og de norske feilsidene (NFR-10, AD-12). FR-2 s
+         +kal vise siden «Siden finnes ikke» for andre bedrifters produkt
+         +er, men kravet bygges i story 1.8.                             
+      16  
+      17  **Oppsett på Windows (D-3).** Oppsettet med Docker Desktop og o
+          ppstarten uten nett er ikke testet på Windows, fordi gruppen ik
+          ke har en Windows x64-PC der uv og Docker Desktop kan installer
+          es. Delen uten Docker testes automatisk på Windows Server 2025 
+          x64 i GitHub Actions for hver pull request som endrer koden ell
+          er avhengighetene, og passerte første gang 22. november 2026 (s
+          e [QA-loggen](qa-logg.md#2026-11-22--oppsettet-på-windows-story
+          -13-sm-2-nfr-1-dr-1-d-3)).
+      18  
+
+⏺ Update(docs/ki-styringslogg.md)
+  ⎿  Added 11 lines
+      298  - **Kilde:** «Implementation Notes» og «Review Triage Log» i [
+           spesifikasjonen for story 1.3](../_bmad-output/implementation-
+           artifacts/spec-1-3-confirm-the-setup-on-windows-and-without-a-
+           network.md); kommentaren i PR #12; [sesjonsloggen for story 1.
+           3](../.logs/mounia-03/981-2026-11-22-09-53-00-story-1-3-window
+           s-og-uten-nett.md).
+      299  - **QA-loggen:** [oppsettet på Windows](qa-logg.md#2026-11-22-
+           -oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3) og [feilen
+           e fra reviewene av story 1.3](qa-logg.md#2026-11-22--feil-i-ki
+           -generert-kode-og-tekst-fra-reviewene-av-story-13-dr-9).
+      300  
+      301 +**Story 1.4.** Story 1.4 ga tilfelle 31. Ellers godtok brukere
+          +n hver anbefaling fra Claude i økten 22. november 2026. Feilen
+          +e som byggingen og reviewene fant i KI-generert kode og tekst,
+          + står i QA-loggen, under [byggingen og reviewene av story 1.4]
+          +(qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-b
+          +yggingen-og-reviewene-av-story-14-dr-9).                      
+      302 +                                                              
+      303 +### 31. 503-siden og den ytterste mellomvaren (22. november 20
+          +26)                                                           
+      304 +                                                              
+      305 +- **Hva KI foreslo:** AD-12 i arkitekturspinen, som Claude skr
+          +ev og rettet etter BMAD-reviewen 18. november, sier at 503-hån
+          +dteringen sitter i den ytterste mellomvaren, slik at en databa
+          +sefeil fra hvor som helst, også fra annen mellomvare, gir 503-
+          +siden. Story 1.4 i `epics.md` har det samme kravet.           
+      306 +- **Hva som var feil:** Django gjør om et unntak til et svar i
+          + laget der det oppstår, så den ytterste mellomvaren ser aldri 
+          +unntaket fra lagene innenfor. En `try/except` rundt resten av 
+          +forespørselen, som er den vanlige måten å lese regelen på, vil
+          +le aldri slått til, og en stoppet database ville gitt 500-side
+          +n i stedet for 503.                                           
+      307 +- **Hva gruppen bestemte:** Claude fant feilen da story 1.4 bl
+          +e planlagt, ved å lese koden i Django 5.2.19. Claude foreslo a
+          +t Djangos signal `got_request_exception` merker forespørselen 
+          +mens unntaket håndteres, og at den ytterste mellomvaren derett
+          +er viser 503-siden. Kravet og spinen er uendret, fordi håndter
+          +ingen fortsatt sitter i den ytterste mellomvaren. Brukeren god
+          +kjente spesifikasjonen med denne løsningen.                   
+      308 +- **Commit eller pull request:** PR #14.                      
+      309 +- **Kilde:** «Design Notes» og «Implementation Notes» i [spesi
+          +fikasjonen for story 1.4](../_bmad-output/implementation-artif
+          +acts/spec-1-4-norwegian-app-shell-and-error-pages.md).        
+      310 +- **QA-loggen:** [feilene fra byggingen og reviewene av story 
+          +1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-f
+          +ra-byggingen-og-reviewene-av-story-14-dr-9).                  
+      311 +                                                              
+      312  Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics
+           .md`, linje 45–47).
+
+⏺ Nå QA-loggen. Jeg sjekker slutten av fila, så den nye oppføringen havner
+  riktig:
+
+  Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+⏺ Før jeg skriver resten av QA-loggen, trenger jeg at du sjekker de endrede
+  sidene i Safari i responsiv visning, og at du velger mellom alternativene fra
+  gjennomgangen. Jeg starter appen slik README beskriver, med DEBUG av, og åpner
+  de to sidene i Safari.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Appen kjører på http://127.0.0.1:8000/, og begge sidene er åpnet i Safari.
+
+⏺ User answered Claude's questions:
+  ⎿  · Prognose kjører nå lokalt, og startsiden og /finnes-ikke/ er åpnet i 
+     Safari. Slå på responsiv designmodus (Utvikle-menyen, ⌥⌘R) og sjekk begge 
+     sidene ved 320 px bredde, 390 × 844 og 820 × 1180: blir tekst kuttet av, 
+     overlapper noe, eller ruller siden sidelengs? Sjekk gjerne også at ⌥Tab gir
+     en blå fokusring rundt lenken «Til produktoversikten» på 404-siden. → Alt 
+     i orden
+     · Berøringsreglene (mål på minst 44 × 44 px og 16 px tekst i felt) gjelder 
+     nå bare når berøring er hovedinngangen (pointer: coarse), altså på 
+     telefoner og iPad. En PC med berøringsskjerm der musen er hovedinngangen, 
+     beholder PC-størrelsene. Skal reglene også gjelde der? → Behold pointer: 
+     coarse (Anbefalt)
+
+⏺ Takk. Begge sidene var i orden ved alle tre størrelsene, og berøringsregelen
+  beholdes som pointer: coarse. Jeg stopper appen og ser i runserver-loggen
+  hvilke forespørsler Safari gjorde:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Background command "Start the app on 127.0.0.1:8000 for the Safari check"
+completed (exit code 0)
+
+⏺ Appen er stoppet. Utdraget kuttet noen av forespørselslinjene, så jeg leser
+  dem fra loggen:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Safari ba om apple-touch-icon.png i tillegg til /, stilarket og /finnes-ikke/,
+  og fikk 404 med en «Not Found»-linje i konsollen, uten å påvirke sidene. Jeg
+  fører det som en observasjon i QA-loggen nå.
+
+⏺ Update(docs/qa-logg.md)
+  ⎿  Added 63 lines
+      625  **Avvist.** En klone som flyttes inn i brukermappa, kan behold
+           e de gamle tilgangsreglene, men README ber deg klone der, og d
+           et er sjeldent. At README ikke lenger sier at Intel-Mac er ute
+           stet, stemmer ikke: README nevner bare Apple M1 som testet.
+      626  
+      627  **KI-styringsloggen:** [tilfelle 30](ki-styringslogg.md#30-win
+           dows-testen-og-reviewene-av-story-13-22-november-2026).
+      628 +                                                              
+      629 +## 2026-11-22 – App-skallet og feilsidene i runserver og Safar
+          +i (Story 1.4; NFR-6, NFR-10, AD-12, UX-DR7)                   
+      630 +                                                              
+      631 +**Hvorfor.** Hver side en story endrer eller legger til, skal 
+          +sjekkes i nettleserens responsive visning ved 320 px, 390 × 84
+          +4 (iPhone 13) og 820 × 1180 (iPad), og pull requesten skal nev
+          +ne sjekkene (reglene for hver story i `epics.md`; NFR-6, UX-DR
+          +7). Story 1.4 ga startsiden app-skallet og la til feilsidene, 
+          +som alle bruker det samme panelet. Testklienten i Django viser
+          + ikke alt en ekte server sender, så Claude sjekket også svaren
+          +e gjennom runserver.                                          
+      632 +                                                              
+      633 +**Oppsett.**                                                  
+      634 +- Claude startet appen med `uv run python src/manage.py runser
+          +ver --insecure` på grenen `story/1-4-app-shell-and-error-pages
+          +`, med DEBUG av, og spurte med `curl`. Koden er den samme som 
+          +i den første commiten i PR #14.                               
+      635 +- Brukeren sjekket selv `/` og `/finnes-ikke/` i den responsiv
+          +e visningen i Safari 22. november 2026, på samme Mac som i sto
+          +ry 1.1. Der sto Safari 18.6 og macOS 15.6.1, men versjonene er
+          + ikke lest på nytt.                                           
+      636 +                                                              
+      637 +**Resultat med runserver.**                                   
+      638 +                                                              
+      639 +| Forespørsel | Svar |                                        
+      640 +|---|---|                                                     
+      641 +| `GET /` | 200 med app-skallet |                             
+      642 +| `GET /finnes-ikke/` | 404 med «Siden finnes ikke» og lenken 
+          +«Til produktoversikten»; `Content-Length` stemmer med innholde
+          +t |                                                           
+      643 +| `GET /static/web/app.css` | 200 med `text/css`, også med DEB
+          +UG av |                                                       
+      644 +| En statisk fil som ikke finnes | 404 med den norske siden | 
+      645 +| `OPTIONS /` | 405 med Server error-siden. Først var `Content
+          +-Length` 0 og siden tom (se feilene under); etter rettingen 71
+          +7 byte med riktig lengde |                                    
+      646 +| `DELETE /` | 403 med siden for utløpt skjema, fordi CSRF-sje
+          +kken kommer før sjekken av metoden |                          
+      647 +| Konsollen | Forespørselslinjene fra runserver som før, og nå
+          + også advarslene «Not Found» og «Forbidden (CSRF cookie not se
+          +t.)» med DEBUG av |                                           
+      648 +                                                              
+      649 +**Resultat i Safari.** Begge sidene var i orden ved alle tre s
+          +tørrelsene.                                                   
+      650 +                                                              
+      651 +| Tilsvarer | Størrelse | `/` og `/finnes-ikke/` |            
+      652 +|---|---|---|                                                 
+      653 +| Den minste bredden i NFR-6 | 320 px bred | ingen avkuttet te
+          +kst, overlapp eller sidelengs rulling |                       
+      654 +| iPhone 13 | 390 × 844 | ingen avkuttet tekst, overlapp eller
+          + sidelengs rulling |                                          
+      655 +| iPad | 820 × 1180 | ingen avkuttet tekst, overlapp eller sid
+          +elengs rulling |                                              
+      656 +                                                              
+      657 +Safari ba også selv om `/apple-touch-icon.png` og `/apple-touc
+          +h-icon-precomposed.png`. Begge ga 404 og en linje «Not Found» 
+          +i konsollen, men det påvirker ikke sidene. Fokusringen ble for
+          +eslått som en valgfri sjekk, men svaret nevnte den ikke, så de
+          +n er ikke ført som sjekket her. Testene sjekker regelen i stil
+          +arket.                                                        
+      658 +                                                              
+      659 +**Gjenstår.**                                                 
+      660 +- Pull requesten for story 1.4 skal nevne de tre størrelsene. 
+      661 +- 503-siden kan ikke sjekkes for hånd før story 1.8, fordi ing
+          +en side leser databasen ennå. Testene dekker den, og story 1.8
+          + tester den med en innlogget bruker.                          
+      662 +- Berøringsreglene og testen på en ekte iPhone 13 hører til st
+          +ory 1.8 (NFR-6).                                              
+      663 +                                                              
+      664 +## 2026-11-22 – Feil i KI-generert kode og tekst fra byggingen
+          + og reviewene av story 1.4 (DR-9)                             
+      665 +                                                              
+      666 +**Hvordan det ble funnet.** Claude Code skrev stilarket, malen
+          +e, mellomvaren, loggoppsettet og testene i story 1.4 med `bmad
+          +-build`. Claude fant den første feilen da storyen ble planlagt
+          +, ved å lese koden i Django 5.2.19. To feil fant Claude under 
+          +byggingen: én ved å lese hvordan Python setter opp loggingen, 
+          +og én med `curl` mot runserver da oppgavene ble kontrollert. T
+          +estklienten i Django sjekker ikke `Content-Length`, så ingen t
+          +est fanget den. Deretter gikk byggeøkten selv gjennom diffen m
+          +ed Blind Hunter, uten subagenter, og fant 10 funn (BH-1 til BH
+          +-10 under «Review Triage Log» i `_bmad-output/implementation-a
+          +rtifacts/spec-1-4-norwegian-app-shell-and-error-pages.md`): 2 
+          +ble rettet og 8 avvist. Edge Case Hunter og Verification Gap k
+          +jøres som uavhengige KI-granskere i BMAD Code Review på PR #14
+          +.                                                             
+      667 +                                                              
+      668 +**Feilene som ble rettet.**                                   
+      669 +                                                              
+      670 +| Feil | Funnet av | Retting | Commit |                       
+      671 +|---|---|---|---|                                             
+      672 +| AD-12 i arkitekturspinen sier at 503-håndteringen sitter i d
+          +en ytterste mellomvaren, men Django gjør om et unntak til et s
+          +var i laget der det oppstår, så en `try/except` der ville aldr
+          +i sett databasefeilen, og en stoppet database ville gitt 500-s
+          +iden | Claude, da storyen ble planlagt | Signalet `got_request
+          +_exception` merker forespørselen, og `ErrorPageMiddleware`, de
+          +n første i `MIDDLEWARE`, viser 503-siden. Kravet og spinen er 
+          +uendret ([tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-
+          +ytterste-mellomvaren-22-november-2026)) | PR #14 |            
+      673 +| Spesifikasjonen ba om å sette opp loggeren `django`, men da 
+          +nullstiller Python barneloggeren `django.server`, og runserver
+          + ville sluttet å skrive forespørslene | Claude, under bygginge
+          +n | `LOGGING` setter opp `django.request` og `django.security`
+          + i stedet, og runserver skriver forespørslene som før | PR #14
+          + |                                                            
+      674 +| 405-svaret hadde `Content-Length: 0` etter at mellomvaren ha
+          +dde lagt inn feilsiden, fordi `CommonMiddleware` hadde satt le
+          +ngden for det tomme svaret, så nettleseren ville vist en blank
+          + side | Claude, med `curl` mot runserver | Mellomvaren setter 
+          +lengden etter den nye siden og beholder de andre hodene, også 
+          +på 503-siden. Testene sjekker at `Content-Length` stemmer | PR
+          + #14 |                                                        
+      675 +| Raden «Server error» i I/O-matrisen var delt mellom to teste
+          +r | Claude, i kontrollen av matrisen | Én test dekker både sid
+          +en og loggen | PR #14 |                                       
+      676 +| Testen for `var()` sjekket ikke kortformen `font` | Blind Hu
+          +nter i `bmad-build` (BH-4) | `font` er med blant egenskapene s
+          +om sjekkes | PR #14 |                                         
+      677 +| En test sjekket den ytterste mellomvaren etter at innstillin
+          +gene var endret, så den så ut til å sjekke feil liste | Blind 
+          +Hunter i `bmad-build` (BH-8) | Sjekken står før endringen | PR
+          + #14 |                                                        
+      678 +                                                              
+      679 +**Kjente feil som ikke ble rettet.**                          
+      680 +                                                              
+      681 +| Feil | Funnet av | Hvorfor den ikke ble rettet |            
+      682 +|---|---|---|                                                 
+      683 +| Berøringsreglene gjelder bare når berøring er hovedinngangen
+          + (`pointer: coarse`), så en PC med berøringsskjerm der musen e
+          +r hovedinngangen, beholder PC-størrelsene | Blind Hunter i `bm
+          +ad-build` (BH-1) | Brukeren valgte å beholde `pointer: coarse`
+          +: telefonene og iPad-ene i NFR-6 får reglene, og PC-er beholde
+          +r den kompakte visningen som FR-25 trenger ved 1366 × 768 |   
+      684 +| En økt som er lest og endret, og som ikke kan lagres etter v
+          +isningen, gir Server error-siden (400) i stedet for 503 | Blin
+          +d Hunter i `bmad-build` (BH-3) | Det skjer bare hvis databasen
+          + stopper mellom lesingen og lagringen i samme forespørsel, og 
+          +Django gjør om feilen før noen krok kan se den |              
+      685 +| Lenken «Til produktoversikten» gir 404-siden til story 1.8 l
+          +ager `/produkter/` | Blind Hunter i `bmad-build` (BH-6) | Adre
+          +ssen kommer fra URL-kartet i AD-11, som spesifikasjonen bestem
+          +mer. Story 1.8 bytter til `{% url %}` (`issues.md`) |         
+      686 +| «Last siden på nytt og prøv igjen.» etter en POST: å laste s
+          +iden på nytt sender det gamle skjemaet på nytt | Blind Hunter 
+          +i `bmad-build` (BH-10) | Teksten er ordrett fra meldingskatalo
+          +gen, slik storyen krever. Story 4.2 kan endre den (`issues.md`
+          +) |                                                           
+      687 +                                                              
+      688 +**Avvist.** Ingen visning sender andre tomme feilsvar enn 405 
+          +(BH-2). Fargesjekken fanger heksverdiene, som er den reelle ri
+          +sikoen, men av fargenavnene bare `white` og `black` (BH-5). At
+          + 503-siden også vises med DEBUG på, er med vilje, fordi traceb
+          +acken står i konsollen (BH-7). Stien til UX-mappa står i begge
+          + testfilene, men flyttes mappa, feiler begge (BH-9).          
+      689 +                                                              
+      690 +**KI-styringsloggen:** [tilfelle 31](ki-styringslogg.md#31-503
+          +-siden-og-den-ytterste-mellomvaren-22-november-2026).         
+
+⏺ Nå arbeidsloggen. Oppføringen følger formen fra story 1.3 og gjelder fram til
+  commit-steget:
+
+⏺ Update(docs/arbeidslogg.md)
+  ⎿  Added 12 lines
+      636  
+      637  **Status:** Story 1.3 er flettet inn i `main` (`36e4035`). Opp
+           settet på Windows er bare testet uten Docker, og de åpne punkt
+           ene står i `issues.md`. Neste story følger rekkefølgen i sprin
+           tplanen, og story 1.4 er ikke startet.
+      638  
+      639 +### 22. november 2026 – Story 1.4: app-skall og norske feilsid
+          +er                                                            
+      640 +                                                              
+      641 +* Startet story 1.4 med `bmad-build` på grenen `story/1-4-app-
+          +shell-and-error-pages`, laget fra `main` (`dc7673e`). Epic-1-k
+          +onteksten var formelt utdatert etter en endring i spinen i sto
+          +ry 1.3, men endringen gjaldt bare Windows-testen, så jeg valgt
+          +e å bruke konteksten som den var. Godkjente subagenter bare ti
+          +l gjennomgangene.                                             
+      642 +* Godkjente spesifikasjonen, også størrelsen på om lag 2 400 t
+          +okens, som er over den anbefalte grensen på 1 600.            
+      643 +* Claude fant at AD-12 ikke kan bygges slik regelen vanligvis 
+          +leses: Django gjør om et unntak til et svar i laget der det op
+          +pstår, så den ytterste mellomvaren ser bare svaret. Løsningen 
+          +er et signal som merker forespørselen, og kravet og spinen er 
+          +uendret ([tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-
+          +ytterste-mellomvaren-22-november-2026)).                      
+      644 +* Claude bygde stilarket med alle tokenene fra `DESIGN.md`, ba
+          +sismalen med toppfeltet, de norske feilsidene, mellomvaren for
+          + 503 og 405, loggingen til konsollen og 26 nye tester. Testene
+          + leser tokenene fra `DESIGN.md` og tekstene fra meldingskatalo
+          +gen i `EXPERIENCE.md`. Åtte mutasjoner viste at testene feiler
+          + når de skal.                                                 
+      645 +* `curl` mot runserver viste at 405-siden ble sendt med `Conte
+          +nt-Length: 0`, så nettleseren ville vist en blank side. Claude
+          + rettet mellomvaren og la til en sjekk i testene.             
+      646 +* Reviewen i `bmad-build` (Blind Hunter) ga 10 funn: 2 ble ret
+          +tet og 8 avvist. Jeg valgte å beholde berøringsreglene for skj
+          +ermer der berøring er hovedinngangen (`pointer: coarse`).     
+      647 +* Sjekket `/` og `/finnes-ikke/` i den responsive visningen i 
+          +Safari ved 320 px, 390 × 844 og 820 × 1180, uten avkuttet teks
+          +t, overlapp eller sidelengs rulling.                          
+      648 +                                                              
+      649 +**Status:** Story 1.4 er bygd og testet lokalt med 130 tester 
+          +og Ruff, og venter på commit, push og PR #14.                 
+      650 +                                                              
+      651  ## 4. Videre dokumentasjon
+      652  
+      653  Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal 
+           beskrive hva som faktisk ble gjort, hvilke beslutninger som bl
+           e tatt, og hva som gjenstår. Arbeid skal ikke føres som fullfø
+           rt før det er kontrollert.
+
+⏺ Før commit-godkjenningen kjører jeg personvernkontrollen over alle endringene
+  for personopplysninger, lokale stier og hemmeligheter. Hemmelighetene telles
+  bare som antall treff, så innholdet vises ikke.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Kontrollene er gjennomført uten funn: ingen personopplysninger, lokale stier,
+  nøkler eller private IP-adresser i de 22 filene, og .secret_key og .env er
+  ignorert av git. Nå ser jeg raskt på formen i PR #12 for å følge samme mønster
+  i PR #14.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Formen er klar, så jeg skriver PR-teksten til en fil i den midlertidige mappa
+  og kjører hele testsuiten en siste gang før godkjenningen.
+
+  Made 1 scratchpad edit +27, ran 1 shell command (ctrl+o to expand)
+
+⏺ Story 1.4 er ferdig med stilark, basismal og norske feilsider, og 130 tester
+  og Ruff passerer. Neste steg er å lage to commits, pushe grenen og åpne PR #14
+  mot main, så CI og BMAD-reviewen kjører før jeg spør om flettingen.
+
+⏺ User answered Claude's questions:
+  ⎿  · Godkjenner du at jeg committer story 1.4 i to commits (koden med testene,
+     og dokumentene), pusher grenen story/1-4-app-shell-and-error-pages til 
+     GitHub og oppretter PR #14 mot main? Flettingen spør jeg om senere. → Ja: 
+     commit, push og PR (Anbefalt)
+
+⏺ Godkjent. Jeg kontrollerer først git-identiteten (noreply-adressen) og lager
+  så de to commitene med filene navngitt hver for seg:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ To commits er laget (9ae95fc med 18 filer og f3a10dd med 4), med
+  noreply-identiteten, og arbeidskopien er ren. Nå push og PR #14:
+
+  Pushed to story/1-4-app-shell-and-error-pages, created PR #14 (ctrl+o to expand)
+
+⏺ PR #14 er opprettet, og CI og Windows-testen kjører nå på GitHub. Mens jeg
+  følger dem, starter jeg BMAD Code Review (D-8) med de fire granskerne du
+  godkjente.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Skill(bmad-code-review)
+  ⎿  Successfully loaded skill
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Hei, Mounia-03. BMAD Code Review er satt opp: fire granskere, norsk
+  kommunikasjon og ingen ekstra steg i oppsettet. Jeg leser første steg:
+  Read 1 file (ctrl+o to expand)
+
+⏺ Målet er PR #14 med spesifikasjon, så jeg kjører full modus: jeg henter PR-en,
+  skriver diffen fra grunnlinjen og legger commitmeldingene i en påstandsfil
+  som kun Edge Case Hunter leser.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Klar for gjennomgang: PR #14 har 22 filer og 1 348 linjer diff, under grensen,
+  så den deles ikke. Fire uavhengige granskere starter i full modus med
+  spesifikasjonen og konteksten som allerede er lastet.
+
+⏺ User answered Claude's questions:
+  ⎿  · BMAD Code Review av PR #14 (story 1.4) er klar: 22 filer, 1 140 linjer 
+     lagt til, full modus med spesifikasjonen og epic-1-konteksten. Skal jeg 
+     starte de fire uavhengige granskerne (Blind Hunter, Edge Case Hunter, 
+     Verification Gap og Acceptance Auditor)? → Start gjennomgangen (Anbefalt)
+
+⏺ Background command "Wait for the PR #14 checks to finish" completed (exit code
+0)
+
+⏺ Gjennomgangen er godkjent. CI-overvåkingen ble ferdig med exit-kode 0. Jeg
+  leser resultatet av sjekkene og deretter steg 2 i gjennomgangen:
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ CI-kjøringene passerte på f3a10dd på både Linux og Windows. Jeg starter nå de
+  fire granskerne samtidig, med reglen din om å holde seg i prosjektmappa og
+  ikke røre hemmeligheter.
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review of PR 14
+   ├ Edge Case Hunter review of PR 14
+   ├ Verification Gap review of PR 14
+   └ Acceptance Auditor review of PR 14
+
+⏺ De fire granskerne er startet og arbeider uavhengig av hverandre. Jeg venter
+  til alle fire har levert, før jeg vurderer noe av det de finner.
+
+✻ Cooked for 45m 26s · done 4:56 PM
+
+⏺ Agent "Edge Case Hunter review of PR 14" failed: Agent terminated early due to
+an API error: You've hit your 5-hour limit · resets 7:10pm (Europe/Oslo) (error
+type rate_limit, HTTP 429, request id req_011ChJFXJxaorMpujfiMM4Kk, model sent
+to the API: claude-opus-5-5)
+  ⎿  You've hit your 5-hour limit · resets 7:10pm (Europe/Oslo)
+     /upgrade or /usage-credits to finish what you’re working on.
+
+⏺ Usage limit reached · continuing automatically at 7:10pm · esc to 
+  cancel
+
+✻ Worked for 0s · done 5:04 PM
+
+⏺ Agent "Acceptance Auditor review of PR 14" failed: Agent terminated early due
+to an API error: You've hit your 5-hour limit · resets 7:10pm (Europe/Oslo)
+(error type rate_limit, HTTP 429, request id req_011ChJFXhX9aGyqUFXEu3jDH, model
+sent to the API: claude-opus-5-5)
+
+⏺ Agent "Verification Gap review of PR 14" failed: Agent terminated early due to
+an API error: You've hit your 5-hour limit · resets 7:10pm (Europe/Oslo) (error
+type rate_limit, HTTP 429, request id req_011ChJFXqGVMU3o1xBwtYA8r, model sent
+to the API: claude-opus-5-5)
+
+⏺ Agent "Blind Hunter review of PR 14" failed: Agent terminated early due to an
+API error: You've hit your 5-hour limit · resets 7:10pm (Europe/Oslo) (error
+type rate_limit, HTTP 429, request id req_011ChJFe6ThRDqsXMB4wtCNY, model sent
+to the API: claude-opus-5-5)
+
+⏺ Usage limit reset · Continuing automatically
+
+⏺ Alle fire granskerne stoppet underveis fordi bruksgrensen ble nådd. Nå er den
+  tilbakestilt. Arbeidet deres er lagret, så de kan fortsette der de slapp, i
+  stedet for at jeg starter nye. Jeg henter verktøyet for å sende dem en
+  melding:
+  ⎿  Resuming agent afec054
+  ⎿  Resuming agent a1e10b7
+  ⎿  Resuming agent aacb0a1
+  ⎿  Resuming agent a443628
+
+⏺ Jeg har startet alle fire granskerne igjen, og de fortsetter der de stoppet.
+  Jeg venter til alle fire har levert før jeg vurderer funnene.
+
+✻ Cooked for 27s · done 7:12 PM
+
+› Message from general-purpose
+  The diff is 70,595 bytes (about 70.6 kB), so N = min(floor(sqrt(70.6) + 1),
+  10) = min(floor(9.40), 10) = 9.
+
+  - **Open points cited as recorded in `issues.md` are not there.** The spec's
+  triage says of BH-6 that "the switch to `{% url %}` is an open point for Story
+  1.8 in `issues.md`". The QA log's «Kjente feil som ikke ble rettet» table
+  also cites `issues.md`: "Story 1.8 bytter til `{% url %}`" (BH-6) and "Story
+  4.2 kan endre den" (BH-10). But
+  `<repo>/.logs/mounia-03/issues.md` is tracked in
+  git, this diff does not touch it, and it has no entry for either. In Story 1.3
+  the `issues.md` update went into the PR branch. Nothing records the AD-12
+  wording gap that case 31 describes either. The spine still says only "the
+  handler sits in the outermost middleware", which is the try/except reading
+  that cannot work, and it never mentions the `got_request_exception` receiver
+  in `apps.py` that the design depends on. This story may not change the spine,
+  so at least an open point should carry this to Story 1.8, which builds on the
+  503 page.
+
+  - **The shell's focus ring and link colour fail on the navy header.** The
+  global rules `a { color: var(--color-blue) }` and `:focus-visible { outline:
+  3px solid var(--color-blue) }` in
+  `<repo>/src/web/static/web/app.css` also apply
+  inside `.app-header`, the only dark surface. Blue `#1D56C4` on navy `#0E2236`
+  is about 2.4:1. That is below the 3:1 a focus indicator needs under WCAG 2.2
+  1.4.11 (the AA target in UX-DR44), and below 4.5:1 for link text. DESIGN.md
+  also forbids blue text on navy and makes the header links white. Nothing in
+  the logged-out header can take focus, so no test fails now, but Story 1.8's
+  navigation links and «Logg ut» will inherit both rules. DESIGN.md has no focus
+  colour for the header, so either define a header-scoped link and focus colour
+  now or record it as an open point that needs a design decision.
+
+  - **`replace_page` keeps headers that describe the old body.** In
+  `<repo>/src/web/middleware.py` it replaces the body
+  but corrects only `Content-Length`. `Content-Type` stays, and so would any
+  `Content-Encoding`, `ETag`, `Content-Language` or `Content-Disposition`.
+    - **Concrete case:** with DEBUG on, which the Design Notes say the 503 path
+  covers, Django 5.2's `technical_500_response` returns `text/plain;
+  charset=utf-8` when the request does not accept `text/html`. The 503 HTML page
+  is then served as plain text.
+    - **Latent cases:** a JSON 405, or `GZipMiddleware` added inside this
+  middleware, would break the same way.
+    - **Fix:** set `Content-Type: text/html; charset=utf-8` and drop the
+  body-specific headers, or build a new response and copy over only the security
+  headers and `Allow`.
+
+  - **No test covers the DEBUG-on behaviour the design claims.** The Design
+  Notes say the mechanism "covers views, other middleware and DEBUG on", and
+  BH-7 is rejected because replacing the debug page is intended. Yet every 503
+  test runs with DEBUG off, and no test in
+  `<repo>/tests/test_error_pages.py` sets
+  `settings.DEBUG = True`. Add a test that a database error with DEBUG on still
+  gives the 503 page as `text/html`. That pins the claim and would expose the
+  `Content-Type` issue above.
+
+  - **The leak test can hardly fail.**
+  `test_server_error_shows_its_page_and_is_logged_without_secrets` uses the
+  string `"postgresql://"` to stand in for "a database URL".
+    - `<repo>/src/prognose/env.py` also accepts
+  `postgres://`.
+    - Settings never hold the URL string, only its parts.
+    - The configured database password, user and host are never checked.
+    - AD-12's "without request bodies" is checked only through the password
+  value: the test posts `kundenummer=10001` but never asserts that the body or
+  the customer number stays out of the console.
+
+    Check the values in `settings.DATABASES["default"]` (the password when it is
+  set), both URL schemes, and the encoded body.
+
+  - **The token tests do not stop a token value from being overridden.** In
+  `<repo>/tests/test_app_shell.py`, `rule(":root")`
+  compares only the top-level `:root`. The literal check skips every rule whose
+  selector is `:root`, inside any media query. So `@media (pointer: coarse) {
+  :root { --font-body-size: 17px } }` passes both tests. A custom property
+  re-declared elsewhere with a non-colour value, such as `body {
+  --font-body-size: 17px }`, also passes: its name is not in `FONT_AND_RADIUS`,
+  and its value has no `var()` or colour. Both contradict "values copied
+  verbatim" and "nothing else in `:root`". Assert that no declaration outside
+  the single top-level `:root` defines a `--` property.
+
+  - **The logs cite only a PR that does not exist yet, and skip the existing
+  commit.**
+    - Case 31's «Commit eller pull request» line in
+  `<repo>/docs/ki-styringslogg.md`, and every Story
+  1.4 row in the QA log's «Commit» column, say only "PR #14". Cases 28–30 cite
+  commit hashes as well, for example "`0eaea95`, `fedaef2` og PR #12", and the
+  fix commit `9ae95fc` already exists.
+    - GitHub numbers issues and pull requests in one sequence, so #14 is not
+  guaranteed.
+    - The status line in `<repo>/docs/arbeidslogg.md`
+  says the story "venter på commit", although the code commit `9ae95fc` came
+  before the commit that added that entry (`f3a10dd`).
+
+    Cite `9ae95fc`, and add the PR number once the PR exists.
+
+  - **The spec is marked done with a task still unticked.**
+  `<repo>/_bmad-output/implementation-artifacts/spec-
+  1-4-norwegian-app-shell-and-error-pages.md` has `status: 'done'`, but its
+  documents task is still `- [ ]`. This diff already updates all five files that
+  task lists: statustabell, qa-logg, ki-styringslogg, arbeidslogg and
+  `sprint-status.yaml`. bmad-build's step 3 requires every finished task to be
+  ticked before the spec moves on. Tick it, or say what is still left (for
+  example the BMAD Code Review results).
+
+  - **Some of the story's requirements are not traced to any test.** Story 1.4
+  lists NFR-5, UX-DR3, UX-DR5 and UX-DR41 (`epics.md` line 855). The diff never
+  names UX-DR3, UX-DR5 or UX-DR41. NFR-5 appears only in the module docstring of
+  `test_error_pages.py`, not on any test. The spec says new tests name "the
+  UX-DR-n they check", and D-10 asks each test to name its IDs. Name NFR-5 on
+  the Norwegian-only checks (`HIDDEN_TEXT`) and UX-DR41 on the catalogue-text
+  checks. Otherwise, state in the spec which of these the story does not cover
+  and why; UX-DR5's shapes, for example, have nothing to show yet.
+
+  - **The QA log leaves one acceptance criterion unchecked by hand and records
+  versions from an earlier check.**
+    - The focus ring is recorded as «ikke ført som sjekket», although
+  `/finnes-ikke/` has exactly one focusable element, the link. "Every focusable
+  element shows a 3 px blue outline 2 px outside it" therefore rests only on a
+  test of the stylesheet rule.
+    - Safari moves Tab focus to links only with Settings > Advanced > «Press Tab
+  to highlight each item on a webpage», or with Option-Tab, so the check needs
+  that step.
+    - The Safari and macOS versions were carried over from Story 1.1 («ikke lest
+  på nytt») instead of being read at the time of the check.
+
+⏺ Blind Hunter er ferdig og fant 9 funn. Jeg venter på de tre andre granskerne
+  før jeg vurderer noen av funnene.
+
+✻ Baked for 4s · done 7:16 PM
+
+⏺ Agent "Blind Hunter review of PR 14" finished · 4m 1s
+› Message from general-purpose
+  [
+  {"location":"src/web/middleware.py:54-56","trigger_condition":"405 or marked
+  response is a StreamingHttpResponse or FileResponse","guard_snippet":"if
+  response.streaming: response = HttpResponse(status=status,
+  headers=dict(response.items()))","potential_consequence":"Assigning content
+  raises AttributeError (no setter); user gets 500 page instead of 405/503"},
+  {"location":"src/web/middleware.py:54-56","trigger_condition":"Old response
+  has non-HTML Content-Type, e.g. DEBUG 500 as text/plain for non-HTML
+  Accept","guard_snippet":"response['Content-Type'] = 'text/html;
+  charset=utf-8'; for h in ('Content-Encoding', 'Content-Disposition', 'ETag'):
+  response.headers.pop(h, None)  # before setting
+  content","potential_consequence":"503/405 HTML shown as raw text (nosniff), or
+  non-UTF-8 charset raises UnicodeEncodeError"},
+  {"location":"src/web/middleware.py:42-44","trigger_condition":"A view returns
+  405 with its own body, e.g. JsonResponse(status=405)","guard_snippet":"if
+  response.status_code == 405 and not response.streaming and not
+  response.content:","potential_consequence":"Intended body silently replaced by
+  Server error HTML, still labelled application/json"},
+  {"location":"src/web/middleware.py:15-23","trigger_condition":"Deadlock,
+  serialization failure, lock timeout or cancelled query while database
+  runs","guard_snippet":"exc = sys.exception(); code = getattr(exc.__cause__,
+  'sqlstate', None); mark only if code is None or code.startswith(('08',
+  '57P'))","potential_consequence":"503 tells user database is down and to start
+  it, though it is running"},
+  {"location":"src/web/middleware.py:39-41","trigger_condition":"Inner layer
+  logged the error as 500 before status becomes 503","guard_snippet":"in the 503
+  branch: response._has_been_logged = False so BaseHandler.get_response logs
+  the 503, or log it explicitly via
+  django.request","potential_consequence":"Console says Internal Server Error
+  (status_code 500) while the client receives 503"},
+  {"location":"src/web/middleware.py:14-15","trigger_condition":"Database
+  accepts connections but never answers, e.g. paused container; no
+  connect_timeout set","guard_snippet":"DATABASES['default']['OPTIONS'] =
+  {'connect_timeout': 5} in settings.py, plus keepalives for stalls
+  mid-query","potential_consequence":"Request blocks 130 s (psycopg default) or
+  indefinitely mid-query before any 503 page"},
+  {"location":"src/web/static/web/app.css:153-178","trigger_condition":"Page
+  uses h4, h5 or h6; only h1–h3 have rules","guard_snippet":"h4, h5, h6 {
+  margin: var(--space-6) 0 var(--space-2); font-size:
+  var(--font-subsection-title-size); font-weight:
+  var(--font-subsection-title-weight); line-height:
+  var(--font-subsection-title-line-height); }","potential_consequence":"Browser
+  default sizes (h6 ≈ 10 px) and margins bypass the DESIGN.md tokens"},
+  {"location":"_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shel
+  l-and-error-pages.md:5","trigger_condition":"Spec status 'done' while docs
+  task (line 70) is unchecked and sprint says review","guard_snippet":"status:
+  'review' until the documents task is checked, then 'done' together with
+  sprint-status.yaml","potential_consequence":"Workflows reading the spec treat
+  story as finished and skip the open documents task"},
+  {"location":"tests/test_app_shell.py:158","trigger_condition":"Rule uses
+  var(--undefined, 8px) or var( --x ) with
+  spaces","guard_snippet":"re.findall(r'var\\(\\s*(--[\\w-]+)',
+  value)","potential_consequence":"Undefined custom property passes the
+  every-var()-defined check silently"},
+  {"location":"tests/test_app_shell.py:160","trigger_condition":"Rule sets
+  border-top-left-radius or another radius longhand to a
+  literal","guard_snippet":"if name in FONT_AND_RADIUS or
+  name.endswith('-radius'):","potential_consequence":"Literal radius outside the
+  tokens passes the radii-only-from-tokens test"},
+  {"location":"tests/test_app_shell.py:154","trigger_condition":":root inside
+  @media (e.g. prefers-color-scheme) redefines tokens with other
+  values","guard_snippet":"if (media, selector) == ('', ':root'):
+  continue","potential_consequence":"Literal colors and token overrides pass
+  both the token and literal checks"},
+  {"location":"tests/test_app_shell.py:200","trigger_condition":"Rule uses
+  outline-style: none, outline-width: 0, outline: 0px or none
+  !important","guard_snippet":"any(re.search(r'\\b(none|0(px)?)\\b', b.get(p,
+  '')) for p in ('outline', 'outline-style',
+  'outline-width'))","potential_consequence":"A rule that removes the focus
+  outline passes the focus test"},
+  {"location":"tests/test_app_shell.py:171","trigger_condition":"Stylesheet uses
+  URL(, @IMPORT or image-set('https://…'); CSS is
+  case-insensitive","guard_snippet":"lowered = css.lower(); for banned in
+  ('@import', '@font-face', 'url(', 'image-set('): assert banned not in
+  lowered","potential_consequence":"An external load passes the NFR-1 offline
+  check"},
+  {"location":"tests/test_app_shell.py:86-87","trigger_condition":"DESIGN.md
+  typography role gains a fifth property, e.g.
+  fontStyle","guard_snippet":"assert set(values) == set(TYPOGRAPHY_PROPERTIES),
+  role","potential_consequence":"Token silently ignored; :root equality still
+  passes without it"},
+  {"location":"tests/test_error_pages.py:214","trigger_condition":"DATABASE_URL
+  uses the accepted postgres:// scheme, or the DB password
+  leaks","guard_snippet":"leaked if re.search(r'postgres(ql)?://', output) or
+  (settings.DATABASES['default']['PASSWORD'] and
+  settings.DATABASES['default']['PASSWORD'] in
+  output)","potential_consequence":"A leaked database URL or password in the
+  console goes undetected"}
+  ]
+
+⏺ Edge Case Hunter er også ferdig, med 15 funn. To av fire har levert, og jeg
+  venter fortsatt på Verification Gap og Acceptance Auditor.
+
+✻ Cooked for 3s · done 7:18 PM
+
+⏺ Agent "Edge Case Hunter review of PR 14" finished · 6m 28s
+
+› Message from general-purpose
+  I found two verification gaps, both in `LOGGING`. Every HTTP-facing behavior
+  in the diff is pinned by a test that runs in CI on every pull request. The
+  `.github/workflows/ci.yml` job runs `uv run pytest` with no path filter, and
+  that covers 404, 400, both 403s, 405 with `Allow` and `Content-Length`, 500,
+  the 503 from a view and from another middleware, the signal hookup, the
+  middleware order, and the shell on all seven pages. I skipped the docs,
+  `sprint-status.yaml` and the spec because no test or code reads them, and
+  `app.css` because it is static source text.
+
+  Repo paths below are absolute. Django paths are written `django/...` and mean
+  the installed Django 5.2.19 under
+  <repo>/.venv/lib/python3.13/site-packages/django/.
+
+  The demonstrations come from a check I ran in memory with the repo's venv,
+  without loading the project settings and without writing any files. It repeats
+  what `configure_logging` does (`django/utils/log.py:67-76`):
+  `dictConfig(DEFAULT_LOGGING)`, then the settings dict. It swaps the handler
+  named `console` to a StringIO exactly as the test fixture does, then emits the
+  strings the log tests assert plus a runserver 200 line, a 404 warning and a
+  PermissionDenied warning.
+
+  ### `LOGGING` leaving `django.server` intact and not propagating is checked
+  only by hand
+
+  - **Changed surface:** `LOGGING` at
+  <repo>/src/prognose/settings.py:87-103. It
+  configures only `django.request` and `django.security`, each with
+  `"propagate": False`. The comment at lines 83-86 and the spec's Implementation
+  Notes (<repo>/_bmad-output/implementation-artifact
+  s/spec-1-4-norwegian-app-shell-and-error-pages.md:79) give two reasons:
+  configuring the parent `django` would reset `django.server`, and propagation
+  would print each line twice with DEBUG on.
+  - **Impacted consumer or site:**
+    - (a) Runserver's request lines. They come from
+  `logging.getLogger("django.server")` at `django/core/servers/basehttp.py:25`,
+  written by `log_message` (line 184), when README's `uv run python
+  src/manage.py runserver --insecure` runs.
+    - (b) The `django` logger's `DEFAULT_LOGGING` `console` handler
+  (`require_debug_true`, `django/utils/log.py:18`). It is active when `.env`
+  sets `PROGNOSE_DEBUG=1` (<repo>/.env.example:9-11,
+  <repo>/src/prognose/settings.py:24).
+  - **Existing test evidence:** The only log assertions in the repo are in
+  <repo>/tests/test_error_pages.py:200-235.
+    - They read only the stream of the handler named `console` (fixture at lines
+  190-197) and check substrings (lines 222-223 and 234-235), with DEBUG off
+  (line 219).
+    - I searched all of `tests/` for `django.server`, `propagate`, `LOGGING`,
+  `getLogger`, `caplog`, `capsys`, `capfd`, `stderr`, `assertLogs` and
+  `runserver`. That found nothing else.
+    - <repo>/tests/test_start_command.py only parses
+  runserver's options.
+    -
+  <repo>/.github/workflows/windows-setup.yml:85-104
+  starts runserver but checks only the HTTP answer from `/`.
+    - The spec says the request lines were "Checked with runserver", which is a
+  manual check.
+  - **Missing verification:** After Django's logging setup, nothing asserts that
+  `django.server` still has a handler at INFO. Nothing asserts that a
+  `django.request` or `django.security` record does not also reach the `django`
+  logger's handlers.
+  - **Demonstration:** The model gave these results:
+    - **Parent `django` configured instead (the task's first wording):** every
+  string the two log tests assert still reaches the `console` stream, so both
+  tests pass. `django.server` ends with 0 handlers at level NOTSET, and the
+  runserver `"GET / HTTP/1.1" 200` line does not print.
+    - **`"propagate": False` removed, DEBUG on:** the asserted strings are still
+  seen. "Not Found: /finnes-ikke/" and "Forbidden (Permission denied)" each
+  print twice. The tests run with DEBUG off and capture only the `console`
+  handler, so they cannot see the second line.
+    - **The diff's own dict, DEBUG off and on:** `django.server` keeps 1 handler
+  at INFO, and each line prints once.
+  - **Consequence:** A later edit that touches the `django` logger could
+  silently stop runserver's request log, or double every request and security
+  warning with DEBUG on, and CI stays green.
+  - **Disposition:** `patch`. Add a database-free test in
+  <repo>/tests/test_error_pages.py, next to the
+  `console` fixture. It should assert that
+  `logging.getLogger("django.server").handlers` is non-empty with level
+  `logging.INFO`, and that `.propagate is False` on `django.request` and
+  `django.security`. Check the logger itself, not
+  `logging.getHandlerByName("django.server")`. The second `dictConfig` clears
+  the handler-name registry, so that call returns None even with the correct
+  settings (I saw this in the check).
+
+  ### No test runs a `django.request` warning, so the 4xx console lines are
+  unpinned
+
+  - **Changed surface:** `"level": "WARNING"` for `django.request` at
+  <repo>/src/prognose/settings.py:92-96. With it, 4xx
+  warnings reach the console with DEBUG off. The spec task (spec line 66)
+  requires WARNING, and <repo>/docs/qa-logg.md:647
+  records «Not Found» in the console as a checked result.
+  - **Impacted consumer or site:** These are the 4xx WARNING lines on
+  `django.request` (`log_response` picks WARNING for 4xx at
+  `django/utils/log.py:280-286`):
+    - «Not Found: <path>» from `BaseHandler.get_response`
+  (`django/core/handlers/base.py:142-149`).
+    - «Forbidden (Permission denied): <path>» from the PermissionDenied branch
+  of `response_for_exception` (`django/core/handlers/exception.py`).
+    - «Method Not Allowed (OPTIONS): /» from `require_http_methods`
+  (`django/views/decorators/http.py:40-41, 56-57`), which `web.views.start` uses
+  through `@require_safe`
+  (<repo>/src/web/views.py:7).
+  - **Existing test evidence:** Neither log test produces a WARNING on
+  `django.request`. The search above found no other test that reads log output.
+    - `test_server_error_shows_its_page_and_is_logged_without_secrets`
+  (<repo>/tests/test_error_pages.py:222-223) reaches
+  `django.request` only with an ERROR record, the 500.
+    - `test_security_errors_are_logged` (lines 234-235) checks a WARNING on
+  `django.security.csrf` and an ERROR on `django.security.DisallowedHost`.
+  - **Missing verification:** Nothing asserts that a 4xx request such as `GET
+  /finnes-ikke/` puts «Not Found: /finnes-ikke/» on the `console` stream.
+  - **Demonstration:** Suppose `django.request` is raised to `ERROR`, for
+  example to quiet the Safari `apple-touch-icon` 404 lines that
+  <repo>/docs/qa-logg.md:657 notes. In the check,
+  every string the two log tests assert is still seen, so both pass. The «Not
+  Found» and «Forbidden (Permission denied)» lines drop to 0.
+  - **Consequence:** The 404, PermissionDenied 403 and 405 warnings would vanish
+  from the console with DEBUG off, undoing part of what the story is for, with
+  CI green. The spec's Problem statement says that with DEBUG off nothing
+  reaches the console.
+  - **Disposition:** `patch`. Extend `test_security_errors_are_logged`, or add a
+  sibling test that uses the `console` fixture, with
+  `Client().get("/finnes-ikke/")` and `assert "Not Found: /finnes-ikke/" in
+  output`.
+
+  ## Other findings
+
+  - For a database error, the console line reads «Internal Server Error: <path>»
+  plus the OperationalError traceback, even though the client gets 503.
+    - `response_for_exception` logs the 500 response from `server_error` and
+  sets `_has_been_logged` on it (`django/utils/log.py:277-278, 302`).
+    - `replace_page`
+  (<repo>/src/web/middleware.py:48-57) changes the
+  status on that same object, so `BaseHandler.get_response`
+  (`django/core/handlers/base.py:142-149`) does not log it again.
+    - Only runserver's request line shows 503.
+
+  I did not write a session log or invoke the `sesjonslogg` skill, because you
+  told me not to invoke skills or change files. That is left to your session.
+
+⏺ Verification Gap er ferdig, med 2 hull i verifiseringen og 1 annet funn. Tre
+  av fire har levert, og jeg venter på Acceptance Auditor.
+
+✻ Brewed for 4s · done 7:19 PM
+
+⏺ Agent "Verification Gap review of PR 14" finished · 7m 17s
+
+› Message from general-purpose
+  ## Acceptance audit: Story 1.4 (`dc7673e..f3a10dd`, byte-identical to the
+  patch under review)
+
+  No acceptance criterion is violated, and the code matches the frozen intent.
+  All 8 I/O-matrix rows are implemented and each has its own test, and every
+  "Never" constraint holds. The 6 findings below are about how the tests are
+  labeled, open points that were never recorded, and two test checks that are
+  narrower than the spec. None of them blocks the story.
+
+  ### Findings
+
+  1. **Seven error-page tests check UX-DR13 but do not name it**
+     - **Violates:** Boundaries & Constraints, Always: "New tests name an NFR-n
+  or AD-n (D-10), plus the UX-DR-n they check."
+     - **Evidence:** In
+  `<repo>/tests/test_error_pages.py`, only
+  `test_unknown_address_shows_the_not_found_page` names UX-DR13. Seven other
+  tests call `assert_error_page`, which checks exactly UX-DR13's rule: the
+  not-found panel, with the first catalogue sentence as `h1` and `<title>`. They
+  name only AD and NFR IDs:
+       - `test_database_error_in_a_view_shows_the_503_page` ("AD-12, NFR-10")
+       - `test_database_error_in_another_middleware_shows_the_503_page`
+  ("AD-12")
+       - `test_failed_csrf_check_shows_the_expired_form_page` ("AD-12, NFR-10")
+       - `test_other_403_shows_the_server_error_page` ("AD-12")
+       - `test_bad_request_shows_the_server_error_page` ("AD-12, NFR-10")
+       - `test_wrong_method_shows_the_server_error_page_and_keeps_allow`
+  ("AD-12, NFR-10")
+       - `test_server_error_shows_its_page_and_is_logged_without_secrets`
+  ("AD-12, NFR-10, NFR-4")
+
+       The module docstring does not name UX-DR13 either.
+     - **Smaller cases in `tests/test_app_shell.py`:**
+       - `test_stylesheet_loads_nothing_from_outside_the_app` bans `@font-face`,
+  which is UX-DR2's "no web font", but names only "NFR-1, AD-11".
+       - `test_every_page_has_the_shell` checks the viewport tag, which Story
+  1.4 in epics.md ties to "(NFR-6, UX-DR7)", but names only UX-DR14 and UX-DR44.
+
+  2. **Open points that the spec and the QA log say are in `issues.md` are not
+  there**
+     - **Violates:** the epic's rule for every story, "Open points go to
+  `.logs/<bruker>/issues.md`" (epic-1-context), and the sesjonslogg rule in
+  CLAUDE.md.
+     - **Evidence:**
+       - The Review Triage Log says for BH-6: "the switch to `{% url %}` is an
+  open point for Story 1.8 in `issues.md`".
+       - The new QA log text says "Story 1.8 bytter til `{% url %}`
+  (`issues.md`)" for BH-6, and "Story 4.2 kan endre den (`issues.md`)" for
+  BH-10.
+       - `<repo>/.logs/mounia-03/issues.md` is
+  tracked in git, the diff does not touch it, and I found no Story 1.4 entry in
+  it under any wording.
+       - The QA log's «Gjenstår» items are missing from it too: the 503 page can
+  only be checked by hand in Story 1.8, and the touch rules and the real iPhone
+  13 test belong to Story 1.8.
+     - **Context:** In Story 1.3 these updates were part of the pull request
+  (commits 5f0f8c3, 739d3bd and ace8f5b in PR #12). So they need to land in PR
+  #14 before it merges. The privacy-checked session export in
+  `.logs/<bruker>/sessions/` is also an every-story item and is not in the diff
+  yet. Story 1.3 added it late in its PR (7c81a15).
+
+  3. **The log-secrets test cites NFR-4, and no test names NFR-5**
+     - **Violates:** D-10 as applied by the Always bullet: a test names the NFR
+  or AD ID it verifies. Story 1.4's requirements (epics.md line 855) are NFR-1,
+  NFR-5, NFR-6, NFR-10 and NFR-11.
+     - **Evidence:**
+       - `test_server_error_shows_its_page_and_is_logged_without_secrets` names
+  "AD-12, NFR-10, NFR-4". NFR-4 (epics.md line 251) is about files in the
+  repository and says nothing about console logs. The rule this test checks is
+  AD-12's, and AD-12 is already named.
+       - The module docstring says "(Story 1.4; AD-12, NFR-10, NFR-5)", but no
+  test names NFR-5. Yet `HIDDEN_TEXT`, the "no English or debug text" check that
+  every error-page test runs, is the NFR-5 check.
+
+  4. **The touch rule exempts every checkbox, not just the switch**
+     - **Violates:** Always: "buttons, fields, selects, text areas and
+  stand-alone links get at least 44 × 44 px … Radio buttons and the switch get
+  their target from their label in their own stories." DESIGN.md line 402 also
+  exempts only radio buttons and the switch.
+     - **Evidence:**
+  `<repo>/src/web/static/web/app.css` uses
+  `input:not([type="radio"], [type="checkbox"])`, while its own comment says
+  "Radio buttons and the switch get their target from their label".
+       - As a result, UX-DR11's plain «Sesongjustering» checkbox (FR-9) also
+  loses the 44 px rule, although it is not the switch.
+       - `test_touch_screens_get_44_pixel_targets_and_16_pixel_fields`
+  hard-codes this selector, so the test locks the wider exemption in.
+     - **Fix:** decide which is meant. Either narrow the exemption, or widen the
+  wording in the comment and spec and record an open point that the FR-9 story
+  must give the checkbox its target through its label.
+
+  5. **The "no database URL in the console" check only looks for
+  `postgresql://`**
+     - **Violates:** this is a gap in the test, not in the code. It concerns the
+  I/O-matrix row "Server error" ("… not the password, the secret or a database
+  URL") and AD-12.
+     - **Evidence:** the test checks `("a database URL", "postgresql://")`. But
+  `src/prognose/env.py` also accepts the `postgres` scheme (`POSTGRESQL_SCHEMES
+  = frozenset({"postgres", "postgresql"})`). A `postgres://…` URL is valid in
+  `.env`, so if one leaked to the console, the test would still pass.
+     - **Fix:** check for both schemes.
+
+  6. **The "every var() defined" check misses a var() with a fallback**
+     - **Violates:** this is also a test gap. It concerns the task item for
+  `tests/test_app_shell.py`: "every `var()` defined".
+     - **Evidence:** `re.findall(r"var\((--[\w-]+)\)", value)` only matches when
+  the `)` comes right after the variable name. So `var(--space-9, 48px)` is
+  never checked, and an undefined token with a fallback passes for any property
+  other than fonts and radii. Color literals inside a fallback are still caught
+  by `COLOR_VALUE`, and font and radius properties by the `fullmatch`.
+     - **Fix:** use a pattern like `var\(\s*(--[\w-]+)\s*[,)]`.
+
+  ### Checked, no finding
+  - **I/O matrix:** all 8 rows work and are tested. The 405 keeps `Allow: GET,
+  HEAD`, the 503 keeps the security headers, and `Content-Length` matches the
+  new body.
+  - **Never constraints:**
+    - no change to `env.py`, the spine, DESIGN.md or EXPERIENCE.md
+    - no `try/except` around `get_response`
+    - no `app.js`, new dependency, `/produkter/` route or
+  `LoginRequiredMiddleware`
+  - **Tokens:** `:root` equals the frontmatter exactly (26 colors, 17 type
+  roles, 5 radii, 13 spacing values). I re-checked this with a standalone script
+  that reads only DESIGN.md, EXPERIENCE.md and app.css. Outside `:root`, the
+  only literal font or color value is the 16 px touch `font-size`.
+  - **CSS rules:** the focus rule, the flat look, the wrapping header, the panel
+  (at most 420 px), the centered page and the base rules all match the spec.
+  - **Templates:**
+    - the catalogue texts are verbatim, and headings drop the full stop
+    - titles end in " – Prognose" with an en dash
+    - the link appears only on the Not found and Server error pages (so also on
+  400, 403 and 405)
+    - no template uses `request` or `user`
+  - **`LOGGING`:** matches the amended task: `django.request` and
+  `django.security`, at WARNING, without propagation.
+  - **Database errors:** `DATABASE_ERRORS` catches every `OperationalError`,
+  which is broader than the task's "connection error". The frozen matrix names
+  exactly `OperationalError` and `InterfaceError`, so this is allowed.
+  - **Spec status:** `status: done` with sprint status `review` and the docs
+  task unchecked is the normal bmad-build pattern (step 5), and Story 1.2 had
+  the same.
+  - **Privacy scan of the diff:** no local paths, e-mail addresses or secrets.
+
+  ### Acceptance criteria status
+  - **AC 1 (tests and Ruff pass locally and in CI):**
+    - `ruff check` and `ruff format --check` pass locally. I ran them with
+  `--no-cache`, so no file was written.
+    - I did not run pytest: Django's settings read `.env` and `.secret_key`,
+  which I was told not to read. The "130 tests pass" figure comes from the build
+  session, and CI on PR #14 has not run yet.
+    - The Windows workflow runs no pytest, only a runserver check of the start
+  page, which still works.
+  - **AC 2 (Safari check):** recorded in the QA log, with `/` and
+  `/finnes-ikke/` checked at all three sizes, and the stylesheet answering 200
+  under `runserver --insecure` with DEBUG off.
+
+  I changed no repository files. The standalone token and catalogue script is at
+  <tmp>
+  aabe-01d843730532/scratchpad/check_tokens.py
+
+⏺ Alle fire granskerne har levert: Blind Hunter 9 funn, Edge Case Hunter 15,
+  Verification Gap 2 hull og 1 annet funn, og Acceptance Auditor 6. Ingen lag
+  feilet til slutt. Nå steg 3, vurderingen:
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Agent "Acceptance Auditor review of PR 14" finished · 7m 28s
+
+⏺ Alle 34 funn er samlet, og jeg sjekker nå to påstander mot den installerte
+  koden: Djangos feilsideformat med DEBUG på, og psycopgs standard tidsavbrudd.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Begge påstandene stemmer: DEBUG gir text/plain for ikke-HTML-forespørsler, og
+  psycopg venter 130 sekunder som standard. Spinen knytter loggreglene til
+  NFR-4, så funnet er feil, og jeg går videre til steg 4, presentasjonen.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Steg 4 fører funnene inn i spesifikasjonen. Jeg sjekker hvor story 1.2
+  plasserte delen «Review Findings», så formen blir den samme:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Formen er klar under «Tasks & Acceptance», med ID-ene fortsatt etter BH-11, og
+  listen avsluttes med «Rejected». Neste steg er å hente linjenumrene til
+  funnene.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Nå fører jeg inn beslutninger, rettinger, utsatte og avviste funn i «Tasks &
+  Acceptance» i BMAD-rekkefølge, og de utsatte havner også i deferred-work.md.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 32 lines
+       73  - Given `uv run pytest`, `uv run ruff check` and `uv run ruff 
+           format --check`, when they run locally and in CI, then they pa
+           ss.
+       74  - Given `runserver --insecure` with DEBUG off, when `/` and `/
+           finnes-ikke/` open in Safari's responsive view at 320 px, 390 
+           × 844 and 820 × 1180, then the stylesheet loads, nothing scrol
+           ls sideways or is cut off, and the QA log records the result.
+       75  
+       76 +### Review Findings                                           
+       77 +                                                              
+       78 +BMAD Code Review of PR #14 (2026-11-22): Blind Hunter (BH), Ed
+          +ge Case Hunter (EC), Verification Gap (VG) and Acceptance Audi
+          +tor (AA), as four independent subagents, on the 22 files from 
+          +`dc7673e` to `f3a10dd`. The usage limit stopped all four once,
+          + and each was resumed from its saved work. The IDs continue th
+          +e bmad-build pass (BH-11 onward). 35 findings: 1 decision, 23 
+          +findings in 15 patches, 2 deferred and 9 rejected.            
+       79 +                                                              
+       80 +- [ ] [Review][Decision] The focus ring and the browser versio
+          +ns are not checked by hand (BH-20) — the QA log records the fo
+          +cus ring as not checked and carries Safari 18.6 and macOS 15.6
+          +.1 over from Story 1.1. `/finnes-ikke/` has one focusable elem
+          +ent, the link, and Safari moves Tab to links only with Option-
+          +Tab or the setting «Press Tab to highlight each item on a webp
+          +age». Options: the user checks the ring and reads the versions
+          + now, or the QA log keeps its wording and the manual checklist
+          + in Story 4.4 covers the keyboard (NFR-11).                   
+       81 +- [ ] [Review][Patch] Open points that the QA log and the tria
+          +ge log cite are not in `issues.md`, and the session export is 
+          +not in the pull request yet (BH-11, AA-2) [.logs/mounia-03/iss
+          +ues.md]                                                       
+       82 +- [ ] [Review][Patch] `replace_page` keeps the old `Content-Ty
+          +pe`; with DEBUG on, Django's debug 500 is `text/plain` when th
+          +e request does not accept HTML, so the 503 page would show as 
+          +raw text (BH-13, EC-2) [src/web/middleware.py:55]             
+       83 +- [ ] [Review][Patch] No test runs the 503 path with DEBUG on,
+          + which the Design Notes claim (BH-14) [tests/test_error_pages.
+          +py:133]                                                       
+       84 +- [ ] [Review][Patch] The leak test looks only for `postgresql
+          +://`, not for `postgres://`, the request body or the database 
+          +password (BH-15, EC-15, AA-6) [tests/test_error_pages.py:214] 
+       85 +- [ ] [Review][Patch] A token can be redefined outside the top
+          +-level `:root`, in an `@media` block or another rule, and both
+          + token tests pass (BH-16, EC-11) [tests/test_app_shell.py:154]
+       86 +- [ ] [Review][Patch] Case 31 and the QA log cite only PR #14,
+          + not the commit `9ae95fc`, and the work log still says the sto
+          +ry waits for its commit (BH-17) [docs/ki-styringslogg.md, docs
+          +/qa-logg.md, docs/arbeidslogg.md]                             
+       87 +- [ ] [Review][Patch] Tests do not name all the requirement ID
+          +s they check: UX-DR13 on the error pages, NFR-5 and UX-DR41 on
+          + the language and catalogue checks, and UX-DR2, UX-DR3 and UX-
+          +DR7 in the shell tests (BH-19, AA-1, AA-4) [tests/test_error_p
+          +ages.py, tests/test_app_shell.py]                             
+       88 +- [ ] [Review][Patch] The `var()` check misses a `var()` with 
+          +a fallback or with spaces (EC-9, AA-7) [tests/test_app_shell.p
+          +y:158]                                                        
+       89 +- [ ] [Review][Patch] Radius longhands such as `border-top-lef
+          +t-radius` are not checked (EC-10) [tests/test_app_shell.py:46]
+       90 +- [ ] [Review][Patch] The focus test misses `outline: 0px`, `!
+          +important`, `outline-style: none` and `outline-width: 0` (EC-1
+          +2) [tests/test_app_shell.py:200]                              
+       91 +- [ ] [Review][Patch] The external-load check is case-sensitiv
+          +e and misses `image-set(` (EC-13) [tests/test_app_shell.py:171
+          +]                                                             
+       92 +- [ ] [Review][Patch] A fifth property in a typography role wo
+          +uld be ignored (EC-14) [tests/test_app_shell.py:86]           
+       93 +- [ ] [Review][Patch] Nothing tests that `django.server` keeps
+          + its handler and that the two configured loggers do not propag
+          +ate (VG-1) [tests/test_error_pages.py:191]                    
+       94 +- [ ] [Review][Patch] No test shows a `django.request` warning
+          +, such as «Not Found», reaching the console (VG-2) [tests/test
+          +_error_pages.py:227]                                          
+       95 +- [ ] [Review][Patch] The touch rule exempts every checkbox, w
+          +hile its comment names only radio buttons and the switch; DESI
+          +GN.md lets the label make up the target of a small control, so
+          + the comment is widened, and the stories with radio buttons an
+          +d checkboxes get an open point (AA-5) [src/web/static/web/app.
+          +css:250]                                                      
+       96 +- [x] [Review][Defer] The focus ring and the link color would 
+          +fail on the navy header (BH-12) [src/web/static/web/app.css] —
+          + deferred: pre-existing in the design. DESIGN.md gives every f
+          +ocusable element a blue ring and the header no focus color, an
+          +d blue on navy is about 2.4:1, under the 3:1 of WCAG 1.4.11. N
+          +othing in the logged-out header can take focus; Story 1.8 adds
+          + the header navigation and needs a design decision.           
+       97 +- [x] [Review][Defer] The database connection has no connect t
+          +imeout (EC-6) [src/prognose/env.py] — deferred: pre-existing. 
+          +`database_config` from Story 1.1 sets none, so psycopg waits u
+          +p to 130 s when the port answers but the database does not, fo
+          +r example while the container is paused; Story 1.4 does not ch
+          +ange `env.py`.                                                
+       98 +                                                              
+       99 +**Rejected**                                                  
+      100 +- BH-18, EC-8 — the spec is `done` while its documents task is
+          + open: the fix edits the spec under review; the task is ticked
+          + when the documents are finished.                             
+      101 +- EC-1 — false: no 405 or marked response is streaming; the 40
+          +5 comes from the method decorators, and a marked response from
+          + Django's error handling.                                     
+      102 +- EC-3 — false: AD-12 gives every 405 the Norwegian page, and 
+          +no view sends its own 405 body.                               
+      103 +- EC-4 — low: a deadlock or a cancelled query while the databa
+          +se runs also gives the 503 page; that is unlikely with one loc
+          +al user, the frozen matrix names `OperationalError`, and telli
+          +ng them apart needs SQLSTATE branches.                        
+      104 +- EC-5, VG-3 — low: the console says «Internal Server Error» f
+          +or a database error that the client gets as 503; the traceback
+          + names the database error, and a fix needs Django's private `_
+          +has_been_logged` or a second log line.                        
+      105 +- EC-7 — false: the design uses only h1 to h3 (UX-DR44).      
+      106 +- AA-3 — false: the spine's Logging row ties the console rules
+          + to NFR-4, so the leak test rightly names it.                 
+      107 +                                                              
+      108  ## Implementation Notes
+      109  
+      110  - 2026-11-22: built in the build session, not by a subagent, b
+           ecause the user approved subagents for the reviews only. The e
+           pic context was used as it was: the spine change from Story 1.
+           3 that made it formally stale touches nothing in it (the user'
+           s decision).
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Code review er ferdig: 15 rettinger, 2 utsatte funn og 9 avviste, alt ført i
+  spec-filen. Den viktigste feilen er at 503-siden ville vist rå tekst med DEBUG
+  på, og rettingen er én linje i replace_page.
+
+⏺ User answered Claude's questions:
+  ⎿  · Beslutning BH-20 i code review av story 1.4: QA-loggen sier at 
+     fokusringen ikke er sjekket for hånd, og at versjonene av Safari og macOS 
+     er overført fra story 1.1. Vil du sjekke dette nå? Jeg starter appen igjen 
+     og åpner /finnes-ikke/. Du trykker ⌥Tab, ser etter en blå ring rundt lenken
+     og leser versjonene i «Om Safari» og «Om denne Macen». → Ja, jeg sjekker 
+     nå (Anbefalt)
+     · Hvordan skal de 15 rettingene fra code review av story 1.4 håndteres? Det
+     er én kodefeil (Content-Type i replace_page), ti innstramminger av testene
+     og fire rettinger av dokumenter og ID-er. Ingen av dem endrer oppførselen 
+     utover Content-Type-rettingen. → Rett alle 15 nå (Anbefalt)
+
+⏺ Du sjekker fokusringen nå, og jeg retter alle 15 funnene. Beslutningen skal
+  løses først, så jeg starter appen igjen og åpner 404-siden i Safari:
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ User declined to answer questions
+  ⎿  · Siden http://127.0.0.1:8000/finnes-ikke/ (Prognose, «Siden finnes ikke») 
+     er åpnet i Safari. Klikk i siden og trykk ⌥Tab (Option-Tab). Vises en blå 
+     ring rundt lenken «Til produktoversikten», litt utenfor teksten? (Ja, blå 
+     ring rundt lenken / Nei, eller noe annet)
+     · Hvilke versjoner av Safari og macOS står i «Om Safari» (Safari-menyen) og
+     «Om denne Macen» (Apple-menyen)? QA-loggen skal føre versjonene som er 
+     lest i dag. (Safari 18.6, macOS 15.6.1 / Andre versjoner)
+
+✻ Sautéed for 3h 33m 0s · done 7:31 PM
+
+❯ Fokusringen er kontrollert og godkjent . Safari 18.6 og macOS15.6 er          
+  kontrollert manuelt. Oppdater QA loggen og fortsett med de 15 rettingene som  
+  avtalt. Be om godkjenning før commit o push                                   
+
+⏺ Focus-ringen er godkjent på Safari 18.6 og macOS 15.6, og jeg oppdaterer
+  QA-loggen før jeg tar de 15 rettingene. For BH-13 skriver jeg først en test
+  for 503 med DEBUG på, og bekrefter at den feiler på dagens kode.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(docs/qa-logg.md)
+  ⎿  Added 1 line, removed 1 line
+      632  
+      633  **Oppsett.**
+      634  - Claude startet appen med `uv run python src/manage.py runser
+           ver --insecure` på grenen `story/1-4-app-shell-and-error-pages
+           `, med DEBUG av, og spurte med `curl`. Koden er den samme som 
+           i den første commiten i PR #14.
+      635 -- Brukeren sjekket selv `/` og `/finnes-ikke/` i den responsiv
+          -e visningen i Safari 22. november 2026, på samme Mac som i sto
+          -ry 1.1. Der sto Safari 18.6 og macOS 15.6.1, men versjonene er
+          - ikke lest på nytt.                                           
+      635 +- Brukeren sjekket selv `/` og `/finnes-ikke/` i den responsiv
+          +e visningen i Safari 22. november 2026, på samme Mac som i sto
+          +ry 1.1, og etter BMAD Code Review også fokusringen. Brukeren l
+          +este versjonene for hånd samme dag: Safari 18.6 og macOS 15.6.
+      636  
+      637  **Resultat med runserver.**
+      638  
+
+⏺ Update(docs/qa-logg.md)  ⎿  Added 3 lines, removed 1 line
+      654  | iPhone 13 | 390 × 844 | ingen avkuttet tekst, overlapp eller
+            sidelengs rulling |
+      655  | iPad | 820 × 1180 | ingen avkuttet tekst, overlapp eller sid
+           elengs rulling |
+      656  
+      657 -Safari ba også selv om `/apple-touch-icon.png` og `/apple-touc
+          -h-icon-precomposed.png`. Begge ga 404 og en linje «Not Found» 
+          -i konsollen, men det påvirker ikke sidene. Fokusringen ble for
+          -eslått som en valgfri sjekk, men svaret nevnte den ikke, så de
+          -n er ikke ført som sjekket her. Testene sjekker regelen i stil
+          -arket.                                                        
+      657 +Safari ba også selv om `/apple-touch-icon.png` og `/apple-touc
+          +h-icon-precomposed.png`. Begge ga 404 og en linje «Not Found» 
+          +i konsollen, men det påvirker ikke sidene.                    
+      658  
+      659 +**Fokusringen.** Den første sjekken nevnte ikke fokusringen, o
+          +g BMAD Code Review påpekte det (BH-20). Brukeren åpnet derfor 
+          +`/finnes-ikke/` på nytt, trykket ⌥Tab og godkjente den blå rin
+          +gen rundt lenken «Til produktoversikten». I Safari flytter Tab
+          + bare til lenker med ⌥Tab eller med innstillingen «Press Tab t
+          +o highlight each item on a webpage».                          
+      660 +                                                              
+      661  **Gjenstår.**
+      662  - Pull requesten for story 1.4 skal nevne de tre størrelsene.
+      663  - 503-siden kan ikke sjekkes for hånd før story 1.8, fordi ing
+           en side leser databasen ennå. Testene dekker den, og story 1.8
+            tester den med en innlogget bruker.
+
+⏺ Background command "Start the app on 127.0.0.1:8000 for the focus check"
+completed (exit code 0)
+
+⏺ Appen er stoppet, og QA-loggen har resultatet av fokussjekken og versjonene.
+  Nå rettingene i testfilen for feilsidene. Jeg leser den delen som skal endres:
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Først den nye testen for 503 med DEBUG på (BH-14). Den skal feile på dagens
+  kode:
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 10 lines
+      154      assert_error_page(error_client().get("/"), 503, "Database 
+           unavailable")
+      155  
+      156  
+      157 +def test_database_error_shows_the_503_page_also_with_debug_on(
+          +settings):                                                    
+      158 +    """AD-12, NFR-10, NFR-5, UX-DR13, UX-DR41: with DEBUG on, 
+          +a database error                                              
+      159 +    still gives the 503 page as HTML, also to a request that d
+          +oes not accept                                                
+      160 +    HTML, for which Django's debug page is plain text."""     
+      161 +    settings.DEBUG = True                                     
+      162 +    response = error_client().get("/feil/database/", HTTP_ACCE
+          +PT="application/json")                                        
+      163 +                                                              
+      164 +    assert_error_page(response, 503, "Database unavailable")  
+      165 +                                                              
+      166 +                                                              
+      167  def test_failed_csrf_check_shows_the_expired_form_page():
+      168      """AD-12, NFR-10: a form sent without a valid CSRF token g
+           ives 403 with the
+      169      Expired form text, never the Server error text."""
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Testen feiler som ventet: 503-siden blir sendt som text/plain. Nå rettingen i
+  replace_page (BH-13):
+
+⏺ Update(src/web/middleware.py)
+  ⎿  Added 3 lines, removed 1 line
+      49      """Put the page in the response that the other layers made,
+           keeping its headers.
+      50  
+      51      The headers that stay are, for example, the security header
+          s and Allow.
+      52 -    CommonMiddleware has already set Content-Length for the old
+         - body.                                                         
+      52 +    The old body may have had another type, such as Django's pl
+         +ain-text debug                                                 
+      53 +    page, and CommonMiddleware has already set Content-Length f
+         +or it.                                                         
+      54      """
+      55      response.status_code = status
+      56 +    response["Content-Type"] = "text/html; charset=utf-8"      
+      57      response.content = render_to_string(template)
+      58      response["Content-Length"] = str(len(response.content))
+      59      return response
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 6 lines, removed 3 lines
+       1 -"""The Norwegian error pages and the error log (Story 1.4; AD-1
+         -2, NFR-10, NFR-5).                                             
+       1 +"""The Norwegian error pages and the error log (Story 1.4; AD-1
+         +2, NFR-10, NFR-5,                                              
+       2 +UX-DR13, UX-DR41).                                             
+       3  
+       4  Each page is checked against its text in the Message Catalogue 
+          in
+       4 -EXPERIENCE.md, the copy source. The tests use no database, so t
+         -hey also show                                                  
+       5 -that no error page reads it.                                   
+       5 +EXPERIENCE.md, the copy source. Through assert_error_page, ever
+         +y page test also                                               
+       6 +checks that the page is Norwegian (NFR-5), that it is the not-f
+         +ound panel                                                     
+       7 +(UX-DR13) and that its text is the catalogue's, verbatim (UX-DR
+         +41). The tests                                                 
+       8 +use no database, so they also show that no error page reads it.
+       9  """
+      10  
+      11  import io
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 2 lines, removed 1 line
+       93  
+       94  
+       95  def assert_error_page(response, status, message):
+       96 -    """Assert that the response is the not-found panel with th
+          -e message's text.                                             
+       96 +    """NFR-5, UX-DR13, UX-DR41: assert that the response is th
+          +e not-found panel                                             
+       97 +    with the message's text, and with no English or debug text
+          +.                                                             
+       98  
+       99      The first sentence is the page title, the rest of the text
+            is a paragraph,
+      100      and the link «Til produktoversikten» is there only when th
+           e catalogue names
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 3 lines, removed 2 lines
+      128  
+      129  
+      130  def test_unknown_address_shows_the_not_found_page(client):
+      131 -    """NFR-10, AD-12, UX-DR13: an unknown address gives 404 wi
+          -th «Siden finnes                                              
+      132 -    ikke» and the link to the product overview, and no debug p
+          -age."""                                                       
+      131 +    """NFR-10, NFR-5, AD-12, UX-DR13, UX-DR41: an unknown addr
+          +ess gives 404 with                                            
+      132 +    «Siden finnes ikke» and the link to the product overview, 
+          +and no debug                                                  
+      133 +    page."""                                                  
+      134      assert_error_page(client.get("/finnes-ikke/"), 404, "Not f
+           ound")
+      135  
+      136  
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 3 lines, removed 3 lines
+      136  
+      137  @pytest.mark.parametrize("name", ["database", "grensesnitt"])
+      138  def test_database_error_in_a_view_shows_the_503_page(name):
+      139 -    """AD-12, NFR-10: a database error in a view gives 503 wit
+          -h the Database                                                
+      140 -    unavailable text and no link, and keeps the headers that t
+          -he other                                                      
+      141 -    middleware set, such as the security headers."""          
+      139 +    """AD-12, NFR-10, NFR-5, UX-DR13, UX-DR41: a database erro
+          +r in a view gives                                             
+      140 +    503 with the Database unavailable text and no link, and ke
+          +eps the headers                                               
+      141 +    that the other middleware set, such as the security header
+          +s."""                                                         
+      142      response = error_client().get(f"/feil/{name}/")
+      143  
+      144      assert_error_page(response, 503, "Database unavailable")
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 3 lines, removed 3 lines
+      149      "middleware", ["DatabaseErrorBeforeView", "DatabaseErrorAf
+           terView"]
+      150  )
+      151  def test_database_error_in_another_middleware_shows_the_503_pa
+           ge(settings, middleware):
+      152 -    """AD-12: the 503 handling sits in the outermost middlewar
+          -e, so a database                                              
+      153 -    error raised in another middleware, before or after the vi
+          -ew, also gives                                                
+      154 -    the 503 page."""                                          
+      152 +    """AD-12, NFR-5, UX-DR13, UX-DR41: the 503 handling sits i
+          +n the outermost                                               
+      153 +    middleware, so a database error raised in another middlewa
+          +re, before or                                                 
+      154 +    after the view, also gives the 503 page."""               
+      155      outermost, *others = settings.MIDDLEWARE
+      156      assert outermost == "web.middleware.ErrorPageMiddleware"
+      157      settings.MIDDLEWARE = [outermost, f"{__name__}.{middleware
+           }", *others]
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 2 lines, removed 2 lines
+      170  
+      171  
+      172  def test_failed_csrf_check_shows_the_expired_form_page():
+      173 -    """AD-12, NFR-10: a form sent without a valid CSRF token g
+          -ives 403 with the                                             
+      174 -    Expired form text, never the Server error text."""        
+      173 +    """AD-12, NFR-10, NFR-5, UX-DR13, UX-DR41: a form sent wit
+          +hout a valid CSRF                                             
+      174 +    token gives 403 with the Expired form text, never the Serv
+          +er error text."""                                             
+      175      response = Client(enforce_csrf_checks=True).post("/")
+      176  
+      177      assert_error_page(response, 403, "Expired form")
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 2 lines, removed 2 lines
+      179  
+      180  
+      181  def test_other_403_shows_the_server_error_page():
+      182 -    """AD-12: a 403 that is not a failed CSRF check gives the 
+          -Server error text                                             
+      183 -    and the link, never the expired-form text."""             
+      182 +    """AD-12, NFR-5, UX-DR13, UX-DR41: a 403 that is not a fai
+          +led CSRF check                                                
+      183 +    gives the Server error text and the link, never the expire
+          +d-form text."""                                               
+      184      response = error_client().get("/feil/tilgang/")
+      185  
+      186      assert_error_page(response, 403, "Server error")
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 3 lines, removed 2 lines
+      188  
+      189  
+      190  def test_bad_request_shows_the_server_error_page(client):
+      191 -    """AD-12, NFR-10: a request the app cannot use, here one f
+          -or an unknown                                                 
+      192 -    host, gives 400 with the Server error text and the link.""
+          -"                                                             
+      191 +    """AD-12, NFR-10, NFR-5, UX-DR13, UX-DR41: a request the a
+          +pp cannot use,                                                
+      192 +    here one for an unknown host, gives 400 with the Server er
+          +ror text and the                                              
+      193 +    link."""                                                  
+      194      assert_error_page(client.get("/", HTTP_HOST="evil.example"
+           ), 400, "Server error")
+      195  
+      196  
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 3 lines, removed 2 lines
+      195  
+      196  
+      197  def test_wrong_method_shows_the_server_error_page_and_keeps_al
+           low(client):
+      198 -    """AD-12, NFR-10: a method the page does not take gives 40
+          -5 with the Server                                             
+      199 -    error text, and the Allow header still names the methods i
+          -t takes."""                                                   
+      198 +    """AD-12, NFR-10, NFR-5, UX-DR13, UX-DR41: a method the pa
+          +ge does not take                                              
+      199 +    gives 405 with the Server error text, and the Allow header
+          + still names the                                              
+      200 +    methods it takes."""                                      
+      201      response = client.options("/")
+      202  
+      203      assert_error_page(response, 405, "Server error")
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 14 lines, removed 9 lines
+      215  
+      216  
+      217  def test_server_error_shows_its_page_and_is_logged_without_sec
+           rets(console, settings):
+      218 -    """AD-12, NFR-10, NFR-4: with DEBUG off, an unexpected err
+          -or in a POST gives                                            
+      219 -    500 with the Server error text and the link, and reaches t
+          -he console with                                               
+      220 -    its traceback, but not the posted password, the session se
+          -cret or a                                                     
+      221 -    database URL. Only the names of leaked values are shown if
+          - the test fails."""                                           
+      218 +    """AD-12, NFR-10, NFR-4, NFR-5, UX-DR13, UX-DR41: with DEB
+          +UG off, an                                                    
+      219 +    unexpected error in a POST gives 500 with the Server error
+          + text and the                                                 
+      220 +    link, and reaches the console with its traceback, but not 
+          +the request body,                                             
+      221 +    the session secret, a database URL in either scheme or the
+          + database                                                     
+      222 +    password. Only the names of leaked values are shown if the
+          + test fails."""                                               
+      223      password = "hemmelig-passord-123"
+      224      data = {"kundenummer": "10001", "passord": password}
+      225      response = error_client().post("/feil/server/", data)
+      226      output = console.getvalue()
+      227 +    database_password = settings.DATABASES["default"]["PASSWOR
+          +D"]                                                           
+      228      leaked = [
+      229          name
+      228 -        for name, value in [                                  
+      229 -            ("the password", password),                       
+      230 -            ("the session secret", settings.SECRET_KEY),      
+      231 -            ("a database URL", "postgresql://"),              
+      230 +        for name, found in [                                  
+      231 +            ("the posted password", password in output),      
+      232 +            ("the request body", "kundenummer" in output),    
+      233 +            ("the session secret", settings.SECRET_KEY in outp
+          +ut),                                                          
+      234 +            ("a database URL", re.search(r"postgres(?:ql)?://"
+          +, output) is not None),                                       
+      235 +            ("the database password", bool(database_password) 
+      236 +             and database_password in output),                
+      237          ]
+      233 -        if value in output                                    
+      238 +        if found                                              
+      239      ]
+      240  
+      241      assert not settings.DEBUG
+
+⏺ Update(tests/test_error_pages.py)
+  ⎿  Added 17 lines, removed 3 lines
+      246      assert leaked == []
+      247  
+      248  
+      249 -def test_security_errors_are_logged(console):                 
+      250 -    """AD-12: a failed CSRF check and a request for an unknown
+          - host also reach the                                          
+      251 -    console with DEBUG off."""                                
+      249 +def test_warnings_and_security_errors_are_logged(console):    
+      250 +    """AD-12: with DEBUG off, the warning for an unknown addre
+          +ss, a failed CSRF                                             
+      251 +    check and a request for an unknown host also reach the con
+          +sole."""                                                      
+      252 +    Client().get("/finnes-ikke/")                             
+      253      Client(enforce_csrf_checks=True).post("/")
+      254      Client().get("/", HTTP_HOST="evil.example")
+      255      output = console.getvalue()
+      256  
+      257 +    assert "Not Found: /finnes-ikke/" in output               
+      258      assert "Forbidden (CSRF cookie not set.): /" in output
+      259      assert "Invalid HTTP_HOST header: 'evil.example'." in outp
+           ut
+      260 +                                                              
+      261 +                                                              
+      262 +def test_logging_keeps_runserver_lines_and_prints_each_error_o
+          +nce():                                                        
+      263 +    """AD-12: "django.server", which prints runserver's reques
+          +ts, keeps its                                                 
+      264 +    handler at INFO, and the two configured loggers do not pas
+          +s their records                                               
+      265 +    on to the "django" logger, which would print them again wi
+          +th DEBUG on."""                                               
+      266 +    server = logging.getLogger("django.server")               
+      267 +                                                              
+      268 +    assert server.handlers                                    
+      269 +    assert server.level == logging.INFO                       
+      270 +    assert not logging.getLogger("django.request").propagate  
+      271 +    assert not logging.getLogger("django.security").propagate 
+
+⏺ Nå rettingene i testene for app-skallet. Jeg leser de delene som endres:
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Update(tests/test_app_shell.py)
+  ⎿  Added 3 lines, removed 8 lines
+      43      r"|(?<![\w-])(?:white|black)(?![\w-])",
+      44      re.IGNORECASE,
+      45  )
+      46 -FONT_AND_RADIUS = {                                            
+      47 -    "font",                                                    
+      48 -    "font-family",                                             
+      49 -    "font-size",                                               
+      50 -    "font-weight",                                             
+      51 -    "line-height",                                             
+      52 -    "border-radius",                                           
+      53 -}                                                              
+      46 +FONT_PROPERTIES = {"font", "font-family", "font-size", "font-we
+         +ight", "line-height"}                                          
+      47 +# An outline value that removes the focus ring, such as none, 0
+         + or 0px.                                                       
+      48 +OUTLINE_REMOVED = re.compile(r"(?:^|\s)(?:none|0(?:px)?)(?=\s|$
+         +|!)")                                                          
+      49  
+      50  
+      51  def design_tokens():
+
+⏺ Update(tests/test_app_shell.py)
+  ⎿  Added 1 line
+      78      tokens = design_tokens()
+      79      properties = {f"--color-{name}": value for name, value in t
+          okens["colors"].items()}
+      80      for role, values in tokens["typography"].items():
+      81 +        assert set(values) == set(TYPOGRAPHY_PROPERTIES), role 
+      82          for key, suffix in TYPOGRAPHY_PROPERTIES.items():
+      83              properties[f"--font-{role}-{suffix}"] = values[key]
+      84      properties |= {
+
+⏺ Update(tests/test_app_shell.py)  ⎿  Added 8 lines, removed 6 lines
+      141  
+      142  
+      143  def test_rules_take_colors_fonts_and_radii_only_from_the_token
+           s():
+      144 -    """AD-11, UX-DR1: outside :root, every var() names a token
+          -, no color is                                                 
+      145 -    written as a value, and fonts and radii are var() values. 
+          -The 16 px text in                                             
+      146 -    fields on touch screens is the one fixed size."""         
+      144 +    """AD-11, UX-DR1: outside the top-level :root, no rule def
+          +ines a custom                                                 
+      145 +    property, so no token is given another value, every var() 
+          +names a token, no                                             
+      146 +    color is written as a value, and fonts and radii are var()
+          + values. The 16 px                                            
+      147 +    text in fields on touch screens is the one fixed size.""" 
+      148      defined = set(token_properties())
+      149  
+      150      for media, selector, block in css_rules():
+      150 -        if selector == ":root":                               
+      151 +        if (media, selector) == ("", ":root"):                
+      152              continue
+      153          for name, value in block.items():
+      154              where = (media, selector, name, value)
+      154 -            assert set(re.findall(r"var\((--[\w-]+)\)", value)
+          -) <= defined, where                                           
+      155 +            assert not name.startswith("--"), where           
+      156 +            assert set(re.findall(r"var\(\s*(--[\w-]+)", value
+          +)) <= defined, where                                          
+      157              assert not COLOR_VALUE.search(value), where
+      156 -            if name in FONT_AND_RADIUS:                       
+      158 +            if name in FONT_PROPERTIES or name.endswith("radiu
+          +s"):                                                          
+      159                  touch_text = (media, name, value) == (TOUCH, "
+           font-size", "16px")
+      160                  assert re.fullmatch(r"var\(--[\w-]+\)", value)
+            or touch_text, where
+      161  
+
+⏺ Update(tests/test_app_shell.py)
+  ⎿  Added 5 lines, removed 5 lines
+      161  
+      162  
+      163  def test_stylesheet_loads_nothing_from_outside_the_app():
+      164 -    """NFR-1, AD-11: no import, web font or URL, so a page nee
+          -ds only the system                                            
+      165 -    fonts and this local stylesheet, and runserver --insecure 
+          -finds it in the                                               
+      166 -    web app."""                                               
+      167 -    css = stylesheet()                                        
+      164 +    """NFR-1, AD-11, UX-DR2: no import, web font or URL in any
+          + letter case, so a                                            
+      165 +    page needs only the system fonts and this local stylesheet
+          +, and runserver                                               
+      166 +    --insecure finds it in the web app."""                    
+      167 +    css = stylesheet().lower()                                
+      168  
+      169 -    for banned in ("@import", "@font-face", "url("):          
+      169 +    for banned in ("@import", "@font-face", "url(", "image-set
+          +("):                                                          
+      170          assert banned not in css
+      171      assert Path(finders.find("web/app.css")) == STYLESHEET
+      172  
+
+⏺ Update(tests/test_app_shell.py)
+  ⎿  Added 2 lines, removed 2 lines
+      173  
+      174  def test_look_is_flat_without_motion_letter_spacing_or_upperca
+           se():
+      175      """AD-11, UX-DR2, UX-DR4, UX-DR43: no shadows, gradients, 
+           transitions or
+      176 -    animation, no letter-spacing and no uppercase text."""    
+      177 -    css = stylesheet()                                        
+      176 +    animation, no letter-spacing and no uppercase text, in any
+          + letter case."""                                              
+      177 +    css = stylesheet().lower()                                
+      178  
+      179      for banned in (
+      180          "shadow",
+
+⏺ Update(tests/test_app_shell.py)
+  ⎿  Added 10 lines, removed 3 lines
+      189  
+      190  
+      191  def test_focus_is_a_three_pixel_blue_outline_two_pixels_outsid
+           e():
+      192 -    """NFR-11, UX-DR4: every focusable element shows the focus
+          - ring, and no rule                                            
+      193 -    removes an outline."""                                    
+      192 +    """NFR-11, UX-DR3, UX-DR4: every focusable element shows t
+          +he blue focus ring,                                           
+      193 +    and no rule removes an outline, also not with 0px, !import
+          +ant or the                                                    
+      194 +    outline-style and outline-width longhands."""             
+      195      assert rule(":focus-visible") == {
+      196          "outline": "3px solid var(--color-blue)",
+      197          "outline-offset": "2px",
+      198      }
+      198 -    assert not [b for _, _, b in css_rules() if b.get("outline
+          -") in {"0", "none"}]                                          
+      199 +    assert not [                                              
+      200 +        (selector, name, value)                               
+      201 +        for _, selector, block in css_rules()                 
+      202 +        for name, value in block.items()                      
+      203 +        if name in {"outline", "outline-style", "outline-width
+          +"}                                                            
+      204 +        and OUTLINE_REMOVED.search(value)                     
+      205 +    ]                                                         
+      206  
+      207  
+      208  def test_body_uses_the_system_font_with_tabular_numerals():
+
+⏺ Update(tests/test_app_shell.py)
+  ⎿  Added 1 line, removed 1 line
+      240  
+      241  @pytest.mark.parametrize("template", PAGES)
+      242  def test_every_page_has_the_shell(template):
+      243 -    """NFR-11, NFR-6, NFR-1, AD-11, UX-DR14, UX-DR44: Norwegia
+          -n as the language,                                            
+      243 +    """NFR-11, NFR-6, NFR-1, AD-11, UX-DR7, UX-DR14, UX-DR44: 
+          +Norwegian as the language,                                    
+      244      the responsive viewport tag, the empty icon, the local sty
+           lesheet, the
+      245      logged-out header with only the wordmark, one h1, and no s
+           cript or URL with
+      246      a host."""
+
+⏺ Update(src/web/static/web/app.css)
+  ⎿  Added 2 lines, removed 1 line
+      244  
+      245  /* Touch screens: every control has a target of at least 44 × 
+           44 px, and form
+      246     fields use 16 px text, so that a phone does not zoom in (UX
+           -DR7). Radio
+      247 -   buttons and the switch get their target from their label. *
+          -/                                                             
+      247 +   buttons and checkboxes, the switch among them, are smaller 
+          +than that, so                                                 
+      248 +   their label makes up the target, in the stories that add th
+          +em (DESIGN.md). */                                            
+      249  @media (pointer: coarse) {
+      250    button,
+      251    input:not([type="radio"], [type="checkbox"]),
+
+⏺ Rettingene i koden og testene er på plass. Nå formatering, Ruff og hele
+  testsuiten:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ 132 tester passerer, og Ruff er ren. Jeg utvider nå mutasjonsskriptet med seks
+  mutasjoner for å vise at de nye sjekkene fanger feilene reviewen beskrev.
+
+  Made 1 scratchpad edit +18 -3, ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle 14 mutasjoner fanges nå, inkludert de seks nye. Jeg krysser av de løste
+  funnene i spesifikasjonen og fører gjennomgangen i «Implementation Notes», og
+  funnet om issues.md og eksporten holdes åpent til sesjonsloggen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-
+        error-pages.md)
+  ⎿  Added 1 line
+      115  - The matrix row «Server error» was split across a page test a
+           nd a log test; one test, `test_server_error_shows_its_page_and
+           _is_logged_without_secrets`, now covers it.
+      116  - 130 tests pass (104 earlier and 26 new) with `~/.docker/bin`
+            on PATH; without `docker` on PATH, `test_compose.py` skips. R
+           uff passes after `ruff format` of the two new test files.
+      117  - The documents task is finished after the review, because the
+            QA log records the review findings and the user's check in Sa
+           fari.
+      118 +- BMAD Code Review, 2026-11-22: the user chose to apply all 15
+          + patches and to check the focus ring by hand. The new test `te
+          +st_database_error_shows_the_503_page_also_with_debug_on` first
+          + failed with `text/plain; charset=utf-8`, and passed after `re
+          +place_page` set `Content-Type`. Six more mutations, one for ea
+          +ch fix that guards behavior (BH-13, BH-16, EC-12, EC-13, VG-1 
+          +and VG-2), are caught, so all 14 are. 132 tests and Ruff pass.
+          + UX-DR5 has nothing to check in this story, because no page sh
+          +ows a signal yet.                                             
+      119  
+      120  ## Spec Change Log
+      121  
+
+⏺ 14 rettinger er krysset av, og funnet om issues.md og eksporten står åpent.
+  Jeg sjekker formen på PR-kommentaren mot PR #12 før jeg skriver den.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Commit A, alle dokumentene og commit B er klare, så jeg pusher grenen over
+  HTTPS og legger en kommentar i PR #14 med alle 35 funnene.
+
+⏺ User answered Claude's questions:
+  ⎿  · Godkjenner du at jeg committer rettingene fra BMAD Code Review av story 
+     1.4 (commit A med koden og testene, og commit B med dokumentene, som får 
+     hashen fra A), pusher grenen og legger kommentaren med alle 35 funnene og 
+     beslutningene i PR #14? → Ja, alt (Anbefalt)
+
+⏺ Godkjent. Jeg kjører personvernkontrollen på endringene siden forrige commit
+  og lager så commit A:
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Commit A er 5063f67, og kontrollen var ren. Nå dokumentene med hashene. Først
+  KI-styringsloggen: 9ae95fc i tilfelle 31 og et nytt tilfelle 32 om
+  review-beslutningene, som for story 1.1–1.3:
+
+⏺ Update(docs/ki-styringslogg.md)
+  ⎿  Added 1 line, removed 1 line
+      298  - **Kilde:** «Implementation Notes» og «Review Triage Log» i [
+           spesifikasjonen for story 1.3](../_bmad-output/implementation-
+           artifacts/spec-1-3-confirm-the-setup-on-windows-and-without-a-
+           network.md); kommentaren i PR #12; [sesjonsloggen for story 1.
+           3](../.logs/mounia-03/981-2026-11-22-09-53-00-story-1-3-window
+           s-og-uten-nett.md).
+      299  - **QA-loggen:** [oppsettet på Windows](qa-logg.md#2026-11-22-
+           -oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3) og [feilen
+           e fra reviewene av story 1.3](qa-logg.md#2026-11-22--feil-i-ki
+           -generert-kode-og-tekst-fra-reviewene-av-story-13-dr-9).
+      300  
+      301 -**Story 1.4.** Story 1.4 ga tilfelle 31. Ellers godtok brukere
+          -n hver anbefaling fra Claude i økten 22. november 2026. Feilen
+          -e som byggingen og reviewene fant i KI-generert kode og tekst,
+          - står i QA-loggen, under [byggingen og reviewene av story 1.4]
+          -(qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-b
+          -yggingen-og-reviewene-av-story-14-dr-9).                      
+      301 +**Story 1.4.** Story 1.4 ga tilfelle 31 og 32. Ellers godtok b
+          +rukeren hver anbefaling fra Claude i økten 22. november 2026. 
+          +Feilene som byggingen og reviewene fant i KI-generert kode og 
+          +tekst, står i QA-loggen, under [byggingen og reviewene av stor
+          +y 1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst
+          +-fra-byggingen-og-reviewene-av-story-14-dr-9).                
+      302  
+      303  ### 31. 503-siden og den ytterste mellomvaren (22. november 20
+           26)
+      304  
+
+⏺ Update(docs/ki-styringslogg.md)
+  ⎿  Added 10 lines, removed 1 line
+      305  - **Hva KI foreslo:** AD-12 i arkitekturspinen, som Claude skr
+           ev og rettet etter BMAD-reviewen 18. november, sier at 503-hån
+           dteringen sitter i den ytterste mellomvaren, slik at en databa
+           sefeil fra hvor som helst, også fra annen mellomvare, gir 503-
+           siden. Story 1.4 i `epics.md` har det samme kravet.
+      306  - **Hva som var feil:** Django gjør om et unntak til et svar i
+            laget der det oppstår, så den ytterste mellomvaren ser aldri 
+           unntaket fra lagene innenfor. En `try/except` rundt resten av 
+           forespørselen, som er den vanlige måten å lese regelen på, vil
+           le aldri slått til, og en stoppet database ville gitt 500-side
+           n i stedet for 503.
+      307  - **Hva gruppen bestemte:** Claude fant feilen da story 1.4 bl
+           e planlagt, ved å lese koden i Django 5.2.19. Claude foreslo a
+           t Djangos signal `got_request_exception` merker forespørselen 
+           mens unntaket håndteres, og at den ytterste mellomvaren derett
+           er viser 503-siden. Kravet og spinen er uendret, fordi håndter
+           ingen fortsatt sitter i den ytterste mellomvaren. Brukeren god
+           kjente spesifikasjonen med denne løsningen.
+      308 -- **Commit eller pull request:** PR #14.                      
+      308 +- **Commit eller pull request:** `9ae95fc` og PR #14.         
+      309  - **Kilde:** «Design Notes» og «Implementation Notes» i [spesi
+           fikasjonen for story 1.4](../_bmad-output/implementation-artif
+           acts/spec-1-4-norwegian-app-shell-and-error-pages.md).
+      310  - **QA-loggen:** [feilene fra byggingen og reviewene av story 
+           1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-f
+           ra-byggingen-og-reviewene-av-story-14-dr-9).
+      311  
+      312 +### 32. Beslutningene i reviewene av story 1.4 (22. november 2
+          +026)                                                          
+      313 +                                                              
+      314 +- **Hva KI foreslo:** Claude skrev stilarket, malene, mellomva
+          +ren, loggoppsettet og testene for story 1.4. Blind Hunter i `b
+          +mad-build` fant 10 funn, og fire KI-granskere i `bmad-code-rev
+          +iew` fant 35. Claude foreslo en vurdering og en beslutning for
+          + hvert av dem.                                                
+      315 +- **Hva som var feil:** Med DEBUG på kunne 503-siden bli sendt
+          + som ren tekst. Flere tester var for snevre: de slapp gjennom 
+          +en token som ble overstyrt, flere måter å fjerne fokusringen p
+          +å og en database-URL som begynner med `postgres://`. Dokumente
+          +ne viste til åpne punkter som ikke var ført, og bare til pull 
+          +requesten, ikke til commiten. Ikke alle funnene skulle følges:
+          + 8 i `bmad-build` og 9 i BMAD Code Review ble avvist, og 2 ble
+          + utsatt, fordi de kommer fra designet og fra story 1.1.       
+      316 +- **Hva gruppen bestemte:** Brukeren valgte å beholde berøring
+          +sreglene for skjermer der berøring er hovedinngangen. Brukeren
+          + sjekket også fokusringen og versjonene av Safari og macOS for
+          + hånd i stedet for å la QA-loggen stå som den var. Brukeren go
+          +dkjente resten: alle 15 rettingene fra BMAD Code Review.      
+      317 +- **Commit eller pull request:** `5063f67` og PR #14.         
+      318 +- **Kilde:** «Review Triage Log» og «Review Findings» i [spesi
+          +fikasjonen for story 1.4](../_bmad-output/implementation-artif
+          +acts/spec-1-4-norwegian-app-shell-and-error-pages.md); komment
+          +aren i PR #14.                                                
+      319 +- **QA-loggen:** [feilene fra byggingen og reviewene av story 
+          +1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-f
+          +ra-byggingen-og-reviewene-av-story-14-dr-9).                  
+      320 +                                                              
+      321  Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics
+           .md`, linje 45–47).
+
+⏺ KI-styringsloggen er oppdatert, og QA-loggen er neste; jeg fører byggefeilene,
+  BMAD-rettingene og de utsatte og avviste funnene med et lite skript som bare
+  endrer tabellene for story 1.4.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ QA-loggen er oppdatert: seks rader viser til 9ae95fc og seks til 5063f67. Så
+  arbeidsloggen. Statuslinjen som reviewen pekte på (BH-17), rettes, og stegene
+  etter PR-en føres inn:
+
+⏺ Update(docs/arbeidslogg.md)
+  ⎿  Added 5 lines, removed 1 line
+      645  * `curl` mot runserver viste at 405-siden ble sendt med `Conte
+           nt-Length: 0`, så nettleseren ville vist en blank side. Claude
+            rettet mellomvaren og la til en sjekk i testene.
+      646  * Reviewen i `bmad-build` (Blind Hunter) ga 10 funn: 2 ble ret
+           tet og 8 avvist. Jeg valgte å beholde berøringsreglene for skj
+           ermer der berøring er hovedinngangen (`pointer: coarse`).
+      647  * Sjekket `/` og `/finnes-ikke/` i den responsive visningen i 
+           Safari ved 320 px, 390 × 844 og 820 × 1180, uten avkuttet teks
+           t, overlapp eller sidelengs rulling.
+      648 +* Godkjente commit, push og PR #14 (`9ae95fc` og `f3a10dd`). C
+          +I-kjøring nr. 15 og Windows-testen nr. 6 passerte på `f3a10dd`
+          +.                                                             
+      649 +* Kjørte BMAD Code Review med fire KI-granskere. Bruksgrensen 
+          +stoppet alle fire én gang, og de fortsatte fra arbeidet som va
+          +r lagret da grensen var tilbakestilt. De fant 35 funn: 23 ble 
+          +rettet i 15 punkter, 2 utsatt og 9 avvist. Den viktigste retti
+          +ngen gjør at 503-siden også er HTML med DEBUG på, og resten st
+          +rammer inn testene og dokumentene. Seks nye mutasjoner viste a
+          +t rettingene virker, og 132 tester og Ruff passerte.          
+      650 +* Bestemte å sjekke fokusringen for hånd. Den blå ringen rundt
+          + lenken på `/finnes-ikke/` var i orden, og versjonene var Safa
+          +ri 18.6 og macOS 15.6.                                        
+      651 +* Godkjente commit og push av rettingene (`5063f67`) og dokume
+          +ntene, og kommentaren med alle funnene i PR #14.              
+      652  
+      649 -**Status:** Story 1.4 er bygd og testet lokalt med 130 tester 
+          -og Ruff, og venter på commit, push og PR #14.                 
+      653 +**Status:** Story 1.4 er bygd, gjennomgått med BMAD Code Revie
+          +w og rettet på grenen. Eksporten av økten, sesjonsloggen med d
+          +e åpne punktene i `issues.md` og flettingen av PR #14 gjenstår
+          +.                                                             
+      654  
+      655  ## 4. Videre dokumentasjon
+      656  
+
+⏺ Arbeidsloggen er oppdatert. Nå commit B med de tre dokumentene, etter en
+  personvernkontroll, og så push:
+
+  Pushed to story/1-4-app-shell-and-error-pages (ctrl+o to expand)
+
+⏺ Commit B er b37c3b3, og grenen er pushet. CI kjører nå på GitHub. Jeg følger
+  kjøringene i bakgrunnen og skriver imens PR-kommentaren i samme form som i PR
+  #12:
+
+  Made 1 scratchpad edit +53, ran 1 shell command (ctrl+o to expand)
+⏺ Før jeg poster kommentaren, retter jeg tellingen i innledningen. 21 funn er
+  rettet i 14 punkter, og 2 funn i ett punkt gjenstår. Summen blir da 21 + 2 + 1
+  + 2 + 9 = 35.
+
+  Made 1 scratchpad edit +1 -1 (ctrl+o to expand)
+
+⏺ Tellingen stemmer nå. Jeg legger kommentaren i PR #14:
+
+  Commented on PR #14 (ctrl+o to expand)
+
+⏺ Kommentaren er lagt inn i PR #14, og mens CI kjører ser jeg hvordan eksportene
+  fra forrige økt ble maskert, så denne eksporten følger samme regel.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Background command "Wait for the PR #14 checks on the new commit" completed
+(exit code 0)
+
+⏺ Maskeringsregelen fra før er plassholdere som <repo>, <tmp>, <bruker>, <navn>
+  og <maskin>. CI-overvåkingen er også ferdig:
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ CI-kjøring nr. 16 og Windows-testen nr. 7 passerte på b37c3b3.
+
+  ✅ BMAD Code Review av story 1.4 er ferdig.
+  - Beslutningen er løst: du sjekket fokusringen og leste versjonene.
+  - Rettinger: 14 av 15 er gjort, i 5063f67 og b37c3b3. Den siste, de åpne
+    punktene i issues.md og eksporten av økten, gjøres sammen med sesjonsloggen.
+  - Utsatt: 2, ført i deferred-work.md.
+  - Avvist: 9, med begrunnelse i spesifikasjonen og i PR-kommentaren.
+
+  Storyen står som review i sprintstatusen. Den blir done når sesjonsloggen er
+  ført.
+
+  Neste steg er eksporten av økten, slik rutinen for KI-økter krever. Skriv
+  denne kommandoen selv i Claude Code:
+
+  /export .logs/mounia-03/sessions/1-4-2026-11-22.txt
+
+  Deretter maskerer jeg eksporten (<repo>, <tmp>, <bruker> og så videre, som
+  før) og skriver sesjonsloggen med de åpne punktene i issues.md. Så ber jeg om
+  godkjenning av commit og push, og til slutt av flettingen av PR #14.
+
+✻ Churned for 7m 52s · done 7:46 PM

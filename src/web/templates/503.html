@@ -1,0 +1,8 @@
+{% extends "web/error.html" %}
+{# Database unavailable: rendered by ErrorPageMiddleware for a database error raised anywhere (AD-12). #}
+{% block title %}Prognose får ikke kontakt med databasen – Prognose{% endblock %}
+{% block heading %}Prognose får ikke kontakt med databasen{% endblock %}
+{% block text %}
+      <p>Prøv igjen om litt. Kjører du Prognose på din egen maskin, må databasen være startet slik README beskriver.</p>
+{% endblock %}
+{% block link %}{% endblock %}
