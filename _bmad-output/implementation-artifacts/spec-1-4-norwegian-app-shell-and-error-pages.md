@@ -67,7 +67,7 @@ context: ['{project-root}/_bmad-output/implementation-artifacts/epic-1-context.m
 - [x] `src/web/templates/web/start.html`, `tests/test_start_page.py` -- extend the base; test the header.
 - [x] `tests/test_app_shell.py` -- create: the tokens equal the frontmatter (read by a small reader, no YAML package), the counts, nothing else in `:root`, every `var()` defined, no literals outside `:root`, no external loads, no shadow, gradient, animation, letter-spacing or uppercase, the focus, header and touch rules, and every page's `lang`, viewport, icon, stylesheet, header and single `h1`.
 - [x] `tests/test_error_pages.py` -- create: each matrix row, with the texts read from the catalogue; no English or debug text; test views and middleware in the module, with `pytest.mark.urls(__name__)` and `Client(raise_request_exception=False)`; the console text through the `console` handler.
-- [ ] `docs/statustabell.md`, `docs/qa-logg.md`, `docs/ki-styringslogg.md`, `docs/arbeidslogg.md`, `sprint-status.yaml` -- the status paragraph, the manual check and the review defects, the middleware case, the work log and the story status.
+- [x] `docs/statustabell.md`, `docs/qa-logg.md`, `docs/ki-styringslogg.md`, `docs/arbeidslogg.md`, `sprint-status.yaml` -- the status paragraph, the manual check and the review defects, the middleware case, the work log and the story status.
 
 **Acceptance Criteria:**
 - Given `uv run pytest`, `uv run ruff check` and `uv run ruff format --check`, when they run locally and in CI, then they pass.
@@ -78,7 +78,7 @@ context: ['{project-root}/_bmad-output/implementation-artifacts/epic-1-context.m
 BMAD Code Review of PR #14 (2026-11-22): Blind Hunter (BH), Edge Case Hunter (EC), Verification Gap (VG) and Acceptance Auditor (AA), as four independent subagents, on the 22 files from `dc7673e` to `f3a10dd`. The usage limit stopped all four once, and each was resumed from its saved work. The IDs continue the bmad-build pass (BH-11 onward). 35 findings: 1 decision, 23 findings in 15 patches, 2 deferred and 9 rejected.
 
 - [x] [Review][Decision] The focus ring and the browser versions are not checked by hand (BH-20) — the QA log records the focus ring as not checked and carries Safari 18.6 and macOS 15.6.1 over from Story 1.1. `/finnes-ikke/` has one focusable element, the link, and Safari moves Tab to links only with Option-Tab or the setting «Press Tab to highlight each item on a webpage». Options: the user checks the ring and reads the versions now, or the QA log keeps its wording and the manual checklist in Story 4.4 covers the keyboard (NFR-11). Resolved: the user checked the ring with Option-Tab and approved it, and read Safari 18.6 and macOS 15.6 by hand; the QA log records both.
-- [ ] [Review][Patch] Open points that the QA log and the triage log cite are not in `issues.md`, and the session export is not in the pull request yet (BH-11, AA-2) [.logs/mounia-03/issues.md]
+- [x] [Review][Patch] Open points that the QA log and the triage log cite are not in `issues.md`, and the session export is not in the pull request yet (BH-11, AA-2) [.logs/mounia-03/issues.md]
 - [x] [Review][Patch] `replace_page` keeps the old `Content-Type`; with DEBUG on, Django's debug 500 is `text/plain` when the request does not accept HTML, so the 503 page would show as raw text (BH-13, EC-2) [src/web/middleware.py:55]
 - [x] [Review][Patch] No test runs the 503 path with DEBUG on, which the Design Notes claim (BH-14) [tests/test_error_pages.py:133]
 - [x] [Review][Patch] The leak test looks only for `postgresql://`, not for `postgres://`, the request body or the database password (BH-15, EC-15, AA-6) [tests/test_error_pages.py:214]
@@ -116,6 +116,7 @@ BMAD Code Review of PR #14 (2026-11-22): Blind Hunter (BH), Edge Case Hunter (EC
 - 130 tests pass (104 earlier and 26 new) with `~/.docker/bin` on PATH; without `docker` on PATH, `test_compose.py` skips. Ruff passes after `ruff format` of the two new test files.
 - The documents task is finished after the review, because the QA log records the review findings and the user's check in Safari.
 - BMAD Code Review, 2026-11-22: the user chose to apply all 15 patches and to check the focus ring by hand. The new test `test_database_error_shows_the_503_page_also_with_debug_on` first failed with `text/plain; charset=utf-8`, and passed after `replace_page` set `Content-Type`. Six more mutations, one for each fix that guards behavior (BH-13, BH-16, EC-12, EC-13, VG-1 and VG-2), are caught, so all 14 are. 132 tests and Ruff pass. UX-DR5 has nothing to check in this story, because no page shows a signal yet.
+- 2026-11-22, the end of the session: the user exported it to `.logs/mounia-03/sessions/1-4-2026-11-22.txt`, which is masked (27 project paths became `<repo>`, 1 temporary path `<tmp>`). The session log `980-2026-11-22-19-51-47-story-1-4-app-skall-og-feilsider.md` and seven new open points in `issues.md` resolve BH-11 and AA-2, and the documents task is done.
 
 ## Spec Change Log
 

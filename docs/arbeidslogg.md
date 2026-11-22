@@ -648,9 +648,10 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Godkjente commit, push og PR #14 (`9ae95fc` og `f3a10dd`). CI-kjøring nr. 15 og Windows-testen nr. 6 passerte på `f3a10dd`.
 * Kjørte BMAD Code Review med fire KI-granskere. Bruksgrensen stoppet alle fire én gang, og de fortsatte fra arbeidet som var lagret da grensen var tilbakestilt. De fant 35 funn: 23 ble rettet i 15 punkter, 2 utsatt og 9 avvist. Den viktigste rettingen gjør at 503-siden også er HTML med DEBUG på, og resten strammer inn testene og dokumentene. Seks nye mutasjoner viste at rettingene virker, og 132 tester og Ruff passerte.
 * Bestemte å sjekke fokusringen for hånd. Den blå ringen rundt lenken på `/finnes-ikke/` var i orden, og versjonene var Safari 18.6 og macOS 15.6.
-* Godkjente commit og push av rettingene (`5063f67`) og dokumentene, og kommentaren med alle funnene i PR #14.
+* Godkjente commit og push av rettingene (`5063f67`) og dokumentene (`b37c3b3`), og kommentaren med alle funnene i PR #14. CI-kjøring nr. 16 og Windows-testen nr. 7 passerte på `b37c3b3`.
+* Eksporterte økten med `/export`. Claude maskerte den: 27 stier til prosjektmappa ble `<repo>`, og 1 sti til den midlertidige mappa ble `<tmp>`. Sesjonsloggen og sju nye åpne punkter i `issues.md` er ført, og story 1.4 står som `done` i sprintstatusen.
 
-**Status:** Story 1.4 er bygd, gjennomgått med BMAD Code Review og rettet på grenen. Eksporten av økten, sesjonsloggen med de åpne punktene i `issues.md` og flettingen av PR #14 gjenstår.
+**Status:** Story 1.4 er ferdig på grenen, med eksporten, sesjonsloggen og de åpne punktene, og venter på flettingen av PR #14.
 
 ## 4. Videre dokumentasjon
 

@@ -306,7 +306,7 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Hva som var feil:** Django gjør om et unntak til et svar i laget der det oppstår, så den ytterste mellomvaren ser aldri unntaket fra lagene innenfor. En `try/except` rundt resten av forespørselen, som er den vanlige måten å lese regelen på, ville aldri slått til, og en stoppet database ville gitt 500-siden i stedet for 503.
 - **Hva gruppen bestemte:** Claude fant feilen da story 1.4 ble planlagt, ved å lese koden i Django 5.2.19. Claude foreslo at Djangos signal `got_request_exception` merker forespørselen mens unntaket håndteres, og at den ytterste mellomvaren deretter viser 503-siden. Kravet og spinen er uendret, fordi håndteringen fortsatt sitter i den ytterste mellomvaren. Brukeren godkjente spesifikasjonen med denne løsningen.
 - **Commit eller pull request:** `9ae95fc` og PR #14.
-- **Kilde:** «Design Notes» og «Implementation Notes» i [spesifikasjonen for story 1.4](../_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md).
+- **Kilde:** «Design Notes» og «Implementation Notes» i [spesifikasjonen for story 1.4](../_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md); [sesjonsloggen for story 1.4](../.logs/mounia-03/980-2026-11-22-19-51-47-story-1-4-app-skall-og-feilsider.md).
 - **QA-loggen:** [feilene fra byggingen og reviewene av story 1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-byggingen-og-reviewene-av-story-14-dr-9).
 
 ### 32. Beslutningene i reviewene av story 1.4 (22. november 2026)
@@ -314,8 +314,8 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Hva KI foreslo:** Claude skrev stilarket, malene, mellomvaren, loggoppsettet og testene for story 1.4. Blind Hunter i `bmad-build` fant 10 funn, og fire KI-granskere i `bmad-code-review` fant 35. Claude foreslo en vurdering og en beslutning for hvert av dem.
 - **Hva som var feil:** Med DEBUG på kunne 503-siden bli sendt som ren tekst. Flere tester var for snevre: de slapp gjennom en token som ble overstyrt, flere måter å fjerne fokusringen på og en database-URL som begynner med `postgres://`. Dokumentene viste til åpne punkter som ikke var ført, og bare til pull requesten, ikke til commiten. Ikke alle funnene skulle følges: 8 i `bmad-build` og 9 i BMAD Code Review ble avvist, og 2 ble utsatt, fordi de kommer fra designet og fra story 1.1.
 - **Hva gruppen bestemte:** Brukeren valgte å beholde berøringsreglene for skjermer der berøring er hovedinngangen. Brukeren sjekket også fokusringen og versjonene av Safari og macOS for hånd i stedet for å la QA-loggen stå som den var. Brukeren godkjente resten: alle 15 rettingene fra BMAD Code Review.
-- **Commit eller pull request:** `5063f67` og PR #14.
-- **Kilde:** «Review Triage Log» og «Review Findings» i [spesifikasjonen for story 1.4](../_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md); kommentaren i PR #14.
+- **Commit eller pull request:** `5063f67`, `b37c3b3` og PR #14.
+- **Kilde:** «Review Triage Log» og «Review Findings» i [spesifikasjonen for story 1.4](../_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md); kommentaren i PR #14; [sesjonsloggen for story 1.4](../.logs/mounia-03/980-2026-11-22-19-51-47-story-1-4-app-skall-og-feilsider.md).
 - **QA-loggen:** [feilene fra byggingen og reviewene av story 1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-byggingen-og-reviewene-av-story-14-dr-9).
 
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).

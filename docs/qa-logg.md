@@ -659,7 +659,7 @@ Safari ba også selv om `/apple-touch-icon.png` og `/apple-touch-icon-precompose
 **Fokusringen.** Den første sjekken nevnte ikke fokusringen, og BMAD Code Review påpekte det (BH-20). Brukeren åpnet derfor `/finnes-ikke/` på nytt, trykket ⌥Tab og godkjente den blå ringen rundt lenken «Til produktoversikten». I Safari flytter Tab bare til lenker med ⌥Tab eller med innstillingen «Press Tab to highlight each item on a webpage».
 
 **Gjenstår.**
-- Pull requesten for story 1.4 skal nevne de tre størrelsene.
+- Pull requesten for story 1.4 skal nevne de tre størrelsene. (Gjort i PR #14.)
 - 503-siden kan ikke sjekkes for hånd før story 1.8, fordi ingen side leser databasen ennå. Testene dekker den, og story 1.8 tester den med en innlogget bruker.
 - Berøringsreglene og testen på en ekte iPhone 13 hører til story 1.8 (NFR-6).
 
@@ -683,8 +683,8 @@ Safari ba også selv om `/apple-touch-icon.png` og `/apple-touch-icon-precompose
 | Ingen test sjekket at `django.server` beholder handleren sin, at de to loggerne ikke sender postene videre, eller at en advarsel som «Not Found» når konsollen | Verification Gap i BMAD Code Review (VG-1, VG-2) | To tester sjekker det | `5063f67` |
 | Testene nevnte ikke alle krav-ID-ene de sjekker: UX-DR13, NFR-5 og UX-DR41 for feilsidene, og UX-DR2, UX-DR3 og UX-DR7 for app-skallet | Blind Hunter og Acceptance Auditor i BMAD Code Review (BH-19, AA-1, AA-4) | ID-ene står i testene | `5063f67` |
 | Kommentaren om berøringsreglene nevnte bare radioknapper og bryteren, mens regelen unntar alle avkrysningsbokser | Acceptance Auditor i BMAD Code Review (AA-5) | Kommentaren nevner avkrysningsboksene, og storyene som legger dem til, får et åpent punkt | `5063f67` |
-| Fokusringen var ikke sjekket for hånd, og versjonene av Safari og macOS var overført fra story 1.1 | Blind Hunter i BMAD Code Review (BH-20) | Brukeren sjekket ringen og leste versjonene, se oppføringen om runserver og Safari over | PR #14 |
-| Loggene viste bare til PR #14, ikke til commiten, og arbeidsloggen sa at storyen ventet på sin første commit | Blind Hunter i BMAD Code Review (BH-17) | Commitene står i loggene, og statusen er rettet | PR #14 |
+| Fokusringen var ikke sjekket for hånd, og versjonene av Safari og macOS var overført fra story 1.1 | Blind Hunter i BMAD Code Review (BH-20) | Brukeren sjekket ringen og leste versjonene, se oppføringen om runserver og Safari over | `b37c3b3` |
+| Loggene viste bare til PR #14, ikke til commiten, og arbeidsloggen sa at storyen ventet på sin første commit | Blind Hunter i BMAD Code Review (BH-17) | Commitene står i loggene, og statusen er rettet | `b37c3b3` |
 
 **Kjente feil som ikke ble rettet.**
 
@@ -701,6 +701,6 @@ Safari ba også selv om `/apple-touch-icon.png` og `/apple-touch-icon-precompose
 
 **Avvist.** Ingen visning sender andre tomme feilsvar enn 405 (BH-2). Fargesjekken fanger heksverdiene, som er den reelle risikoen, men av fargenavnene bare `white` og `black` (BH-5). At 503-siden også vises med DEBUG på, er med vilje, fordi tracebacken står i konsollen (BH-7). Stien til UX-mappa står i begge testfilene, men flyttes mappa, feiler begge (BH-9). I BMAD Code Review ble også disse avvist: ingen 405 eller merket svar strømmes (EC-1), AD-12 gir alle 405-svar den norske siden (EC-3), designet bruker bare h1 til h3 (EC-7), spinen knytter loggreglene til NFR-4 (AA-3), og en review endrer ikke spesifikasjonen den gjennomgår (BH-18, EC-8).
 
-**Gjenstår.** De åpne punktene som denne oppføringen viser til, og eksporten av økten, føres i `issues.md` og `.logs/mounia-03/sessions/` før pull requesten flettes (BH-11, AA-2).
+**Åpne punkter.** De åpne punktene som denne oppføringen viser til, står i `issues.md` fra [sesjonsloggen for story 1.4](../.logs/mounia-03/980-2026-11-22-19-51-47-story-1-4-app-skall-og-feilsider.md), og den maskerte eksporten av økten ligger i `.logs/mounia-03/sessions/1-4-2026-11-22.txt` (BH-11, AA-2).
 
 **KI-styringsloggen:** [tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-ytterste-mellomvaren-22-november-2026).
