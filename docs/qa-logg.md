@@ -75,7 +75,7 @@ Testcontaineren, volumet og de midlertidige filene ble slettet etterpå. Imaget 
 - **Oppstart uten nett med Docker Desktop:** ikke testet. Claude Code trenger nett, så testen kunne ikke kjøres mens Claude arbeidet. Omstarten viste at Docker ikke trengte å laste ned noe, men Docker Desktop selv ble ikke startet uten nett.
 - **Oppsett på Windows (x64) med Docker Desktop:** ikke testet, fordi økten ikke hadde noen Windows-maskin.
 
-**Gjenstår.** Begge testene kjøres i første story og på nytt på siste commit (DR-9, SM-2). (Merknad 21. november: testene på Windows og uten nett er nå story 1.3.)
+**Gjenstår.** Begge testene kjøres i første story og på nytt på siste commit (DR-9, SM-2). (Merknad 21. november: testene på Windows og uten nett er nå story 1.3.) (Merknad 22. november: oppstarten uten nett med Docker Desktop passerte på macOS, og oppsettet på Windows er bare testet uten Docker; se [oppstart uten nett på macOS](#2026-11-22--oppstart-uten-nett-på-macos-story-13-nfr-1-sm-2-dr-9) og [oppsettet på Windows](#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3).)
 
 ## 2026-11-20 – Første oppsett på macOS fra en ren kopi (Story 1.1; NFR-1, NFR-3, SM-2)
 
@@ -116,7 +116,7 @@ Tidene er lavere enn ved et første oppsett på en ny maskin, fordi imaget, Pyth
 - Brukeren sjekker `/` i Safari i responsiv visning ved 320 px, 390 × 844 og 820 × 1180 før pull requesten. (Gjort 20. november og på nytt 21. november, se [responsiv visning i Safari](#2026-11-20-og-2026-11-21--responsiv-visning-av-startsiden-i-safari-story-11-nfr-6-ux-dr7).)
 - De fem kommandoene kjøres på nytt fra en `git clone` av den pushede grenen før pull requesten flettes. (Gjort 21. november, se [klonetesten fra GitHub](#2026-11-21--klonetest-fra-github-story-11-nfr-1-nfr-3-sm-2).)
 - Tidtakingen av hele oppsettet fra klonen, utført av en person (SM-2), hører til Story 4.1 og 4.4.
-- Oppsett på Windows x64 og oppstart uten nett hører til Story 1.3.
+- Oppsett på Windows x64 og oppstart uten nett hører til Story 1.3. (Oppstarten uten nett på macOS er gjort 22. november, med Docker Desktop helt avsluttet i kjøring 2, se [oppstart uten nett på macOS](#2026-11-22--oppstart-uten-nett-på-macos-story-13-nfr-1-sm-2-dr-9). Oppsettet på Windows er bare testet uten Docker, se [oppsettet på Windows](#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3).)
 
 ## 2026-11-20 – Feil i KI-generert kode og tekst fra reviewen av story 1.1 del A (DR-9)
 
@@ -490,3 +490,138 @@ De 99 testene er de 82 fra story 1.1 og de 17 nye. Ingen ble hoppet over, så co
 **Avvist.** De andre funnene fra `bmad-build` er avvist med begrunnelse i spesifikasjonen.
 
 **KI-styringsloggen:** [tilfelle 29](ki-styringslogg.md#29-beslutningene-i-reviewene-av-story-12-22-november-2026).
+
+## 2026-11-22 – Oppstart uten nett på macOS (Story 1.3; NFR-1, SM-2, DR-9)
+
+**Hvorfor.** Story 1.3 skal vise at Prognose starter uten nett etter at det er startet én gang, på macOS og på Windows. Dette er macOS-delen.
+
+**Oppsett.**
+- Brukeren kjørte testen to ganger 22. november 2026 i Terminal-appen, med skript som Claude skrev, og slo selv nettet av og på. Skriptene er ikke committet. De registrerte versjonene, stegene og tidene, målte tiden med `date +%s` og gjorde dette:
+  - sjekket nettet med `curl` mot github.com, der `000` betyr ingen forbindelse;
+  - startet Docker Desktop med `open -a Docker` og spurte `docker info` hvert 2. sekund til det svarte;
+  - kjørte `docker compose up -d --wait`;
+  - startet `uv run python src/manage.py runserver --insecure`, spurte `http://127.0.0.1:8000/` med `curl` hvert sekund til siden svarte 200, og sjekket at den viste «Prognose».
+- Maskinen var macOS 15.6.1 på Apple M1 (arm64), med uv 0.12.13 og Docker Desktop 4.99.0 med Docker Engine 29.9.3. Prognose var startet før, så imaget `postgres:18.7`, Python og pakkene lå lokalt.
+- Før nettet ble slått av, ble databasen stoppet med `docker compose down`, som fjerner containeren og beholder volumet. Appen kjørte ikke.
+
+**Kjøring 1, kl. 09.34–09.44 på commit `850250d`.** Brukeren skulle avslutte Docker Desktop og slå av Wi-Fi, men skriptet sjekket ikke at Docker Desktop var avsluttet.
+
+| Steg | Resultat | Tid (sekunder) |
+|---|---|---|
+| Nettprøve mot github.com | ingen forbindelse (`000`) | under 5 |
+| Docker Desktop startet med `open -a Docker` | svarte på `docker info` | 1 |
+| `docker compose up -d --wait` | databasen var klar («Healthy») | 5 |
+| `uv run python src/manage.py runserver --insecure` | `http://127.0.0.1:8000/` svarte 200 med «Prognose» | 1 |
+
+Docker Desktop svarte så raskt at det trolig ikke var helt avsluttet. Kjøring 1 viser at databasen og appen starter uten nett, men ikke at Docker Desktop selv starter uten nett fra avsluttet tilstand.
+
+**Kjøring 2, kl. 14.56–14.58 på commit `fedaef2`.** Etter BMAD Code Review valgte brukeren å kjøre testen på nytt. Skriptet sjekket først at Terminal finner `docker`, og fortsatte bare når ingen prosess fra Docker Desktop kjørte, `docker info` feilet og nettet ikke svarte. To forsøk stoppet før testen: kl. 11.19 kjørte Docker Desktop fortsatt, og kl. 14.51 fant ikke Terminal-vinduet `docker`.
+
+| Steg | Resultat | Tid (sekunder) |
+|---|---|---|
+| `command -v docker` i et nytt Terminal-vindu | fant `~/.docker/bin/docker`, slik PATH-rettingen i README gir | – |
+| Sjekk av at Docker Desktop var avsluttet | ingen prosess fra Docker Desktop, og `docker info` feilet | – |
+| Nettprøve mot github.com | ingen forbindelse (`000`) | under 5 |
+| Kald start av Docker Desktop med `open -a Docker` | svarte på `docker info` | 6 |
+| `docker compose up -d --wait` | containeren ble laget fra det lokale imaget, og databasen var klar («Healthy») | 4 |
+| `uv run python src/manage.py runserver --insecure` | `http://127.0.0.1:8000/` svarte 200 med «Prognose» | 2 |
+
+Kjøring 2 viser at Docker Desktop, databasen og appen starter uten nett på macOS, også når Docker Desktop er helt avsluttet. Valget **System** i Docker Desktop, den andre rettingen for `docker` i README, er ikke prøvd.
+
+**Feil som ble funnet og rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Terminal-appen fant ikke `docker`, fordi Docker Desktop hadde lagt verktøyene i `~/.docker/bin`, som ikke var i PATH. Den som følger README, får da `command not found: docker` allerede ved første kommando, og README nevnte det ikke | Testskriptet i kjøring 1, som brukte `~/.docker/bin/docker` og skrev det i loggen | README forklarer hvordan Terminal finner `docker`: valget **System** i Docker Desktop, eller `~/.docker/bin` i PATH og et nytt Terminal-vindu. Etter BMAD Code Review nevner den også bash. Kjøring 2 fant `docker` på den andre måten | `3363596`, `fedaef2` |
+
+**De tidligere kjøringene på macOS.** Oppsettet 20. november og klonetesten 21. november kjørte Claude Code i sitt eget skall, ikke en person i Terminal-appen (se de oppføringene). De viser derfor ikke om Terminal-appen finner `docker`. Kjøring 1 her ble kjørt av en person i Terminal-appen, og der viste feilen seg ved første kommando.
+
+**Gjenstår.** Ingenting for macOS i story 1.3. Tidtakingen av hele oppsettet, utført av en person, hører til story 4.1 og 4.4. For Windows, se [oppsettet på Windows](#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3).
+
+## 2026-11-22 – Oppsettet på Windows (Story 1.3; SM-2, NFR-1, DR-1, D-3)
+
+**Begrensningen (D-3).** Brukeren opplyste 22. november at ingen programmer kan installeres på Windows x64-PC-en på jobben, og gruppen har ingen annen Windows x64-PC. Om en lånt PC, en PC på skolen eller en virtuell Windows-maskin i skyen kunne vært brukt, er ikke undersøkt (`issues.md`). Etter første akseptkriterium i story 1.3 er oppsettet med Docker Desktop og WSL 2 og oppstarten uten nett derfor ikke testet på Windows, og README og statustabellen sier det.
+
+**Delvis test i GitHub Actions.** Etter brukerens valg kjører `.github/workflows/windows-setup.yml` README-oppsettet uten Docker på GitHubs egen Windows-maskin, i Windows PowerShell. GitHubs Windows-maskiner kan ikke kjøre Linux-containeren fra `compose.yaml`, så testen bruker maskinens egen PostgreSQL i stedet for Docker. Etter BMAD Code Review kjører workflowen for hver pull request som endrer koden (`src/**`), avhengighetene, `.python-version` eller workflowen, og manuelt med `workflow_dispatch`. GitHub sletter loggene etter 90 dager som standard, så resultatene står her.
+- Kjøring nr. 1, med ID 45006768015, startet for PR #12 på commit `0eaea95`, 22. november 2026 kl. 10.16 norsk tid (09.16 UTC), og passerte på 40 sekunder: <https://github.com/IBE160-2026/G40-lyamouri/actions/runs/45006768015>. uv brukte da CPython 3.13.17, som allerede lå på maskinen. Kjøring nr. 2 (45007112153, `739d3bd`) hadde samme workflow og passerte på 36 sekunder.
+- Kjøring nr. 3, med ID 45009667642, kjørte workflowen slik den ble rettet etter BMAD Code Review, på commit `fedaef2`, kl. 10.52 norsk tid (09.52 UTC): <https://github.com/IBE160-2026/G40-lyamouri/actions/runs/45009667642>. Tabellen gjelder den.
+- Maskinen var Microsoft Windows Server 2025 Datacenter 10.0.26100, 64-bit, med runner-imaget `win25-vs2026` 20261116.315.1, Windows PowerShell 5.1.26100.33822, uv 0.12.13 og PostgreSQL 17.12. Workflowen setter `UV_PYTHON_PREFERENCE: only-managed`, så uv lastet ned Python selv, slik README lover for en PC uten Python.
+
+| Steg | Resultat | Tid (sekunder) |
+|---|---|---|
+| PostgreSQL-tjenesten startet, etter en sjekk av at det finnes nøyaktig én | «accepting connections» | 5 |
+| `uv sync --locked` | lastet ned CPython 3.13.15 og installerte 16 pakker | 5 |
+| `uv run python src/manage.py migrate` | alle migreringene, også `web.0001_initial` | 4 |
+| `uv run python src/manage.py load_seed` | lagde `.secret_key` | 1 |
+| `icacls .secret_key` i arbeidsmappa | se under | under 1 |
+| En ny klone i brukermappa, `C:\Users\runneradmin\prognose`, med `load_seed` og `icacls .secret_key` | se under; steget feiler hvis `BUILTIN\Users`, `Everyone` eller `Authenticated Users` har tilgang | 18 |
+| `uv run python src/manage.py runserver --insecure` | `http://127.0.0.1:8000/` svarte 200 med «Prognose» etter 1 sekund | 2 |
+| Hele jobben, med oppsett og opprydding | bestått | 57 |
+
+`icacls` viste dette, med maskinnavnet byttet ut med `<maskin>`. I arbeidsmappa arver fila mappas regler, merket `(I)`, og alle lokale brukere (`BUILTIN\Users`) kan lese den:
+
+```
+.secret_key BUILTIN\Administrators:(I)(F)
+            NT AUTHORITY\SYSTEM:(I)(F)
+            BUILTIN\Users:(I)(RX)
+```
+
+I klonen i brukermappa kan bare SYSTEM, administratorene og brukeren lese den. Reglene der er ikke merket `(I)`, altså ikke arvet. Brukeren `runneradmin` er administrator, og brukermappa på GitHubs maskin er ikke nødvendigvis lik den på en vanlig PC:
+
+```
+.secret_key NT AUTHORITY\SYSTEM:(F)
+            BUILTIN\Administrators:(F)
+            <maskin>\runneradmin:(F)
+```
+
+Testen viser at uv med nedlastingen av Python, pakkene med `psycopg[binary]`, migreringene, `load_seed` og `runserver` virker på Windows x64, og hvem som kan lese `.secret_key` i en klone i brukermappa. Den viser ikke:
+- Docker Desktop med WSL 2, databasen fra `compose.yaml` eller oppstart uten nett;
+- oppsettet uten variabler fra README: workflowen setter `DATABASE_URL` til maskinens PostgreSQL 17.12 på port 5432, med brukeren `postgres` og passordet fra `PGPASSWORD`, mens README bruker standardverdien, brukeren `prognose` uten passord på port 15432, med PostgreSQL 18.7 fra `compose.yaml`;
+- hvilken adresse `runserver` lytter på (på macOS sjekket med `lsof`);
+- testene fra «Tester» i README, `uv run pytest` (`deferred-work.md`);
+- tiden for installasjonen av uv og Docker Desktop med WSL 2, eller en person som følger README i et vanlig PowerShell-vindu på en vanlig PC.
+
+**Kjent feil som ikke ble rettet i koden.**
+
+| Feil | Funnet av | Hvorfor den ikke ble rettet |
+|---|---|---|
+| `load_seed` ber om modusen 600 for `.secret_key`, men på Windows setter modusen bare skrivebeskyttelsen. I arbeidsmappa på GitHubs maskin kunne derfor alle lokale brukere lese nøkkelen | Windows-testen med `icacls` (punktet fra BMAD Code Review av story 1.1, EC-5 og BH-7) | Databasen uten passord er uansett åpen for alle brukere av maskinen, så README sier at Prognose er laget for én bruker per maskin. Den som deler en PC, kloner i brukermappa, der bare SYSTEM, administratorene og brukeren kunne lese nøkkelen i kjøring 3, og `icacls .secret_key` viser hvem som har tilgang (`739d3bd`, `fedaef2`) |
+
+**Observasjon.** I meldingen fra `load_seed` vises «nøkkel» som «n�kkel» i loggen fra GitHub, i kjøring 1 og 3. Der går utdataene gjennom en pipe, og Python skriver da med Windows' tegnsett, mens GitHub leser UTF-8. I et vanlig PowerShell-vindu skriver Python rett til konsollen, og etter Pythons dokumentasjon skal «ø» da vises riktig. Det er ikke prøvd. Sendes utdataene videre i Windows PowerShell 5.1, for eksempel med `> logg.txt`, kan «ø» bli feil også der (`issues.md`).
+
+**Gjenstår.**
+- Oppsettet med Docker Desktop og oppstarten uten nett på Windows kan bare testes på en Windows x64-PC der uv og Docker Desktop kan installeres (`issues.md`).
+- Tiden for installasjonen av uv og Docker Desktop er ikke målt i story 1.3, verken på macOS eller Windows, så story 4.1 må si i README at den ikke er målt (`issues.md`).
+- Story 4.4 kjører Windows-testen med `workflow_dispatch` på siste commit og fører resultatet her (`issues.md`).
+- README og arkitekturspinen nevner Windows 10 22H2 og Windows 11 23H2, som Microsoft ikke lenger gir vanlige oppdateringer for. Story 4.1 sjekker hvilke versjoner Docker Desktop 4.99.0 krever (`issues.md`, `deferred-work.md`).
+
+## 2026-11-22 – Feil i KI-generert kode og tekst fra reviewene av story 1.3 (DR-9)
+
+**Hvordan det ble funnet.** Claude Code skrev Windows-workflowen, testskriptene og tekstene i story 1.3 med `bmad-build`. Før reviewen gikk byggeøkten selv gjennom diffen med Blind Hunter, uten subagenter, og fant 3 funn (BH-1 til BH-3 under «Review Triage Log» i `_bmad-output/implementation-artifacts/spec-1-3-confirm-the-setup-on-windows-and-without-a-network.md`). 22. november kjørte BMAD Code Review med fire uavhengige KI-granskere på PR #12: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. De fant 46 funn. Claude kontrollerte hvert funn mot koden, loggene og kjøringene og samlet dem etter felles årsak i 24 punkter: brukeren bestemte 2, 19 ble rettet, 1 utsatt og 2 avvist. Spesifikasjonen har ingen oppgaveliste, så alle funnene og beslutningene står i kommentaren i PR #12.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Workflowen startet PostgreSQL-tjenesten med navnet `postgresql-x64-17`, som endres med neste PostgreSQL i GitHubs image, og med null eller flere tjenester ville starten feilet med en uklar melding | Blind Hunter i `bmad-build` (BH-1), og Blind Hunter og Edge Case Hunter i BMAD Code Review | Workflowen finner tjenesten med `Get-Service postgresql*` og krever nøyaktig én | `fedaef2` |
+| Workflowen kjørte bare når den selv endret seg, så en endring i avhengighetene eller koden som bryter oppsettet på Windows, kunne flettes uten test, mens README sa at delen uten Docker er testet automatisk | Blind Hunter i `bmad-build` (BH-2) og alle fire granskerne i BMAD Code Review | Den kjører også for `pyproject.toml` og `uv.lock`, og etter brukerens valg for `src/**` og `.python-version` | `fedaef2` |
+| `runserver`-steget prøvde på nytt ved alle feil, så et svar med 500 eller en server som stoppet, ble meldt som manglende svar etter 60 sekunder, og avslutningskoden fra `taskkill` kunne felle et steg som hadde passert | Blind Hunter, Edge Case Hunter og Verification Gap i BMAD Code Review | Steget melder HTTP-statusen eller avslutningskoden til serveren med en gang og nullstiller `$LASTEXITCODE` etter `taskkill` | `fedaef2` |
+| Kjøring 1 viste ikke at uv laster ned Python, slik README lover, fordi uv brukte en CPython som lå på maskinen | Blind Hunter i BMAD Code Review | `UV_PYTHON_PREFERENCE: only-managed`, og i kjøring 3 lastet uv ned CPython 3.13.15 | `fedaef2` |
+| Ingen test knyttet Windows-workflowen til README, så den kunne fortsette å teste gamle kommandoer | Blind Hunter i BMAD Code Review | `test_the_windows_workflow_runs_the_readme_setup_without_docker` | `fedaef2` |
+| `icacls` skrev bare ut tilgangen, og rådet i README om brukermappa var aldri sjekket | Alle fire granskerne i BMAD Code Review | Workflowen kloner i brukermappa og feiler hvis andre brukere kan lese `.secret_key`, og kjøring 3 passerte | `fedaef2` |
+| README lovet at bare brukeren, SYSTEM og administratorene kan lese nøkkelen i brukermappa, men databasen uten passord er åpen for alle brukere av maskinen. README nevnte heller ikke bash, et nytt PowerShell-vindu etter installasjonen eller hvor brukermappa er | Blind Hunter og Edge Case Hunter i BMAD Code Review | README sier at Prognose er laget for én bruker per maskin, og nevner resten | `fedaef2` |
+| README og QA-loggen sa at oppstarten uten nett var testet, men Docker Desktop var trolig ikke avsluttet, og PATH-rettingen for `docker` var ikke prøvd | Blind Hunter, Edge Case Hunter og Acceptance Auditor i BMAD Code Review | Etter brukerens valg ble testen kjørt på nytt med Docker Desktop helt avsluttet, og README sier hva som er testet på hver plattform | PR #12 |
+| QA-loggen førte en kjøring av en eldre workflow og manglet runner-imaget, utskriften fra `icacls`, forskjellene fra README-oppsettet og at GitHub sletter loggene. Den viste til Windows-testen 25. november, sa ikke at tiden for installasjonen ikke er målt, og omtalte «ø» i PowerShell som om det var prøvd | Alle fire granskerne i BMAD Code Review | Kjøring 3 av den rettede workflowen er ført med det som manglet, og resten er rettet her og i arbeidsloggen. De åpne punktene står i `issues.md` | PR #12 |
+| Arkitekturspinen og statustabellen var ikke oppdatert for den nye workflowen og begrensningen på Windows, QA-loggen sa ikke hva som ble vurdert som en annen Windows-PC, og KI-styringsloggen manglet et tilfelle for story 1.3 | Acceptance Auditor og Blind Hunter i BMAD Code Review | Rettet, med en rad i endringsloggen til spinen og [tilfelle 30](ki-styringslogg.md#30-windows-testen-og-reviewene-av-story-13-22-november-2026) | PR #12 |
+
+**Kjente feil som ikke ble rettet.**
+
+| Feil | Funnet av | Hvorfor den ikke ble rettet |
+|---|---|---|
+| Testene i «Tester», `uv run pytest`, kjører ikke på Windows | Blind Hunter i `bmad-build` (BH-3) | Utenfor kriteriene i story 1.3, som gjelder oppsettet og oppstarten (`deferred-work.md`) |
+| README og arkitekturspinen nevner Windows 10 22H2 og Windows 11 23H2, som Microsoft ikke lenger gir vanlige oppdateringer for | Blind Hunter i BMAD Code Review | Versjonene kom fra PRD-en og spinen før story 1.3, og en endring av plattformkravet trenger godkjenning. Story 4.1 sjekker kravene til Docker Desktop 4.99.0 (`deferred-work.md`, `issues.md`) |
+| `load_seed` begrenser ikke hvem som kan lese `.secret_key` på Windows | Windows-testen | Se [oppsettet på Windows](#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3) |
+
+**Avvist.** En klone som flyttes inn i brukermappa, kan beholde de gamle tilgangsreglene, men README ber deg klone der, og det er sjeldent. At README ikke lenger sier at Intel-Mac er utestet, stemmer ikke: README nevner bare Apple M1 som testet.
+
+**KI-styringsloggen:** [tilfelle 30](ki-styringslogg.md#30-windows-testen-og-reviewene-av-story-13-22-november-2026).

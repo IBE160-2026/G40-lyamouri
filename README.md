@@ -11,10 +11,10 @@ Prognose kjører på din egen maskin: appen med uv, og databasen PostgreSQL i Do
 ### Dette trenger du
 
 - **uv** 0.12.13 eller nyere ([installasjon](https://docs.astral.sh/uv/getting-started/installation/)). uv installerer selv Python 3.13 for prosjektet hvis maskinen mangler det.
-- **Docker Desktop** 4.99.0 eller nyere ([nedlasting](https://www.docker.com/products/docker-desktop/)), og det må være startet. Docker Desktop er gratis for personlig bruk og utdanning. Versjon 4.99.0 krever macOS 14 eller nyere. På Windows trenger det WSL 2 og maskinvarevirtualisering slått på.
+- **Docker Desktop** 4.99.0 eller nyere ([nedlasting](https://www.docker.com/products/docker-desktop/)), og det må være startet. Docker Desktop er gratis for personlig bruk og utdanning. Versjon 4.99.0 krever macOS 14 eller nyere. På Windows trenger det WSL 2 og maskinvarevirtualisering slått på. På macOS må Terminal finne `docker`. Svarer den `command not found: docker`, ligger verktøyene i `~/.docker/bin`. Velg da **System** under Docker Desktop → Settings → Advanced, eller legg mappa til i PATH med `echo 'export PATH="$HOME/.docker/bin:$PATH"' >> ~/.zprofile` (bruker du bash, `~/.bash_profile`) og åpne et nytt Terminal-vindu. På Windows åpner du et nytt PowerShell-vindu etter installasjonen, og starter maskinen på nytt hvis Docker Desktop ber om det, så PowerShell finner `uv` og `docker`.
 - **Git**, for å klone repoet.
 
-Prognose støtter macOS på Apple silicon eller Intel, og Windows 10 22H2 eller Windows 11 23H2 på x64. Windows på ARM støttes ikke i versjon 1, fordi databasedriveren psycopg ikke har en ferdig pakke for det. Så langt er oppsettet bare testet på macOS med Apple M1 (se [QA-loggen](docs/qa-logg.md)).
+Prognose støtter macOS på Apple silicon eller Intel, og Windows 10 22H2 eller Windows 11 23H2 på x64. Windows på ARM støttes ikke i versjon 1, fordi databasedriveren psycopg ikke har en ferdig pakke for det. Hele oppsettet er testet på macOS med Apple M1, også oppstart uten nett med Docker Desktop helt avsluttet (se [QA-loggen](docs/qa-logg.md)). På macOS trenger Prognose derfor ikke nett etter første oppsett, fordi Docker-imaget, Python og pakkene da ligger på maskinen. På Windows er oppsettet med Docker Desktop og oppstart uten nett ikke testet, fordi gruppen ikke har en Windows x64-PC der uv og Docker Desktop kan installeres. Delen uten Docker, altså `uv sync --locked`, `migrate`, `load_seed` og `runserver`, testes automatisk på Windows Server 2025 x64 i GitHub Actions for hver pull request som endrer koden eller avhengighetene.
 
 ### Start Prognose
 
@@ -48,8 +48,8 @@ Er en `DATABASE_URL` eksportert i terminalen, for eksempel for et annet prosjekt
 ## Nøkler og hemmeligheter
 
 - Prognose trenger ingen API-nøkkel, betalt tjeneste eller tredjepartskonto.
-- `load_seed` lager nøkkelen som signerer øktene, i fila `.secret_key` i prosjektmappa, når fila mangler. En nøkkel som finnes, endres aldri. Git ignorerer fila, så nøkkelen kommer aldri inn i repoet. Er fila tom, stopper `load_seed` og ber deg slette den og kjøre kommandoen på nytt.
-- Den lokale databasen har ikke passord. Den tar bare imot tilkoblinger fra din egen maskin, på 127.0.0.1:15432.
+- `load_seed` lager nøkkelen som signerer øktene, i fila `.secret_key` i prosjektmappa, når fila mangler. En nøkkel som finnes, endres aldri. Git ignorerer fila, så nøkkelen kommer aldri inn i repoet. Er fila tom, stopper `load_seed` og ber deg slette den og kjøre kommandoen på nytt. På macOS kan bare du lese fila. På Windows avhenger det av mappa hvem som kan lese den, så bruker flere samme PC, bør du klone repoet i din egen brukermappe, `C:\Users\<navn>`. Da kan bare du, SYSTEM og administratorene lese den, og `icacls .secret_key` viser hvem som har tilgang.
+- Den lokale databasen har ikke passord. Den tar bare imot tilkoblinger fra din egen maskin, på 127.0.0.1:15432, men der kan alle brukere av maskinen koble seg til. Prognose er derfor laget for én bruker per maskin.
 - Alle variablene i [`.env.example`](.env.example) er valgfrie, og ingen av dem trengs for oppsettet over. Fila forklarer hver av dem.
 
 ## Tester

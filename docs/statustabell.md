@@ -4,7 +4,7 @@ Statustabellen oppfyller DR-8 i PRD-en. Den viser hvert funksjonskrav (FR) og DR
 
 **Statusene.** Tabellen bruker bare de fire statusene i DR-8: «bygd», «delvis bygd», «ikke bygd» og «endret». «Ikke bygd» uten en grunn betyr at kravet ikke er bygd ennå.
 
-**Oppdatering.** Hver story oppdaterer tabellen når den er ferdig, fordi Definition of Done krever det (DR-7). Story 4.3 fyller ut alle kolonnene, og story 4.4 setter statusen ved innlevering. Da har hver rad som er «delvis bygd», «endret» eller «ikke bygd», en grunn i den siste kolonnen, også kan-ha-kravene (DR-8). Tabellen skal også vise en epic som ikke er bygd (D-2 i `epics.md`), noe story 4.3 legger til, og et oppsett på Windows som ikke kunne testes (D-3), noe story 1.3 legger til.
+**Oppdatering.** Hver story oppdaterer tabellen når den er ferdig, fordi Definition of Done krever det (DR-7). Story 4.3 fyller ut alle kolonnene, og story 4.4 setter statusen ved innlevering. Da har hver rad som er «delvis bygd», «endret» eller «ikke bygd», en grunn i den siste kolonnen, også kan-ha-kravene (DR-8). Tabellen skal også vise en epic som ikke er bygd (D-2 i `epics.md`), noe story 4.3 legger til. At oppsettet på Windows ikke kunne testes (D-3), står i et eget avsnitt over tabellen, fordi tabellen bare har rader for FR og DR-10 (story 1.3).
 
 **Kolonnene.**
 - **Navn:** overskriften til kravet i PRD-en, oversatt til norsk med ordene fra ordlisten i PRD §3.
@@ -13,6 +13,8 @@ Statustabellen oppfyller DR-8 i PRD-en. Den viser hvert funksjonskrav (FR) og DR
 - **Tester:** fylles ut når testene finnes. Hver test nevner FR-n eller E-n som den kontrollerer (DR-5), og en test som ikke kontrollerer noen FR, nevner NFR-, DR- eller AD-ID-ene sine (D-10).
 
 **Status 20. november 2026.** Ingen FR er bygd eller delvis bygd. Prosjektskjelettet fra story 1.1 del A har brukermodellen `web.Company` og databasen i Docker Compose, som FR-1 og FR-4 bygger på, men kravene bygges i story 1.8 og 1.7.
+
+**Oppsett på Windows (D-3).** Oppsettet med Docker Desktop og oppstarten uten nett er ikke testet på Windows, fordi gruppen ikke har en Windows x64-PC der uv og Docker Desktop kan installeres. Delen uten Docker testes automatisk på Windows Server 2025 x64 i GitHub Actions for hver pull request som endrer koden eller avhengighetene, og passerte første gang 22. november 2026 (se [QA-loggen](qa-logg.md#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3)).
 
 | Krav | Navn | Prioritet | Status | Stories | Tester | Grunn til avvik |
 |---|---|---|---|---|---|---|

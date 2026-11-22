@@ -244,7 +244,7 @@ Arrows point from the depender to the dependency. Nothing points back into the s
 ```text
 G40-lyamouri/
   README.md, pyproject.toml, uv.lock, .python-version, compose.yaml, .env.example, .gitignore
-  .github/workflows/   # CI: tests and Ruff on Linux with compose.yaml
+  .github/workflows/   # CI: tests and Ruff on Linux with compose.yaml; the setup on Windows without Docker
   src/
     manage.py
     prognose/          # Django project: settings, urls, wsgi
@@ -305,7 +305,7 @@ erDiagram
 - **Not in v1:** a Content Security Policy, browser end-to-end tests (Playwright) and rate limiting, because the test logins are public in the README.
 - **Operations:** no monitoring, backup or alerting service in v1. The app holds synthetic data only, an explicit reset restores it (DR-4), and the console shows the logs.
 - **Validation messages the Message Catalogue lacks,** for a percentage with decimals or a factor with two decimals: settled in the settings story under the UX copy rules.
-- **Tests not run yet** (recorded in `docs/qa-logg.md`): the offline start with Docker Desktop, and the whole README setup on Windows x64. Both run in Story 1.3 of `epics.md`, which no other story waits for, and again on the final commit (DR-9, SM-2). The Windows test runs on a Windows x64 PC at work if installing uv and Docker Desktop is allowed there. If no Windows x64 computer can be used, the README and the status table say that the setup was not tested on Windows.
+- **Setup tests from Story 1.3** (recorded in `docs/qa-logg.md`): the offline start passed on macOS on 2026-11-22, also with Docker Desktop quit first. The README setup with Docker Desktop and the offline start are not tested on Windows x64, because nothing may be installed on the Windows x64 PC at work and the group has no other one; the README and the status table say so (D-3). `.github/workflows/windows-setup.yml` runs the setup without Docker, with the runner's own PostgreSQL, on GitHub's Windows Server 2025 x64 runner for every pull request that changes the code or the dependencies. Both run again on the final commit (DR-9, SM-2).
 - **Publishing (removed from v1):** Vercel with Neon was planned as Story 1.9 until 2026-11-19, when the teacher's clarification on Canvas made it optional and the user removed it (AD-16, PRD DR-10). Story 1.2 still checks that GitHub Actions is allowed in the organization.
 - **Docker Desktop's terms:** re-checked before submission: Docker Desktop is free for personal use and education.
 
@@ -323,3 +323,4 @@ The spine was set to `final` on 2026-11-17. Every later change is recorded here 
 | 2026-11-19 | Consistency Conventions, «Commands»: the README installs with `uv sync --locked`, as the Dependencies row requires and CI runs (Story 1.2). | The implementation-readiness check of 2026-11-19 found that the Commands row said `uv sync`, while the Dependencies row says that installs use `uv sync --locked`. The user approved one install command for the README and CI. | `67694f7` (PR #6) |
 | 2026-11-21 | AD-17 and the «Checks before a pull request» row: Story 1.1, which comes before CI, is merged when the tests and Ruff pass locally on its final commit (D-9 in `epics.md`). | The user's decision of 2026-11-21: CI comes in Story 1.2, after Story 1.1, so Story 1.1 could not meet the rule that a pull request is merged only when CI passes. | `fa237e7` |
 | 2026-11-21 | AD-17: a test that verifies no FR names its NFR-n, DR-n or AD-n (D-10 in `epics.md`). | The user's decision in the BMAD Code Review of Story 1.1 on 2026-11-21: most tests of Story 1.1 verify no FR, because the story builds none. | `bcd8223` |
+| 2026-11-22 | Structural Seed: `.github/workflows/` also holds the setup on Windows without Docker. Deferred: «Tests not run yet» becomes «Setup tests from Story 1.3», with the results instead of the plan for the Windows x64 PC at work. | Story 1.3: nothing may be installed on the work PC, and the user chose to record the limitation and add the partial test on GitHub's Windows runner (D-3). BMAD Code Review of Story 1.3 found that the spine still described the old plan, and the user approved the fix. | PR #12 |

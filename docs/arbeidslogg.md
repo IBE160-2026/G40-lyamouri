@@ -613,6 +613,21 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 1.2 er flettet inn i `main` (`674c8fd`), og CI sjekker nå hver pull request. Neste story følger rekkefølgen i sprintplanen, og story 1.3 er ikke startet.
 
+### 22. november 2026 – Story 1.3: oppsettet på Windows og uten nett
+
+* Startet story 1.3 med `bmad-build` på grenen `story/1-3-windows-and-offline-setup`, laget fra `main` (`850250d`). Storyen fulgte den korte «oneshot»-ruten, og ingen subagent trengtes, fordi epic-1-konteksten var gyldig.
+* Planen var Windows-testen på jobb-PC-en 25. november, fordi PC-en bare er tilgjengelig da og 7. desember.
+* Kjørte testen uten nett på macOS i Terminal med et skript som Claude skrev, og slo selv nettet av og på. Databasen var klar etter 5 sekunder, og Prognose svarte etter 1 sekund. Docker Desktop var trolig ikke helt avsluttet.
+* Testen viste at Terminal ikke fant `docker`, fordi verktøyene lå i `~/.docker/bin`. Claude rettet README. Godkjente commit og push av rettingen, testen og loggene (`3363596`, `683e13f`, `5f0f8c3` og `f772c42`).
+* Fant ut at ingenting kan installeres på jobb-PC-en, og gruppen har ingen annen Windows x64-PC. Valgte å føre begrensningen i QA-loggen, README og statustabellen (D-3) og å la GitHub Actions teste oppsettet uten Docker på en Windows-maskin. Den ferdige nettsiden testes i en nettleser på Windows i story 4.4.
+* Claude skrev `.github/workflows/windows-setup.yml`. Den første kjøringen passerte på 40 sekunder og viste at alle lokale brukere kunne lese `.secret_key` i arbeidsmappa, så README råder den som deler PC-en, til å klone i brukermappa. Godkjente commit, push og PR #12 med workflowen og resultatet (`0eaea95` og `739d3bd`).
+* Kjørte BMAD Code Review med fire KI-granskere: 46 funn, samlet i 24 punkter. Bestemte at testen uten nett på macOS kjøres på nytt med Docker Desktop helt avsluttet, og at Windows-testen også kjører når koden endres. 19 punkter ble rettet, 1 utsatt og 2 avvist. Rettingene i workflowen, testene og README ligger i `fedaef2`, og Windows-kjøring nr. 3 passerte på den.
+* Kjørte testen uten nett på macOS på nytt med et nytt skript. Et nytt Terminal-vindu fant `docker`, og med Docker Desktop helt avsluttet og nettet av startet Docker Desktop på 6 sekunder. Databasen var klar etter 4 sekunder, og Prognose svarte etter 2 sekunder.
+* Godkjente commit og push av rettingene og resultatene (`edc48af`). CI-kjøring nr. 10 og Windows-testen nr. 4 passerte, og kommentaren med alle 24 punktene ble lagt inn i PR #12.
+* Eksporterte økten med `/export`. Claude maskerte den og beholdt bare delen etter eksporten for story 1.2. Sesjonsloggen og `issues.md` er oppdatert.
+
+**Status:** Story 1.3 er ferdig, men PR #12 er ikke flettet. Oppsettet på Windows er bare testet uten Docker, og de åpne punktene står i `issues.md`.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

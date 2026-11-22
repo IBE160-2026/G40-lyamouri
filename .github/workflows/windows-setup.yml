@@ -1,0 +1,104 @@
+# The README's setup on Windows x64 without Docker (Story 1.3; SM-2, NFR-1).
+# GitHub's Windows runners cannot run the Linux container from compose.yaml,
+# so this job uses the runner's own PostgreSQL instead of Docker Desktop, and
+# it cannot test the start without a network. It runs in Windows PowerShell
+# when the code, the dependencies or this file change in a pull request, and
+# by hand. Each action is pinned to a commit SHA, with its version in the
+# comment.
+name: Windows setup
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/windows-setup.yml
+      - .python-version
+      - pyproject.toml
+      - src/**
+      - uv.lock
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    name: Setup on Windows without Docker
+    runs-on: windows-2025
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: powershell
+    env:
+      # The runner sets PGUSER and PGPASSWORD for its PostgreSQL.
+      DATABASE_URL: postgresql://postgres@127.0.0.1:5432/postgres
+      # Download Python as on a PC without it, not the runner's own.
+      UV_PYTHON_PREFERENCE: only-managed
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.12.13"
+
+      - name: Start the runner's PostgreSQL
+        run: |
+          $service = @(Get-Service postgresql*)
+          if ($service.Count -ne 1) { throw "expected one PostgreSQL service, found $($service.Count)" }
+          Set-Service $service[0].Name -StartupType Manual
+          Start-Service $service[0].Name
+          & "$env:PGBIN\pg_isready.exe" --host=127.0.0.1
+
+      - name: Versions
+        run: |
+          (Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture | Out-String).Trim()
+          "Runner image $env:ImageOS $env:ImageVersion"
+          "Windows PowerShell $($PSVersionTable.PSVersion)"
+          uv --version
+          & "$env:PGBIN\psql.exe" --version
+
+      - name: uv sync --locked
+        run: uv sync --locked
+
+      - name: uv run python src/manage.py migrate
+        run: uv run python src/manage.py migrate
+
+      - name: uv run python src/manage.py load_seed
+        run: uv run python src/manage.py load_seed
+
+      - name: Who can read .secret_key
+        run: icacls .secret_key
+
+      # The README advises a clone in the user folder on a shared PC.
+      - name: Who can read .secret_key in a clone in the user folder
+        run: |
+          $clone = Join-Path $env:USERPROFILE 'prognose'
+          git clone --quiet $env:GITHUB_WORKSPACE $clone
+          Push-Location $clone
+          uv run python src/manage.py load_seed
+          $access = icacls .secret_key
+          Pop-Location
+          $access
+          if ($access -match 'BUILTIN\\Users|Everyone|Authenticated Users') { throw "other users can read .secret_key in the user folder" }
+
+      - name: uv run python src/manage.py runserver --insecure
+        run: |
+          $server = Start-Process uv -ArgumentList 'run', 'python', 'src/manage.py', 'runserver', '--insecure' -PassThru -NoNewWindow
+          $started = Get-Date
+          $response = $null
+          while (-not $response -and ((Get-Date) - $started).TotalSeconds -lt 60) {
+            if ($server.HasExited) { throw "runserver exited with code $($server.ExitCode)" }
+            try {
+              $response = Invoke-WebRequest http://127.0.0.1:8000/ -UseBasicParsing -TimeoutSec 2
+            } catch {
+              if ($_.Exception.Response) { throw "the start page answered $([int]$_.Exception.Response.StatusCode)" }
+              Start-Sleep 1
+            }
+          }
+          $seconds = [int]((Get-Date) - $started).TotalSeconds
+          taskkill /PID $server.Id /T /F | Out-Null
+          $global:LASTEXITCODE = 0
+          if (-not $response) { throw "http://127.0.0.1:8000/ did not answer within 60 s" }
+          "http://127.0.0.1:8000/ answered $($response.StatusCode) after $seconds s"
+          if ($response.StatusCode -ne 200 -or $response.Content -notmatch 'Prognose') { throw "the start page is wrong" }

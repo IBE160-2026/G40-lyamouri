@@ -89,6 +89,24 @@ def test_no_check_can_be_skipped_or_ignored():
     assert values("env") == []
 
 
+def test_the_windows_workflow_runs_the_readme_setup_without_docker():
+    """SM-2, NFR-1: the Windows workflow runs every setup command in the README
+    except the database start, which needs Docker Desktop, and it runs when
+    the code or the dependencies change, so it follows the README."""
+    readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+    windows = (WORKFLOW_DIR / "windows-setup.yml").read_text(encoding="utf-8")
+    block = re.search(
+        r"```\n(docker compose up -d --wait\n.*?)\n```", readme, re.DOTALL
+    )
+    setup = block.group(1).splitlines()
+    paths = [".python-version", "pyproject.toml", "src/**", "uv.lock"]
+
+    assert [
+        command for command in setup[1:] if f"name: {command}\n" not in windows
+    ] == []
+    assert [path for path in paths if f"      - {path}\n" not in windows] == []
+
+
 def test_ci_can_only_read_and_uses_only_the_pinned_setup_actions():
     """DR-7, AD-17: CI may only read the repository, keeps no credentials and
     uses no secrets. Every workflow file uses only actions pinned to a full
