@@ -116,7 +116,7 @@ Tidene er lavere enn ved et første oppsett på en ny maskin, fordi imaget, Pyth
 - Brukeren sjekker `/` i Safari i responsiv visning ved 320 px, 390 × 844 og 820 × 1180 før pull requesten. (Gjort 20. november og på nytt 21. november, se [responsiv visning i Safari](#2026-11-20-og-2026-11-21--responsiv-visning-av-startsiden-i-safari-story-11-nfr-6-ux-dr7).)
 - De fem kommandoene kjøres på nytt fra en `git clone` av den pushede grenen før pull requesten flettes. (Gjort 21. november, se [klonetesten fra GitHub](#2026-11-21--klonetest-fra-github-story-11-nfr-1-nfr-3-sm-2).)
 - Tidtakingen av hele oppsettet fra klonen, utført av en person (SM-2), hører til Story 4.1 og 4.4.
-- Oppsett på Windows x64 og oppstart uten nett hører til Story 1.3.
+- Oppsett på Windows x64 og oppstart uten nett hører til Story 1.3. (Oppstarten uten nett på macOS er gjort 22. november, se [oppstart uten nett på macOS](#2026-11-22--oppstart-uten-nett-på-macos-story-13-nfr-1-sm-2-dr-9).)
 
 ## 2026-11-20 – Feil i KI-generert kode og tekst fra reviewen av story 1.1 del A (DR-9)
 
@@ -490,3 +490,31 @@ De 99 testene er de 82 fra story 1.1 og de 17 nye. Ingen ble hoppet over, så co
 **Avvist.** De andre funnene fra `bmad-build` er avvist med begrunnelse i spesifikasjonen.
 
 **KI-styringsloggen:** [tilfelle 29](ki-styringslogg.md#29-beslutningene-i-reviewene-av-story-12-22-november-2026).
+
+## 2026-11-22 – Oppstart uten nett på macOS (Story 1.3; NFR-1, SM-2, DR-9)
+
+**Hvorfor.** Story 1.3 skal vise at Prognose starter uten nett etter at det er startet én gang, på macOS og på Windows. Dette er macOS-delen.
+
+**Oppsett.**
+- Brukeren kjørte testen 22. november 2026 kl. 09.34–09.44 i Terminal-appen, med et skript som Claude skrev, og slo selv nettet av og på. Skriptet registrerte versjonene, stegene og tidene, og det er ikke committet.
+- Maskinen var macOS 15.6.1 på Apple M1 (arm64), med uv 0.12.13 og Docker Desktop 4.99.0 med Docker Engine 29.9.3, på commit `850250d`. Prognose var startet før, så imaget `postgres:18.7`, Python og pakkene lå lokalt.
+- Databasen ble stoppet med `docker compose down`, som fjerner containeren og beholder volumet. Appen kjørte ikke. Brukeren skulle så avslutte Docker Desktop og slå av Wi-Fi.
+
+**Resultat.**
+
+| Steg | Resultat | Tid (sekunder) |
+|---|---|---|
+| Nettprøve mot github.com | ingen forbindelse (`000`) | under 5 |
+| Docker Desktop startet med `open -a Docker` | svarte på `docker info` | 1 |
+| `docker compose up -d --wait` | databasen var klar («Healthy») | 5 |
+| `uv run python src/manage.py runserver --insecure` | `http://127.0.0.1:8000/` svarte 200 med «Prognose» | 1 |
+
+Docker Desktop svarte så raskt at det trolig ikke var helt avsluttet. Testen viser at databasen og appen starter uten nett, men ikke at Docker Desktop selv starter uten nett fra avsluttet tilstand. Det sjekkes på Windows 25. november og i story 4.4.
+
+**Feil som ble funnet og rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Terminal-appen fant ikke `docker`, fordi Docker Desktop hadde lagt verktøyene i `~/.docker/bin`, som ikke var i PATH. Den som følger README, får da `command not found: docker` allerede ved første kommando, og README nevnte det ikke | Testskriptet, som brukte `~/.docker/bin/docker` og skrev det i loggen | README forklarer hvordan Terminal finner `docker`: valget **System** i Docker Desktop, eller `~/.docker/bin` i PATH | `3363596` |
+
+**Gjenstår.** Windows-testen på PC-en på jobben 25. november, med oppstart uten nett der, hvis IT-reglene og Dockers lisens tillater at uv og Docker Desktop installeres (D-3).
