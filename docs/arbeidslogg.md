@@ -613,6 +613,15 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 1.2 er flettet inn i `main` (`674c8fd`), og CI sjekker nå hver pull request. Neste story følger rekkefølgen i sprintplanen, og story 1.3 er ikke startet.
 
+### 22. november 2026 – Story 1.3: oppstart uten nett på macOS
+
+* Startet story 1.3 med `bmad-build` på grenen `story/1-3-windows-and-offline-setup`, laget fra `main` (`850250d`). Storyen fulgte den korte «oneshot»-ruten, og ingen subagent trengtes, fordi epic-1-konteksten var gyldig.
+* Windows-PC-en er bare tilgjengelig 25. november og 7. desember, så storyen blir ferdig etter Windows-testen 25. november.
+* Kjørte testen uten nett på macOS i Terminal med et skript som Claude skrev, og slo selv nettet av og på. Databasen var klar etter 5 sekunder, og Prognose svarte etter 1 sekund. Docker Desktop var trolig ikke helt avsluttet, så en kald oppstart av Docker Desktop uten nett sjekkes på Windows og i story 4.4.
+* Testen viste at Terminal ikke fant `docker`, fordi verktøyene lå i `~/.docker/bin`. Claude rettet README, som nå også sier at Prognose ikke trenger nett etter første oppsett.
+
+**Status:** Story 1.3 er i gang. Neste steg er å sjekke med IT om uv og Docker Desktop kan installeres på jobb-PC-en, og Windows-testen 25. november.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
