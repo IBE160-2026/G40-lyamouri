@@ -34,6 +34,7 @@ Lese prosjektreglene, sprintplanen, story 1.4 og de relevante BMAD-dokumentene, 
 - **Dokumenter:** statustabellen, QA-loggen (to oppføringer), KI-styringsloggen (tilfelle 31 og 32), arbeidsloggen, `deferred-work.md`, `sprint-status.yaml` og spesifikasjonen.
 - **Eksporten:** [1-4-2026-11-22.txt](sessions/1-4-2026-11-22.txt) dekker hele økten etter `/clear`. Den er maskert: 27 stier til prosjektmappa ble `<repo>`, og 1 sti til den midlertidige mappa ble `<tmp>`. Kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler eller sesjonsnøkkel.
 - **`issues.md`:** sju nye punkter (under). Ingen gamle punkter ble løst i økten.
+- **Flettingen:** Etter brukerens godkjenning ble eksporten, denne loggen og dokumentene committet og pushet (`a5b82cd`, `fde748f` og `990ee9d`), og CI-kjøring nr. 17 og Windows-testen nr. 8 passerte på `990ee9d`. PR #14 ble flettet lokalt med «Create a merge commit» og noreply-adressen, og `main` ble pushet over HTTPS, fordi ingen workflow-filer var endret. Det første forsøket stoppet før flettingen, fordi `git merge -F -` ikke leser meldingen fra standard input, og ingenting ble endret eller pushet. Merge-commiten er `c5bd9cc`, og GitHub viser PR #14 som flettet 22. november kl. 19.57. CI-kjøring nr. 18 på `main` passerte. Lokal `main` og GitHub ble synkronisert på `c5bd9cc`, og grenen `story/1-4-app-shell-and-error-pages` er beholdt.
 
 ### Åpne punkter
 - Story 1.8: bytt lenken «Til produktoversikten» i `web/error.html` fra `/produkter/` til `{% url %}` når ruten finnes (BH-6).
