@@ -244,7 +244,8 @@ a {
 
 /* Touch screens: every control has a target of at least 44 × 44 px, and form
    fields use 16 px text, so that a phone does not zoom in (UX-DR7). Radio
-   buttons and the switch get their target from their label. */
+   buttons and checkboxes, the switch among them, are smaller than that, so
+   their label makes up the target, in the stories that add them (DESIGN.md). */
 @media (pointer: coarse) {
   button,
   input:not([type="radio"], [type="checkbox"]),

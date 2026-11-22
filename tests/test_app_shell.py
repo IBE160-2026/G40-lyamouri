@@ -43,14 +43,9 @@ COLOR_VALUE = re.compile(
     r"|(?<![\w-])(?:white|black)(?![\w-])",
     re.IGNORECASE,
 )
-FONT_AND_RADIUS = {
-    "font",
-    "font-family",
-    "font-size",
-    "font-weight",
-    "line-height",
-    "border-radius",
-}
+FONT_PROPERTIES = {"font", "font-family", "font-size", "font-weight", "line-height"}
+# An outline value that removes the focus ring, such as none, 0 or 0px.
+OUTLINE_REMOVED = re.compile(r"(?:^|\s)(?:none|0(?:px)?)(?=\s|$|!)")
 
 
 def design_tokens():
@@ -83,6 +78,7 @@ def token_properties():
     tokens = design_tokens()
     properties = {f"--color-{name}": value for name, value in tokens["colors"].items()}
     for role, values in tokens["typography"].items():
+        assert set(values) == set(TYPOGRAPHY_PROPERTIES), role
         for key, suffix in TYPOGRAPHY_PROPERTIES.items():
             properties[f"--font-{role}-{suffix}"] = values[key]
     properties |= {
@@ -145,38 +141,40 @@ def test_stylesheet_defines_every_design_token_with_the_same_value():
 
 
 def test_rules_take_colors_fonts_and_radii_only_from_the_tokens():
-    """AD-11, UX-DR1: outside :root, every var() names a token, no color is
-    written as a value, and fonts and radii are var() values. The 16 px text in
-    fields on touch screens is the one fixed size."""
+    """AD-11, UX-DR1: outside the top-level :root, no rule defines a custom
+    property, so no token is given another value, every var() names a token, no
+    color is written as a value, and fonts and radii are var() values. The 16 px
+    text in fields on touch screens is the one fixed size."""
     defined = set(token_properties())
 
     for media, selector, block in css_rules():
-        if selector == ":root":
+        if (media, selector) == ("", ":root"):
             continue
         for name, value in block.items():
             where = (media, selector, name, value)
-            assert set(re.findall(r"var\((--[\w-]+)\)", value)) <= defined, where
+            assert not name.startswith("--"), where
+            assert set(re.findall(r"var\(\s*(--[\w-]+)", value)) <= defined, where
             assert not COLOR_VALUE.search(value), where
-            if name in FONT_AND_RADIUS:
+            if name in FONT_PROPERTIES or name.endswith("radius"):
                 touch_text = (media, name, value) == (TOUCH, "font-size", "16px")
                 assert re.fullmatch(r"var\(--[\w-]+\)", value) or touch_text, where
 
 
 def test_stylesheet_loads_nothing_from_outside_the_app():
-    """NFR-1, AD-11: no import, web font or URL, so a page needs only the system
-    fonts and this local stylesheet, and runserver --insecure finds it in the
-    web app."""
-    css = stylesheet()
+    """NFR-1, AD-11, UX-DR2: no import, web font or URL in any letter case, so a
+    page needs only the system fonts and this local stylesheet, and runserver
+    --insecure finds it in the web app."""
+    css = stylesheet().lower()
 
-    for banned in ("@import", "@font-face", "url("):
+    for banned in ("@import", "@font-face", "url(", "image-set("):
         assert banned not in css
     assert Path(finders.find("web/app.css")) == STYLESHEET
 
 
 def test_look_is_flat_without_motion_letter_spacing_or_uppercase():
     """AD-11, UX-DR2, UX-DR4, UX-DR43: no shadows, gradients, transitions or
-    animation, no letter-spacing and no uppercase text."""
-    css = stylesheet()
+    animation, no letter-spacing and no uppercase text, in any letter case."""
+    css = stylesheet().lower()
 
     for banned in (
         "shadow",
@@ -191,13 +189,20 @@ def test_look_is_flat_without_motion_letter_spacing_or_uppercase():
 
 
 def test_focus_is_a_three_pixel_blue_outline_two_pixels_outside():
-    """NFR-11, UX-DR4: every focusable element shows the focus ring, and no rule
-    removes an outline."""
+    """NFR-11, UX-DR3, UX-DR4: every focusable element shows the blue focus ring,
+    and no rule removes an outline, also not with 0px, !important or the
+    outline-style and outline-width longhands."""
     assert rule(":focus-visible") == {
         "outline": "3px solid var(--color-blue)",
         "outline-offset": "2px",
     }
-    assert not [b for _, _, b in css_rules() if b.get("outline") in {"0", "none"}]
+    assert not [
+        (selector, name, value)
+        for _, selector, block in css_rules()
+        for name, value in block.items()
+        if name in {"outline", "outline-style", "outline-width"}
+        and OUTLINE_REMOVED.search(value)
+    ]
 
 
 def test_body_uses_the_system_font_with_tabular_numerals():
@@ -235,7 +240,7 @@ def test_touch_screens_get_44_pixel_targets_and_16_pixel_fields():
 
 @pytest.mark.parametrize("template", PAGES)
 def test_every_page_has_the_shell(template):
-    """NFR-11, NFR-6, NFR-1, AD-11, UX-DR14, UX-DR44: Norwegian as the language,
+    """NFR-11, NFR-6, NFR-1, AD-11, UX-DR7, UX-DR14, UX-DR44: Norwegian as the language,
     the responsive viewport tag, the empty icon, the local stylesheet, the
     logged-out header with only the wordmark, one h1, and no script or URL with
     a host."""

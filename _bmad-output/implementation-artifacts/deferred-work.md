@@ -20,3 +20,8 @@
 ## Deferred from: code review of spec-1-3-confirm-the-setup-on-windows-and-without-a-network.md (2026-11-22)
 
 - The README and the spine's Platforms row name Windows 10 22H2 and Windows 11 23H2, which are past the end of Microsoft's servicing, and Docker supports Docker Desktop only on Windows versions still in servicing. Story 4.1 checks Docker Desktop 4.99.0's requirements and proposes minimum versions; changing the platform requirement needs the user's approval. Deferred: pre-existing, because the versions come from the PRD and the spine, not from Story 1.3.
+
+## Deferred from: code review of spec-1-4-norwegian-app-shell-and-error-pages.md (2026-11-22)
+
+- The focus ring and the link color would fail on the navy app header (BH-12). DESIGN.md gives every focusable element a 3 px blue ring and the header no focus color, and blue on navy is about 2.4:1, under the 3:1 that WCAG 2.2 1.4.11 asks of a focus indicator. Nothing in the logged-out header can take focus yet. Story 1.8 adds «Produktoversikt» and «Logg ut» there and needs a design decision, for example a white ring in the header.
+- The database connection has no connect timeout (EC-6). `env.database_config` from Story 1.1 sets none, so psycopg waits up to 130 seconds when the port answers but PostgreSQL does not, for example while the container is paused. A stopped database refuses the connection at once and gives the 503 page. Story 1.4 does not change `env.py`.

@@ -49,9 +49,11 @@ def replace_page(response, template, status):
     """Put the page in the response that the other layers made, keeping its headers.
 
     The headers that stay are, for example, the security headers and Allow.
-    CommonMiddleware has already set Content-Length for the old body.
+    The old body may have had another type, such as Django's plain-text debug
+    page, and CommonMiddleware has already set Content-Length for it.
     """
     response.status_code = status
+    response["Content-Type"] = "text/html; charset=utf-8"
     response.content = render_to_string(template)
     response["Content-Length"] = str(len(response.content))
     return response

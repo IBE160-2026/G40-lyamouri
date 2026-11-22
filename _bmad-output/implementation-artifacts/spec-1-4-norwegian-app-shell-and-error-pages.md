@@ -73,6 +73,38 @@ context: ['{project-root}/_bmad-output/implementation-artifacts/epic-1-context.m
 - Given `uv run pytest`, `uv run ruff check` and `uv run ruff format --check`, when they run locally and in CI, then they pass.
 - Given `runserver --insecure` with DEBUG off, when `/` and `/finnes-ikke/` open in Safari's responsive view at 320 px, 390 × 844 and 820 × 1180, then the stylesheet loads, nothing scrolls sideways or is cut off, and the QA log records the result.
 
+### Review Findings
+
+BMAD Code Review of PR #14 (2026-11-22): Blind Hunter (BH), Edge Case Hunter (EC), Verification Gap (VG) and Acceptance Auditor (AA), as four independent subagents, on the 22 files from `dc7673e` to `f3a10dd`. The usage limit stopped all four once, and each was resumed from its saved work. The IDs continue the bmad-build pass (BH-11 onward). 35 findings: 1 decision, 23 findings in 15 patches, 2 deferred and 9 rejected.
+
+- [x] [Review][Decision] The focus ring and the browser versions are not checked by hand (BH-20) — the QA log records the focus ring as not checked and carries Safari 18.6 and macOS 15.6.1 over from Story 1.1. `/finnes-ikke/` has one focusable element, the link, and Safari moves Tab to links only with Option-Tab or the setting «Press Tab to highlight each item on a webpage». Options: the user checks the ring and reads the versions now, or the QA log keeps its wording and the manual checklist in Story 4.4 covers the keyboard (NFR-11). Resolved: the user checked the ring with Option-Tab and approved it, and read Safari 18.6 and macOS 15.6 by hand; the QA log records both.
+- [ ] [Review][Patch] Open points that the QA log and the triage log cite are not in `issues.md`, and the session export is not in the pull request yet (BH-11, AA-2) [.logs/mounia-03/issues.md]
+- [x] [Review][Patch] `replace_page` keeps the old `Content-Type`; with DEBUG on, Django's debug 500 is `text/plain` when the request does not accept HTML, so the 503 page would show as raw text (BH-13, EC-2) [src/web/middleware.py:55]
+- [x] [Review][Patch] No test runs the 503 path with DEBUG on, which the Design Notes claim (BH-14) [tests/test_error_pages.py:133]
+- [x] [Review][Patch] The leak test looks only for `postgresql://`, not for `postgres://`, the request body or the database password (BH-15, EC-15, AA-6) [tests/test_error_pages.py:214]
+- [x] [Review][Patch] A token can be redefined outside the top-level `:root`, in an `@media` block or another rule, and both token tests pass (BH-16, EC-11) [tests/test_app_shell.py:154]
+- [x] [Review][Patch] Case 31 and the QA log cite only PR #14, not the commit `9ae95fc`, and the work log still says the story waits for its commit (BH-17) [docs/ki-styringslogg.md, docs/qa-logg.md, docs/arbeidslogg.md]
+- [x] [Review][Patch] Tests do not name all the requirement IDs they check: UX-DR13 on the error pages, NFR-5 and UX-DR41 on the language and catalogue checks, and UX-DR2, UX-DR3 and UX-DR7 in the shell tests (BH-19, AA-1, AA-4) [tests/test_error_pages.py, tests/test_app_shell.py]
+- [x] [Review][Patch] The `var()` check misses a `var()` with a fallback or with spaces (EC-9, AA-7) [tests/test_app_shell.py:158]
+- [x] [Review][Patch] Radius longhands such as `border-top-left-radius` are not checked (EC-10) [tests/test_app_shell.py:46]
+- [x] [Review][Patch] The focus test misses `outline: 0px`, `!important`, `outline-style: none` and `outline-width: 0` (EC-12) [tests/test_app_shell.py:200]
+- [x] [Review][Patch] The external-load check is case-sensitive and misses `image-set(` (EC-13) [tests/test_app_shell.py:171]
+- [x] [Review][Patch] A fifth property in a typography role would be ignored (EC-14) [tests/test_app_shell.py:86]
+- [x] [Review][Patch] Nothing tests that `django.server` keeps its handler and that the two configured loggers do not propagate (VG-1) [tests/test_error_pages.py:191]
+- [x] [Review][Patch] No test shows a `django.request` warning, such as «Not Found», reaching the console (VG-2) [tests/test_error_pages.py:227]
+- [x] [Review][Patch] The touch rule exempts every checkbox, while its comment names only radio buttons and the switch; DESIGN.md lets the label make up the target of a small control, so the comment is widened, and the stories with radio buttons and checkboxes get an open point (AA-5) [src/web/static/web/app.css:250]
+- [x] [Review][Defer] The focus ring and the link color would fail on the navy header (BH-12) [src/web/static/web/app.css] — deferred: pre-existing in the design. DESIGN.md gives every focusable element a blue ring and the header no focus color, and blue on navy is about 2.4:1, under the 3:1 of WCAG 1.4.11. Nothing in the logged-out header can take focus; Story 1.8 adds the header navigation and needs a design decision.
+- [x] [Review][Defer] The database connection has no connect timeout (EC-6) [src/prognose/env.py] — deferred: pre-existing. `database_config` from Story 1.1 sets none, so psycopg waits up to 130 s when the port answers but the database does not, for example while the container is paused; Story 1.4 does not change `env.py`.
+
+**Rejected**
+- BH-18, EC-8 — the spec is `done` while its documents task is open: the fix edits the spec under review; the task is ticked when the documents are finished.
+- EC-1 — false: no 405 or marked response is streaming; the 405 comes from the method decorators, and a marked response from Django's error handling.
+- EC-3 — false: AD-12 gives every 405 the Norwegian page, and no view sends its own 405 body.
+- EC-4 — low: a deadlock or a cancelled query while the database runs also gives the 503 page; that is unlikely with one local user, the frozen matrix names `OperationalError`, and telling them apart needs SQLSTATE branches.
+- EC-5, VG-3 — low: the console says «Internal Server Error» for a database error that the client gets as 503; the traceback names the database error, and a fix needs Django's private `_has_been_logged` or a second log line.
+- EC-7 — false: the design uses only h1 to h3 (UX-DR44).
+- AA-3 — false: the spine's Logging row ties the console rules to NFR-4, so the leak test rightly names it.
+
 ## Implementation Notes
 
 - 2026-11-22: built in the build session, not by a subagent, because the user approved subagents for the reviews only. The epic context was used as it was: the spine change from Story 1.3 that made it formally stale touches nothing in it (the user's decision).
@@ -83,6 +115,7 @@ context: ['{project-root}/_bmad-output/implementation-artifacts/epic-1-context.m
 - The matrix row «Server error» was split across a page test and a log test; one test, `test_server_error_shows_its_page_and_is_logged_without_secrets`, now covers it.
 - 130 tests pass (104 earlier and 26 new) with `~/.docker/bin` on PATH; without `docker` on PATH, `test_compose.py` skips. Ruff passes after `ruff format` of the two new test files.
 - The documents task is finished after the review, because the QA log records the review findings and the user's check in Safari.
+- BMAD Code Review, 2026-11-22: the user chose to apply all 15 patches and to check the focus ring by hand. The new test `test_database_error_shows_the_503_page_also_with_debug_on` first failed with `text/plain; charset=utf-8`, and passed after `replace_page` set `Content-Type`. Six more mutations, one for each fix that guards behavior (BH-13, BH-16, EC-12, EC-13, VG-1 and VG-2), are caught, so all 14 are. 132 tests and Ruff pass. UX-DR5 has nothing to check in this story, because no page shows a signal yet.
 
 ## Spec Change Log
 
