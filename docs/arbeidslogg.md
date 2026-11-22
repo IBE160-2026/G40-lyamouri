@@ -636,6 +636,18 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 1.3 er flettet inn i `main` (`36e4035`). Oppsettet på Windows er bare testet uten Docker, og de åpne punktene står i `issues.md`. Neste story følger rekkefølgen i sprintplanen, og story 1.4 er ikke startet.
 
+### 22. november 2026 – Story 1.4: app-skall og norske feilsider
+
+* Startet story 1.4 med `bmad-build` på grenen `story/1-4-app-shell-and-error-pages`, laget fra `main` (`dc7673e`). Epic-1-konteksten var formelt utdatert etter en endring i spinen i story 1.3, men endringen gjaldt bare Windows-testen, så jeg valgte å bruke konteksten som den var. Godkjente subagenter bare til gjennomgangene.
+* Godkjente spesifikasjonen, også størrelsen på om lag 2 400 tokens, som er over den anbefalte grensen på 1 600.
+* Claude fant at AD-12 ikke kan bygges slik regelen vanligvis leses: Django gjør om et unntak til et svar i laget der det oppstår, så den ytterste mellomvaren ser bare svaret. Løsningen er et signal som merker forespørselen, og kravet og spinen er uendret ([tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-ytterste-mellomvaren-22-november-2026)).
+* Claude bygde stilarket med alle tokenene fra `DESIGN.md`, basismalen med toppfeltet, de norske feilsidene, mellomvaren for 503 og 405, loggingen til konsollen og 26 nye tester. Testene leser tokenene fra `DESIGN.md` og tekstene fra meldingskatalogen i `EXPERIENCE.md`. Åtte mutasjoner viste at testene feiler når de skal.
+* `curl` mot runserver viste at 405-siden ble sendt med `Content-Length: 0`, så nettleseren ville vist en blank side. Claude rettet mellomvaren og la til en sjekk i testene.
+* Reviewen i `bmad-build` (Blind Hunter) ga 10 funn: 2 ble rettet og 8 avvist. Jeg valgte å beholde berøringsreglene for skjermer der berøring er hovedinngangen (`pointer: coarse`).
+* Sjekket `/` og `/finnes-ikke/` i den responsive visningen i Safari ved 320 px, 390 × 844 og 820 × 1180, uten avkuttet tekst, overlapp eller sidelengs rulling.
+
+**Status:** Story 1.4 er bygd og testet lokalt med 130 tester og Ruff, og venter på commit, push og PR #14.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

@@ -625,3 +625,66 @@ Testen viser at uv med nedlastingen av Python, pakkene med `psycopg[binary]`, mi
 **Avvist.** En klone som flyttes inn i brukermappa, kan beholde de gamle tilgangsreglene, men README ber deg klone der, og det er sjeldent. At README ikke lenger sier at Intel-Mac er utestet, stemmer ikke: README nevner bare Apple M1 som testet.
 
 **KI-styringsloggen:** [tilfelle 30](ki-styringslogg.md#30-windows-testen-og-reviewene-av-story-13-22-november-2026).
+
+## 2026-11-22 – App-skallet og feilsidene i runserver og Safari (Story 1.4; NFR-6, NFR-10, AD-12, UX-DR7)
+
+**Hvorfor.** Hver side en story endrer eller legger til, skal sjekkes i nettleserens responsive visning ved 320 px, 390 × 844 (iPhone 13) og 820 × 1180 (iPad), og pull requesten skal nevne sjekkene (reglene for hver story i `epics.md`; NFR-6, UX-DR7). Story 1.4 ga startsiden app-skallet og la til feilsidene, som alle bruker det samme panelet. Testklienten i Django viser ikke alt en ekte server sender, så Claude sjekket også svarene gjennom runserver.
+
+**Oppsett.**
+- Claude startet appen med `uv run python src/manage.py runserver --insecure` på grenen `story/1-4-app-shell-and-error-pages`, med DEBUG av, og spurte med `curl`. Koden er den samme som i den første commiten i PR #14.
+- Brukeren sjekket selv `/` og `/finnes-ikke/` i den responsive visningen i Safari 22. november 2026, på samme Mac som i story 1.1. Der sto Safari 18.6 og macOS 15.6.1, men versjonene er ikke lest på nytt.
+
+**Resultat med runserver.**
+
+| Forespørsel | Svar |
+|---|---|
+| `GET /` | 200 med app-skallet |
+| `GET /finnes-ikke/` | 404 med «Siden finnes ikke» og lenken «Til produktoversikten»; `Content-Length` stemmer med innholdet |
+| `GET /static/web/app.css` | 200 med `text/css`, også med DEBUG av |
+| En statisk fil som ikke finnes | 404 med den norske siden |
+| `OPTIONS /` | 405 med Server error-siden. Først var `Content-Length` 0 og siden tom (se feilene under); etter rettingen 717 byte med riktig lengde |
+| `DELETE /` | 403 med siden for utløpt skjema, fordi CSRF-sjekken kommer før sjekken av metoden |
+| Konsollen | Forespørselslinjene fra runserver som før, og nå også advarslene «Not Found» og «Forbidden (CSRF cookie not set.)» med DEBUG av |
+
+**Resultat i Safari.** Begge sidene var i orden ved alle tre størrelsene.
+
+| Tilsvarer | Størrelse | `/` og `/finnes-ikke/` |
+|---|---|---|
+| Den minste bredden i NFR-6 | 320 px bred | ingen avkuttet tekst, overlapp eller sidelengs rulling |
+| iPhone 13 | 390 × 844 | ingen avkuttet tekst, overlapp eller sidelengs rulling |
+| iPad | 820 × 1180 | ingen avkuttet tekst, overlapp eller sidelengs rulling |
+
+Safari ba også selv om `/apple-touch-icon.png` og `/apple-touch-icon-precomposed.png`. Begge ga 404 og en linje «Not Found» i konsollen, men det påvirker ikke sidene. Fokusringen ble foreslått som en valgfri sjekk, men svaret nevnte den ikke, så den er ikke ført som sjekket her. Testene sjekker regelen i stilarket.
+
+**Gjenstår.**
+- Pull requesten for story 1.4 skal nevne de tre størrelsene.
+- 503-siden kan ikke sjekkes for hånd før story 1.8, fordi ingen side leser databasen ennå. Testene dekker den, og story 1.8 tester den med en innlogget bruker.
+- Berøringsreglene og testen på en ekte iPhone 13 hører til story 1.8 (NFR-6).
+
+## 2026-11-22 – Feil i KI-generert kode og tekst fra byggingen og reviewene av story 1.4 (DR-9)
+
+**Hvordan det ble funnet.** Claude Code skrev stilarket, malene, mellomvaren, loggoppsettet og testene i story 1.4 med `bmad-build`. Claude fant den første feilen da storyen ble planlagt, ved å lese koden i Django 5.2.19. To feil fant Claude under byggingen: én ved å lese hvordan Python setter opp loggingen, og én med `curl` mot runserver da oppgavene ble kontrollert. Testklienten i Django sjekker ikke `Content-Length`, så ingen test fanget den. Deretter gikk byggeøkten selv gjennom diffen med Blind Hunter, uten subagenter, og fant 10 funn (BH-1 til BH-10 under «Review Triage Log» i `_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md`): 2 ble rettet og 8 avvist. Edge Case Hunter og Verification Gap kjøres som uavhengige KI-granskere i BMAD Code Review på PR #14.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| AD-12 i arkitekturspinen sier at 503-håndteringen sitter i den ytterste mellomvaren, men Django gjør om et unntak til et svar i laget der det oppstår, så en `try/except` der ville aldri sett databasefeilen, og en stoppet database ville gitt 500-siden | Claude, da storyen ble planlagt | Signalet `got_request_exception` merker forespørselen, og `ErrorPageMiddleware`, den første i `MIDDLEWARE`, viser 503-siden. Kravet og spinen er uendret ([tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-ytterste-mellomvaren-22-november-2026)) | PR #14 |
+| Spesifikasjonen ba om å sette opp loggeren `django`, men da nullstiller Python barneloggeren `django.server`, og runserver ville sluttet å skrive forespørslene | Claude, under byggingen | `LOGGING` setter opp `django.request` og `django.security` i stedet, og runserver skriver forespørslene som før | PR #14 |
+| 405-svaret hadde `Content-Length: 0` etter at mellomvaren hadde lagt inn feilsiden, fordi `CommonMiddleware` hadde satt lengden for det tomme svaret, så nettleseren ville vist en blank side | Claude, med `curl` mot runserver | Mellomvaren setter lengden etter den nye siden og beholder de andre hodene, også på 503-siden. Testene sjekker at `Content-Length` stemmer | PR #14 |
+| Raden «Server error» i I/O-matrisen var delt mellom to tester | Claude, i kontrollen av matrisen | Én test dekker både siden og loggen | PR #14 |
+| Testen for `var()` sjekket ikke kortformen `font` | Blind Hunter i `bmad-build` (BH-4) | `font` er med blant egenskapene som sjekkes | PR #14 |
+| En test sjekket den ytterste mellomvaren etter at innstillingene var endret, så den så ut til å sjekke feil liste | Blind Hunter i `bmad-build` (BH-8) | Sjekken står før endringen | PR #14 |
+
+**Kjente feil som ikke ble rettet.**
+
+| Feil | Funnet av | Hvorfor den ikke ble rettet |
+|---|---|---|
+| Berøringsreglene gjelder bare når berøring er hovedinngangen (`pointer: coarse`), så en PC med berøringsskjerm der musen er hovedinngangen, beholder PC-størrelsene | Blind Hunter i `bmad-build` (BH-1) | Brukeren valgte å beholde `pointer: coarse`: telefonene og iPad-ene i NFR-6 får reglene, og PC-er beholder den kompakte visningen som FR-25 trenger ved 1366 × 768 |
+| En økt som er lest og endret, og som ikke kan lagres etter visningen, gir Server error-siden (400) i stedet for 503 | Blind Hunter i `bmad-build` (BH-3) | Det skjer bare hvis databasen stopper mellom lesingen og lagringen i samme forespørsel, og Django gjør om feilen før noen krok kan se den |
+| Lenken «Til produktoversikten» gir 404-siden til story 1.8 lager `/produkter/` | Blind Hunter i `bmad-build` (BH-6) | Adressen kommer fra URL-kartet i AD-11, som spesifikasjonen bestemmer. Story 1.8 bytter til `{% url %}` (`issues.md`) |
+| «Last siden på nytt og prøv igjen.» etter en POST: å laste siden på nytt sender det gamle skjemaet på nytt | Blind Hunter i `bmad-build` (BH-10) | Teksten er ordrett fra meldingskatalogen, slik storyen krever. Story 4.2 kan endre den (`issues.md`) |
+
+**Avvist.** Ingen visning sender andre tomme feilsvar enn 405 (BH-2). Fargesjekken fanger heksverdiene, som er den reelle risikoen, men av fargenavnene bare `white` og `black` (BH-5). At 503-siden også vises med DEBUG på, er med vilje, fordi tracebacken står i konsollen (BH-7). Stien til UX-mappa står i begge testfilene, men flyttes mappa, feiler begge (BH-9).
+
+**KI-styringsloggen:** [tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-ytterste-mellomvaren-22-november-2026).
