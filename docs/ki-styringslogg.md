@@ -298,15 +298,24 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Implementation Notes» og «Review Triage Log» i [spesifikasjonen for story 1.3](../_bmad-output/implementation-artifacts/spec-1-3-confirm-the-setup-on-windows-and-without-a-network.md); kommentaren i PR #12; [sesjonsloggen for story 1.3](../.logs/mounia-03/981-2026-11-22-09-53-00-story-1-3-windows-og-uten-nett.md).
 - **QA-loggen:** [oppsettet på Windows](qa-logg.md#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3) og [feilene fra reviewene av story 1.3](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-reviewene-av-story-13-dr-9).
 
-**Story 1.4.** Story 1.4 ga tilfelle 31. Ellers godtok brukeren hver anbefaling fra Claude i økten 22. november 2026. Feilene som byggingen og reviewene fant i KI-generert kode og tekst, står i QA-loggen, under [byggingen og reviewene av story 1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-byggingen-og-reviewene-av-story-14-dr-9).
+**Story 1.4.** Story 1.4 ga tilfelle 31 og 32. Ellers godtok brukeren hver anbefaling fra Claude i økten 22. november 2026. Feilene som byggingen og reviewene fant i KI-generert kode og tekst, står i QA-loggen, under [byggingen og reviewene av story 1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-byggingen-og-reviewene-av-story-14-dr-9).
 
 ### 31. 503-siden og den ytterste mellomvaren (22. november 2026)
 
 - **Hva KI foreslo:** AD-12 i arkitekturspinen, som Claude skrev og rettet etter BMAD-reviewen 18. november, sier at 503-håndteringen sitter i den ytterste mellomvaren, slik at en databasefeil fra hvor som helst, også fra annen mellomvare, gir 503-siden. Story 1.4 i `epics.md` har det samme kravet.
 - **Hva som var feil:** Django gjør om et unntak til et svar i laget der det oppstår, så den ytterste mellomvaren ser aldri unntaket fra lagene innenfor. En `try/except` rundt resten av forespørselen, som er den vanlige måten å lese regelen på, ville aldri slått til, og en stoppet database ville gitt 500-siden i stedet for 503.
 - **Hva gruppen bestemte:** Claude fant feilen da story 1.4 ble planlagt, ved å lese koden i Django 5.2.19. Claude foreslo at Djangos signal `got_request_exception` merker forespørselen mens unntaket håndteres, og at den ytterste mellomvaren deretter viser 503-siden. Kravet og spinen er uendret, fordi håndteringen fortsatt sitter i den ytterste mellomvaren. Brukeren godkjente spesifikasjonen med denne løsningen.
-- **Commit eller pull request:** PR #14.
+- **Commit eller pull request:** `9ae95fc` og PR #14.
 - **Kilde:** «Design Notes» og «Implementation Notes» i [spesifikasjonen for story 1.4](../_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md).
+- **QA-loggen:** [feilene fra byggingen og reviewene av story 1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-byggingen-og-reviewene-av-story-14-dr-9).
+
+### 32. Beslutningene i reviewene av story 1.4 (22. november 2026)
+
+- **Hva KI foreslo:** Claude skrev stilarket, malene, mellomvaren, loggoppsettet og testene for story 1.4. Blind Hunter i `bmad-build` fant 10 funn, og fire KI-granskere i `bmad-code-review` fant 35. Claude foreslo en vurdering og en beslutning for hvert av dem.
+- **Hva som var feil:** Med DEBUG på kunne 503-siden bli sendt som ren tekst. Flere tester var for snevre: de slapp gjennom en token som ble overstyrt, flere måter å fjerne fokusringen på og en database-URL som begynner med `postgres://`. Dokumentene viste til åpne punkter som ikke var ført, og bare til pull requesten, ikke til commiten. Ikke alle funnene skulle følges: 8 i `bmad-build` og 9 i BMAD Code Review ble avvist, og 2 ble utsatt, fordi de kommer fra designet og fra story 1.1.
+- **Hva gruppen bestemte:** Brukeren valgte å beholde berøringsreglene for skjermer der berøring er hovedinngangen. Brukeren sjekket også fokusringen og versjonene av Safari og macOS for hånd i stedet for å la QA-loggen stå som den var. Brukeren godkjente resten: alle 15 rettingene fra BMAD Code Review.
+- **Commit eller pull request:** `5063f67` og PR #14.
+- **Kilde:** «Review Triage Log» og «Review Findings» i [spesifikasjonen for story 1.4](../_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md); kommentaren i PR #14.
 - **QA-loggen:** [feilene fra byggingen og reviewene av story 1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-byggingen-og-reviewene-av-story-14-dr-9).
 
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).

@@ -632,7 +632,7 @@ Testen viser at uv med nedlastingen av Python, pakkene med `psycopg[binary]`, mi
 
 **Oppsett.**
 - Claude startet appen med `uv run python src/manage.py runserver --insecure` på grenen `story/1-4-app-shell-and-error-pages`, med DEBUG av, og spurte med `curl`. Koden er den samme som i den første commiten i PR #14.
-- Brukeren sjekket selv `/` og `/finnes-ikke/` i den responsive visningen i Safari 22. november 2026, på samme Mac som i story 1.1. Der sto Safari 18.6 og macOS 15.6.1, men versjonene er ikke lest på nytt.
+- Brukeren sjekket selv `/` og `/finnes-ikke/` i den responsive visningen i Safari 22. november 2026, på samme Mac som i story 1.1, og etter BMAD Code Review også fokusringen. Brukeren leste versjonene for hånd samme dag: Safari 18.6 og macOS 15.6.
 
 **Resultat med runserver.**
 
@@ -654,7 +654,9 @@ Testen viser at uv med nedlastingen av Python, pakkene med `psycopg[binary]`, mi
 | iPhone 13 | 390 × 844 | ingen avkuttet tekst, overlapp eller sidelengs rulling |
 | iPad | 820 × 1180 | ingen avkuttet tekst, overlapp eller sidelengs rulling |
 
-Safari ba også selv om `/apple-touch-icon.png` og `/apple-touch-icon-precomposed.png`. Begge ga 404 og en linje «Not Found» i konsollen, men det påvirker ikke sidene. Fokusringen ble foreslått som en valgfri sjekk, men svaret nevnte den ikke, så den er ikke ført som sjekket her. Testene sjekker regelen i stilarket.
+Safari ba også selv om `/apple-touch-icon.png` og `/apple-touch-icon-precomposed.png`. Begge ga 404 og en linje «Not Found» i konsollen, men det påvirker ikke sidene.
+
+**Fokusringen.** Den første sjekken nevnte ikke fokusringen, og BMAD Code Review påpekte det (BH-20). Brukeren åpnet derfor `/finnes-ikke/` på nytt, trykket ⌥Tab og godkjente den blå ringen rundt lenken «Til produktoversikten». I Safari flytter Tab bare til lenker med ⌥Tab eller med innstillingen «Press Tab to highlight each item on a webpage».
 
 **Gjenstår.**
 - Pull requesten for story 1.4 skal nevne de tre størrelsene.
@@ -663,18 +665,26 @@ Safari ba også selv om `/apple-touch-icon.png` og `/apple-touch-icon-precompose
 
 ## 2026-11-22 – Feil i KI-generert kode og tekst fra byggingen og reviewene av story 1.4 (DR-9)
 
-**Hvordan det ble funnet.** Claude Code skrev stilarket, malene, mellomvaren, loggoppsettet og testene i story 1.4 med `bmad-build`. Claude fant den første feilen da storyen ble planlagt, ved å lese koden i Django 5.2.19. To feil fant Claude under byggingen: én ved å lese hvordan Python setter opp loggingen, og én med `curl` mot runserver da oppgavene ble kontrollert. Testklienten i Django sjekker ikke `Content-Length`, så ingen test fanget den. Deretter gikk byggeøkten selv gjennom diffen med Blind Hunter, uten subagenter, og fant 10 funn (BH-1 til BH-10 under «Review Triage Log» i `_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md`): 2 ble rettet og 8 avvist. Edge Case Hunter og Verification Gap kjøres som uavhengige KI-granskere i BMAD Code Review på PR #14.
+**Hvordan det ble funnet.** Claude Code skrev stilarket, malene, mellomvaren, loggoppsettet og testene i story 1.4 med `bmad-build`. Claude fant den første feilen da storyen ble planlagt, ved å lese koden i Django 5.2.19. To feil fant Claude under byggingen: én ved å lese hvordan Python setter opp loggingen, og én med `curl` mot runserver da oppgavene ble kontrollert. Testklienten i Django sjekker ikke `Content-Length`, så ingen test fanget den. Deretter gikk byggeøkten selv gjennom diffen med Blind Hunter, uten subagenter, og fant 10 funn (BH-1 til BH-10 under «Review Triage Log» i `_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md`): 2 ble rettet og 8 avvist. 22. november kjørte BMAD Code Review med fire uavhengige KI-granskere på PR #14: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Bruksgrensen stoppet alle fire én gang, og hver fortsatte fra arbeidet som var lagret. De fant 35 funn. Claude kontrollerte hvert funn mot koden og kildekoden til Django og samlet dem etter felles årsak: brukeren bestemte 1, 23 funn ble rettet i 15 punkter, 2 ble utsatt og 9 avvist. Alle står under «Review Findings» i spesifikasjonen og i kommentaren i PR #14.
 
 **Feilene som ble rettet.**
 
 | Feil | Funnet av | Retting | Commit |
 |---|---|---|---|
-| AD-12 i arkitekturspinen sier at 503-håndteringen sitter i den ytterste mellomvaren, men Django gjør om et unntak til et svar i laget der det oppstår, så en `try/except` der ville aldri sett databasefeilen, og en stoppet database ville gitt 500-siden | Claude, da storyen ble planlagt | Signalet `got_request_exception` merker forespørselen, og `ErrorPageMiddleware`, den første i `MIDDLEWARE`, viser 503-siden. Kravet og spinen er uendret ([tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-ytterste-mellomvaren-22-november-2026)) | PR #14 |
-| Spesifikasjonen ba om å sette opp loggeren `django`, men da nullstiller Python barneloggeren `django.server`, og runserver ville sluttet å skrive forespørslene | Claude, under byggingen | `LOGGING` setter opp `django.request` og `django.security` i stedet, og runserver skriver forespørslene som før | PR #14 |
-| 405-svaret hadde `Content-Length: 0` etter at mellomvaren hadde lagt inn feilsiden, fordi `CommonMiddleware` hadde satt lengden for det tomme svaret, så nettleseren ville vist en blank side | Claude, med `curl` mot runserver | Mellomvaren setter lengden etter den nye siden og beholder de andre hodene, også på 503-siden. Testene sjekker at `Content-Length` stemmer | PR #14 |
-| Raden «Server error» i I/O-matrisen var delt mellom to tester | Claude, i kontrollen av matrisen | Én test dekker både siden og loggen | PR #14 |
-| Testen for `var()` sjekket ikke kortformen `font` | Blind Hunter i `bmad-build` (BH-4) | `font` er med blant egenskapene som sjekkes | PR #14 |
-| En test sjekket den ytterste mellomvaren etter at innstillingene var endret, så den så ut til å sjekke feil liste | Blind Hunter i `bmad-build` (BH-8) | Sjekken står før endringen | PR #14 |
+| AD-12 i arkitekturspinen sier at 503-håndteringen sitter i den ytterste mellomvaren, men Django gjør om et unntak til et svar i laget der det oppstår, så en `try/except` der ville aldri sett databasefeilen, og en stoppet database ville gitt 500-siden | Claude, da storyen ble planlagt | Signalet `got_request_exception` merker forespørselen, og `ErrorPageMiddleware`, den første i `MIDDLEWARE`, viser 503-siden. Kravet og spinen er uendret ([tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-ytterste-mellomvaren-22-november-2026)) | `9ae95fc` |
+| Spesifikasjonen ba om å sette opp loggeren `django`, men da nullstiller Python barneloggeren `django.server`, og runserver ville sluttet å skrive forespørslene | Claude, under byggingen | `LOGGING` setter opp `django.request` og `django.security` i stedet, og runserver skriver forespørslene som før | `9ae95fc` |
+| 405-svaret hadde `Content-Length: 0` etter at mellomvaren hadde lagt inn feilsiden, fordi `CommonMiddleware` hadde satt lengden for det tomme svaret, så nettleseren ville vist en blank side | Claude, med `curl` mot runserver | Mellomvaren setter lengden etter den nye siden og beholder de andre hodene, også på 503-siden. Testene sjekker at `Content-Length` stemmer | `9ae95fc` |
+| Raden «Server error» i I/O-matrisen var delt mellom to tester | Claude, i kontrollen av matrisen | Én test dekker både siden og loggen | `9ae95fc` |
+| Testen for `var()` sjekket ikke kortformen `font` | Blind Hunter i `bmad-build` (BH-4) | `font` er med blant egenskapene som sjekkes | `9ae95fc` |
+| En test sjekket den ytterste mellomvaren etter at innstillingene var endret, så den så ut til å sjekke feil liste | Blind Hunter i `bmad-build` (BH-8) | Sjekken står før endringen | `9ae95fc` |
+| Med DEBUG på ble 503-siden sendt som ren tekst til en forespørsel som ikke godtar HTML, fordi mellomvaren beholdt `Content-Type` fra feilsøkingssiden i Django | Blind Hunter og Edge Case Hunter i BMAD Code Review (BH-13, EC-2) | Mellomvaren setter `Content-Type: text/html; charset=utf-8`, og en ny test sjekker 503-siden med DEBUG på | `5063f67` |
+| Testene av stilarket slapp gjennom en token som ble gitt en annen verdi i en annen regel eller i `@media`, `var()` med reserveverdi, radier skrevet som enkeltegenskaper, `outline: 0px` og andre måter å fjerne fokusringen på, `URL(` og `@IMPORT` med store bokstaver og en ny egenskap i en typografirolle | Blind Hunter, Edge Case Hunter og Acceptance Auditor i BMAD Code Review (BH-16, EC-9 til EC-14, AA-7) | Testene sjekker alt dette, og seks nye mutasjoner viser at rettingene virker | `5063f67` |
+| Testen av loggen så bare etter `postgresql://`, ikke etter `postgres://`, innholdet i forespørselen eller passordet til databasen | Blind Hunter, Edge Case Hunter og Acceptance Auditor i BMAD Code Review (BH-15, EC-15, AA-6) | Testen ser etter alt dette | `5063f67` |
+| Ingen test sjekket at `django.server` beholder handleren sin, at de to loggerne ikke sender postene videre, eller at en advarsel som «Not Found» når konsollen | Verification Gap i BMAD Code Review (VG-1, VG-2) | To tester sjekker det | `5063f67` |
+| Testene nevnte ikke alle krav-ID-ene de sjekker: UX-DR13, NFR-5 og UX-DR41 for feilsidene, og UX-DR2, UX-DR3 og UX-DR7 for app-skallet | Blind Hunter og Acceptance Auditor i BMAD Code Review (BH-19, AA-1, AA-4) | ID-ene står i testene | `5063f67` |
+| Kommentaren om berøringsreglene nevnte bare radioknapper og bryteren, mens regelen unntar alle avkrysningsbokser | Acceptance Auditor i BMAD Code Review (AA-5) | Kommentaren nevner avkrysningsboksene, og storyene som legger dem til, får et åpent punkt | `5063f67` |
+| Fokusringen var ikke sjekket for hånd, og versjonene av Safari og macOS var overført fra story 1.1 | Blind Hunter i BMAD Code Review (BH-20) | Brukeren sjekket ringen og leste versjonene, se oppføringen om runserver og Safari over | PR #14 |
+| Loggene viste bare til PR #14, ikke til commiten, og arbeidsloggen sa at storyen ventet på sin første commit | Blind Hunter i BMAD Code Review (BH-17) | Commitene står i loggene, og statusen er rettet | PR #14 |
 
 **Kjente feil som ikke ble rettet.**
 
@@ -684,7 +694,13 @@ Safari ba også selv om `/apple-touch-icon.png` og `/apple-touch-icon-precompose
 | En økt som er lest og endret, og som ikke kan lagres etter visningen, gir Server error-siden (400) i stedet for 503 | Blind Hunter i `bmad-build` (BH-3) | Det skjer bare hvis databasen stopper mellom lesingen og lagringen i samme forespørsel, og Django gjør om feilen før noen krok kan se den |
 | Lenken «Til produktoversikten» gir 404-siden til story 1.8 lager `/produkter/` | Blind Hunter i `bmad-build` (BH-6) | Adressen kommer fra URL-kartet i AD-11, som spesifikasjonen bestemmer. Story 1.8 bytter til `{% url %}` (`issues.md`) |
 | «Last siden på nytt og prøv igjen.» etter en POST: å laste siden på nytt sender det gamle skjemaet på nytt | Blind Hunter i `bmad-build` (BH-10) | Teksten er ordrett fra meldingskatalogen, slik storyen krever. Story 4.2 kan endre den (`issues.md`) |
+| Den blå fokusringen får om lag 2,4:1 mot det marineblå toppfeltet, under 3:1 i WCAG 1.4.11 | Blind Hunter i BMAD Code Review (BH-12) | Toppfeltet har ingenting som kan få fokus før story 1.8, og fargen krever en designbeslutning, fordi `DESIGN.md` ikke har noen fokusfarge for toppfeltet (`deferred-work.md`, `issues.md`) |
+| Databasen har ikke noe tidsavbrudd ved tilkobling, så en database som tar imot tilkoblingen uten å svare, holder forespørselen i opptil 130 sekunder | Edge Case Hunter i BMAD Code Review (EC-6) | Innstillingen kommer fra story 1.1 og står i `env.py`, som story 1.4 ikke endrer (`deferred-work.md`) |
+| En vranglås eller en avbrutt spørring gir også 503-siden, selv om databasen kjører | Edge Case Hunter i BMAD Code Review (EC-4) | Det er lite sannsynlig med én lokal bruker, og å skille feilene fra hverandre krever SQLSTATE-koder |
+| Konsollen skriver «Internal Server Error» for en databasefeil som gir 503 | Edge Case Hunter og Verification Gap i BMAD Code Review (EC-5, VG-3) | Tracebacken viser databasefeilen, og en retting krever et privat flagg i Django eller en ekstra logglinje |
 
-**Avvist.** Ingen visning sender andre tomme feilsvar enn 405 (BH-2). Fargesjekken fanger heksverdiene, som er den reelle risikoen, men av fargenavnene bare `white` og `black` (BH-5). At 503-siden også vises med DEBUG på, er med vilje, fordi tracebacken står i konsollen (BH-7). Stien til UX-mappa står i begge testfilene, men flyttes mappa, feiler begge (BH-9).
+**Avvist.** Ingen visning sender andre tomme feilsvar enn 405 (BH-2). Fargesjekken fanger heksverdiene, som er den reelle risikoen, men av fargenavnene bare `white` og `black` (BH-5). At 503-siden også vises med DEBUG på, er med vilje, fordi tracebacken står i konsollen (BH-7). Stien til UX-mappa står i begge testfilene, men flyttes mappa, feiler begge (BH-9). I BMAD Code Review ble også disse avvist: ingen 405 eller merket svar strømmes (EC-1), AD-12 gir alle 405-svar den norske siden (EC-3), designet bruker bare h1 til h3 (EC-7), spinen knytter loggreglene til NFR-4 (AA-3), og en review endrer ikke spesifikasjonen den gjennomgår (BH-18, EC-8).
+
+**Gjenstår.** De åpne punktene som denne oppføringen viser til, og eksporten av økten, føres i `issues.md` og `.logs/mounia-03/sessions/` før pull requesten flettes (BH-11, AA-2).
 
 **KI-styringsloggen:** [tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-ytterste-mellomvaren-22-november-2026).

@@ -645,8 +645,12 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * `curl` mot runserver viste at 405-siden ble sendt med `Content-Length: 0`, så nettleseren ville vist en blank side. Claude rettet mellomvaren og la til en sjekk i testene.
 * Reviewen i `bmad-build` (Blind Hunter) ga 10 funn: 2 ble rettet og 8 avvist. Jeg valgte å beholde berøringsreglene for skjermer der berøring er hovedinngangen (`pointer: coarse`).
 * Sjekket `/` og `/finnes-ikke/` i den responsive visningen i Safari ved 320 px, 390 × 844 og 820 × 1180, uten avkuttet tekst, overlapp eller sidelengs rulling.
+* Godkjente commit, push og PR #14 (`9ae95fc` og `f3a10dd`). CI-kjøring nr. 15 og Windows-testen nr. 6 passerte på `f3a10dd`.
+* Kjørte BMAD Code Review med fire KI-granskere. Bruksgrensen stoppet alle fire én gang, og de fortsatte fra arbeidet som var lagret da grensen var tilbakestilt. De fant 35 funn: 23 ble rettet i 15 punkter, 2 utsatt og 9 avvist. Den viktigste rettingen gjør at 503-siden også er HTML med DEBUG på, og resten strammer inn testene og dokumentene. Seks nye mutasjoner viste at rettingene virker, og 132 tester og Ruff passerte.
+* Bestemte å sjekke fokusringen for hånd. Den blå ringen rundt lenken på `/finnes-ikke/` var i orden, og versjonene var Safari 18.6 og macOS 15.6.
+* Godkjente commit og push av rettingene (`5063f67`) og dokumentene, og kommentaren med alle funnene i PR #14.
 
-**Status:** Story 1.4 er bygd og testet lokalt med 130 tester og Ruff, og venter på commit, push og PR #14.
+**Status:** Story 1.4 er bygd, gjennomgått med BMAD Code Review og rettet på grenen. Eksporten av økten, sesjonsloggen med de åpne punktene i `issues.md` og flettingen av PR #14 gjenstår.
 
 ## 4. Videre dokumentasjon
 
