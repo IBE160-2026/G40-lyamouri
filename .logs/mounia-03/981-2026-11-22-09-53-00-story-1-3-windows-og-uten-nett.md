@@ -1,22 +1,33 @@
 # Story 1.3 – oppsett på Windows og uten nett
 
-## 2026-11-22 kl. 09:53 — Mounia-03
+## 2026-11-22 kl. 15:26 — Mounia-03
 
 ### Oppgave
-Starte story 1.3 («Confirm the setup on Windows and without a network») med BMAD, lære av arbeidsmåten i story 1.2, jobbe selvstendig og effektivt, unngå unødvendige spørsmål, subagenter og dobbeltarbeid, og ikke committe eller pushe uten godkjenning. Etter testen uten nett på macOS ba brukeren om at loggene leses og at QA-loggen og den relevante dokumentasjonen oppdateres.
+Starte story 1.3 («Confirm the setup on Windows and without a network») med BMAD, lære av arbeidsmåten i story 1.2, jobbe selvstendig og effektivt, unngå unødvendige spørsmål, subagenter og dobbeltarbeid, og ikke committe eller pushe uten godkjenning. Senere samme dag:
+- Etter testen uten nett på macOS: lese testloggene og oppdatere QA-loggen og den relevante dokumentasjonen.
+- Brukeren kan ikke installere noe på jobb-PC-en og mente bare å teste den ferdige nettsiden i en nettleser på Windows. Story 1.3 skulle derfor oppfylles uten installasjon der, med et skille mellom nettlesertesten og oppsettet på Windows uten nett, en enkel alternativ testmetode og begrensningene dokumentert, uten å endre kravene.
+- BMAD Code Review av story 1.3, testen uten nett på macOS på nytt, og alle rettingene i én runde.
+- Eksporten av økten med maskering, sesjonsloggen og `issues.md`, med godkjenning før commit, push og fletting.
 
 ### Plan
-- `bmad-build` på grenen `story/1-3-windows-and-offline-setup`, laget fra `main` (`850250d`). Epic-1-konteksten var gyldig, så ingen subagent trengtes. Storyen fulgte «oneshot»-ruten, fordi den har små endringer og ingen uavklarte valg; spesifikasjonen er [spec-1-3-confirm-the-setup-on-windows-and-without-a-network.md](../../_bmad-output/implementation-artifacts/spec-1-3-confirm-the-setup-on-windows-and-without-a-network.md).
-- Windows-PC-en er bare tilgjengelig 25. november og 7. desember, så storyen blir ferdig etter Windows-testen 25. november. Grenen står åpen til da.
-- Testen uten nett på macOS: Claude skrev et skript i den midlertidige mappa for økten, og brukeren kjørte det i Terminal og slo selv nettet av og på, fordi økten mister forbindelsen uten nett. Skriptet sletter ingen data: `docker compose down` beholder volumet.
+- `bmad-build` på grenen `story/1-3-windows-and-offline-setup`, laget fra `main` (`850250d`). Epic-1-konteksten var gyldig, så ingen subagent trengtes. Storyen fulgte «oneshot»-ruten; spesifikasjonen er [spec-1-3-confirm-the-setup-on-windows-and-without-a-network.md](../../_bmad-output/implementation-artifacts/spec-1-3-confirm-the-setup-on-windows-and-without-a-network.md).
+- Testen uten nett på macOS: Claude skrev skript i den midlertidige mappa for økten, og brukeren kjørte dem i Terminal og slo selv nettet av og på, fordi økten mister forbindelsen uten nett. Skriptene sletter ingen data: `docker compose down` beholder volumet.
+- Windows: første akseptkriterium har en reserve når ingen Windows x64-PC kan brukes. Brukeren valgte å føre begrensningen i QA-loggen, README og statustabellen (D-3) og å la `.github/workflows/windows-setup.yml` teste oppsettet uten Docker på GitHubs Windows-maskin. Nettlesertesten på Windows hører til NFR-6 og story 4.4.
+- BMAD Code Review med fire subagenter, som BMAD krever. Brukeren tok to beslutninger og godkjente resten.
+- Eksporten: bare delen etter eksporten for story 1.2 beholdes, som for story 1.2.
 
 ### Resultat
-- Testen uten nett på macOS passerte 22. november: databasen var klar etter 5 sekunder, og Prognose svarte 200 med «Prognose» etter 1 sekund. Docker Desktop svarte etter 1 sekund og var trolig ikke helt avsluttet, så en kald oppstart av Docker Desktop uten nett er ikke vist. Resultatet står i [QA-loggen](../../docs/qa-logg.md#2026-11-22--oppstart-uten-nett-på-macos-story-13-nfr-1-sm-2-dr-9).
-- Funn: Terminal-appen fant ikke `docker`, fordi verktøyene lå i `~/.docker/bin`. README forklarer nå hva man gjør når Terminal svarer `command not found: docker`, og sier at Prognose ikke trenger nett etter første oppsett, testet på macOS.
-- Planen for Windows-testen 25. november står i spesifikasjonen: tidtaking av installasjonen, de fem README-kommandoene i PowerShell fra en ren klone, `icacls .secret_key`, tidene fra `Get-History` og oppstart uten nett.
-- `sprint-status.yaml`: story 1.3 står som `in-progress`.
-- `issues.md`: punktet om Dockers vilkår på Macen er lukket. Punktene om oppsettstiden og jobb-PC-en har fått merknader.
+- **macOS uten nett:** kjøring 1 (09.34–09.44, `850250d`) passerte, men Docker Desktop var trolig ikke avsluttet. Kjøring 2 (14.56–14.58, `fedaef2`) passerte med Docker Desktop helt avsluttet og nettet av: Docker Desktop svarte etter 6 sekunder, databasen var klar etter 4, og Prognose svarte 200 etter 2. Testen fant at Terminal ikke fant `docker`. README er rettet (`3363596`, `fedaef2`), og i kjøring 2 fant et nytt Terminal-vindu `docker`.
+- **Windows:** ingenting kan installeres på jobb-PC-en, og gruppen har ingen annen Windows x64-PC, så oppsettet med Docker Desktop og oppstarten uten nett er ikke testet på Windows. Windows-workflowen (`0eaea95`, rettet i `fedaef2`) passerte i kjøring 1–4. Kjøring 3 på `fedaef2` lastet ned CPython 3.13.15 og viste at bare SYSTEM, administratorene og brukeren kunne lese `.secret_key` i en klone i brukermappa.
+- **BMAD Code Review:** 46 funn fra fire granskere, samlet i 24 punkter: 2 beslutninger (kjøre macOS-testen på nytt; kjøre Windows-testen også for `src/**` og `.python-version`), 19 rettet, 1 utsatt (Windows-versjonene, `deferred-work.md`) og 2 avvist. Funnene står i [kommentaren i PR #12](https://github.com/IBE160-2026/G40-lyamouri/pull/12#issuecomment-7080488795).
+- **Commits på grenen:** `3363596`, `683e13f`, `5f0f8c3`, `f772c42`, `0eaea95`, `739d3bd`, `fedaef2` og `edc48af`. CI-kjøring nr. 10 og Windows-testen nr. 4 passerte på `edc48af`, og 104 tester og Ruff passerte lokalt.
+- **Dokumenter:** README, QA-loggen (oppføringene om macOS og Windows og én med KI-feilene fra reviewene), statustabellen, KI-styringsloggen (tilfelle 30), arkitekturspinen med en rad i endringsloggen, spesifikasjonen, arbeidsloggen, `deferred-work.md` og `sprint-status.yaml`, der story 1.3 er `done`.
+- **Eksporten:** [1-3-2026-11-22.txt](sessions/1-3-2026-11-22.txt) er maskert og har bare delen etter eksporten for story 1.2 (3756 linjer). Delen fra story 1.2 var lik den forrige eksporten.
+- **`issues.md`:** lukket i dag: Dockers vilkår på Macen, jobb-PC-en, `.secret_key` på Windows og den kalde oppstarten av Docker Desktop på macOS. Punktene om oppsettstiden og `.secret_key` har fått merknader, og det er fem nye punkter (under).
 
 ### Åpne punkter
-- Windows-testen 25. november på PC-en på jobben, hvis IT-reglene og Dockers lisens tillater at uv og Docker Desktop installeres. Ellers en annen Windows x64-PC, eller en merknad i README og statustabellen om at Windows ikke er testet (D-3). Dekkes av punktet om jobb-PC-en i `issues.md`.
-- En kald oppstart av Docker Desktop uten nett sjekkes på Windows 25. november og i story 4.4.
+- Story 4.4: kjør Windows-testen med `workflow_dispatch` på siste commit, og før resultatet i QA-loggen.
+- Får gruppen tilgang til en Windows x64-PC der uv og Docker Desktop kan installeres, kjøres hele README-oppsettet og oppstarten uten nett der (D-3).
+- Story 4.1: Windows-versjonene i README og spinen er ute av Microsofts vanlige støtte; sjekk kravene til Docker Desktop 4.99.0 og foreslå minsteversjoner (krever godkjenning).
+- «ø» i meldingene fra `manage.py` vises feil i loggen fra GitHub på Windows; sjekk det i et vanlig PowerShell-vindu hvis en Windows-PC blir tilgjengelig.
+- Story 4.4: test den ferdige nettsiden i en nettleser på Windows-PC-en på jobben via LAN-modusen, hvis jobbnettet og IT-reglene tillater det (NFR-6).
