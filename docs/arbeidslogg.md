@@ -625,8 +625,16 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Kjørte testen uten nett på macOS på nytt med et nytt skript. Et nytt Terminal-vindu fant `docker`, og med Docker Desktop helt avsluttet og nettet av startet Docker Desktop på 6 sekunder. Databasen var klar etter 4 sekunder, og Prognose svarte etter 2 sekunder.
 * Godkjente commit og push av rettingene og resultatene (`edc48af`). CI-kjøring nr. 10 og Windows-testen nr. 4 passerte, og kommentaren med alle 24 punktene ble lagt inn i PR #12.
 * Eksporterte økten med `/export`. Claude maskerte den og beholdt bare delen etter eksporten for story 1.2. Sesjonsloggen og `issues.md` er oppdatert.
+* Godkjente commit og push av eksporten, sesjonsloggen og arbeidsloggen (`7c81a15`, `ace8f5b` og `68603a5`). CI-kjøring nr. 11 og Windows-testen nr. 5 på `68603a5` passerte.
+* Godkjente flettingen av PR #12. Claude flettet lokalt med «Create a merge commit» (`git merge --no-ff`), uten squash eller rebase, og med noreply-adressen som forfatter:
+  * merge-commiten `36e4035` har den gamle `main` (`850250d`) og PR-hodet (`68603a5`) som foreldre;
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * `main` ble pushet via SSH, fordi `windows-setup.yml` kom inn i `main`, og GitHub viser PR #12 som flettet 22. november kl. 15.33, med `36e4035` som merge-commit;
+  * CI-kjøring nr. 12 på `main` passerte med 104 tester;
+  * lokal `main` og GitHub ble synkronisert og sto på samme commit, og arbeidskopien var ren;
+  * grenen `story/1-3-windows-and-offline-setup` er beholdt.
 
-**Status:** Story 1.3 er ferdig, men PR #12 er ikke flettet. Oppsettet på Windows er bare testet uten Docker, og de åpne punktene står i `issues.md`.
+**Status:** Story 1.3 er flettet inn i `main` (`36e4035`). Oppsettet på Windows er bare testet uten Docker, og de åpne punktene står i `issues.md`. Neste story følger rekkefølgen i sprintplanen, og story 1.4 er ikke startet.
 
 ## 4. Videre dokumentasjon
 
