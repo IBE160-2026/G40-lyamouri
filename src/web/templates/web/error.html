@@ -1,0 +1,14 @@
+{% extends "web/base.html" %}
+{# The not-found panel, which every error page uses (AD-12, UX-DR13). The texts come from the Message Catalogue in EXPERIENCE.md: the first sentence is the heading. No error page uses the request, so none reads the database. #}
+{% block main %}
+  <main class="panel-page">
+    <div class="panel">
+      <h1>{% block heading %}{% endblock %}</h1>
+      {% block text %}{% endblock %}
+      {% block link %}
+      {# The product overview from the URL map in AD-11, which Story 1.8 builds. #}
+      <p><a class="standalone-link" href="/produkter/">Til produktoversikten</a></p>
+      {% endblock %}
+    </div>
+  </main>
+{% endblock %}

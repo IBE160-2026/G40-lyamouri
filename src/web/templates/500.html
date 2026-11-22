@@ -1,0 +1,7 @@
+{% extends "web/error.html" %}
+{# Server error: any error without a page of its own, also 405 through ErrorPageMiddleware (AD-12). #}
+{% block title %}Noe gikk galt, og siden kunne ikke vises – Prognose{% endblock %}
+{% block heading %}Noe gikk galt, og siden kunne ikke vises{% endblock %}
+{% block text %}
+      <p>Prøv igjen, eller gå til produktoversikten.</p>
+{% endblock %}
