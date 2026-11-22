@@ -517,4 +517,34 @@ Docker Desktop svarte så raskt at det trolig ikke var helt avsluttet. Testen vi
 |---|---|---|---|
 | Terminal-appen fant ikke `docker`, fordi Docker Desktop hadde lagt verktøyene i `~/.docker/bin`, som ikke var i PATH. Den som følger README, får da `command not found: docker` allerede ved første kommando, og README nevnte det ikke | Testskriptet, som brukte `~/.docker/bin/docker` og skrev det i loggen | README forklarer hvordan Terminal finner `docker`: valget **System** i Docker Desktop, eller `~/.docker/bin` i PATH | `3363596` |
 
-**Gjenstår.** Windows-testen på PC-en på jobben 25. november, med oppstart uten nett der, hvis IT-reglene og Dockers lisens tillater at uv og Docker Desktop installeres (D-3).
+**Gjenstår.** Windows-testen på PC-en på jobben 25. november, med oppstart uten nett der, hvis IT-reglene og Dockers lisens tillater at uv og Docker Desktop installeres (D-3). (Merknad 22. november: installasjon er ikke tillatt, se [oppsettet på Windows](#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3).)
+
+## 2026-11-22 – Oppsettet på Windows (Story 1.3; SM-2, NFR-1, DR-1, D-3)
+
+**Begrensningen (D-3).** Brukeren opplyste 22. november at ingen programmer kan installeres på Windows x64-PC-en på jobben, og gruppen har ingen annen Windows x64-PC. Etter første akseptkriterium i story 1.3 er oppsettet med Docker Desktop og WSL 2 og oppstarten uten nett derfor ikke testet på Windows, og README og statustabellen sier det.
+
+**Delvis test i GitHub Actions.** Etter brukerens valg kjører `.github/workflows/windows-setup.yml` README-oppsettet uten Docker på GitHubs egen Windows-maskin, i Windows PowerShell. GitHubs Windows-maskiner kan ikke kjøre Linux-containeren fra `compose.yaml`, så testen bruker maskinens egen PostgreSQL 17 i stedet for Docker.
+- Kjøring nr. 1 av workflowen, med ID 45006768015, startet for PR #12 på commit `0eaea95`, 22. november 2026 kl. 10.16 norsk tid (09.16 UTC): <https://github.com/IBE160-2026/G40-lyamouri/actions/runs/45006768015>.
+- Maskinen var Microsoft Windows Server 2025 Datacenter 10.0.26100, 64-bit, med Windows PowerShell 5.1.26100.33822, uv 0.12.13, CPython 3.13.17 og PostgreSQL 17.12.
+
+| Steg | Resultat | Tid (sekunder) |
+|---|---|---|
+| PostgreSQL-tjenesten startet | «accepting connections» | 5 |
+| `uv sync --locked` | CPython 3.13.17 og 16 pakker | 3 |
+| `uv run python src/manage.py migrate` | alle migreringene, også `web.0001_initial` | 4 |
+| `uv run python src/manage.py load_seed` | lagde `.secret_key` | 1 |
+| `icacls .secret_key` | `BUILTIN\Administrators` og `NT AUTHORITY\SYSTEM` full tilgang, og `BUILTIN\Users` lese- og kjøretilgang, alt arvet fra mappa | 1 |
+| `uv run python src/manage.py runserver --insecure` | `http://127.0.0.1:8000/` svarte 200 med «Prognose» | 1 |
+| Hele kjøringen, med oppsett og opprydding | bestått | 40 |
+
+Testen viser at uv, pakkene med `psycopg[binary]`, migreringene, `load_seed` og `runserver` virker på Windows x64. Den viser ikke Docker Desktop med WSL 2, databasen fra `compose.yaml`, oppstart uten nett, tiden for installasjonen, eller en person som følger README i et vanlig PowerShell-vindu.
+
+**Feil som ble funnet og rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| På Windows arver `.secret_key` tilgangsreglene til mappa, så modusen 600 som `load_seed` ber om, begrenser ingenting. I maskinens arbeidsmappe kunne alle lokale brukere lese nøkkelen | Windows-testen med `icacls` (punktet fra BMAD Code Review av story 1.1, EC-5 og BH-7) | README sier at den som deler PC-en med andre, bør klone repoet i sin egen brukermappe, der bare brukeren, SYSTEM og administratorene har tilgang | PR #12 |
+
+**Observasjon.** I meldingen fra `load_seed` vises «nøkkel» som «n�kkel» i loggen fra GitHub. Utdataene går der gjennom en pipe med Windows' tegnsett, mens Python skriver via konsollen i et vanlig PowerShell-vindu og da viser «ø» riktig. Det er ikke prøvd i et vanlig PowerShell-vindu.
+
+**Gjenstår.** Oppsettet med Docker Desktop og oppstarten uten nett på Windows kan bare testes på en Windows x64-PC der uv og Docker Desktop kan installeres. Story 4.4 kan kjøre den delvise testen på nytt med `workflow_dispatch` på siste commit.

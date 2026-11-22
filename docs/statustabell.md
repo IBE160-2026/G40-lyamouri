@@ -14,6 +14,8 @@ Statustabellen oppfyller DR-8 i PRD-en. Den viser hvert funksjonskrav (FR) og DR
 
 **Status 20. november 2026.** Ingen FR er bygd eller delvis bygd. Prosjektskjelettet fra story 1.1 del A har brukermodellen `web.Company` og databasen i Docker Compose, som FR-1 og FR-4 bygger på, men kravene bygges i story 1.8 og 1.7.
 
+**Oppsett på Windows (D-3).** Oppsettet med Docker Desktop og oppstarten uten nett er ikke testet på Windows, fordi gruppen ikke har en Windows x64-PC der uv og Docker Desktop kan installeres. Delen uten Docker er testet automatisk på Windows Server 2025 x64 i GitHub Actions 22. november 2026 (se [QA-loggen](qa-logg.md#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3)).
+
 | Krav | Navn | Prioritet | Status | Stories | Tester | Grunn til avvik |
 |---|---|---|---|---|---|---|
 | FR-1 | Innlogging med kundenummer og passord | må-ha | ikke bygd | 1.8 | `tests/test_company.py`: `test_company_is_the_user_model_with_customer_number_as_login`, `test_password_is_stored_as_a_pbkdf2_hash` og `test_customer_number_is_required` | – |
