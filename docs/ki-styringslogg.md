@@ -287,4 +287,15 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Triage Log» og «Review Findings» i [spesifikasjonen for story 1.2](../_bmad-output/implementation-artifacts/spec-1-2-check-every-pull-request-automatically.md); kommentaren i PR #10.
 - **QA-loggen:** [feilene fra reviewene av story 1.2](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-reviewene-av-story-12-dr-9).
 
+**Story 1.3.** Story 1.3 ga tilfelle 30. Ellers godtok brukeren hver anbefaling fra Claude i økten 22. november 2026. Feilene som reviewene fant i KI-generert kode og tekst, står i QA-loggen, under [reviewene av story 1.3](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-reviewene-av-story-13-dr-9).
+
+### 30. Windows-testen og reviewene av story 1.3 (22. november 2026)
+
+- **Hva KI foreslo:** README som Claude skrev i story 1.1, nevnte ikke at Terminal kan mangle `docker`, og testskriptet for den første testen uten nett sjekket ikke at Docker Desktop var avsluttet. Da ingenting kunne installeres på jobb-PC-en, foreslo Claude å føre begrensningen og legge til en delvis test i GitHub Actions. Fire KI-granskere i `bmad-code-review` fant 46 funn, og Claude foreslo en vurdering og en beslutning for hvert av dem.
+- **Hva som var feil:** Den som fulgte README på macOS, fikk `command not found: docker`. Den første testen viste ikke en kald start av Docker Desktop uten nett, men README sa at oppstarten uten nett var testet. Windows-workflowen hadde svakheter, og QA-loggen førte en kjøring av en eldre versjon av den. Ikke alle funnene skulle følges: 2 ble avvist, og 1 ble utsatt, fordi det gjelder et plattformkrav fra før story 1.3.
+- **Hva gruppen bestemte:** Brukeren valgte å føre begrensningen og den delvise testen i GitHub Actions i stedet for å installere noe på jobb-PC-en, og å teste den ferdige nettsiden i en nettleser på Windows i story 4.4. I BMAD Code Review valgte brukeren å kjøre testen uten nett på macOS på nytt med Docker Desktop helt avsluttet, og at Windows-testen også kjører når koden endres. Brukeren godkjente resten: 19 punkter ble rettet, 1 utsatt og 2 avvist.
+- **Commit eller pull request:** `0eaea95`, `fedaef2` og PR #12.
+- **Kilde:** «Implementation Notes» og «Review Triage Log» i [spesifikasjonen for story 1.3](../_bmad-output/implementation-artifacts/spec-1-3-confirm-the-setup-on-windows-and-without-a-network.md); kommentaren i PR #12; [sesjonsloggen for story 1.3](../.logs/mounia-03/981-2026-11-22-09-53-00-story-1-3-windows-og-uten-nett.md).
+- **QA-loggen:** [oppsettet på Windows](qa-logg.md#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3) og [feilene fra reviewene av story 1.3](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-reviewene-av-story-13-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).

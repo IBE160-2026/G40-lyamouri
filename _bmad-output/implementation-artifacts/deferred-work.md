@@ -12,3 +12,11 @@
 
 - Only a manual `lsof` checks that `compose.yaml` publishes the database port on 127.0.0.1 (VG-4). A passwordless database with the image's superuser would accept connections from the network if the mapping lost its address, and no test would fail. A check of `docker compose config` fits the CI of Story 1.2, because `docker` may be missing from PATH when pytest runs.
   - Resolved 2026-11-21 in Story 1.2: `tests/test_compose.py` checks `docker compose --file compose.yaml config`, skips only without `docker` on PATH, and ran without a skip in the first CI run on PR #10 (`spec-1-2-check-every-pull-request-automatically.md`).
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-1-3-confirm-the-setup-on-windows-and-without-a-network.md`
+  summary: Run `uv run pytest` in the Windows workflow too, so that the README's «Tester» section is checked on Windows x64.
+  evidence: The Windows workflow from Story 1.3 checks only the setup; no test ran on Windows, and tests such as the mode-600 check of `.secret_key` may assume macOS or Linux. It is outside Story 1.3's criteria, which cover the setup and the start.
+
+## Deferred from: code review of spec-1-3-confirm-the-setup-on-windows-and-without-a-network.md (2026-11-22)
+
+- The README and the spine's Platforms row name Windows 10 22H2 and Windows 11 23H2, which are past the end of Microsoft's servicing, and Docker supports Docker Desktop only on Windows versions still in servicing. Story 4.1 checks Docker Desktop 4.99.0's requirements and proposes minimum versions; changing the platform requirement needs the user's approval. Deferred: pre-existing, because the versions come from the PRD and the spine, not from Story 1.3.
