@@ -1,0 +1,973 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   ~/G40-lyamouri
+
+
+❯ /clear                                                                        
+
+❯ /model                                                                        
+  ⎿  Set model to Sonnet 5.5 and saved as your default for new sessions
+
+❯ /effort                                                                       
+  ⎿  Set effort level to high (saved as your default for new sessions):
+     Comprehensive implementation with extensive testing and documentation ·
+     burns fastest — medium handles most tasks
+
+❯ Start story 1.6 etter peosjektreglene, BMAD og sensorveiledningen. Les bare   
+  nødvendige prosjektfiler, inkludert sprintplanen og relevante åpne punkter i  
+  issues.md. Kontroller main og gjenbruk eksisterende arbeid. Lag               
+  spesifikasjon, implementer, test og gjennomfør BMAD Code Review med fire      
+  uavhengige granskere. Bruk subagenter kun til gjennomganger. Dokumenter       
+  faktise resultater og spør ved nødvendige faglige beslutninger. Be om         
+  manuelle tester og /export når det trengs. Etter godkjente kontroller kan du  
+  committe, pushe, opprette PR og flette ved grønn CI og Windows-test,          
+  inkludert etterfølgende flettelog etter etablert rutine. Stopp ved feil eller 
+  usikkerhet. Ikke les utenfor prosjektmappen eller eksponer hemmeligheter.     
+  Ikke start story 1.7                                                          
+
+⏺ Jeg starter med å se på prosjektstrukturen og reglene.
+
+  Searched for 3 patterns, listed 3 directories, ran 1 shell command (ctrl+o to expand)
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+⏺ Jeg kjører skillens render-kommando for å få workflow.md for bmad-build, og
+  følger den deretter.
+
+  Read 2 files, ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg sjekker at epic-konteksten er gyldig og om det finnes eksisterende arbeid
+  for story 1.6 (grener, PR-er, spec).
+
+  Read 4 files, listed 1 directory, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg leser nå arkitekturreglene for seed-data (AD-8, AD-15, AD-17), FR-3 og
+  UX-DR46, og svarnøkkel-leseren, før jeg skriver spesifikasjonen.
+
+  Searched for 1 pattern, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Jeg leser nå regel R-1 til R-16 i PRD-en og sensorveiledningen, så jeg kan
+  bygge de to testbedriftene riktig.
+
+  Searched for 1 pattern, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Undersøkelsen er ferdig. Jeg lager grenen for story 1.6 og skriver
+  spesifikasjonen med de åpne spørsmålene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-1-6-generate-the-synthetic-se
+       ed-data.md)
+  ⎿  Wrote 96 lines to _bmad-output/implementation-artifacts/spec-1-6-gener
+     ate-the-synthetic-seed-data.md
+       1 ---
+       2 title: 'Story 1.6: Generate the synthetic seed data'
+       3 type: 'feature'
+       4 created: '2026-11-23'
+       5 status: 'draft'
+       6 route: 'dispatch'
+       7 baseline_commit: '1610325cf1f4631523e4b5ffc5ae57616284a906'
+       8 review_loop_iteration: 0
+       9 context: ['{project-root}/_bmad-output/implementation-artifacts/
+         epic-1-context.md']
+     … +87 lines (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-1-6-generate-the-synthetic-s
+        eed-data.md)
+  ⎿  Added 1 line, removed 1 line
+      89  
+      90  The generator's weekly series: `units = (level × (100 + noise) 
+          + 50) // 100`, with `noise` in −20…+20 from the hash and `level
+          ` from the product's shape (flat, a trend of fixed steps, a tri
+          angular seasonal profile, a tail forced to the mockup's sums). 
+          A flat product with a level of 8 or more gives at most a ratio 
+          of 1,5 between a week and its baseline, so R-10 never flags it;
+           the scratchpad check confirms this for every product.
+      91  
+      92 -**Verification**                                               
+      92 +## Verification                                                
+      93  
+      94  **Commands:**
+      95  - `uv run python data/generate_seed.py` twice, then `git status
+          ` -- expected: no change after the second run.
+
+⏺ User answered Claude's questions:
+  ⎿  · Hvor skal den felles leseren av referanseregnearket ligge, slik at 
+     seed-generatoren kan bruke den uten å kopiere parseren fra 
+     tests/answer_key.py (åpent punkt BH-31)? → reference/ (Recommended)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Sjekkpunkt 1: spesifikasjonen for story 1.6
+
+  Spesifikasjonen er _bmad-output/implementation-artifacts/spec-1-6-generate-the
+  -synthetic-seed-data.md, og den er på draft. Grenen
+  story/1-6-generate-the-synthetic-seed-data er laget fra main (1610325). Det
+  finnes ikke noe tidligere arbeid på 1.6 å gjenbruke.
+
+  Hva jeg fant
+  - main er rent og lik origin/main. PR #16 og #17 for story 1.5 er flettet.
+  - Epic-konteksten for epic 1 er formelt utdatert. Arkitekturspinen og PRD-en
+    er endret siden den ble laget. Endringene gjelder Windows-testnotater og E12
+    og rører ikke seed-data. Jeg bruker den som den er, slik story 1.4 og 1.5
+    gjorde.
+  - Sprintplanen har story 1.6 i M1 (24. november). Det er ingen åpne punkter i
+    issues.md som blokkerer. To gjelder denne storyen: BH-31, hvor leseren skal
+    ligge, og skjematesten fra 1.5 (BH-3), som hører til story 1.7.
+
+  Hva storyen gjør
+  - data/generate_seed.py skriver data/seed/testbedrift-a.json og
+    testbedrift-b.json. Filene er byte-like på alle plattformer: bare
+    heltallsregning, støy fra SHA-256, LF-linjeslutt og fast nøkkelrekkefølge.
+  - Testbedrift A har 30 produkter fra mockupen og slutter i uke 45 2026.
+    Testbedrift B har regeltestproduktene og mønsterproduktene og slutter i
+    uke 44. Den ene uka forskjell lar story 1.8 vise at uka utledes per bedrift.
+  - Regeltestproduktene og Strøsand 25 kg henter serie og lager fra regnearket
+    gjennom en felles leser. Leseren flyttes til reference/answer_key_reader.py,
+    etter ditt valg.
+  - Passordene hashes med Django PBKDF2, fast salt per bedrift og Djangos
+    standard antall iterasjoner. Filene har bare hashen.
+  - Et uavhengig skript i scratchpad (R-1 til R-16, ikke committet) skal
+    bekrefte «Denne uken» for A: 4 produkter, 31 enheter, 1 uten prognose og 4
+    med varsel. Det sjekker også at ingen produkt har uforutsett uvanlig uke,
+    nytt nivå eller utsolgt uke.
+
+  Valg jeg tok selv, som du kan endre
+  - Kundenummer er 1001 for A og 1002 for B. Passordene er testbedrift-a og
+    testbedrift-b, og README-en gir dem.
+  - Produktnumre: A 10001–10043 etter mockupen, B 20001 og oppover.
+
+  Omfang: spesifikasjonen er på ca. 2 700 tokens, over grensen på 1 600. Det er
+  ett brukerrettet mål, så jeg anbefaler å beholde den hele, som for story 1.5.
+  Risikoen er at den er lang å lese for implementeringen.
+
+  Før du godkjenner, kan du åpne filen og be om endringer.
+
+  Hva velger du?
+  - Godkjenn og fortsett: jeg implementerer i denne økta.
+  - Godkjenn og stopp: spesifikasjonen settes til ready-for-dev, og en ny økt
+    tar implementeringen.
+  - Gjennomgå spesifikasjonen: vi går gjennom den først.
+
+✻ Baked for 5m 46s · done 5:17 PM
+
+❯ Godkjenn spesifikasjonen samlet og fortsett med implementeringen denne økten. 
+  Følg BMAD og alle akseptkriteriene. Behod godkjenningskontrollene før         
+  publisering.                                                                  
+
+  Read 2 files, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Leseren er flyttet. Nå oppdaterer jeg testmodulen og importstien, og kjører de
+  eksisterende testene for å se at ingenting brøt.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå skriver jeg generatoren.
+
+⏺ Write(data/generate_seed.py)
+  ⎿  Wrote 386 lines to data/generate_seed.py
+       1 """Write the synthetic seed data of the two test companies (Stor
+         y 1.6; FR-3, AD-8, AD-15).
+       2 
+       3     uv run python data/generate_seed.py
+       4 
+       5 writes data/seed/testbedrift-a.json and testbedrift-b.json. The 
+         output is the
+       6 same on every run and on every platform: the series use integer 
+         arithmetic and
+       7 noise from SHA-256 of the product number and the position, and n
+     … +380 lines (~14 KB) (ctrl+o to expand)
+  Made 1 scratchpad edit +120, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Nå skriver jeg dokumentasjonen: data/README.md og en ny «Testbedrifter»-del i
+  README-en.
+
+⏺ Write(data/README.md)
+  ⎿  Wrote 108 lines to data/README.md
+      1 # Testdata
+      2 
+      3 Denne mappa har generatoren [`generate_seed.py`](generate_seed.py
+        ) og dataene den skriver i [`seed/`](seed/): de to testbedriftene
+         Testbedrift A og Testbedrift B med produkter, salgshistorikk og 
+        lager (FR-3, AD-15). Alt er syntetisk. Ingen virkelig bedrift, ku
+        nde eller person er med (NFR-4). Story 1.7 laster filene inn i da
+        tabasen med `load_seed`, og til da leser ingenting i appen dem.
+      4 
+      5 ## Generatoren
+     … +103 lines (ctrl+o to expand)
+
+⏺ Update(README.md)
+  ⎿  Added 11 lines
+      45  
+      46  Er en `DATABASE_URL` eksportert i terminalen, for eksempel for 
+          et annet prosjekt, bruker Prognose og testene den databasen i s
+          tedet for databasen fra `compose.yaml`, og pytest lager og slet
+          ter da testdatabasen sin der. Fjern variabelen først, med `unse
+          t DATABASE_URL` i Terminal på macOS eller `Remove-Item Env:DATA
+          BASE_URL` i PowerShell.
+      47  
+      48 +## Testbedrifter                                               
+      49 +                                                               
+      50 +Prognose har to syntetiske testbedrifter, uten virkelige data. 
+         +Dataene lages av en generator som gir de samme filene hver gang
+         +, og ligger i [`data/seed/`](data/seed/). [`data/README.md`](da
+         +ta/README.md) forklarer skjemaet, produktene og mønstrene. File
+         +ne har bare passordhasher, så passordene står her:             
+      51 +                                                               
+      52 +| Bedrift | Kundenummer | Passord |                            
+      53 +|---|---|---|                                                  
+      54 +| Testbedrift A | 1001 | `testbedrift-a` |                     
+      55 +| Testbedrift B | 1002 | `testbedrift-b` |                     
+      56 +                                                               
+      57 +Generatoren kjøres med `uv run python data/generate_seed.py`. D
+         +ataene lastes først inn i databasen når `load_seed` kan det (st
+         +ory 1.7), og innloggingen kommer i story 1.8.                  
+      58 +                                                               
+      59  ## Nøkler og hemmeligheter
+      60  
+      61  - Prognose trenger ingen API-nøkkel, betalt tjeneste eller tred
+          jepartskonto.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(tests/test_seed_data.py)
+  ⎿  Wrote 422 lines to tests/test_seed_data.py
+       1 """The seed generator and its two test companies (Story 1.6; FR-
+         3, AD-8, AD-15).
+       2 
+       3 No test uses the database. The files in data/seed/ are compared 
+         with a fresh
+       4 run of data/generate_seed.py, the rule test products with the re
+         ference
+       5 spreadsheet, and the patterns with the table in data/README.md. 
+         A test that
+       6 verifies no FR names its NFR, DR or AD (D-10).
+     … +416 lines (ctrl+o to expand)
+
+  Read 2 files, ran 16 shell commands (ctrl+o to expand)
+
+⏺ Implementeringen av story 1.6 er ferdig lokalt. Ingenting er committet eller
+  pushet ennå.
+
+  Resultat
+  - uv run pytest gir 168 passed, og Ruff-sjekkene består. De 151 tidligere
+    testene er uendret i oppførsel. 17 tester er nye.
+  - Generatoren data/generate_seed.py gir byte-like filer ved to kjøringer.
+    Testbedrift A har 30 produkter og slutter i uke 45 2026. Testbedrift B har
+    32 produkter og slutter i uke 44.
+  - Den felles leseren ligger i reference/answer_key_reader.py, slik du valgte.
+    De 11 produktene fra regnearket, Strøsand og E8 inkludert, har serie og
+    lager derfra.
+  - Et uavhengig skript (R-1 til R-16, ikke committet) ga for A akkurat det
+    UX-DR46 krever:
+    - 4 produkter å bestille snart: Isskrape 7, Strøsand 11, Lyspære 9 og
+      Skruer 4.
+    - 31 enheter, 1 produkt uten prognose og 4 med varsel.
+    - Ingen andre varsler i A.
+    - Alle 11 regnearkprodukter får de forventede verdiene i regnearket.
+    - Skruer får 21,3 og Kabelstrips 3,8 uker dekning.
+  - Ni feil jeg la inn i filene og README-en ble alle fanget av testene. Filene
+    er gjenopprettet.
+  - Testene fant to feil hos meg. Det første saltet var for kort (13 tegn,
+    Django krever minst 22), så første innlogging ville ha byttet salt og
+    skrevet hashen om. Nivåskifte-testen hoppet også over Skruer.
+  - Jeg la til .gitattributes for LF på seed-filene. Uten den ville en
+    Windows-klone med CRLF ha feilet byte-testen.
+  - Blind Hunter-passet (bygge-økta, uten subagenter) ga 10 funn: 6 rettet og 4
+    avvist. De står i spesifikasjonen. Edge Case Hunter og Verification Gap
+    kjører i BMAD Code Review på PR-en.
+  - Personvernskanning av diffen: ingen lokale stier, e-poster eller
+    hemmeligheter.
+
+  Ikke testet nå: «Denne uken» for A (4, 31, 1, 4) og tillitsmerkene kan først
+  testes mot kjernen i epic 2. Jeg fører det som åpent punkt for story 2.8.
+
+  Manuell test: ingen side er endret, så ingen test i nettleseren er nødvendig.
+  Du kan gjerne lese data/README.md og «Testbedrifter» i README.md, og si fra
+  hvis du vil endre kundenumre, passord eller produktnavn.
+
+  Gjenstår etter din godkjenning:
+  1. Commit på story/1-6-generate-the-synthetic-seed-data, uten QA-logg,
+     arbeidslogg og issues.md, som kommer etter reviewen.
+  2. Push, PR og grønn CI. Windows-testen starter av seg selv, fordi
+     pyproject.toml er endret.
+  3. BMAD Code Review med fire uavhengige granskere, og så dine beslutninger.
+  4. /export, sesjonslogg og flettingen.
+
+  Godkjenner du commit, push og PR nå?
+
+✻ Cogitated for 9m 33s · done 5:30 PM
+
+❯ Jeg godkjenner commit, push og PR for story 1.6. Fortsett selvstendig med CI, 
+  Windows test og BMAD Code Review med fire uavhengige granskere. Dokumenter    
+  funnene og åpne punkter. Be om mine beslutninger etter reviewen, før          
+  rettinger og fletting. Unngå dobbeltarbeid og unødvendige tokenbruk.          
+
+  Pushed to story/1-6-generate-the-synthetic-seed-data, created PR #18, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Skillen bmad-code-review har en annen oppbygning enn bmad-build. Jeg ser på
+  filene i den, mens CI og Windows-testen kjører.
+
+  Listed 1 directory, ran 4 shell commands (ctrl+o to expand)
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   ├ Verification Gap review
+   └ Acceptance Auditor review
+
+⏺ De fire granskerne kjører i bakgrunnen. Mens jeg venter, sjekker jeg CI og
+  Windows-testen på PR #18.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ CI (Tests and Ruff) og Windows-testen er grønne på 1dff8db. Jeg venter på de
+  fire granskerne og triagerer funnene når alle har levert.
+
+✻ Sautéed for 1m 24s · done 5:38 PM
+
+› Message from general-purpose
+  I read the whole diff (1996 lines). I did not read the two generated JSON
+  files in full. I opened only the last 14 weeks of four products in them. I
+  read `.github/workflows/ci.yml` and `.github/workflows/windows-setup.yml`. I
+  grepped `tests/`, `reference/` and `.github/` for `answer_key` references.
+
+  ### Cross-platform byte-for-byte claim has no test that runs on Windows
+
+  - **Changed surface:**
+    - `data/generate_seed.py:551-557` (`write()` with `newline="\n"`) and
+  `:541-548` (`dumps`).
+    - `.gitattributes:1-3` (`data/seed/*.json text eol=lf`).
+    - The claim at `data/README.md:71`: "byte for byte de samme filene hver
+  gang, på macOS, Windows og Linux".
+  - **Impacted consumer or site:** a Windows checkout and a Windows run of the
+  generator. The consumer is
+  `tests/test_seed_data.py::test_the_committed_files_equal_a_fresh_run`
+  (`:1656`), plus `test_two_runs_write_identical_files` (`:1627`) and
+  `test_the_script_runs_as_the_readme_says` (`:1639`).
+  - **Existing test evidence (Broken-verification gap):**
+    - The three byte-comparison tests would catch a platform difference only if
+  they ran on Windows. `.github/workflows/ci.yml` runs `uv run pytest` on
+  `ubuntu-24.04` only.
+    - `.github/workflows/windows-setup.yml` runs on `windows-2025`. Its steps
+  are `uv sync`, `migrate` and `load_seed`, plus `icacls` checks. I read all of
+  them and none runs pytest.
+    - Its `paths:` filter lists only the workflow file, `.python-version`,
+  `pyproject.toml`, `src/**` and `uv.lock`. It does not list `data/**`,
+  `reference/**`, `tests/**` or `.gitattributes`.
+    - The one test that targets the Windows risk is
+  `test_git_keeps_the_seed_files_with_lf_endings` (`:1784-1789`). It only checks
+  that the line `data/seed/*.json text eol=lf` appears in `.gitattributes`.
+  That is a source-text assertion and does not count as verification.
+    - `test_two_runs_write_identical_files` asserts `b"\r" not in content`. On
+  Linux that holds even if `newline="\n"` is removed from `write()`.
+  - **Missing verification:** a Windows run of `tests/test_seed_data.py`, or at
+  least `test_the_committed_files_equal_a_fresh_run` and
+  `test_the_script_runs_as_the_readme_says`, on a Windows checkout with
+  `core.autocrlf=true`. It must also trigger when `data/**`, `reference/**`,
+  `tests/**` or `.gitattributes` change.
+  - **Demonstration:** someone deletes `newline="\n"` from `write()`, or removes
+  `.gitattributes`. Linux CI stays green. The `.gitattributes` text test fails
+  only if the line itself is deleted, and it cannot see whether Git actually
+  applies it. A Windows user then gets CRLF files or a generator that writes
+  different bytes. Nothing in CI observes this.
+  - **Consequence:** the documented guarantee that the seed files are identical
+  on macOS, Windows and Linux is checked only on Linux.
+  - **Disposition:** `patch`. Add a pytest step for `tests/test_seed_data.py` to
+  the Windows job and extend its `paths:` filter. A `.github/workflows` change
+  needs an SSH push, per the project memory. If that is out of scope for this
+  story, `defer` it and record it as an open item.
+
+  ### The documented "Denne uken" figures and the mockup's suggested quantities
+  are not asserted by any committed test
+
+  - **Changed surface:**
+    - `data/README.md:127` (E8 product with 50 in stock keeps "Denne uken" at 4
+  products).
+    - `data/README.md:129-144`: forecast, order quantity ("Forslag") and
+  confidence per demo product, and "4 produkter … 31 enheter, 1 produkt uten
+  prognose, 4 produkter med varsel".
+    - The stock and series values in `data/generate_seed.py:262-275` that
+  produce these figures.
+  - **Impacted consumer or site:** the future overview and product screens
+  (story 1.8 and Epic 2). Today the consumer is `tests/test_seed_data.py::test_t
+  he_demo_products_of_testbedrift_a_follow_the_mockup` (`:1961-1986`).
+  - **Existing test evidence (Regression gap):**
+    - That test asserts, per demo product: the number, the name, the stock, and
+  the week-1 forecast as the mean of the last 3 valid weeks. It also asserts
+  that Snøskuffe has fewer than 3 valid weeks.
+    - `answer_key.mockup_products()` (`tests/answer_key.py:1222-1245`) parses
+  `quantity` ("Foreslått"), but no test reads that key.
+    - I grepped `test_seed_data.py` for `quantity`, `order`, `trust`, `label`
+  and `Tillit`. None checks suggested quantities, confidence labels, the totals
+  (4 / 31 / 1 / 4), or that the other 21 products have no stockouts or unusual
+  weeks and are covered by stock.
+    - The README says the figures were checked with an uncommitted independent
+  script, and that story 2.8 will check them with the core.
+  - **Missing verification:** an assertion of the order quantity and confidence
+  per demo product, or at least a check that the 21 stable products show no
+  stockout, unusual-week or level-shift pattern and have stock of at least about
+  3 weeks of sales. No committed test exists for this today.
+  - **Demonstration:** change `stock` for `10002` from 25 to 5, or change a
+  `stable(...)` level so it gets a noisy spike. Every test in
+  `test_seed_data.py` still passes. The documented "4 produkter bør bestilles
+  snart / 31 enheter" would then be false.
+  - **Consequence:** the seed can drift from the demo narrative (UJ-1, UX-DR46)
+  with no failing test until Epic 2 builds the core.
+  - **Disposition:** `defer`. The README and the story already schedule this for
+  story 2.8, because it needs the forecasting core. Make sure that story
+  carries the "21 other products are quiet" claim as well.
+
+  ## Other findings
+
+  - `data/generate_seed.py:262-275` and `:335-342`: the new-level patches on
+  `10004` and `20014` set weeks 6, 5 and 4 from the end, and the tail sets weeks
+  2, 1 and 0. Week 3 from the end is left to the generator's noise. The
+  committed series are `... 7, 21, 22, 21, 9, 22, 21, 21` for `10004` and `...
+  9, 21, 22, 21, 7, 22, 21, 21` for `20014`. The README says "nytt nivå i de
+  siste 12 ukene". The pattern test `has_level_shift`
+  (`tests/test_seed_data.py:1908-1918`) passes because the first three weeks
+  (21, 22, 21) already qualify, so the dip is not observed. This looks like a
+  missed patch. If a sustained level was intended, `3: "22"` or similar is
+  missing. If the dip is intended, it should be stated.
+  - `tests/test_seed_data.py:1924-1927` ("Utsolgte uker"): the pattern is
+  checked only for a stockout in the last 12 weeks. `data/README.md:166` also
+  says 20012 has stockouts "for lenge siden". That part is not checked.
+  - `data/README.md:167` says "de 10 siste ukene utsolgt" for 20015. The pattern
+  test (`:1930-1933`) requires only the last 9 positions.
+  - `test_broken_seed_data_is_refused_before_writing` (`:1741-1770`) covers 5 of
+  the `validate()` branches. It does not cover "a bad series", "a stockout week
+  out of range" or "negative sales" in `data/generate_seed.py:531-536`. It also
+  does not cover the `ValueError`s in `series_of` (a tail longer than the
+  history, or a patch out of range). The committed-file tests observe the same
+  properties on the current data, so only a regression in the generator's own
+  guards would go unseen.
+
+⏺ Rapporten fra Verification Gap er mottatt. Jeg venter på Blind Hunter, Edge
+  Case Hunter og Acceptance Auditor før triagen.
+
+✻ Churned for 1s · done 5:39 PM
+
+⏺ Agent "Verification Gap review" finished · 1m 22s
+
+› Message from general-purpose
+  N = min(floor(sqrt(86.4) + 1), 10) = 10. The diff is 88,514 bytes, or about
+  86.4 kB, so sqrt is about 9.3 and the floor of 10.3 is 10.
+
+  - **Seed JSON left out of the diff.** `data/seed/testbedrift-a.json` and
+  `-b.json` are the actual deliverable of story 1.6, and they are not in the
+  diff (line 1). A reviewer cannot confirm the product counts, the patterns, the
+  hash format or the absence of personal data. Only the generator and tests are
+  visible. The change should also say how a reviewer can reproduce the files,
+  for example "run the generator and diff".
+
+  - **Off-by-one in the seasonal shape.** In `level_hundredths`, `distance =
+  abs((week_number - 1) % 52 - 26)` is zero at ISO week 27, not week 26. The
+  trough is at week 1 (or 53), and week 52 has distance 25. The code comment and
+  `data/README.md` ("toppen i uke 26 og bunnen i uke 52") do not match the
+  formula. Either the formula or the text needs fixing.
+  `is_seasonal_without_trend` only checks the index range, so it will not catch
+  this.
+
+  - **Unmapped workbook products are silently dropped.** `build_companies`
+  iterates only `from_workbook`, so a new row in the workbook's `products` sheet
+  that is not in that map is ignored without error. Only a test notices
+  (`placed == {...}`). The generator should fail on any workbook product it does
+  not place.
+
+  - **Validation gaps in `validate()`.**
+    - It does not check `customer_number` uniqueness across companies, or that
+  the number is non-empty and numeric.
+    - It does not check `first_week` format, or that `units_sold` holds ints.
+    - It does not check the `pbkdf2_sha256$` prefix.
+    - `end_week` runs before the `length < 1` check, so an empty series gives a
+  misleading "products end at …" message instead of "a bad series".
+    - Nothing checks that the written JSON keys match the schema documented in
+  `data/README.md`. No test asserts `schema_version` or the exact key set, so
+  the documented schema can drift.
+
+  - **Misleading salt comment and unpinned PBKDF2 iterations.**
+    - The comment calls a fixed, human-readable salt such as
+  `prognoseSeedTestbedriftA` "128 bits of entropy". That is only Django's length
+  heuristic. It is not real entropy, and the comment should say so.
+    - Hash bytes depend on Django's default iteration count. The README admits
+  that a Django upgrade will fail the byte-for-byte test and `must_update`. The
+  generator could pin iterations explicitly, or there should be a documented
+  upgrade step. Today the failure looks like a data regression.
+
+  - **The privacy scan can fail by chance on the hash.**
+  `test_no_local_path_or_personal_data_in_the_seed_files` scans the whole file
+  text, including the base64 `password_hash`, with `\+47` and `\b\d{8}\b`. A
+  regenerated hash (after a Django bump or salt change) can match by coincidence
+  (`+47` appears in about 1 in 16k base64 positions). Exclude the
+  `password_hash` field from the scan, or scan the other fields only.
+
+  - **The mockup product test never checks "Forslag" or "Tillit".**
+    - `mockup_products()` parses `quantity`, but
+  `test_the_demo_products_of_testbedrift_a_follow_the_mockup` never asserts it.
+    - The `data/README.md` table also gives suggested quantity and confidence
+  per demo product, and the totals "4 produkter bør bestilles, 31 enheter, 4
+  varsler". None of these is tested.
+    - The README says they were verified by an uncommitted independent script,
+  so the claim cannot be reproduced. Commit the script, or add a test that
+  computes quantity and confidence from the rules.
+
+  - **Fragile mockup scraping.** `mockup_products()` uses regexes over mockup
+  HTML. It silently `continue`s on duplicates or on a missing number or stock.
+  The test then relies on a hard-coded `len(mockup) == 8`. A markup change would
+  produce a confusing failure or a silently smaller set.
+
+  - **Pattern checks are ad hoc approximations of the rules.** Unusual week is
+  "more than 2 x median of the 3 prior valid weeks". New level is "3 consecutive
+  such weeks". Lager covers is "stock >= 1.1 x mean of the last 3". None of
+  these is tied to the R-numbers or computed by the core. The test can pass
+  while the real rules disagree. The "Lager som dekker neste uke" threshold is
+  not defined in `data/README.md` at all. The pattern products also record no
+  expected results, such as confidence label or warnings. Only the workbook
+  products do.
+
+  - **Pattern coverage is uneven between companies.** Trend and seasonal
+  products exist only in Testbedrift B. A has no seasonal or trend product, and
+  no test or README line states that this is deliberate.
+
+  - **Status table lists too few tests.**
+    - `docs/statustabell.md` names 7 of the roughly 19 new tests in the FR-3
+  row. Missing are the script-run, changed-workbook, missing-product,
+  broken-data, LF and hash tests, and the seasonal and ISO-week tests.
+    - The NFR-3 and NFR-4 tests have no row, and `test_the_files_hold_hashes…`
+  cites FR-1 without being listed there.
+    - DR-5 and D-10 are meant to keep this table and the tests in step.
+
+  - **Weak LF guarantee and unhandled generator errors.**
+    - `test_git_keeps_the_seed_files_with_lf_endings` only checks that a line
+  exists in `.gitattributes`. It does not use `git check-attr` or check the
+  working tree.
+    - `main()` catches only `ValueError`. A missing or corrupt workbook
+  (`FileNotFoundError`, an openpyxl error) gives a raw traceback instead of the
+  Norwegian "Seed-filene ble ikke skrevet" message.
+    - Writing is not atomic. If the second file fails, the first is already
+  overwritten.
+
+  - **Plaintext credentials documented without a demo-only warning.** The root
+  `README.md` publishes the logins (`1001`/`testbedrift-a`,
+  `1002`/`testbedrift-b`) next to a seed that loads them. It says nothing about
+  these being for demo use only, or about changing or removing them if the app
+  is ever hosted beyond 127.0.0.1. Story 1.7's `load_seed` should also be
+  guarded against this.
+
+⏺ Blind Hunter er mottatt også. Jeg venter på Edge Case Hunter og Acceptance
+  Auditor.
+
+✻ Churned for 1s · done 5:39 PM
+
+⏺ Agent "Blind Hunter review" finished · 1m 26s
+
+› Message from general-purpose
+  Acceptance audit of PR 18 (Story 1.6) against the spec. In the checkout, `uv
+  run pytest` gives 167 passed and 1 skipped, ruff check and format pass, and a
+  fresh generator run leaves `data/` unchanged. The core build matches the spec,
+  and I found no contradiction in the generator logic, the schema, the hashing
+  or the matrix-row tests. The gaps are in the documentation task, the «Denne
+  uken» acceptance criterion and a few smaller spec deviations.
+
+  **Findings**
+
+  - **Documentation task not done, and the spec status contradicts it.**
+    - Violates the last task under Tasks & Acceptance, and the Code Map's
+  «documents to update».
+    - The spec still has that task unchecked (`- [ ] README.md,
+  reference/README.md, docs/statustabell.md, docs/qa-logg.md,
+  docs/ki-styringslogg.md, docs/arbeidslogg.md, sprint-status.yaml,
+  .logs/mounia-03/issues.md, deferred-work.md`), yet its frontmatter says
+  `status: 'done'`. `sprint-status.yaml` says `review`.
+    - `git diff main --stat` shows only README.md, reference/README.md,
+  docs/statustabell.md and sprint-status.yaml from that list. There is no change
+  to `docs/qa-logg.md`, `docs/ki-styringslogg.md`, `docs/arbeidslogg.md`,
+  `.logs/mounia-03/issues.md` or `deferred-work.md`.
+    - The Implementation Notes cite a QA-log entry on the salt length («The
+  salts now have 24 letters (QA log)»), but no such entry exists in the diff.
+    - Per CLAUDE.md the `.logs/` session log is also expected before the session
+  ends.
+
+  - **A's «Denne uken» figures are not checked by anything committed.**
+    - Violates the third acceptance criterion («A's «Denne uken» figures … agree
+  with the sections above») and the Boundaries claim that «no other product of
+  A has an active warning».
+    - The only checks are the uncommitted scratchpad script and a README
+  sentence. In `tests/test_seed_data.py`,
+  `test_the_demo_products_of_testbedrift_a_follow_the_mockup` covers only name,
+  stock and the 3-week mean forecast for the 8 mockup products.
+    - Nothing tests the order quantities (7, 11, 9, 4), the totals (4, 31, 1,
+  4), the warnings, or that the 21 stable A products have no stockout, unusual
+  or level-shift week.
+    - The spec explicitly allows the scratchpad verification and defers the rest
+  to story 2.8. This is a coverage gap rather than a violation.
+
+  - **`data/README.md` does not list every product.**
+    - Violates the task «every product with its number, the pattern or E-n it
+  shows (FR-3, SM-7)».
+    - It lists the 11 workbook products, A's 8 demo products and a pattern table
+  with numbers only. Of A's 30 products, the 21 stable ones (10020–10043) are
+  not individually documented.
+    - The same goes for B's stable products 20022–20032. B's pattern products
+  20010–20021 appear only as bare numbers with no names.
+
+  - **`validate` checks less than the «Broken run» row says.**
+    - Violates the «Broken run» row: «a product's weeks do not end at the
+  company's latest week».
+    - `validate` only checks that all of a company's products share one end week
+  (`len(ends) != 1`). It never compares that week with the configured
+  `latest_week` (2026-W45 for A, 2026-W44 for B).
+    - Today the two cannot diverge, because `first_week` is derived from
+  `latest_monday`. A shared drift would still pass, and
+  `test_each_history_ends_at_the_latest_data_week` is the only guard.
+
+  - **Test and file counts in the Implementation Notes are off.**
+    - Contradicts the notes' «16 tests in `tests/test_seed_data.py`, 167 in
+  all».
+    - The diff adds 17 test functions (the BH-3 `.gitattributes` test appears to
+  be the extra one), and pytest reports 167 passed plus 1 skipped, which is 168
+  collected.
+
+  - **Skruer (10004) has an odd week among its «new level» weeks.**
+    - Relates to «a level shift in the last 12 weeks», sum 64.
+    - The last 7 weeks are 21, 22, 21, 9, 22, 21, 21. The week 3 from the end
+  falls back to the old level because only `{6, 5, 4}` are patched and the
+  `tail` covers the last 3.
+    - Product 20014 has the same shape.
+    - The notes say R-11 was verified by the scratchpad script, so I could not
+  confirm a violation. It is worth a look that the dip is intended and does not
+  break the «nytt nivå» reading in the mockup.
+
+  - **`.gitattributes` is outside the spec.**
+    - It is not in the spec's Code Map or tasks. It comes from review finding
+  BH-3 and is logged in the triage table, with a test.
+    - It is benign and consistent with the Always rule on LF line endings, and
+  nothing in Never forbids it. It is an untracked scope addition.
+
+  - **The NFR-4 test's phone-number pattern can match by chance.**
+    - The `\b\d{8}\b` pattern in
+  `test_no_local_path_or_personal_data_in_the_seed_files` could hit an 8-digit
+  run inside a base64 password hash once the generator or salt changes.
+    - It passes now. The spec's matrix only requires the `/Users/`, `/home/` and
+  drive-path checks, so this is a future flake rather than a violation.
+
+  **Checked and in line with the spec**
+
+  - **Hashes:** the Django `PBKDF2PasswordHasher` is used with fixed 24-letter
+  salts and the default iteration count. The hash test also asserts
+  `must_update` is false.
+  - **Determinism:** the series use integer arithmetic only, with SHA-256 noise,
+  no clock and no random module.
+  - **File format:** UTF-8, LF line endings, fixed key order, final newline.
+  - **Test coverage of the matrix:** the repeat-run, committed-vs-fresh-run,
+  changed-workbook, missing-rule-product, broken-seed-data, plain-password,
+  local-path and hash-check rows each have a test.
+  - **Demo products:** A's tail sums (24, 56, 64, 28, 20, 9) and stocks match
+  the spec.
+  - **Company contents:** A has 30 products, numbers 10001–10043, with 10020 and
+  up for the others. B has the E1, E7, E9, E10, E15, E16, E18 a, E18 b and E19
+  products as 20001–20009, with pattern products from 20010.
+  - **Constraints:** no import of `tests/` in the generator, and no `load_seed`,
+  model or migration change.
+  - **Reader and documents:** the workbook reader moved to
+  `reference/answer_key_reader.py` and `tests/answer_key.py` follows it. The
+  root README gives both logins.
+
+  Relevant files:
+  - <repo>/_bmad-output/implementation-artifacts/spec
+  -1-6-generate-the-synthetic-seed-data.md
+  - <repo>/data/generate_seed.py
+  - <repo>/data/README.md
+  - <repo>/tests/test_seed_data.py
+
+⏺ Tre av fire rapporter er inne (Blind Hunter, Verification Gap og Acceptance
+  Auditor). Jeg venter på Edge Case Hunter, så starter triagen.
+
+✻ Sautéed for 1s · done 5:39 PM
+
+⏺ Agent "Acceptance Auditor review" finished · 1m 28s
+
+› Message from general-purpose
+  [
+  {"location":"data/generate_seed.py:564-568 (main) and :446-459
+  (build_companies)","trigger_condition":"--workbook path missing or not an
+  xlsx, or a sheet or column is absent","guard_snippet":"except (ValueError,
+  OSError, KeyError, openpyxl.utils.exceptions.InvalidFileException) as error:
+  raise SystemExit(...)","potential_consequence":"Raw traceback instead of the
+  'Seed-filene ble ikke skrevet' message (FileNotFoundError reproduced)."},
+  {"location":"data/generate_seed.py:469-476","trigger_condition":"A workbook
+  products row lacks company, sales or stock_on_hand (empty cells are dropped by
+  the reader)","guard_snippet":"missing = [c for c in
+  ('company','sales','stock_on_hand') if c not in row]; if missing: raise
+  ValueError(f'{key!r} lacks {missing}')","potential_consequence":"KeyError
+  escapes main's ValueError handler and gives a traceback, not the intended
+  message."},
+  {"location":"data/generate_seed.py:454-459","trigger_condition":"Two workbook
+  products rows have the same product key","guard_snippet":"if row['product'] in
+  rows: raise ValueError('duplicate product ...')","potential_consequence":"The
+  dict comprehension keeps the last row and silently drops the earlier
+  series."},
+  {"location":"data/generate_seed.py:511-538
+  (validate)","trigger_condition":"Duplicate product names, empty name,
+  duplicate customer_number, or first_week malformed","guard_snippet":"names
+  must be unique and non-empty per company; customer_number unique across
+  companies","potential_consequence":"Bad seed passes validation; only the
+  committed-file tests catch name duplicates, so 1.7 loader may get ambiguous
+  rows."},
+  {"location":"data/generate_seed.py:541-548 (dumps)","trigger_condition":"A
+  string such as a product name contains '[ 12]' (bracket, whitespace, digit) or
+  a float appears in a list","guard_snippet":"collapse only lists of ints, e.g.
+  by serialising units_sold/stockout_positions explicitly instead of regexing
+  the whole text","potential_consequence":"The regex rewrites text inside
+  strings, and floats lose their decimals (findall -?\\d+)."},
+  {"location":"data/generate_seed.py:551-557 (write)","trigger_condition":"Write
+  of the second file fails, or the process dies
+  mid-write","guard_snippet":"write all texts to temp files and os.replace them,
+  or render both dumps before opening any
+  file","potential_consequence":"Half-written or mismatched pair of seed files
+  left in data/seed/."},
+  {"location":"tests/answer_key.py:1243
+  (mockup_products)","trigger_condition":"A product block in the mockup has no
+  'Foreslått' text (forecast is guarded, quantity is
+  not)","guard_snippet":"'quantity': quantity[1] if quantity else
+  None","potential_consequence":"TypeError 'NoneType' not subscriptable instead
+  of a clear test failure when the mockup changes."},
+  {"location":"tests/answer_key.py:1235
+  (mockup_products)","trigger_condition":"Mockup product name occurs twice or
+  lacks Varenr./Lager (silent continue)","guard_snippet":"collect skipped names
+  and let the test assert len(mockup)==8 with the names listed, or raise on a
+  duplicate name with different data","potential_consequence":"A malformed or
+  duplicate mockup entry is dropped silently; only the count of 8 notices it."},
+  {"location":"tests/test_seed_data.py:1875-1882
+  (pattern_table)","trigger_condition":"A later README section after '##
+  Mønstrene' has another table whose second cell is only digits, commas,
+  spaces","guard_snippet":"cut the text at the next '\\n## ' heading before
+  parsing rows","potential_consequence":"Extra rows enter the pattern table and
+  test_every_pattern fails on set(table)==set(PATTERNS)."},
+  {"location":"tests/test_seed_data.py:1934-1936 (Lager som dekker neste
+  uke)","trigger_condition":"Product has fewer than 3 valid weeks or none (sum
+  of an empty slice is 0)","guard_snippet":"and len(valid_units(p)) >=
+  3","potential_consequence":"A product with no valid weeks passes the cover
+  pattern whenever stock >= 0."},
+  {"location":"tests/test_seed_data.py:1822 (no personal data
+  regex)","trigger_condition":"A hash fragment or number run contains 8 digits
+  bounded by non-word characters","guard_snippet":"exclude the password_hash
+  field before the \\b\\d{8}\\b scan","potential_consequence":"The test flakes
+  after regenerating with a Django version that changes iterations or hash."},
+  {"location":"data/README.md:71 and .gitattributes (Windows
+  claims)","kind":"claim","confidence":"medium","trigger_condition":"Generator
+  gives byte for byte the same files 'på macOS, Windows og Linux';
+  .gitattributes keeps LF on Windows","guard_snippet":"Only ubuntu CI runs
+  pytest. windows-setup.yml has paths filters
+  (.github/workflows/windows-setup.yml, .python-version, pyproject.toml, src/**,
+  uv.lock) that omit data/**, reference/** and .gitattributes, and it runs no
+  pytest or generator.","potential_consequence":"Windows determinism and LF
+  handling are untested; the hash also varies with the Django iteration count,
+  so cross-platform equality is not shown."},
+  {"location":"data/README.md:144 (demo numbers: 4 to order soon, 31 units, 4
+  warnings, 21 clean
+  products)","kind":"claim","confidence":"low","trigger_condition":"'Gruppen
+  kontrollerte tallene med et uavhengig skript ... som ikke er
+  committet'","guard_snippet":"The 4/31/1/4 totals are not checked by any
+  committed test. Tests check only the stock and the 3-week mean, not Forslag,
+  Tillit or warnings. The product counts (8 demo, 2 workbook, 21 others) do add
+  up.","potential_consequence":"A reader trusts the 'Denne uken' totals, but
+  only story 2.8 will verify them against the core."}
+  ]
+
+⏺ Alle fire rapporter er inne. Jeg leser triage- og presentasjonstrinnene i
+  skillen og verifiserer funnene mot koden.
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Edge Case Hunter review" finished · 1m 43s
+
+⏺ BMAD Code Review av PR #18: funn og forslag
+
+  Fire uavhengige granskere leverte 42 funn: Blind Hunter 15, Edge Case Hunter
+  13, Verification Gap 6 og Acceptance Auditor 8. Jeg har verifisert dem mot
+  koden. Ingen er high. De fleste er low eller medium. Ingenting er rettet eller
+  committet ennå.
+
+  CI og Windows-testen er grønne på 1dff8db.
+
+  Rettinger jeg foreslår (gruppert etter rotårsak)
+
+  #: P1
+  Funn: Skruer (10004) og 20014 har en uke på 9 midt i det nye nivået (21, 22,
+  21, 9, 22, 21, 21) (VG-3, AA-6)
+  Rettingen: Patch for uka som mangler. Summene i halen er uendret. Seed-filene
+  genereres på nytt, og det uavhengige skriptet kjøres igjen
+  ────────────────────────────────────────
+  #: P2
+  Funn: Sesongformelen har toppen i uke 27 og bunnen i uke 1, men teksten sier
+  uke 26 og 52 (BH-2)
+  Rettingen: Rett teksten i data/README.md
+  ────────────────────────────────────────
+  #: P3
+  Funn: Generatoren ignorerer stille produkter i regnearket som ikke er
+  plassert,
+  og en duplisert rad eller en manglende celle gir KeyError eller tapt rad
+  (BH-3, EC-2, EC-3)
+  Rettingen: Feil med navnet på produktet
+  ────────────────────────────────────────
+  #: P4
+  Funn: validate sammenligner ikke slutt-uka med den konfigurerte siste uka
+  (spesifikasjonens «Broken run»-rad), og sjekker ikke unike navn og kundenumre
+   eller tom serie (AA-4, EC-4, BH-4)
+  Rettingen: Utvid validate, og dekk grenene med tester (VG-6)
+  ────────────────────────────────────────
+  #: P5
+  Funn: De to filene skrives én og én, så en feil kan etterlate et halvt par
+  (BH-14, EC-6)
+  Rettingen: Lag begge tekstene før noen fil åpnes
+  ────────────────────────────────────────
+  #: P6
+  Funn: Kommentaren «128 bits entropi» for saltet er misvisende (BH-5)
+  Rettingen: Skriv at det er Djangos lengderegel på minst 22 tegn
+  ────────────────────────────────────────
+  #: P7
+  Funn: NFR-4-testen skanner også hashen, og +47 eller 8 sifre kan treffe
+  tilfeldig etter en ny generering (BH-6, EC-11, AA-8)
+  Rettingen: Utelat password_hash fra skanningen
+  ────────────────────────────────────────
+  #: P8
+  Funn: Testene mangler: nøyaktig nøkkelsett for skjemaet (BH-4), git check-attr
+
+  i stedet for tekstsjekk av .gitattributes (BH-12), pattern_table kuttes ikke
+  ved neste overskrift (EC-9), og «lager dekker»-mønsteret godtar produkter
+  uten gyldige uker (EC-10)
+  Rettingen: Rettes alle fire
+  ────────────────────────────────────────
+  #: P9
+  Funn: Dokumentene: terskelen for «lager som dekker» er ikke definert, trend og
+
+  sesong står bare i B uten forklaring, passordene mangler «bare for demo», de
+  21+11 stabile produktene og B-mønsterproduktene står ikke i data/README.md,
+  statustabellen nevner for få tester, og notatene har feil testtall (BH-9,
+  BH-10, BH-15, AA-3, BH-11, AA-5)
+  Rettingen: Rettes. Dokumentasjonsoppgaven (QA-logg, KI-styringslogg,
+  arbeidslogg, issues.md) gjør jeg etter denne reviewen
+
+  Avvist (med begrunnelse i triagelogg)
+  - BH-1: seed-filene lå utenfor diffen fordi jeg valgte det. De kan gjenskapes
+    med generatoren.
+  - BH-5 (iterasjoner): Django-standarden er en beslutning i spesifikasjonen, og
+    hash-testen er varsellampen.
+  - BH-8, EC-7 og EC-8: mockup-parseren feiler høylytt.
+  - BH-9: proxyene er med vilje enklere enn reglene.
+  - BH-13 og EC-1: main() feiler høylytt og skriver ingenting.
+  - EC-5: navnene er faste, og en rettelse er mer enn en direkte retting.
+  - VG-4 og VG-5: dokumentteksten er mer presis enn proxyen, uten skade.
+  - AA-1: dokumentasjonen er planlagt etter reviewen.
+  - AA-7: .gitattributes er en dokumentert tilleggsendring (BH-3 fra
+    bygge-reviewen).
+
+  Utsatt til story 2.8: «Denne uken» og alle tillitsmerkene sjekket med kjernen.
+  Det skal også dekke påstanden om at de 21 øvrige produktene er rolige.
+
+  Tre beslutninger trenger du å ta før jeg retter noe.
+
+⏺ User answered Claude's questions:
+  ⎿  · Windows-påstanden «byte for byte like filer på macOS, Windows og Linux» 
+     er bare testet på Linux (VG-1, EC-12). Windows-jobben kjører ikke pytest, 
+     og stifiltrene mangler data/, tests/ og .gitattributes. Hva gjør vi i denne
+     storyen? → Mykne teksten og utsett (Recommended)
+     · «Denne uken» for A (4 produkter, 31 enheter, 1 uten prognose, 4 med 
+     varsel) og de 21 rolige produktene er ikke dekket av noen committet test 
+     (VG-2, AA-2, BH-7, EC-13). Skal jeg legge til en test nå som regner 
+     forslaget med R-8 på de tre siste gyldige ukene, sammenligner med 
+     forslagene og summen i mockupen, og sjekker at bare de fire kjente 
+     produktene har varsel og de 21 ingen utsolgte eller uvanlige uker? → Legg 
+     til testen (Recommended)
+     · Skal jeg gjøre alle rettingene P1–P9 (de som ikke avhenger av de to 
+     spørsmålene over), generere seed-filene på nytt, kjøre det uavhengige 
+     skriptet og alle tester på nytt, og så føre funnene og beslutningene i 
+     PR-en? → Ja, gjør alle (Recommended)
+
+  Searched for 1 pattern, ran 9 shell commands (ctrl+o to expand)
+
+⏺ Rettingene P1–P9 er gjort lokalt, og beslutningene dine er fulgt. Ingenting er
+  committet eller pushet ennå.
+
+  Resultat
+  - 173 tester og Ruff består (5 nye tester og flere utvidede). Det er 21
+    testfunksjoner i tests/test_seed_data.py.
+  - Seed-filene er generert på nytt. Bare én linje er endret i hver fil: Skruer
+    (10004) og 20014 har nå en jevn «22» i uka som tidligere falt tilbake til 9.
+    Summene i halen, og dermed prognosene og forslagene, er uendret.
+  - Det uavhengige skriptet gir fortsatt 4 produkter å bestille snart (7, 11, 9
+    og 4, til sammen 31), 1 uten prognose og 4 med varsel i A. Alle 11
+    regnearkprodukter matcher.
+  - Den nye «Denne uken»-testen (R-8 på de tre siste gyldige ukene, sammenlignet
+    med mockupen) fanger fire feil jeg la inn: lager 25→5 på Kabelstrips, lager
+    12→100 på Lyspære, en utsolgt uke og en topp i to av de 21 rolige
+    produktene.
+  - Windows (din beslutning): data/README.md sier nå at testene bare er kjørt på
+    macOS og Linux. Det eksisterende utsatte punktet om pytest i Windows-jobben
+    utvides med seed-testene og stifiltrene. Det er ingen workflow-endring, så
+    ingen SSH-push.
+
+  Gjenstår etter din godkjenning
+  1. Commit og push av rettingene, med dokumentene fra første runde
+     (statustabell og READMEer).
+  2. Dokumentasjonen med commit-hashene i en egen commit: QA-logg,
+     KI-styringslogg (tilfelle 35), arbeidslogg, deferred-work.md og funnene i
+     spesifikasjonen. En kommentar i PR #18 får alle 42 funnene med vurderinger
+     og dine beslutninger.
+  3. Du kjører /export. Jeg maskerer den og fører sesjonsloggen og issues.md.
+  4. Flettingen. Jeg ber om den separat, etter grønn CI og Windows-test på siste
+     commit.
+
+  Godkjenner du commit og push av rettingene og dokumentasjonscommiten (punkt 1 
+  og 2)?
+
+✻ Crunched for 15m 30s · done 5:52 PM
+
+❯ Jeg godkjenner commit og push av rettingene og dokumentasjonen (punkt 1 og    
+  2). Legg in PR- kommentaren med alle 42 funnene og beslutningene. Kontroller  
+  CI og Windows testen på siste commit. Be meg om /export når det trengs, og    
+  ikke flett PR#18 før sesjonsloggen og issues.md er ferdig og jeg har godkjent 
+  flettingen.                                                                   
+
+  Pushed to story/1-6-generate-the-synthetic-seed-data, commented on PR #18, ran 5 shell commands (ctrl+o to expand)
+
+⏺ Monitor(Wait for CI and Windows runs on the last commit)
+  ⎿  Monitor started · task botgnw8fg · timeout 600s
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg venter på at CI og Windows-testen blir ferdige på siste commit (5bfc29e).
+
+⏺ Monitor(Wait for both runs on the last commit)
+  ⎿  Monitor started · task bt9wg4ew8 · timeout 600s
+
+⏺ CI og Windows-testen kjører på 5bfc29e. Jeg gir beskjed når begge er ferdige,
+  og ber deg da om /export.
+
+✻ Baked for 2m 27s · done 6:01 PM
+
+⏺ Monitor "Wait for CI and Windows runs on the last commit" stream ended
+
+⏺ CI (Tests and Ruff) og Windows-testen er grønne på siste commit 5bfc29e.
+  PR-kommentaren med alle 42 funnene og beslutningene ligger i PR #18.
+
+  Gjenstår før flettingen: sesjonsloggen og issues.md. Jeg trenger eksporten av
+  økta for å føre sesjonsloggen.
+
+  Kan du kjøre /export nå? Lagre den som
+  .logs/mounia-03/sessions/1-6-2026-11-23.txt. Jeg maskerer lokale stier, fører
+  sesjonsloggen og issues.md (BH-31 løses, og nye punkter for story 1.7, 2.8 og
+  Windows kommer til), og committer lokalt. Jeg pusher først etter din
+  godkjenning, og fletter ikke PR #18 før du har godkjent det.
+
+✻ Sautéed for 5s · done 6:01 PM
+
+⏺ Monitor "Wait for both runs on the last commit" stream ended
+
+⏺ Begge overvåkingene bekrefter det samme: CI og Windows-testen er grønne på
+  5bfc29e. Jeg venter på /export fra deg, og fletter ikke før du har godkjent
+  det.
+
+✻ Brewed for 1s · done 6:01 PM
