@@ -1,0 +1,1093 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   ~/G40-lyamouri
+
+
+❯ /clear                                                                        
+
+❯ Start story 1.7 etter prosjektreglene, BMAD og sensorveiledningen, kontroller 
+  at main er ren og synkronisert. Les kun nødvendige prosjektfiler,             
+  sprintplanen og relevante punkter i issues.md. Gjenbruk eksisterende kode og  
+  følg godkjent scope. Lag spesifikasjon, implementer,test og gjennomfør BMAD   
+  Code Review med fire uavhengige granskere. Bruk subagenter kun til            
+  gjennomganger. Dokumenter faktiske resultater og be om manuelle tester og     
+  /export når nødvendig. Stopp ved faglige beslutninger eller feil. Be om       
+  godkjenning før commit, push og fletting. Ikke les utenfor prosjektmappen     
+  eller eksponer hemmeligheter. Ikke start story 1.8                            
+
+⏺ Jeg starter med å kontrollere at main er ren og synkronisert, og ser hvilke
+  prosjektfiler som finnes.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Main er ren og synkronisert med origin (0/0). Nå leser jeg sprintplanen,
+  status og story 1.7 i epics, og relevante punkter i issues.md.
+
+  Searched for 2 patterns, read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg har nå story 1.7 (epics.md:972) og tre relevante punkter i issues.md
+  (linje 95, 117 og 122). Nå laster jeg BMAD-byggeskillen.
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+  Read 2 files, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Epic 1-konteksten er utdatert etter endringer i PRD-en og arkitekturen, så jeg
+  kompilerer den på nytt selv i stedet for med en subagent. · summary
+
+  Read 1 file, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Endringene i PRD-en og arkitekturen gjelder ikke story 1.7, så jeg beholder
+  den eksisterende epic-1-context.md. Neste leser jeg forrige story (1.6) for
+  kontinuitet. · summary
+
+  Read 2 files (ctrl+o to expand)
+
+⏺ Nå undersøker jeg koden som story 1.7 bygger på.
+
+  Read 1 file, ran 7 shell commands (ctrl+o to expand)
+
+⏺ Jeg er ferdig med arkitektur og krav. Nå leser jeg seed-skjemaet, README-en og
+  testene som berøres, før jeg skriver spesifikasjonen.
+
+  Listed 1 directory, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Jeg undersøker Windows-arbeidsflyten, fordi load_seed nå vil stoppe på en
+  database med data, og den kjøres to ganger der.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg har nok til å skrive spesifikasjonen. Windows-jobben kjører load_seed to
+  ganger mot samme database, så den andre kjøringen vil stoppe fordi databasen
+  ikke er tom. · summary
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-1-7-load-the-seed-data-with-a
+       n-explicit-reset.md)
+  ⎿  Wrote 93 lines to _bmad-output/implementation-artifacts/spec-1-7-load-
+     the-seed-data-with-an-explicit-reset.md
+      1 ---
+      2 title: 'Story 1.7: Load the seed data into an empty database, wit
+        h an explicit reset'
+      3 type: 'feature'
+      4 created: '2026-11-23'
+      5 status: 'draft'
+      6 route: 'dispatch'
+      7 review_loop_iteration: 0
+      8 context: ['{project-root}/_bmad-output/implementation-artifacts/e
+        pic-1-context.md']
+     … +85 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Spesifikasjonen er skrevet: _bmad-output/implementation-artifacts/spec-1-7-loa
+  d-the-seed-data-with-an-explicit-reset.md. Status er draft, og ingen kode er
+  endret ennå. Jeg står fortsatt på main, som er ren og synkronisert.
+
+  Hva spesifikasjonen dekker (story 1.7, ett mål)
+  - Modeller: Product, SalesWeek og CompanySettings med migrasjon 0002. Siste
+    datauke lagres ikke, den utledes (AD-8).
+  - FR-20 én gang: forecasting/settings.py har standardverdiene og grensene,
+    bare standardbiblioteket. Modellene leser derfra (AD-9).
+  - web/seed.py: leser og validerer filene før noe skrives eller slettes. Den
+    nekter feil schema_version, hull (null), negative tall, ukjent eller ren
+    passordhash, gjentatte varenumre og produkter som slutter ulike uker. Hashen
+    lagres uendret, så en innlogging ikke skriver den om.
+  - load_seed: lager .secret_key først, deretter validering, deretter databasen.
+    Den stopper med norsk melding hvis det finnes en bedrift. --reset krever at
+    du skriver nullstill, og sletter og laster i én transaksjon (bedrifter,
+    økter, innstillinger).
+  - Åpne punkter fra issues.md som tas med: .secret_key før stopp (linje 95),
+    schema_version og samme sluttuke (linje 122), og arkregnearkets
+    innstillinger mot grensene (linje 117).
+
+  Det du bør vurdere før godkjenning
+  1. Bekreftelsesordet: jeg valgte nullstill. Kravene sier bare «skriver
+     bekreftelsen». Si fra hvis du vil ha et annet ord.
+  2. Windows-arbeidsflyten: windows-setup.yml kjører load_seed to ganger mot
+     samme database. Den andre kjøringen, i en fersk klone som bare skal lage
+     nøkkelen, stopper nå. Jeg har tatt med en liten justering av klonesteget.
+     Den må pushes via SSH (workflow-scope), og resultatet ser vi først i pull
+     requestens Windows-kjøring.
+  3. Omfang: spesifikasjonen er på ca. 2 600 tokens, over målet på 1 600. Målet
+     er ikke en grense, og jeg anbefaler å beholde den som den er: story 1.6 var
+     dobbelt så stor, og modell, validering og kommando henger tett sammen. Det
+     jeg kan skille ut er Windows-justeringen og regnearktesten, og da går de
+     til deferred-work.md.
+
+  Neste steg etter godkjenning: jeg lager grenen story/1-7-…, implementerer og
+  tester, og kjører BMAD Code Review med fire uavhengige subagenter (de eneste
+  subagentene i økten). Ingen commit, push eller fletting uten din godkjenning.
+
+⏺ User answered Claude's questions:
+  ⎿  · Spesifikasjonen for story 1.7 er ca. 2 600 tokens (over målet på 1 600). 
+     Skal jeg beholde den hele, og hva gjør vi videre? → Godkjenn og fortsett 
+     (Recommended)
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg implementerer selv (subagenter bare til gjennomgangene, som du bad om).
+  Først grenen, baseline og statussynkronisering.
+
+  Read 1 file, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå implementerer jeg. Først kjernemodulen med FR-20-verdiene.
+
+⏺ Write(src/forecasting/settings.py)
+  ⎿  Wrote 36 lines to src/forecasting/settings.py
+       1 """The FR-20 defaults and ranges, defined once (AD-9).
+       2 
+       3 The model defaults, `load_seed` and, later, the settings form an
+         d the rules
+       4 read these values and keep no copy. Only the standard library is
+          imported (AD-1).
+       5 """
+       6 
+       7 from dataclasses import dataclass
+       8 from decimal import Decimal
+     … +28 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Så modellene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Så SEED_DIR og seed-leseren.
+⏺ Update(src/prognose/settings.py)
+  ⎿  Added 3 lines
+      20  SECRET_KEY_FILE = BASE_DIR / ".secret_key"
+      21  SECRET_KEY = env.load_secret_key(SECRET_KEY_FILE)
+      22  
+      23 +# AD-15: the seed files that load_seed reads, written by data/g
+         +enerate_seed.py.                                               
+      24 +SEED_DIR = BASE_DIR / "data" / "seed"                          
+      25 +                                                               
+      26  # AD-12: only PROGNOSE_DEBUG in .env turns DEBUG on, and never 
+          during the phone test.
+      27  DEBUG = env.debug_setting(os.environ, _dotenv)
+      28  
+
+⏺ Write(src/web/seed.py)
+  ⎿  Wrote 199 lines to src/web/seed.py
+       1 """Reads and checks the seed files that load_seed loads (AD-8, A
+         D-15, NFR-3).
+       2 
+       3 The files have schema version 1, written by data/generate_seed.p
+         y and described
+       4 in data/README.md. Nothing here touches the database, so a refus
+         ed file stops
+       5 load_seed before anything is deleted or written. Each message na
+         mes the file
+       6 and, where it applies, the product.
+     … +193 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(src/web/management/commands/load_seed.py)
+  ⎿  Added 106 lines, removed 4 lines
+      1 -"""uv run python src/manage.py load_seed (AD-13, NFR-3).        
+      1 +"""uv run python src/manage.py load_seed [--reset] (AD-13, AD-15
+        +, DR-4, NFR-3).                                                 
+      2  
+      3 -For now the command only creates the local session secret when i
+        -t is missing.                                                   
+      4 -It loads no data.                                               
+      3 +It creates the local session secret when it is missing, reads an
+        +d checks the seed                                               
+      4 +files, and loads them into an empty database. With --reset and a
+        + typed                                                          
+      5 +confirmation it first deletes every company with its data and ev
+        +ery session,                                                    
+      6 +in the same transaction.                                        
+      7  """
+      8  
+      9  import os
+     ...
+      11  from pathlib import Path
+      12  
+      13  from django.conf import settings
+      14 +from django.contrib.sessions.models import Session             
+      15  from django.core.management.base import BaseCommand, CommandErr
+          or
+      16 +from django.db import transaction                              
+      17  
+      18  from prognose.env import read_secret_key
+      19 +from web.models import Company, CompanySettings, Product, Sales
+         +Week                                                           
+      20 +from web.seed import SeedError, read_seed                      
+      21  
+      22 +CONFIRMATION = "nullstill"                                     
+      23  
+      24 +                                                               
+      25  class Command(BaseCommand):
+      18 -    help = "Lager den hemmelige nøkkelen for øktene i .secret_k
+         -ey hvis fila mangler."                                         
+      26 +    help = (                                                   
+      27 +        "Lager den hemmelige nøkkelen for øktene i .secret_key 
+         +hvis fila mangler, "                                           
+      28 +        "og laster testbedriftene inn i en tom database. Med --
+         +reset slettes først "                                          
+      29 +        "alle data, og du må skrive en bekreftelse."           
+      30 +    )                                                          
+      31  
+      32 +    def add_arguments(self, parser):                           
+      33 +        parser.add_argument(                                   
+      34 +            "--reset",                                         
+      35 +            action="store_true",                               
+      36 +            help=(                                             
+      37 +                "Slett alle bedrifter med produkter, salgsuker 
+         +og innstillinger og alle "                                     
+      38 +                "økter, og last testdataene på nytt. Du må skri
+         +ve en bekreftelse."                                            
+      39 +            ),                                                 
+      40 +        )                                                      
+      41 +                                                               
+      42      def handle(self, *args, **options):
+      43 +        self.ensure_secret_key()                               
+      44 +        try:                                                   
+      45 +            companies = read_seed(settings.SEED_DIR)           
+      46 +        except SeedError as error:                             
+      47 +            raise CommandError(f"{error} Ingenting er lastet el
+         +ler slettet.") from None                                       
+      48 +                                                               
+      49 +        if options["reset"]:                                   
+      50 +            self.confirm_reset()                               
+      51 +            with transaction.atomic():                         
+      52 +                Company.objects.all().delete()                 
+      53 +                Session.objects.all().delete()                 
+      54 +                self.load(companies)                           
+      55 +        else:                                                  
+      56 +            if Company.objects.exists():                       
+      57 +                raise CommandError(                            
+      58 +                    "Databasen har allerede data, og ingenting 
+         +er endret. "                                                   
+      59 +                    "Kjør load_seed --reset for å slette alle d
+         +ata, også innstillinger "                                      
+      60 +                    "og justerte mengder, og laste testdataene 
+         +på nytt."                                                      
+      61 +                )                                              
+      62 +            with transaction.atomic():                         
+      63 +                self.load(companies)                           
+      64 +                                                               
+      65 +    def ensure_secret_key(self):                               
+      66          path = Path(settings.SECRET_KEY_FILE)
+      67          try:
+      68              # O_EXCL: create the file only if it does not exist
+          , so an existing
+     ...
+       82          self.stdout.write(
+       83              self.style.SUCCESS(f"Lagde {path.name} med en ny h
+           emmelig nøkkel.")
+       84          )
+       85 +                                                              
+       86 +    def confirm_reset(self):                                  
+       87 +        """Stop unless the user types the confirmation; nothin
+          +g is deleted before."""                                       
+       88 +        try:                                                  
+       89 +            answer = input(                                   
+       90 +                "Dette sletter alle bedrifter med produkter, s
+          +algsuker og innstillinger "                                   
+       91 +                "og alle økter, så justerte mengder også nulls
+          +tilles, og laster "                                           
+       92 +                "testdataene på nytt.\n"                      
+       93 +                f"Skriv «{CONFIRMATION}» for å fortsette: "   
+       94 +            )                                                 
+       95 +        except EOFError:                                      
+       96 +            answer = ""                                       
+       97 +        if answer.strip() != CONFIRMATION:                    
+       98 +            raise CommandError("Bekreftelsen mangler. Ingentin
+          +g er slettet eller endret.")                                  
+       99 +                                                              
+      100 +    def load(self, companies):                                
+      101 +        """Create the companies, their settings, products and 
+          +sales weeks (AD-15)."""                                       
+      102 +        counts = {"products": 0, "sales_weeks": 0}            
+      103 +        for seed in companies:                                
+      104 +            # The hash goes in as it is: set_password would ha
+          +sh it again, and a                                            
+      105 +            # hash made with another salt would make Django re
+          +write it at login.                                            
+      106 +            company = Company.objects.create(                 
+      107 +                customer_number=seed.customer_number,         
+      108 +                name=seed.name,                               
+      109 +                password=seed.password_hash,                  
+      110 +            )                                                 
+      111 +            CompanySettings.objects.create(company=company)   
+      112 +            products = Product.objects.bulk_create(           
+      113 +                Product(                                      
+      114 +                    company=company,                          
+      115 +                    product_number=product.product_number,    
+      116 +                    name=product.name,                        
+      117 +                    stock_on_hand=product.stock_on_hand,      
+      118 +                )                                             
+      119 +                for product in seed.products                  
+      120 +            )                                                 
+      121 +            sales_weeks = [                                   
+      122 +                SalesWeek(                                    
+      123 +                    product=row,                              
+      124 +                    position=position,                        
+      125 +                    iso_year=year,                            
+      126 +                    iso_week=week,                            
+      127 +                    units_sold=units,                         
+      128 +                    stockout=stockout,                        
+      129 +                )                                             
+      130 +                for row, product in zip(products, seed.product
+          +s, strict=True)                                               
+      131 +                for position, year, week, units, stockout in p
+          +roduct.weeks()                                                
+      132 +            ]                                                 
+      133 +            SalesWeek.objects.bulk_create(sales_weeks, batch_s
+          +ize=2000)                                                     
+      134 +            counts["products"] += len(products)               
+      135 +            counts["sales_weeks"] += len(sales_weeks)         
+      136 +        self.stdout.write(                                    
+      137 +            self.style.SUCCESS(                               
+      138 +                f"Lastet {len(companies)} bedrifter med {count
+          +s['products']} produkter "                                    
+      139 +                f"og {counts['sales_weeks']} salgsuker."      
+      140 +            )                                                 
+      141 +        )                                                     
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Ruff vil ha tuppel i stedet for liste i disse klasseattributtene.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå testene. Først en liten hjelper for seed-filer i tester, så alle tester
+  bygger de samme gyldige små filene.
+
+⏺ Write(tests/seed_files.py)
+  ⎿  Wrote 68 lines to tests/seed_files.py
+       1 """Small valid seed files for the tests of the seed reader and l
+         oad_seed.
+       2 
+       3 They have schema version 1 (data/README.md) and are written to a
+          temporary
+       4 folder, so the tests do not depend on the committed seed files. 
+         The hash is only
+       5 shaped like Django's PBKDF2 hash, so the tests need no slow hash
+         ing.
+       6 """
+     … +62 lines (ctrl+o to expand)
+
+⏺ Write(tests/test_seed_reader.py)
+  ⎿  Wrote 280 lines to tests/test_seed_reader.py
+       1 """The seed reader of load_seed refuses a bad file before anythi
+         ng is loaded
+       2 (Story 1.7; FR-4, AD-8, AD-15, NFR-3).
+       3 
+       4 The reader touches no database, so these tests need none. The co
+         mmitted files are
+       5 read as they are, and each refusal is built from a small valid f
+         ile.
+       6 """
+       7 
+     … +273 lines (ctrl+o to expand)
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg skriver nå testene for kjernemodulen og for arkregnearkets innstillinger.
+  Modeller, leser og kommando er ferdige og lint er grønt.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(tests/test_forecasting_settings.py)
+  ⎿  Wrote 84 lines to tests/test_forecasting_settings.py
+      1 """The FR-20 defaults and ranges are defined once, in forecasting
+        /settings.py
+      2 (Story 1.7; FR-20, AD-9).
+      3 
+      4 The PRD's FR-20 table is read from the PRD, so no expected value 
+        is copied into
+      5 test code. These tests need no database; the import rule of the c
+        ore is checked
+      6 in test_core_imports.py, which also covers forecasting/settings.p
+        y.
+     … +78 lines (ctrl+o to expand)
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Nå kommandotestene i tests/test_load_seed.py. De fire eksisterende
+  nøkkeltestene beholdes, men må nå ha en seed-mappe og databasen.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Alle 231 tester består (172 før). Før review kjører jeg mutasjoner: jeg bryter
+  koden med vilje åtte steder og sjekker at testene fanger det, og
+  gjenoppretter hver gang.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Sju av åtte fanges. Mutasjon 1 feilet bare på en NameError, så jeg kjører den
+  riktig, og tester også at transaksjonen faktisk betyr noe.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle mutasjonene fanges, og filene er gjenopprettet. Nå kjører jeg kommandoen
+  ende til ende mot den lokale utviklingsdatabasen, som README-en beskriver.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Kommandoen fungerer ende til ende (62 produkter, 5 016 salgsuker). Så
+  Windows-arbeidsflyten: jeg sjekker om en test låser innholdet før jeg endrer
+  klonesteget.
+
+  Searched for 1 pattern, ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(.github/workflows/windows-setup.yml)
+  ⎿  Added 6 lines
+      76            $clone = Join-Path $env:USERPROFILE 'prognose'
+      77            git clone --quiet $env:GITHUB_WORKSPACE $clone
+      78            Push-Location $clone
+      79 +          # The database already holds the seed from the step a
+         +bove, so load_seed                                             
+      80 +          # creates .secret_key here and then stops with exit c
+         +ode 1 (Story 1.7).                                             
+      81 +          $ErrorActionPreference = 'Continue'                  
+      82            uv run python src/manage.py load_seed
+      83 +          if ($LASTEXITCODE -ne 1) { throw "load_seed ended wit
+         +h code $LASTEXITCODE, expected 1" }                            
+      84 +          $ErrorActionPreference = 'Stop'                      
+      85 +          if (-not (Test-Path .secret_key)) { throw "load_seed 
+         +did not create .secret_key in the clone" }                     
+      86            $access = icacls .secret_key
+      87            Pop-Location
+      88            $access
+
+⏺ Nå dokumentasjonen. Først README-avsnittene om oppsett og testdata.
+
+  Ran 7 shell commands (ctrl+o to expand)
+
+⏺ Implementasjonen og testene er ferdige og alle 231 består. Nå lager jeg diffen
+  mot baseline og verifiserer oppgavene mot spesifikasjonen.
+
+  Read 2 files, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Spesifikasjonen står nå som in-review. Jeg kjører byggereviewen selv og de
+  fire uavhengige granskerne etterpå, med minimum 10 funn for en diff på 82 kB. 
+  · summary
+
+  Searched for 1 pattern, read 1 file, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Byggereviewen er ferdig, og jeg venter på din godkjenning før jeg committer.
+  Neste steg er å starte fire uavhengige granskere i BMAD Code Review. · summary
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Skill(bmad-code-review)
+  ⎿  Successfully loaded skill
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Hei Mounia-03! Jeg starter BMAD Code Review av story 1.7 på arbeidstreet,
+  siden du ikke har godkjent noen commit ennå.
+
+  Read 1 file, ran 2 shell commands (ctrl+o to expand)
+
+⏺ User answered Claude's questions:
+  ⎿  · BMAD Code Review av story 1.7 er klar til å starte. Diffen er 17 filer, 
+     +1 356 / −33 linjer (1 661 linjer, 72 kB), arbeidstreet på grenen 
+     story/1-7-… mot main (16d93b7), uten spesifikasjonen. Spesifikasjonen går 
+     bare til Acceptance Auditor og Edge Case Hunter. Fire uavhengige subagenter
+     (Blind Hunter, Edge Case Hunter, Verification Gap, Acceptance Auditor) 
+     starter parallelt og skriver ingenting. Skal jeg starte? → Start review 
+     (Recommended)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   ├ Verification Gap review
+   └ Acceptance Auditor review
+
+⏺ De fire granskerne (Blind Hunter, Edge Case Hunter, Verification Gap og
+  Acceptance Auditor) kjører nå parallelt og uavhengig av hverandre. Jeg venter
+  på at alle fire er ferdige, og triagerer først da.
+
+✻ Sautéed for 13m 44s · done 6:47 PM
+
+› Message from general-purpose
+  Acceptance Auditor findings for Story 1.7 (diff vs spec). Most criteria are
+  met: key-first order, validate-before-write, hash stored unchanged, one atomic
+  reset, non-empty stop, defaults read once from the core module, and the BH-3
+  range test. I did not run the tests. The deviations I found:
+
+  - **FR-4 is listed as "delvis bygd", not "built".**
+    - Violates: Always, last bullet ("status table lists FR-4 as built and FR-20
+  as partly built").
+    - Evidence: `docs/statustabell.md` has `| FR-4 | ... | må-ha | delvis bygd |
+  1.7 |`, and the status paragraph says "FR-4 er delvis bygd til brukeren har
+  sjekket ...". The spec fixes the status as built.
+    - Likely reason: the restart check (AC 2) is still pending. The spec does
+  not allow the downgrade, so either the spec is renegotiated or the table is
+  changed.
+
+  - **The documentation task is not finished, and the docs the spec names are
+  absent from the diff.**
+    - Violates: the unchecked last task (`- [ ]`) and the Code Map documents
+  list.
+    - Evidence: the diff has no `docs/qa-logg.md`, `docs/ki-styringslogg.md`,
+  `docs/arbeidslogg.md`, `deferred-work.md` or `.logs/mounia-03/issues.md`.
+    - AC 2 says "the QA log records it", so `docs/qa-logg.md` needs an entry for
+  the FR-4/SM-5 restart check, which the user runs.
+    - The open points (BH-8, the restart check, the Windows run) are not
+  recorded in `issues.md` or `deferred-work.md`.
+    - The task is still `[ ]`, so this is expected but incomplete.
+
+  - **A cross-file duplicate error names neither the file nor the product.**
+    - Violates: Validation ("One Norwegian `CommandError` names the file and the
+  product").
+    - Evidence: `read_seed` uses `_check_unique` with "Kundenummeret {} brukes
+  av mer enn én bedrift." and "Varenummeret {} brukes av mer enn ett produkt.".
+  Neither message carries a file name.
+    - The product number is shown, but not which file holds the second use.
+  Several product-level refusals also name only the file and not the product:
+  `_keys` for a product, the product-number format error, and the
+  product-number-twice error.
+
+  - **A local path can leak into a message.**
+    - Violates: Never ("No plain-text password, secret or local path in a
+  message, a log or the repository").
+    - Evidence: `_company` catches `(OSError, ValueError)` and writes
+  `f"{path.name}: filen kan ikke leses som JSON ({error})."`. An `OSError` such
+  as a permission or missing-file error carries the full absolute path in
+  `str(error)`. That text is interpolated and then shown by `CommandError`.
+    - No test covers an unreadable file; the only reader test is for invalid
+  JSON.
+
+  - **Bulk creation is not "a fixed number of queries".**
+    - Violates: Always, `SalesWeek` bullet ("created in bulk, in a fixed number
+  of queries").
+    - Evidence: `SalesWeek.objects.bulk_create(sales_weeks, batch_size=2000)`
+  makes about ceil(N/2000) queries per company, which is 3 batches for the 5,016
+  real weeks. The test only varies the number of products, with tiny weeks, so
+  it cannot detect this.
+    - The triage log rejects this as BH-4, so it is a known interpretation. The
+  spec wording is literal, and `Company.objects.create` and
+  `CompanySettings.objects.create` are also per company.
+
+  - **The `--reset` scan is weaker than specified.**
+    - Violates: Tasks ("a scan that only the command and the README mention
+  `--reset`") and the Always rule "Nothing outside the command and the README
+  calls `--reset`".
+    - Evidence: `test_only_the_command_runs_the_reset` searches only
+  `compose.yaml`, `.env.example`, `.github/**`, `src/**/*.py` and
+  `pyproject.toml`. It does not read the README, and it ignores `docs/`,
+  `data/`, any Dockerfile or scripts, and tests.
+    - The rename in BH-3 admits this. A `--reset` added to a build script
+  outside those paths would not be caught.
+
+  - **`position` is not constrained to 1 to N in the database.**
+    - Violates (weakly): Always, "`SalesWeek` holds ... `position` (1 to N)".
+    - Evidence: `position = PositiveIntegerField`, so 0 is accepted. The reader
+  validates the range, but no model constraint enforces it. The spec does not
+  demand a DB check, so this is low severity and arguably out of scope.
+
+  - **The not-confirmed row is only partly met.**
+    - Violates (weakly): I/O matrix, "Reset not confirmed ... message, no
+  deletion".
+    - Evidence: `confirm_reset` raises `CommandError` ("Bekreftelsen mangler.
+  ..."), so the command exits with code 1. The matrix shows a message, not an
+  error, and the Implementation Notes defend the choice. This is consistent with
+  "changes nothing" and probably acceptable.
+
+  Not violations: the secret key is created before validation, validation runs
+  before the prompt and the transaction, `setting.SEED_DIR` exists, and `0002`
+  is the generated migration. The `forecasting` module imports only the standard
+  library and is covered by the existing `test_core_imports` scan, which reads
+  `rglob("*.py")` under `forecasting/`. The migration is excluded from `ruff
+  format` via `extend-exclude` in `pyproject.toml`. The Windows clone step
+  matches the spec.
+
+  Files reviewed:
+  - <repo>/_bmad-output/implementation-artifacts/spec
+  -1-7-load-the-seed-data-with-an-explicit-reset.md
+  - <scratchpad>/review-1-7.diff
+
+⏺ Acceptance Auditor er ferdig, og rapporten er mottatt. Jeg venter på de tre
+  andre (Blind Hunter, Edge Case Hunter og Verification Gap) før triagen
+  starter, slik at ingen vurdering påvirkes av en annen.
+
+✻ Crunched for 1s · done 6:48 PM
+
+⏺ Agent "Acceptance Auditor review" finished · 50s
+
+› Message from general-purpose
+  ### Seed reader's length limits are copies of the model limits, and no test
+  ties them together
+
+  - **Changed surface:** `src/web/seed.py` (new file, the "longest values the
+  models keep" block): `CUSTOMER_NUMBER_LENGTH = 20`, `NAME_LENGTH = 200`, and
+  the `[0-9]{5}` product-number rule in `_product`. These are hand-copied from
+  `Company.customer_number` (`max_length=20`, `src/web/models.py:26`),
+  `Company.name` and `Product.name` (200), and `Product.product_number`
+  (`max_length=5`, in the new models diff).
+  - **Impacted consumer or site:** `Command.load` in
+  `src/web/management/commands/load_seed.py` (`Company.objects.create`,
+  `Product.objects.bulk_create`). A value the reader accepts but the column
+  rejects fails there, at database-insert time. That is after `--reset` has been
+  confirmed and after the deletes have run, and it is not the "refused before
+  anything is touched" path the README promises.
+  - **Existing test evidence (Regression gap):**
+    - I read `tests/test_seed_reader.py`. The case `long_customer_number` uses a
+  hard-coded 21-character string and matches the message text "customer_number
+  har mer enn 20 tegn".
+    - I read `tests/test_load_seed.py`. No test there loads an over-long value.
+    - I grepped `CUSTOMER_NUMBER_LENGTH|NAME_LENGTH` in `tests/` and `src/`
+  outside `seed.py`. There are no references.
+    - No test compares these constants with
+  `Company._meta.get_field("customer_number").max_length`, or with the `name` or
+  `product_number` fields.
+    - `test_migrations_match_the_models` (`tests/test_company.py:40`) only
+  checks model against migration, not model against reader.
+  - **Missing verification:** an assertion that the reader's limits equal the
+  model fields' `max_length`. Alternatively, a boundary test that loads a
+  customer number of exactly 20 characters and a name of exactly 200, and that
+  is refused at 21 and 201.
+  - **Demonstration:** someone changes `customer_number` to `max_length=10`
+  (with a migration, so `test_migrations_match_the_models` passes). A seed file
+  with a 15-character customer number now passes `read_seed` and fails inside
+  `Company.objects.create` with a database error. Every test I read still
+  passes, because the reader tests use the 21-character case and the load tests
+  use 4-digit numbers.
+  - **Consequence:** the "refused before anything is deleted or loaded"
+  guarantee quietly stops holding for these fields. On a confirmed `--reset` it
+  fails mid-load. The atomic block rolls the failure back, so no data is lost,
+  but the user gets a raw database error instead of the Norwegian message.
+  - **Disposition:** `patch`. Add one test in `tests/test_seed_reader.py` that
+  compares `seed.CUSTOMER_NUMBER_LENGTH` with the `customer_number` field's
+  `max_length`, and `seed.NAME_LENGTH` with the `name` fields of `Company` and
+  `Product`. It can also check the 5-digit rule against
+  `Product.product_number`.
+
+  ## Other findings
+
+  - `tests/test_load_seed.py::test_only_the_command_runs_the_reset` is a
+  source-text scan for the literal `--reset`, so it does not run anything. Its
+  search list is only `compose.yaml`, `.env.example`, `.github/**`,
+  `src/**/*.py` and `pyproject.toml`. It skips repo-root and other files, for
+  example any future build or deploy config. It also can't see abbreviations. As
+  far as I can tell from the diff, `add_arguments` doesn't set
+  `allow_abbrev=False`, and argparse accepts abbreviations by default. So
+  `load_seed --res` would trigger the reset path without containing the string
+  `--reset`. This is an inference from argparse defaults. I did not run it.
+  - The Windows workflow's clone step (`.github/workflows/windows-setup.yml`,
+  the new lines around `$LASTEXITCODE -ne 1`) now accepts any exit code 1 as
+  success. `load_seed` also exits 1 for a seed-file error or a bad
+  `.secret_key`, because `ensure_secret_key` runs first and the key file is then
+  created anyway. A seed or settings regression in the clone would therefore be
+  masked. The only check on this step is the CI run itself. `tests/test_ci_work
+  flow.py::test_the_windows_workflow_runs_the_readme_setup_without_docker` only
+  checks step names and trigger paths.
+  - `Company.objects.exists()` is checked outside the transaction in the
+  non-reset path (`load_seed.py`). Two concurrent runs could both pass the
+  check. The unique constraint on `customer_number` would make the second one
+  fail rather than duplicate data. No test covers this.
+
+⏺ Verification Gap er ferdig. Jeg venter fortsatt på Blind Hunter og Edge Case
+  Hunter før triagen.
+
+✻ Cooked for 1s · done 6:48 PM
+
+⏺ Agent "Verification Gap review" finished · 1m 2s
+
+› Message from general-purpose
+  Floor: the diff is 72228 bytes, about 72.2 kB, so N = min(floor(sqrt(72.2) +
+  1), 10) = min(floor(8.50 + 1), 10) = 9. There are 14 findings below.
+
+  - **Secret key is created before the reset confirmation.** In `load_seed.py`
+  `handle()`, `ensure_secret_key()` runs first. A user who types the wrong
+  answer to `--reset`, or who hits a broken seed file, can still end up with a
+  new `.secret_key`. The messages "Ingenting er slettet eller endret" and
+  "Ingenting er lastet eller slettet" are then not strictly true. Either move
+  the key creation after the checks or word the messages precisely.
+  `test_creates_the_secret_before_it_stops...` fixes this ordering in place for
+  the no-reset case only.
+
+  - **The reset has no non-interactive path.** `confirm_reset()` calls the bare
+  `input()` and treats `EOFError` as a refusal. There is no `--noinput` flag,
+  which Django commands normally have. A scripted or CI reset is therefore
+  impossible, and the prompt bypasses `self.stdout`. The README and the
+  statustabell don't say this either.
+
+  - **"Empty database" is tested as "no `Company` rows".**
+  `Company.objects.exists()` is the only check. Orphaned or partial data stays
+  invisible to it, and sessions left over from a previous run stay in place. The
+  check also runs outside the transaction and takes no lock. Two concurrent
+  `load_seed` runs can both pass it. The `customer_number` unique constraint
+  then makes one of them crash with a raw `IntegrityError` instead of the
+  Norwegian message.
+
+  - **The seed reader's hash check is only a prefix check.** `identify_hasher`
+  accepts any enabled hasher and any string that starts with a known algorithm
+  name, for example `pbkdf2_sha256$x`. It also accepts weaker hashers if they
+  are enabled. The reader never checks that the algorithm is the project's
+  preferred one (`PASSWORD_HASHERS[0]`) or that the hash is well formed. The
+  README claims "passordfeltet er en hash og ikke et passord", which is stronger
+  than what is checked. Also, `password_hash` is validated with `_text`, which
+  allows 200 characters. `AbstractBaseUser.password` holds 128, so a long value
+  fails inside the database after the reset has started. The transaction rolls
+  it back, but the user gets a traceback.
+
+  - **Upper bounds on numbers and lengths are not checked.** `units_sold` and
+  `stock_on_hand` are `PositiveIntegerField`, so values above 2147483647 raise a
+  database `DataError` mid-load instead of a `SeedError`. `customer_number` is
+  checked against 20 characters and `name` against 200, but `password_hash` has
+  no matching `max_length` check (see the previous finding). No test covers any
+  of these limits.
+
+  - **The FR-20 ranges are defined but not enforced.** `Range.minimum` and
+  `Range.maximum` are never used outside tests. `CompanySettings` has no
+  validators and no `CheckConstraint`, so `window=0` or `smoothing_factor=0.0`
+  can be stored. `Range` also doesn't check in `__post_init__` that minimum <=
+  default <= maximum. Only a test checks this against the PRD. The statustabell
+  defers the form to story 3.1, but a model-level validator would cost almost
+  nothing and would make "defined once" true for validation as well.
+
+  - **Weak integrity on `SalesWeek` and `Product`.** There is a unique
+  constraint on `(product, position)` but none on `(product, iso_year,
+  iso_week)`. `position` is `PositiveIntegerField`, so 0 is allowed even though
+  it is documented as "from 1". `iso_week` has no 1–53 check. Nothing ties
+  `position` to the ISO week, so the data can disagree with itself. Migration
+  0002 is also not formatted like the rest of the code (single quotes, long
+  lines), which would fail a formatter or lint check if one is run on `src/`.
+
+  - **`CompanySettings` is created only by `load_seed`.**
+  `Company.objects.create_user(...)` (the test creates company 9999) and the
+  manager give a company with no settings row. Later code that reads
+  `company.company_settings` would then raise `RelatedObjectDoesNotExist`. There
+  is no `get_or_create`, signal or accessor, and no test for a company without
+  settings. Also, `load()` uses `Company.objects.create` and skips the
+  `normalize_username` that `create_user` applies to the customer number.
+
+  - **The query-count test doesn't cover batching.**
+  `test_the_number_of_queries_does_not_depend_on_the_number_of_products`
+  compares 2 and 51 products, which is under 150 rows.
+  `SalesWeek.bulk_create(batch_size=2000)` splits larger loads into several
+  queries. The real files (about 60 products with long histories) probably
+  exceed one batch. The test docstring "same number for two as for fifty"
+  therefore says more than the test proves. SQLite's variable limit also changes
+  the batch size on some backends.
+
+  - **`test_only_the_command_runs_the_reset` has gaps.** It searches a hardcoded
+  list (`compose.yaml`, `.env.example`, `.github`, `src/**/*.py`,
+  `pyproject.toml`) for the literal `--reset`. It misses `README.md` and
+  `data/README.md`, which are documentation and could be harmless. It also
+  misses any shell script, Makefile or Dockerfile outside those paths. And
+  `call_command("load_seed", reset=True)` or `"--reset"` built from parts in
+  Python is not detected. The statement "ingen annen kommando eller bygging
+  kjører `--reset`" in the README is only partly verified.
+
+  - **The success message is printed before the transaction commits.** `load()`
+  writes "Lastet N bedrifter…" inside `transaction.atomic()`. If the commit
+  fails, the user has already seen a success line. Print it after the `with`
+  block.
+
+  - **The Windows workflow check is weak.** `windows-setup.yml` accepts "exit
+  code 1" as success, but 1 is also the exit code of a broken seed file, a blank
+  secret key and other `CommandError`s. The step cannot tell "database already
+  has data" from any other failure, so it can pass for the wrong reason. It
+  could check the output for the expected message. The `$ErrorActionPreference`
+  toggling is also fragile: if `uv run` throws before the reset to `'Stop'`, the
+  rest of the job keeps the lenient setting.
+
+  - **Unverified claims in the README and the statustabell.** The README says
+  data "ligger igjen når appen og databasen stoppes og startes på nytt", but it
+  doesn't say that `docker compose down -v` removes the volume and the data. The
+  README also says adjusted amounts "ligger i øktene" and that `--reset`
+  deletes all `Session` rows. That holds only for the database-backed session
+  backend. `django.contrib.sessions` is installed, but no `SESSION_ENGINE` is
+  set in `prognose/settings.py`, so the claim is true only because the default
+  is used. The statustabell text cites DR-4 for the reset, but no DR-4 row is
+  updated in the table. The closing sentence "Testene for regnearket står i
+  FR-3- og FR-21-raden" is now stale, because FR-20 also holds a spreadsheet
+  test.
+
+  - **Test data and coverage are brittle or missing.**
+  `test_the_committed_files_have_the_documented_companies_and_end_weeks`
+  hardcodes `[30, 32]` product counts and the week numbers.
+  `test_the_committed_files_load_with_their_hashes_unchanged` hardcodes the
+  passwords `testbedrift-a` and `testbedrift-b`. Both copy facts that the diff
+  elsewhere says should not be copied into test code. There are no tests for: a
+  seed folder containing non-JSON files or subfolders; a company whose products
+  have duplicate ISO weeks; `first_week` far in the past or future; a reset on a
+  database that has `Product` rows but no `Company`; or a second `--reset` run
+  right after the first one, to check idempotence with fresh sequences.
+
+⏺ Blind Hunter er ferdig, og tre av fire granskere har levert. Jeg venter på
+  Edge Case Hunter.
+
+✻ Sautéed for 1s · done 6:48 PM
+
+⏺ Agent "Blind Hunter review" finished · 1m 10s
+
+› Message from general-purpose
+  [
+  {"location":"src/web/seed.py:647-655","trigger_condition":"password_hash
+  longer than 128 chars, or only an algorithm prefix, passes _text (limit 200)
+  and identify_hasher (prefix check only)","guard_snippet":"if
+  len(password_hash) > 128 or not is_password_usable(password_hash): raise
+  SeedError(...)","potential_consequence":"AbstractBaseUser.password is
+  max_length 128: DataError traceback at load, or a malformed hash that can
+  never log in."},
+  {"location":"src/web/seed.py:676-687","trigger_condition":"stock_on_hand or
+  units_sold is a whole number above the PositiveIntegerField maximum
+  (2147483647)","guard_snippet":"if stock > 2147483647 or value > 2147483647:
+  raise SeedError(...)","potential_consequence":"Validation passes, then the
+  database raises DataError mid-load: a raw traceback instead of the Norwegian
+  refusal."},
+  {"location":"src/web/seed.py:578-586","trigger_condition":"first_week near
+  9999-W52 with several weeks makes first_monday + timedelta exceed
+  date.max","guard_snippet":"try: ... except OverflowError: raise
+  SeedError(f'{where}: uker går forbi år
+  9999')","potential_consequence":"OverflowError from last_week escapes
+  read_seed uncaught, so no Norwegian CommandError."},
+  {"location":"src/web/seed.py:623-629","trigger_condition":"deeply nested JSON
+  raises RecursionError, which the except (OSError, ValueError) does not
+  catch","guard_snippet":"except (OSError, ValueError, RecursionError) as
+  error:","potential_consequence":"Traceback instead of a SeedError that names
+  the file."},
+  {"location":"src/web/seed.py:641-647","trigger_condition":"customer_number
+  with leading or trailing whitespace, or name padded with spaces, is accepted
+  unchanged","guard_snippet":"customer_number = value.strip(); require
+  customer_number == value","potential_consequence":"A stored login ' 1001' that
+  the user can never type; uniqueness check treats '1001' and ' 1001' as
+  different."},
+  {"location":"src/web/management/commands/load_seed.py:240-247","trigger_condit
+  ion":"Company.objects.exists() is checked outside the transaction; two
+  load_seed runs start together on an empty database","guard_snippet":"with
+  transaction.atomic(): if Company.objects.select_for_update().exists(): raise
+  CommandError(...); self.load(companies)","potential_consequence":"Second run
+  hits the unique constraint with an IntegrityError traceback, or the data check
+  is bypassed."},
+  {"location":"src/web/management/commands/load_seed.py:228-247","trigger_condit
+  ion":"Tables missing because migrate has not run: Company.objects.exists() or
+  delete raises ProgrammingError","guard_snippet":"except (ProgrammingError,
+  OperationalError): raise CommandError('Kjør migrate
+  først.')","potential_consequence":"Raw database traceback instead of a
+  Norwegian hint, and in reset it comes after the confirmation prompt."},
+  {"location":"src/web/management/commands/load_seed.py:286-294","trigger_condit
+  ion":"Product.objects.bulk_create returns objects without pk on a backend with
+  no RETURNING support","guard_snippet":"if any(p.pk is None for p in
+  products): raise
+  CommandError(...)","potential_consequence":"SalesWeek(product=unsaved) fails
+  with ValueError or links weeks to the wrong product."},
+  {"location":"src/web/management/commands/load_seed.py:233-238","trigger_condit
+  ion":"--reset deletes Session rows, but sessions held outside the Session
+  table (cache or signed-cookie backend) are untouched","guard_snippet":"assert
+  settings.SESSION_ENGINE == 'django.contrib.sessions.backends.db' or clear the
+  backend via SessionStore().clear_expired()","potential_consequence":"Logged-in
+  users keep stale adjusted quantities after a reset if the session engine is
+  ever changed."},
+  {"location":"src/web/models.py:488-512","trigger_condition":"CompanySettings
+  fields have no validators or check constraints: window 0 or 30000, factor 0.0
+  or 9.9, any method string are storable","guard_snippet":"validators=[MinValueV
+  alidator(defaults.WINDOW.minimum), MaxValueValidator(defaults.WINDOW.maximum)]
+  plus CheckConstraint","potential_consequence":"Out-of-range values reach the
+  core later, for example a window of 0 gives division by zero. The spec and
+  BH-5 knowingly defer this to story 3.1."},
+  {"location":"src/web/models.py:461-468","trigger_condition":"SalesWeek has no
+  unique constraint on (product, iso_year, iso_week) and no range check on
+  iso_week (1-53)","guard_snippet":"UniqueConstraint(fields=['product','iso_year
+  ','iso_week']) and
+  CheckConstraint(iso_week__range=(1,53))","potential_consequence":"Duplicate or
+  impossible calendar weeks can be stored if position and calendar week
+  disagree."},
+  {"location":"src/web/management/commands/load_seed.py:274-309","trigger_condit
+  ion":"Several companies share one transaction, but a mid-load failure on a
+  non-reset path raises a raw exception","guard_snippet":"wrap self.load in
+  try/except (DataError, IntegrityError) as error: raise CommandError(f'Lasting
+  feilet: {error.__class__.__name__}') from None","potential_consequence":"User
+  sees a traceback. Data is rolled back, but the cause is not explained in
+  Norwegian."},
+  {"location":".github/workflows/windows-setup.yml:79-85","trigger_condition":"E
+  xit code 1 is any CommandError, such as a refused seed file or a blank key,
+  not only the non-empty database stop","guard_snippet":"capture output and
+  require it to match 'Databasen har allerede data' before accepting exit code
+  1","potential_consequence":"A broken seed file or other failure in the clone
+  passes the Windows job, since .secret_key is created before validation."},
+  {"location":".github/workflows/windows-setup.yml:79-86","trigger_condition":"t
+  hrow between the lines setting ErrorActionPreference Continue and Stop, with
+  Pop-Location skipped","guard_snippet":"wrap in try { ... } finally {
+  $ErrorActionPreference = 'Stop'; Pop-Location
+  }","potential_consequence":"Preference or location is left changed for the
+  rest of the step on failure paths."},
+  {"location":"tests/test_load_seed.py:1323-1340","trigger_condition":"The scan
+  of --reset reads only compose.yaml, .env.example, .github/**, src/**/*.py and
+  pyproject.toml","guard_snippet":"also scan Dockerfile, Makefile, scripts/,
+  docs/ and *.sh, *.ps1, *.toml, *.yml at the repo
+  root","potential_consequence":"A script, Dockerfile or Makefile calling
+  load_seed --reset passes the test unnoticed."},
+  {"location":"tests/test_forecasting_settings.py:911-918","trigger_condition":"
+  prd_ranges() builds ranges only for rows whose Allowed cell matches a regex; a
+  reworded PRD row is skipped silently","guard_snippet":"assert set(ranges) >=
+  {'Window (moving average)','Smoothing factor (exponential
+  smoothing)','Scenario percentage','Safety margin'} with a clear
+  message","potential_consequence":"A reworded row gives a KeyError in the test
+  instead of a message that names the changed PRD row."},
+  {"location":"src/web/seed.py:604-611","kind":"claim","confidence":"medium","tr
+  igger_condition":"Spec: every refusal 'names the file and the product'
+  (matrix: repeated product number refused with the file and the product
+  named)","guard_snippet":"Duplicate customer-number and product-number
+  messages, and the 'slutter ikke i samme uke' end-week message, name only the
+  value or the file, not the company file and product together; 'Fant ingen
+  seed-filer' names only the folder","potential_consequence":"Someone fixing a
+  duplicate product number across two files cannot tell from the message which
+  file holds the duplicate."},
+  {"location":"tests/test_load_seed.py:1052-1061","kind":"claim","confidence":"m
+  edium","trigger_condition":"Spec: 'the four old tests keep their
+  claims'","guard_snippet":"test_creates_the_missing_secret_for_the_owner_only
+  no longer asserts django_assert_num_queries(0) or 'loads no data'. The old
+  no-data claim is dropped, and the first run now loads the
+  seed","potential_consequence":"The claim that the key creation stays
+  independent of the database is no longer tested."},
+  {"location":"docs/statustabell.md:107","kind":"claim","confidence":"low","trig
+  ger_condition":"Spec: 'After this story the status table lists FR-4 as built
+  and FR-20 as partly built'","guard_snippet":"The table lists FR-4 as 'delvis
+  bygd', not built, until the manual restart check (SM-5) is
+  reported","potential_consequence":"The spec's stated end state differs from
+  the table. A reader of the spec expects FR-4 'bygd'."},
+  {"location":"src/web/management/commands/load_seed.py:274-309","kind":"claim",
+  "confidence":"low","trigger_condition":"Spec: 'Rows are created in bulk, in a
+  fixed number of queries'","guard_snippet":"Queries grow with the number of
+  companies (2 each) and with sales weeks above batch_size=2000 (5 016 weeks
+  give 3 batches); only the product count is
+  independent","potential_consequence":"The query count is not constant, so the
+  claim holds only for products. The review log accepts this as BH-4."}
+  ]
+
+⏺ Alle fire granskere har levert. Nå leser jeg triage-steget.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Agent "Edge Case Hunter review" finished · 1m 32s
+
+⏺ Alle fire granskerne er ferdige med funn fra 14, 20, 1 pluss tre andre og 8.
+  Jeg sjekker først det som kan verifiseres direkte i koden, før jeg setter
+  verdiene. · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Bekreftet: en uleselig fil gir en melding med hele den lokale stien, og
+  passordgrensen er 128 tegn mens leseren tillater 200. Jeg retter funnene som
+  er reelle.
+
+  Read 1 file, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Reviewfunnene i koden er rettet og 238 tester består. Nå utvider jeg
+  --reset-skanningen til alle sporede filer, strammer Windows-steget og retter
+  to dokumentasjonspunkter.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå fører jeg triagen inn i spesifikasjonen og de utsatte punktene i
+  deferred-work.md.
+
+  Read 1 file, ran 2 shell commands (ctrl+o to expand)
+⏺ Story 1.7 er implementert og gjennomgått, men ingenting er committet, pushet
+  eller flettet. Jeg trenger to ting fra deg før vi går videre: den manuelle
+  omstartssjekken og godkjenning av commit.
+
+  Resultat
+
+  - Implementert: Product, SalesWeek og CompanySettings med migrasjon 0002, og
+    FR-20-verdiene definert én gang i forecasting/settings.py. web/seed.py
+    validerer filene før noe skrives. load_seed laster inn i en tom database og
+    stopper ellers. --reset krever at du skriver nullstill, og kjører alt i én
+    transaksjon.
+  - Tester: 238 består og 1 hoppes over (Docker-sjekken, fordi Docker ikke er på
+    PATH i denne skallet). Ruff og makemigrations --check er grønne. 14
+    mutasjoner ble fanget av testene, og kommandoen er kjørt ende til ende mot
+    din lokale utviklingsdatabase (62 produkter, 5 016 salgsuker). Den databasen
+    har dermed seed-data nå.
+  - BMAD Code Review med fire uavhengige subagenter: 46 funn, 2 til 4 av dem
+    middels. Jeg rettet 17 (blant annet at en uleselig fil lekket hele den
+    lokale stien, at hashen og tallene kunne overskride kolonnegrensene og
+    krasje etter at reset var startet, og at Windows-steget kunne bestå av feil
+    grunn). To utsatt, resten avvist med begrunnelse. Alt står i spesifikasjonen
+    under «Review Triage Log».
+  - Det ikke rørte jeg, og avvik: Jeg anvendte patchene uten å stoppe for ditt
+    valg, siden ingen var et faglig valg og alt ligger ucommittet til
+    gjennomsyn. Spesifikasjonen sier at FR-4 skal stå som «bygd», men jeg har
+    satt «delvis bygd» til du har meldt tilbake om omstartssjekken.
+
+  Dette trenger jeg fra deg
+
+  1. Omstartssjekk (FR-4, SM-5), siden jeg ikke har Docker. Noter først tallene,
+     og endre gjerne en innstilling:
+  uv run python src/manage.py shell -c "from web.models import *; CompanySetting
+  s.objects.filter(company__customer_number='1001').update(window=5); 
+  print(Company.objects.count(), Product.objects.count(), 
+  SalesWeek.objects.count(), CompanySettings.objects.count())"
+  docker compose down
+  docker compose up -d --wait
+     Kjør så den samme shell -c uten update. Forventet er 2, 62, 5016 og 2, og
+     vinduet for 1001 er fortsatt 5. Prøv deretter uv run python src/manage.py 
+     load_seed --reset og skriv nullstill, og vinduet skal være tilbake til 3.
+     Skriv noe annet, og ingenting skal endres. Meld resultatet her i chatten.
+  2. /export av økten til .logs/mounia-03/sessions/ når du er klar, så maskerer
+     og committer vi den.
+  3. Godkjenning av commit. Etter det skriver jeg QA-loggen (omstartssjekken og
+     feilene funnet av verktøyene), KI-styringsloggen, arbeidsloggen, issues.md
+     (linje 95, 117 og 122 løses) og sesjonsloggen, og setter FR-4 til «bygd»
+     hvis sjekken består.
+
+  Push og fletting kommer som egne godkjenninger. Endringen i windows-setup.yml
+  krever SSH-push, og om Windows-steget virker, viser først pull requestens
+  Windows-kjøring. Jeg har ikke startet story 1.8.
+
+✻ Cooked for 25m 37s · done 6:53 PM
+
+❯ Manuell test FR-4/SM-5 er bestått: 2 bedrifter, 62produkter, 5016 salgsuker   
+  og 2 innstillinger ble bevart etter Docker omstart. Window=5 ble bevart       
+  load_seed --reset med nullstill lastet data på nytt og satte window tilbake   
+  til 3, nei ble avvist uten ebdringer. Før resultatene i QA-loggen og fortsett 
+  med dokumentasjonen. Be om /export og nødvendige godkjenninger som avtalt.    
+
+⏺ Takk, FR-4/SM-5 er bekreftet. Jeg ser på formatet i de siste oppføringene før
+  jeg skriver dem inn.
+
+  Searched for 2 patterns, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Nå skriver jeg QA-loggen, KI-styringsloggen, arbeidsloggen og statustabellen.
+  Commit-hasher fyller jeg inn etter at du har godkjent commiten.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Dokumentasjonen er skrevet, og alt ligger ucommittet. Omstartssjekken din er
+  ført i QA-loggen, og FR-4 står som «bygd» i statustabellen.
+
+  Det som er ført (23. november):
+  - docs/qa-logg.md: omstartssjekken slik du meldte den, feilene fra byggingen
+    og feilene fra BMAD Code Review.
+  - docs/ki-styringslogg.md: nytt tilfelle 36, med avviket fra trinn 5.
+  - docs/arbeidslogg.md, docs/statustabell.md og spesifikasjonen.
+
+  To rettelser av tall jeg ga deg tidligere:
+  - Funnene: triagen viser 46 funn, med 7 middels og 20 rettede rader. Jeg skrev
+    «2 til 4 middels» og «17 rettet» i forrige melding. Loggene følger triagen.
+  - Mutasjonene: jeg skrev 14 mutasjoner fanget. Det riktige er 11 gyldige, og
+    én ble kjørt på nytt fordi den først feilet på en NameError.
+
+  Hva jeg trenger nå
+  1. /export av økten. Kjør /export og gi meg filen, så maskerer jeg den og
+     sjekker den for stier, brukernavn, e-poster og nøkler før den committes.
+     Navnet blir .logs/mounia-03/sessions/1-7-2026-11-23.txt.
+  2. Godkjenning av commit. Jeg foreslår to commits på grenen
+     story/1-7-load-the-seed-data-with-an-explicit-reset, med norske meldinger
+     og Co-Authored-By-linjen:
+     - Kode: spesifikasjonen, src/, testene, README-ene, statustabellen,
+       windows-setup.yml, deferred-work.md og sprintstatus (review).
+     - Dokumenter: QA-loggen, KI-styringsloggen, arbeidsloggen, eksporten,
+       sesjonsloggen med issues.md (linje 95, 117 og 122 løses, to nye punkter
+       føres), og commit-hashene som erstatter {{KODE}} (13 steder).
+
+  Etter commitene må jeg ha en egen godkjenning for push. Den går via
+  git@github.com, siden en workflow-fil er endret. Deretter trenger jeg en
+  godkjenning for pull request, og for fletting først når CI og
+  Windows-kjøringen er grønne. Windows-steget i windows-setup.yml er ikke prøvd
+  noe sted ennå. Jeg starter ikke story 1.8.
+
+✻ Baked for 2m 13s · done 7:17 PM

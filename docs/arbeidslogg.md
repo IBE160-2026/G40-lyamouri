@@ -717,6 +717,14 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 1.6 er flettet inn i `main` (`62b9434`), og de åpne punktene for story 1.7, 1.8, 2.8 og 4.1 og for pytest i Windows-jobben står i `issues.md`. Neste story følger rekkefølgen i sprintplanen, og story 1.7 er ikke startet.
 
+### 23. november 2026 – Story 1.7: seed-dataene inn i databasen, med en eksplisitt nullstilling
+
+* Startet story 1.7 med `bmad-build` etter prosjektreglene, BMAD og sensorveiledningen. `main` var ren og synkronisert med `origin/main` (`16d93b7`). Claude leste bare sprintplanen, storyen i `epics.md`, de relevante punktene i `issues.md` (linje 95, 117 og 122) og forrige story, og laget grenen `story/1-7-load-the-seed-data-with-an-explicit-reset`. Epic-1-konteksten var formelt utdatert, men endringene gjelder ikke story 1.7, så Claude brukte den som den var. Subagenter brukes bare til gjennomgangene.
+* Claude skrev spesifikasjonen. Den er om lag 2 600 tokens, og brukeren godkjente den slik den var, med ordet «nullstill» som bekreftelse og en justering av klonesteget i Windows-jobben. Claude valgte selv at en avvist bekreftelse gir en feil (som `flush` i Django) og at lesingen av filene ligger i `web/seed.py`.
+* Claude bygde `forecasting/settings.py`, modellene `Product`, `SalesWeek` og `CompanySettings` med migrasjon `0002`, leseren, `load_seed --reset`, 66 nye tester og dokumentene. Ruff og testene fant tre feil under byggingen, og Blind Hunter i byggeøkten ga 10 funn: 3 rettet, 6 avvist og 1 utsatt ([QA-loggen](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-17-dr-9)). 11 feil som ble lagt inn én om gangen, ble alle fanget. Claude kjørte `migrate` og `load_seed` mot den lokale databasen: 2 bedrifter, 62 produkter og 5 016 salgsuker, og en ny kjøring stoppet med den norske meldingen.
+* Kjørte BMAD Code Review med fire uavhengige KI-granskere på arbeidstreet før noe var committet: 46 funn, 20 rettet, 2 utsatt, 4 feil og 20 avvist, og ingen trengte en beslutning ([tilfelle 36](ki-styringslogg.md#36-grensene-i-leseren-og-reviewen-av-story-17-23-november-2026)). Claude gjorde patchene uten å vente på valget i trinn 5, og sa fra om det. 238 tester og Ruff passerte etterpå.
+* Brukeren kjørte omstartssjekken på macOS: 2 bedrifter, 62 produkter, 5 016 salgsuker og 2 innstillinger var uendret etter at Docker ble stoppet og startet, `window=5` ble bevart, og `load_seed --reset` med «nullstill» satte den tilbake til 3, mens «nei» ikke endret noe ([QA-loggen](qa-logg.md#2026-11-23--omstartssjekken-av-dataene-story-17-fr-4-sm-5)). FR-4 står som bygd i statustabellen.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

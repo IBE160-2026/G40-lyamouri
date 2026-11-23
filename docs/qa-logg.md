@@ -838,3 +838,59 @@ Begge står i `deferred-work.md`.
 - **Windows:** pytest med seed-testene i Windows-jobben, og stifiltrene i `windows-setup.yml`.
 
 **Avvist.** 11 funn: blant annet at `main()` bare fanger `ValueError`, at iterasjonene ikke er festet, at mockup-parseren er skjør, at `.gitattributes` ligger utenfor spesifikasjonen og at seed-filene lå utenfor diffen. Alle står under «Review Findings» i [spesifikasjonen](../_bmad-output/implementation-artifacts/spec-1-6-generate-the-synthetic-seed-data.md).
+
+## 2026-11-23 – Omstartssjekken av dataene (Story 1.7; FR-4, SM-5)
+
+**Hva som ble testet.** At produktene, salgsukene og innstillingene er uendret når appen og databasen stoppes og startes på nytt, og at `load_seed --reset` bare gjør noe etter den skrevne bekreftelsen (FR-4, SM-5, DR-4).
+
+**Hvordan.** Brukeren kjørte sjekken på macOS 23. november 2026, på arbeidstreet til story 1.7, mot Docker Compose-databasen etter `migrate` og `load_seed`. Resultatet står her slik brukeren meldte det i chatten. Claude kjørte ikke Docker selv.
+
+**Resultat: bestått.**
+- Før og etter omstarten av Docker (`docker compose down`, så `docker compose up -d --wait`) var tallene de samme: 2 bedrifter, 62 produkter, 5 016 salgsuker og 2 innstillinger.
+- `window=5` for en bedrift, satt før omstarten, var fortsatt 5 etterpå.
+- `load_seed --reset` med svaret `nullstill` lastet testdataene på nytt, og `window` var tilbake til 3.
+- Et annet svar, «nei», ble avvist uten endringer.
+
+**Ikke testet.** Omstarten på Windows (testmaskinen er bare tilgjengelig 25. november og 7. desember, og Windows-jobben i GitHub Actions har ingen Docker). Omstarten gjentas på siste commit (story 4.4).
+
+## 2026-11-23 – Feil i KI-generert kode og tekst fra byggingen av story 1.7 (DR-9)
+
+**Hvordan det ble funnet.** Claude Code skrev modellene, leseren, kommandoen, testene og dokumentene i story 1.7 med `bmad-build`, uten subagenter. Testene, Ruff og `makemigrations --check` fant tre feil. Deretter gikk byggeøkten selv gjennom diffen med Blind Hunter og fant 10 funn (BH-1 til BH-10): 3 ble rettet, 6 avvist og 1 utsatt som uverifisert.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| `Meta` i modellene brukte lister, som Ruff avviser (RUF012), og `ordering` som tuppel ga en annen modelltilstand enn migrasjonen | Ruff og `test_migrations_match_the_models` | Tupler i `Meta`, og `ordering` er tatt bort, fordi spørringene sorterer på `position` selv. Migrasjonen er laget på nytt | `85308ac` |
+| Regelen som leser grensene i FR-20 fra PRD-en krevde enheten «weeks» eller «%» bak tallene, så raden for glattingsfaktoren («0.1 to 0.9») ga en `KeyError` | `test_the_ranges_are_the_ones_in_the_prd` | Enheten er valgfri | `85308ac` |
+| `schema_version` 1.0 ble godtatt som versjon 1, fordi 1.0 == 1 i Python | Blind Hunter i `bmad-build` (BH-1) | Typen må være `int`, og testen har et tilfelle for 1.0 | `85308ac` |
+| Ingen test leste teksten som `--reset` viser før bekreftelsen, og testen som skulle sjekke at bare kommandoen nevner `--reset`, het noe annet enn den gjorde | Blind Hunter i `bmad-build` (BH-2 og BH-3) | Testen sjekker at teksten nevner selskapene, innstillingene, de justerte mengdene og ordet, og navnet er rettet | `85308ac` |
+
+**Utsatt.** Klonesteget i `windows-setup.yml` kan bare verifiseres av Windows-kjøringen i pull requesten (BH-8), se [Deferred from: code review of spec-1-7](../_bmad-output/implementation-artifacts/deferred-work.md).
+
+**Avvist.** BH-4 til BH-7, BH-9 og BH-10: antall spørringer, grenene i modellene (Story 3.1), hasher som ikke er PBKDF2, at generatoren og leseren sjekker det samme to ganger, meldingen uten input og slettingen som leser radene. De står under «Review Triage Log» i [spesifikasjonen for story 1.7](../_bmad-output/implementation-artifacts/spec-1-7-load-the-seed-data-with-an-explicit-reset.md).
+
+## 2026-11-23 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 1.7 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige KI-granskere i `bmad-code-review` gikk gjennom arbeidstreet til story 1.7 mot `main` (`16d93b7`), før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Diffen var uten spesifikasjonen, som bare Edge Case Hunter og Acceptance Auditor fikk. De fant 46 funn: 7 med middels alvor og 39 med lavt. 20 ble rettet, 2 utsatt, 4 var feil funn og 20 ble avvist. Ingen trengte en beslutning av brukeren.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| En fil som ikke kan leses, ga en melding med hele den lokale stien fra operativsystemets feiltekst. Det bryter regelen om at ingen melding har lokale stier | AA-4 | Feilteksten vises ikke, og en test bruker en mappe med navnet `mappe.json` | `85308ac` |
+| Leseren godtok 200 tegn i passordhashen, men kolonnen tar 128, og tall over 2 147 483 647. Feilen ville kommet som en rå databasefeil midt i lastingen, etter at `--reset` var bekreftet | BH-4, BH-5, EC-1, EC-2 og VG-1 | Grensene leses fra modellene, tallgrensen er med, og en test sjekker verdiene nøyaktig på grensen | `85308ac` |
+| Steget i Windows-jobben godtok hvilken som helst feil med kode 1, også en ødelagt seed-fil | BH-12, EC-13 og VG-3 | Steget krever teksten «Databasen har allerede data» (verifiseres av Windows-kjøringen) | `85308ac` |
+| Meldinger om gjentatte kunde- eller varenumre nevnte ikke filen, og meldingen om ulike sluttuker nevnte ikke produktene | EC-17 og AA-3 | Filene og produktene er nevnt, og testene sjekker teksten | `85308ac` |
+| Kunde- og bedriftsnavn med mellomrom først eller sist ble godtatt, så et kundenummer som « 1001» ikke kunne skrives inn | EC-5 | Avvises | `85308ac` |
+| Testen av at bare kommandoen kjører `--reset`, leste en kort liste filer | BH-10, EC-15 og AA-6 | Alle filer som git sporer, leses, unntatt kommandoen, dokumentene og testene. En `--reset` lagt i `pyproject.toml` ble fanget | `85308ac` |
+| Suksessmeldingen kom før transaksjonen var avsluttet, og meldingene sa «ingenting er endret», selv om nøkkelfila kan være laget | BH-1 og BH-11 | Meldingen skrives etter commit, og tekstene sier «ingen data» | `85308ac` |
+| README nevnte ikke at `docker compose down -v` sletter databasen, og en setning i statustabellen var utdatert | BH-13 | Begge er rettet | `85308ac` |
+| Statustabellen sa «delvis bygd» for FR-4, mens spesifikasjonen sier «bygd» | EC-19 og AA-1 | Står som «bygd» etter omstartssjekken over | `85308ac` |
+
+**Utsatt.**
+- **Story 3.1:** modellen for innstillingene har ingen validering av grensene i FR-20 (BH-6 og EC-10).
+- **Windows:** klonesteget kan bare verifiseres av pull requestens Windows-kjøring.
+
+**Avvist.** 20 funn, og 4 var feil. Blant dem: et valg som hopper over den skrevne bekreftelsen (`--noinput`), at to kjøringer samtidig kan passere sjekken, at databasen ikke er migrert, `OverflowError` for uke 9999, og at `--reset` kan forkortes til `--res`. Alle står under «Review Triage Log» i [spesifikasjonen](../_bmad-output/implementation-artifacts/spec-1-7-load-the-seed-data-with-an-explicit-reset.md).
+
