@@ -21,6 +21,12 @@ Starte story 1.8 («Log in and see only your own company's products») etter pro
 - **Avvik fra rutinen:** CLAUDE.md ber skillen committe loggen lokalt, men brukeren ba om at ingenting committes før status er presentert og godkjent. Loggen, eksporten og dokumentene ligger derfor i den andre commiten (som i story 1.7), ikke i en egen loggcommit.
 - **Eksporten** `.logs/mounia-03/sessions/1-8-2026-11-23.txt` er maskert: stien til den midlertidige mappa ble `<scratchpad>`. Kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler eller tokens. iPhone-testen er ført med iOS 27.0.1.
 
+- **Flettingen:**
+  - Etter brukerens godkjenning ble koden og dokumentene committet (`a078c90` og `5b681c5`), og grenen ble pushet over SSH. PR #22 ble opprettet med en kommentar med alle 35 funnene.
+  - CI-kjøring nr. 38 og Windows-kjøring nr. 15 passerte på `5b681c5`. CI kjørte 313 tester (Docker-testen med) og Ruff, og Windows-jobben kjørte oppsettet uten Docker.
+  - Claude flettet lokalt med `git merge --no-ff` (merge-commit `d147241`, foreldre `7aeb0a7` og `5b681c5`) og pushet `main` over SSH. GitHub viser PR #22 som flettet 23. november kl. 23.00, og CI-kjøring nr. 39 på `main` passerte. Grenen er beholdt.
+  - Story 1.8 står som `done` i sprintstatusen og i spesifikasjonen. Story 2.1 er ikke startet.
+
 ### Åpne punkter
 - Story 4.4: sjekke på nytt på den ekte iPhone 13 at feltene ikke zoomer inn ved inntasting (16 px), som ikke ble bekreftet i story 1.8.
 - Hver senere story med en rute eller liste: legge den til i `ROUTES` i `tests/test_isolation.py`, gi den en eksempeladresse i `tests/test_login.py` hvis den har en parameter, og sette `never_cache` på sider med bedriftsdata. Story 2.7 må også la et oppslag av en annen bedrifts produkt gi samme 404-side.
