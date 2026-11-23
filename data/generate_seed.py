@@ -65,8 +65,8 @@ def stable(number, name, level):
     return made(number, name, level * 3, flat(level))
 
 
-# Each company: its login, a fixed salt of at least 22 letters and digits (128 bits
-# of entropy, which Django's must_update asks of a salt, so a login does not
+# Each company: its login, a fixed salt of at least 22 letters and digits (the
+# length at which Django's must_update accepts a salt, so a login does not
 # rewrite the hash), the products made here, and the products that come from the
 # workbook by the workbook's name: (product number, name).
 COMPANIES = [
@@ -93,7 +93,7 @@ COMPANIES = [
                 20,
                 flat(8),
                 tail="22, 21, 21",
-                patches={6: "21", 5: "22", 4: "21"},
+                patches={6: "21", 5: "22", 4: "21", 3: "22"},
             ),
             written("10040", "Snøskuffe aluminium", 6, "4, 6"),
             made("10001", "Malertape 25 mm", 40, flat(9), tail="9, 9, 10"),
@@ -164,7 +164,7 @@ COMPANIES = [
                 30,
                 flat(8),
                 tail="22, 21, 21",
-                patches={6: "21", 5: "22", 4: "21"},
+                patches={6: "21", 5: "22", 4: "21", 3: "22"},
             ),
             made(
                 "20015",
@@ -277,21 +277,32 @@ def build_companies(workbook=None):
         sys.path.insert(0, str(REFERENCE_DIR))
     import answer_key_reader
 
-    rows = {
-        row["product"]: row
-        for row in answer_key_reader.read_typed(
-            "products", workbook or answer_key_reader.WORKBOOK
+    rows = {}
+    for row in answer_key_reader.read_typed(
+        "products", workbook or answer_key_reader.WORKBOOK
+    ):
+        key = row.get("product")
+        missing = [c for c in ("company", "sales", "stock_on_hand") if c not in row]
+        if key in rows or missing:
+            raise ValueError(
+                f"the workbook's product {key!r} is listed twice"
+                if key in rows
+                else f"the workbook's product {key!r} lacks {', '.join(missing)}"
+            )
+        rows[key] = row
+    placed = {key for c in COMPANIES for key in c["from_workbook"]}
+    if set(rows) != placed:
+        raise ValueError(
+            f"the workbook's products {sorted(set(rows) - placed)} are placed in no "
+            f"company, and {sorted(placed - set(rows))} are not in the workbook"
         )
-    }
     hasher = PBKDF2PasswordHasher()
     companies = []
     for company in COMPANIES:
         latest_monday = monday_of(*company["latest_week"])
         products = []
         for key, (number, name) in company["from_workbook"].items():
-            row = rows.get(key)
-            if row is None:
-                raise ValueError(f"the workbook has no product {key!r}")
+            row = rows[key]
             if row["company"] != company["company"]:
                 raise ValueError(
                     f"the workbook places {key!r} in company {row['company']}, "
@@ -312,6 +323,7 @@ def build_companies(workbook=None):
         companies.append(
             {
                 "file": company["file"],
+                "latest_week": week_label(latest_monday),
                 "data": {
                     "schema_version": SCHEMA_VERSION,
                     "customer_number": company["customer_number"],
@@ -337,14 +349,29 @@ def end_week(product):
 def validate(companies):
     """Raise ValueError for seed data that breaks AD-8 or FR-3's shape."""
     numbers = set()
+    customers = set()
     for company in companies:
         data = company["data"]
         products = data["products"]
         if not 10 <= len(products) <= 50:
             raise ValueError(f"{data['name']} has {len(products)} products, not 10–50")
+        if not data["customer_number"].isdigit():
+            raise ValueError(f"{data['name']}: a bad customer number")
+        if data["customer_number"] in customers:
+            raise ValueError(f"customer number {data['customer_number']} is used twice")
+        customers.add(data["customer_number"])
+        if len({p["name"] for p in products}) != len(products) or not all(
+            p["name"] for p in products
+        ):
+            raise ValueError(f"{data['name']}: a product name is empty or used twice")
+        if any(not p["units_sold"] for p in products):
+            raise ValueError(f"{data['name']}: a product has no weeks")
         ends = {end_week(product) for product in products}
-        if len(ends) != 1:
-            raise ValueError(f"{data['name']}: the products end at {sorted(ends)}")
+        if ends != {company["latest_week"]}:
+            raise ValueError(
+                f"{data['name']}: the products end at {sorted(ends)}, "
+                f"not at {company['latest_week']}"
+            )
         for product in products:
             number = product["product_number"]
             if not re.fullmatch(r"\d{5}", number):
@@ -375,11 +402,14 @@ def dumps(data):
 
 
 def write(companies, output_dir):
+    # Render every file before the first is opened, so a failure leaves no
+    # half-written pair.
+    texts = {company["file"]: dumps(company["data"]) for company in companies}
     output_dir.mkdir(parents=True, exist_ok=True)
     for company in companies:
         path = output_dir / company["file"]
         with path.open("w", encoding="utf-8", newline="\n") as file:
-            file.write(dumps(company["data"]))
+            file.write(texts[company["file"]])
         print(f"Skrev {path.name}: {len(company['data']['products'])} produkter.")
 
 

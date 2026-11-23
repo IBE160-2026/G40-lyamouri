@@ -211,3 +211,20 @@ def mockup_products():
             "quantity": quantity[1],
         }
     return products
+
+
+def mockup_overview():
+    """Return the figures that the mockup's overview states: the number of
+    products, the products to order soon with the units suggested for them,
+    and the products without a forecast."""
+    html = MOCKUP.read_text(encoding="utf-8")
+    text = " ".join(re.sub(r"<[^>]*>", " ", html).split())
+    total = re.search(r"Produktoversikt (\d+) produkter", text)
+    soon = re.search(r"Bestill snart (\d+) produkter · (\d+) enheter foreslått", text)
+    without = re.search(r"Uten prognose (\d+) produkt", text)
+    return {
+        "products": int(total[1]),
+        "order_soon": int(soon[1]),
+        "units": int(soon[2]),
+        "without_forecast": int(without[1]),
+    }

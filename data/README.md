@@ -8,7 +8,7 @@ Denne mappa har generatoren [`generate_seed.py`](generate_seed.py) og dataene de
 uv run python data/generate_seed.py
 ```
 
-Den skriver `seed/testbedrift-a.json` og `seed/testbedrift-b.json`, og gir byte for byte de samme filene hver gang, på macOS, Windows og Linux. Seriene lages med heltallsregning, og tilfeldigheten kommer fra SHA-256 av varenummeret og posisjonen, ikke fra klokka eller en tilfeldighetsgenerator. Testene kjører generatoren på nytt og feiler hvis de innsjekkede filene avviker. Fila `.gitattributes` holder JSON-filene med LF-linjeslutt også på Windows, så de ikke avviker fra utdataene. Endrer du generatoren eller [`reference/reference-examples.xlsx`](../reference/reference-examples.xlsx), kjører du kommandoen og committer filene.
+Den skriver `seed/testbedrift-a.json` og `seed/testbedrift-b.json`, og gir byte for byte de samme filene hver gang. Seriene lages med heltallsregning, og tilfeldigheten kommer fra SHA-256 av varenummeret og posisjonen, ikke fra klokka eller en tilfeldighetsgenerator. Testene kjører generatoren på nytt og feiler hvis de innsjekkede filene avviker. Heltallsregningen og LF-linjeslutten skal gi de samme filene på alle plattformer, men testene er bare kjørt på macOS og på Linux i CI. På Windows er de ikke kjørt, fordi Windows-jobben i GitHub Actions ikke kjører pytest ennå (utsatt i `deferred-work.md`). Fila `.gitattributes` holder JSON-filene med LF-linjeslutt også på Windows, så de ikke avviker fra utdataene. Endrer du generatoren eller [`reference/reference-examples.xlsx`](../reference/reference-examples.xlsx), kjører du kommandoen og committer filene.
 
 Regeltestproduktene og Strøsand 25 kg henter serie og lager fra regnearket, som er fasiten (AD-17). Leseren er [`reference/answer_key_reader.py`](../reference/answer_key_reader.py), den samme som testene bruker. Alle andre produkter lages av generatoren.
 
@@ -101,8 +101,73 @@ Hvert mønster har minst ett produkt. Testene leser denne tabellen og sjekker at
 | 3 til 11 gyldige uker | 10025, 20001, 20020 |
 | 12 til 103 gyldige uker | 10019, 20019, 20021 |
 
+- Lageret som dekker neste uke betyr her at lageret er minst 1,1 ganger snittet av de tre siste gyldige ukene (R-8 med sikkerhetsmargin 10 %), så forslaget er 0.
+- Trend og sesong finnes bare i Testbedrift B. Testbedrift A følger demoproduktene i mockupen (UX-DR46), og mønstrene dekkes i B (SM-7).
 - Trenden i 20011 stiger 0,2 enheter per uke, fra 10 til 31. Metodene i Prognose ser ikke trend, så prognosen ligger etter (E28).
-- Sesongen i 20010 har toppen i uke 26 og bunnen i uke 52, med en indeks fra omtrent 0,5 til 1,6. Det er ingen trend, og de to årene har samme nivå.
+- Sesongen i 20010 har toppen i ISO-uke 27 og bunnen i uke 1, med en indeks fra omtrent 0,5 til 1,6. Det er ingen trend, og de to årene har samme nivå.
 - 20012 har utsolgte uker for lenge siden og i de siste 12 ukene. 20013 har to enkeltstående uvanlige uker i de siste 12 ukene. 20014 og 10004 har et nytt nivå i de siste 12 ukene.
 - 20015 har de 10 siste ukene utsolgt, så siste gyldige uke ligger mer enn 8 uker før siste registrerte uke (R-15, varselet om gamle data).
 - 20018 har 5 uker, der 3 er utsolgte, så den har 2 gyldige uker. 20019 har 12 gyldige uker, grensen mellom «lav» og «middels», og 20020 har 11.
+
+## De øvrige produktene
+
+De stabile produktene har 104 uker med et jevnt salg og støy på opptil 20 %. De har ingen utsolgte eller uvanlige uker, og lageret dekker omtrent tre uker, så de har ingen forslag og ingen varsler. Salg per uke er nivået før støyen.
+
+**Testbedrift A, de 21 stabile produktene:**
+
+| Varenr. | Produkt | Lager | Salg per uke |
+|---|---|---|---|
+| 10020 | Hammer 500 g | 36 | ca. 12 |
+| 10021 | Skrutrekkersett, 6 deler | 90 | ca. 30 |
+| 10022 | Tommestokk 5 m | 27 | ca. 9 |
+| 10023 | Arbeidshansker str. 9 | 75 | ca. 25 |
+| 10024 | Sandpapir korn 120 | 120 | ca. 40 |
+| 10026 | Maling hvit 2,7 l | 42 | ca. 14 |
+| 10027 | Pensel 50 mm | 54 | ca. 18 |
+| 10028 | Trelim 250 ml | 30 | ca. 10 |
+| 10029 | Silikon transparent | 48 | ca. 16 |
+| 10030 | Batteri AA, 4 pk. | 66 | ca. 22 |
+| 10032 | Ledning 3×1,5 mm², per meter | 105 | ca. 35 |
+| 10033 | Skjøteledning 10 m | 180 | ca. 60 |
+| 10034 | Stikkontakt utenpåliggende | 60 | ca. 20 |
+| 10035 | Spiker 50 mm, 1 kg | 135 | ca. 45 |
+| 10036 | Treskrue 5×60 mm, 200 stk. | 150 | ca. 50 |
+| 10037 | Plugg 8 mm, 100 stk. | 84 | ca. 28 |
+| 10038 | Vinkelbeslag 40 mm | 45 | ca. 15 |
+| 10039 | Hengsel 75 mm | 33 | ca. 11 |
+| 10041 | Dørhåndtak børstet stål | 72 | ca. 24 |
+| 10042 | Hengelås 40 mm | 96 | ca. 32 |
+| 10043 | Gaffateip 50 m | 39 | ca. 13 |
+
+**Testbedrift B, mønsterproduktene:**
+
+| Varenr. | Produkt | Lager | Viser |
+|---|---|---|---|
+| 20010 | Grillkull 10 kg | 30 | sesong uten trend, topp om sommeren |
+| 20011 | Hagekalk 20 kg | 20 | kjent trend, stigende |
+| 20012 | Tørrfôr hund 15 kg | 30 | utsolgte uker, også i de siste 12 ukene |
+| 20013 | Blomsterjord 40 l | 40 | to uvanlige uker i de siste 12 ukene |
+| 20014 | Gjerdestolpe 1,8 m | 30 | nytt nivå i de siste 12 ukene |
+| 20015 | Parasoll 2 m | 0 | de 10 siste ukene utsolgt (gamle data) |
+| 20016 | Stearinlys, 10 pk. | 100 | lager som dekker neste uke, «høy» |
+| 20017 | Slangekobling messing | 5 | stabil historikk for «høy», lavt lager |
+| 20018 | Solcellelykt | 12 | 5 uker, 2 gyldige uker (ingen prognose) |
+| 20019 | Kattemat 2 kg | 20 | 12 uker, grensen for «lav» |
+| 20020 | Fuglefrø 5 kg | 20 | 11 uker, under grensen for «lav» |
+| 20021 | Hagestol, sammenleggbar | 15 | 60 uker (kortere enn 104) |
+
+**Testbedrift B, de 11 stabile produktene:**
+
+| Varenr. | Produkt | Lager | Salg per uke |
+|---|---|---|---|
+| 20022 | Plantegjødsel flytende 1 l | 36 | ca. 12 |
+| 20023 | Såjord 10 l | 60 | ca. 20 |
+| 20024 | Rive stål | 27 | ca. 9 |
+| 20025 | Spade | 30 | ca. 10 |
+| 20026 | Gressfrø 1 kg | 54 | ca. 18 |
+| 20027 | Ugressduk 10 m | 33 | ca. 11 |
+| 20028 | Plastsekk 120 l, 10 pk. | 75 | ca. 25 |
+| 20029 | Lyslenke utendørs | 48 | ca. 16 |
+| 20030 | Fuglehus tre | 27 | ca. 9 |
+| 20031 | Plantestøtte bambus | 90 | ca. 30 |
+| 20032 | Vanningskobling | 66 | ca. 22 |

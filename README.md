@@ -47,7 +47,7 @@ Er en `DATABASE_URL` eksportert i terminalen, for eksempel for et annet prosjekt
 
 ## Testbedrifter
 
-Prognose har to syntetiske testbedrifter, uten virkelige data. Dataene lages av en generator som gir de samme filene hver gang, og ligger i [`data/seed/`](data/seed/). [`data/README.md`](data/README.md) forklarer skjemaet, produktene og mønstrene. Filene har bare passordhasher, så passordene står her:
+Prognose har to syntetiske testbedrifter, uten virkelige data. Dataene lages av en generator som gir de samme filene hver gang, og ligger i [`data/seed/`](data/seed/). [`data/README.md`](data/README.md) forklarer skjemaet, produktene og mønstrene. Filene har bare passordhasher, så passordene står her. De gjelder bare for disse testdataene på din egen maskin, og skal ikke brukes noe annet sted:
 
 | Bedrift | Kundenummer | Passord |
 |---|---|---|
