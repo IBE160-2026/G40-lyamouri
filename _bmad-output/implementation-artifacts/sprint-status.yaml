@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 11-19-2026 20:56
-last_updated: 11-23-2026 19:30
+last_updated: 11-23-2026 21:30
 project: G40-lyamouri
 project_key: NOKEY
 tracking_system: file-system
@@ -43,7 +43,7 @@ development_status:
   1-5-reference-spreadsheet-as-the-answer-key: done
   1-6-generate-the-synthetic-seed-data: done
   1-7-load-the-seed-data-into-an-empty-database-with-an-explicit-r: done
-  1-8-log-in-and-see-only-your-own-company-s-products: backlog
+  1-8-log-in-and-see-only-your-own-company-s-products: review
   epic-1-retrospective: optional
 
   epic-2: backlog

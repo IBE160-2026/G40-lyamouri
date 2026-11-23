@@ -735,6 +735,20 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 1.7 er flettet inn i `main` (`10b048a`), og story 1.8 er ikke startet. Åpne punkter for story 3.1 og 4.4 står i `issues.md`.
 
+### 23. november 2026 – Story 1.8: innlogging og isolasjon mellom bedriftene
+
+* Startet story 1.8 med `bmad-build` etter prosjektreglene, BMAD og sensorveiledningen. `main` var ren og synkronisert med `origin/main` (`7aeb0a7`), og CI på `main` var grønn. Claude leste bare sprintplanen, storyen i `epics.md`, de relevante punktene i `issues.md` (linje 87, 96, 109 til 111 og 124), forrige story og koden storyen bygger på, og laget grenen `story/1-8-log-in-and-see-only-your-own-companys-products`.
+* Claude skrev spesifikasjonen. Brukeren valgte en hvit fokusring i toppfeltet og godkjente den. Claude valgte selv å ikke bygge en advarsel for manglende `.secret_key`, og at feilsidene bare har ordmerket.
+* Claude bygde innloggingen, utloggingen med POST, `LoginRequiredMiddleware`, `web/queries.py`, produktlisten, toppfeltet og `forecasting/display.py`, og skrev testene med to kontoer og CSRF-sjekken på. 15 mutasjoner ble alle fanget.
+* Kjørte BMAD Code Review med fire uavhengige KI-granskere på arbeidstreet før noe var committet: 35 funn, 19 rettet, 13 avvist og 3 feil, og ingen trengte en beslutning ([tilfelle 37](ki-styringslogg.md#37-utlogging-csrf-og-tilgangen-mellom-bedriftene-i-story-18-23-november-2026)). Blant de rettede: en CSRF-feil fra en utlogget besøkende ga 403, innloggede sider kunne bli stående i historikken, og skanningen etter direkte tilgang til bedriftsdata kunne omgås. 308 tester og Ruff passerte etterpå.
+* Brukeren testet i Safari og fant to feil: Tilbake etter utlogging viste oversikten (Safaris tilbake-hurtigbuffer, som `no-store` ikke stopper), og et gammelt innloggingsskjema ga «Skjemaet er utløpt» (innloggingen bytter CSRF-token). Claude fant årsakene med curl, rettet CSRF-visningen og la fram valget om en `app.js`, siden den krever en endring i AD-11. Brukeren valgte scriptet, og AD-11 ble utvidet med en rad i endringsloggene ([QA-loggen](qa-logg.md#2026-11-23--funn-i-safari-testen-av-story-18-fr-1-nfr-10-dr-9)). 312 tester og Ruff passerer.
+* Brukeren gjennomførte retesten i Safari ved 320, 390 og 820 px og på den ekte iPhone 13 over lokalnettet: alt bestått, bortsett fra at automatisk zoom ved inntasting ikke er sikkert bekreftet ([QA-loggen](qa-logg.md#2026-11-23--manuelle-tester-av-innlogging-og-isolasjon-story-18-fr-1-fr-2-nfr-6-nfr-10-sm-4)). Personvernskanningen av de 32 filene fant ingenting.
+
+* Brukeren oppga iOS 27.0.1 for iPhone-testen, bekreftet at `PROGNOSE_LAN_HOST` bare var satt på startkommandoen og at serveren var stoppet med Ctrl+C, og eksporterte økta. Claude maskerte eksporten (stien til den midlertidige mappa ble `<scratchpad>`), og kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler eller tokens.
+* Brukeren godkjente commit, SSH-push, PR og fletting. Koden, testene, README og planleggingsdokumentene ligger i `a078c90`. Hashen er fylt inn i endringsloggene og i QA- og KI-loggene.
+
+**Status:** Story 1.8 står som `review` i sprintstatusen. Fletting venter på grønn CI og Windows-kjøring på siste commit. Story 1.9 er fjernet fra planen, og story 2.1 er ikke startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
