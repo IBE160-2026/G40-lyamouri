@@ -2,7 +2,7 @@
 
 [`reference-examples.xlsx`](reference-examples.xlsx) er fasiten for Prognose (DR-3, AD-17). Testene leser inndata og forventede verdier herfra med openpyxl, så ingen forventet verdi står i testkoden. Fra story 1.6 leser seed-generatoren også seriene og lagerbeholdningen til regeltestproduktene herfra (AD-15). Sensor kan sammenligne tallene på skjermen med det samme regnearket.
 
-Denne fila beskriver arkene, kolonnene og notasjonen. [`tests/answer_key.py`](../tests/answer_key.py) leser regnearket slik det står her, og [`tests/test_reference_spreadsheet.py`](../tests/test_reference_spreadsheet.py) feiler hvis et tilfelle, en forventet verdi eller en kontroll mangler eller er feil.
+Denne fila beskriver arkene, kolonnene og notasjonen. [`tests/answer_key.py`](../tests/answer_key.py) leser regnearket slik det står her. [`tests/test_reference_spreadsheet.py`](../tests/test_reference_spreadsheet.py) feiler hvis et tilfelle, en variant, et produkt, en forventet verdi eller en kontroll mangler eller er feil. Testene sammenligner også seriene og innstillingene med PRD §5.7, Strøsand 25 kg med mockupen og tallene i kontrollformlene med inndataene.
 
 ## Arkene
 
@@ -14,7 +14,7 @@ Denne fila beskriver arkene, kolonnene og notasjonen. [`tests/answer_key.py`](..
 | `checks` | Kontrollen: hver forventet verdi regnet ut på nytt med en synlig formel. |
 | `check_log` | Når kontrollen ble gjort, av hvem, hva den dekket, hvordan og med hvilket resultat. |
 
-Rad 1 i hvert ark har kolonnenavnene. `cases` og `products` inneholder bare verdier og ingen formler, fordi openpyxl ikke regner ut formler. Leseren stopper hvis den finner en formel der.
+Rad 1 i `cases`, `products`, `checks` og `check_log` har kolonnenavnene. I `checks` står også sammendraget i J1:K3, og `about` begynner med en tittel. `cases` og `products` inneholder bare verdier og ingen formler, fordi openpyxl ikke regner ut formler. Leseren stopper hvis den finner en formel noe sted i de to arkene.
 
 ## Tilfellene
 
@@ -32,6 +32,7 @@ Rad 1 i hvert ark har kolonnenavnene. `cases` og `products` inneholder bare verd
   - E29 f: 50 uker med 10, 3 utsolgte uker og 51 uker med 10.
   - E29 g: 50 uker med 10, 5 utsolgte uker og 49 uker med 10.
 - E30 har 8 gyldige uker, så R-16 gir «lav» både med og uten varselet om sesongmønster. Brukeren bestemte 22. november 2026 å beholde E30 slik PRD-en har det og flytte spørsmålet om et eksempel som viser varselets virkning på tillitsmerket, til story 5.2.
+- E12 sa «8 weeks: no warning», men uke 97–104 er utsolgte uker i de siste 12 ukene, så varselet om utsolgte uker er aktivt. PRD-en ble rettet til «no old-data warning» 23. november 2026 etter BMAD Code Review, med en rad i PRD §12.
 
 ## Salgsserien
 
@@ -59,7 +60,7 @@ Hver rad i `cases` har alle innstillingene, også når de er standardverdiene i 
 
 - **Tomt felt:** tilfellet sier ingenting om verdien, og testene sjekker den ikke.
 - **«none»:** forventet fravær, for eksempel ingen prognose, ingen uker dekning, ingen uker i lista eller ingen varsler.
-- **Tall:** tallceller med presisjonen i PRD §5.7, for eksempel 14.333. Et beregnet tall stemmer når det avviker med mindre enn 0,0005.
+- **Tall:** tallceller med presisjonen i PRD §5.7, for eksempel 14.333. Et beregnet tall stemmer når det avviker med mindre enn 0,0005. En ny verdi føres derfor med så mange desimaler at den ligger innenfor 0,0005 av den eksakte verdien, for eksempel 0.0675 og ikke 0.068. En tallcelle viser ikke nuller til slutt, så 12.900 i PRD-en står som 12.9.
 - **Visningstekst:** kolonnene som slutter på `_shown`, er tekst med desimalkomma, for eksempel «14,3» og «–», og sammenlignes eksakt.
 - **Lister:** verdiene er skilt med komma, for eksempel «4, 5» for posisjoner og «12, 12.9, 12.33» for tall, med desimalpunktum som i PRD-en.
 - **Flagg:** «yes» eller «no».
@@ -110,16 +111,34 @@ Hvert produkt bruker standardinnstillingene i FR-20, slik de er etter `load_seed
 
 ## Kontrollen
 
-- `checks` har én rad per kontrollert verdi: `sheet` og `key` peker på tilfellet eller produktet, `value` er kolonnen, og `item` er plassen i en liste, en uke, et varsel eller «other» (de andre ukene). `recorded` er verdien i fasiten, `recalculated` er en synlig formel som regner den ut på nytt, og `match` viser om de stemmer. For visningstekst står tallet i `recorded`, for eksempel 14.3 for «14,3», og for en uke eller et varsel står det om uka eller varselet er med i fasiten (`TRUE` eller `FALSE`).
-- Rader uten `recorded` er mellomregninger, for eksempel `r10_flag`: om R-10 flagger en uke. Formlene viser hvilke uker regelen sammenligner med, og en annen rad kan vise til resultatet.
-- Sammendraget står til høyre i arket: antall kontroller som stemmer, antall kontroller og om alle stemmer. Formlene har engelske funksjonsnavn i fila, og Excel viser dem på språket til programmet, for eksempel AVRUND for ROUND i norsk Excel.
-- Kontrollen ble gjort slik (se `check_log`):
-  1. Claude Code regnet ut hvert tilfelle på nytt med et uavhengig skript for R-1 til R-17, og regnet ut formlene i `checks` med avrundingen i Excel. Skriptet er ikke committet, fordi regnearket er den eneste fasiten. Ingen verdi avvek fra PRD §5.7.
+- `checks` har én rad per kontrollert verdi:
+  - `sheet` og `key` peker på tilfellet eller produktet, og `value` er kolonnen.
+  - `item` er plassen i en liste, en uke, et varsel, en periode med nytt nivå som «4, 5, 6», eller «other» for de andre ukene.
+  - `recorded` er verdien i fasiten. For visningstekst står tallet, for eksempel 14.3 for «14,3». For en uke, en periode eller et varsel står det om den er med i fasiten (`TRUE` eller `FALSE`).
+  - `recalculated` er en synlig formel som regner verdien ut på nytt, og `match` viser om de stemmer: `=E5=F5` for tekst, flagg og heltall, og `=ABS(E5-F5)<0.0005` for desimaltall.
+  - `note` forklarer formelen, for eksempel hvilke uker R-10 sammenligner med.
+- Rader uten `recorded` og `match` er mellomregninger. `r10_flag` viser om R-10 flagger en uke. I en lang serie står bare de flaggede ukene, og én rad viser at ingen av de andre ukene kan flagges.
+- R-11 avgjøres i formler med én gjennomgang:
+  - En periode med nytt nivå avgjøres i sin tredje uke, når uka er flagget og de to foregående gyldige ukene er uvanlige.
+  - En flagget uke forblir uvanlig med mindre de to foregående gyldige ukene er det.
+  - Hver liste med uker har en rad «other», som viser at ingen annen uke er uvanlig eller hører til et nytt nivå.
+  - Varslene om uvanlige uker og nytt nivå viser til disse radene.
+- Sammendraget står til høyre i arket: antall kontroller som stemmer (K1), antall kontroller (K2) og om alle stemmer (K3). Formlene har engelske funksjonsnavn i fila, og Excel viser dem på språket til programmet, for eksempel AVRUND for ROUND i norsk Excel.
+- `check_log` har én rad per kontroll. Kolonnene er:
+  - `date`: datoen som ISO-tekst, for eksempel «2026-11-23»;
+  - `checked_by`: hvem som kontrollerte;
+  - `scope`: hva kontrollen dekket;
+  - `method`: hvordan kontrollen ble gjort;
+  - `result`: resultatet. Den siste raden må si «N of N checks match», med N som antall kontroller i `checks`, og testene sjekker det.
+- Kontrollene i `check_log`:
+  1. Claude Code regnet ut hvert tilfelle på nytt med et uavhengig skript for R-1 til R-17. Formlene i `checks` ble regnet ut med avrundingen i Excel. Skriptet er ikke committet, fordi regnearket er den eneste fasiten. Ingen verdi avvek fra PRD §5.7.
   2. Brukeren Mounia-03 åpnet regnearket i Excel for Mac 16.78 23. november 2026 og lukket det uten å lagre. Excel regnet ut formlene selv, og sammendraget viste at alle 376 kontrollene stemmer.
+  3. Etter BMAD Code Review ble `checks` utvidet med radene «other» og formlene for R-11. Claude Code regnet ut alle 401 kontrollene på nytt på samme måte, og ingen verdi avvek fra PRD §5.7.
+  4. Mounia-03 åpnet den nye versjonen i Excel for Mac 16.78 samme dag og lukket den uten å lagre. Sammendraget viste at alle 401 kontrollene stemmer.
 
 ## Slik endres regnearket
 
 - Ikke lagre regnearket i Excel. Excel skriver den lokale stien (`absPath`) og brukernavnet inn i fila, og testen for NFR-4 feiler da. Endre regnearket med openpyxl fra et skript, og hold `cases` og `products` fri for formler.
 - Legg nye rader i `checks` til slutt i arket, og ikke sett inn eller slett rader midt i det. openpyxl flytter ikke referansene i formlene slik Excel gjør, så en formel ville da vist til feil rad.
-- Etter en endring oppdateres de tilhørende radene i `checks`. Testene regner ikke ut formlene, så regnearket åpnes i Excel eller Numbers uten å lagre, og sammendraget i `checks` skal vise at alle kontrollene stemmer. Deretter får `check_log` en ny rad med dato, hvem, hva kontrollen dekket, metoden og resultatet, og `uv run pytest` skal passere.
+- Etter en endring oppdateres de tilhørende radene i `checks`. Testene regner ikke ut formlene, så regnearket åpnes i Excel eller Numbers uten å lagre, og sammendraget i `checks` skal vise at alle kontrollene stemmer. Deretter får `check_log` en ny rad med dato, hvem, hva kontrollen dekket, metoden og resultatet («N of N checks match»), og `uv run pytest` skal passere.
 - En forventet verdi som avviker fra PRD §5.7, regnes ut på nytt for hånd. Den siden som var feil, rettes, og en retting i PRD-en får en rad i PRD §12. Funnet føres i [QA-loggen](../docs/qa-logg.md) (AD-17, DR-9).
