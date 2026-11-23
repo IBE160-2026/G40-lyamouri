@@ -318,7 +318,7 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Triage Log» og «Review Findings» i [spesifikasjonen for story 1.4](../_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md); kommentaren i PR #14; [sesjonsloggen for story 1.4](../.logs/mounia-03/980-2026-11-22-19-51-47-story-1-4-app-skall-og-feilsider.md).
 - **QA-loggen:** [feilene fra byggingen og reviewene av story 1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-byggingen-og-reviewene-av-story-14-dr-9).
 
-**Story 1.5.** Story 1.5 ga tilfelle 33. Ellers godtok brukeren hver anbefaling fra Claude i øktene 22. og 23. november 2026. Feilene som byggingen fant i KI-generert kode, står i QA-loggen, under [byggingen av story 1.5](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-15-dr-9).
+**Story 1.5.** Story 1.5 ga tilfelle 33 og 34. Ellers godtok brukeren hver anbefaling fra Claude i øktene 22. og 23. november 2026. Feilene som byggingen og reviewene fant i KI-generert kode og tekst, står i QA-loggen, under [byggingen](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-15-dr-9) og [BMAD Code Review](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-15-dr-9).
 
 ### 33. E30 og tillitsmerket (22. november 2026)
 
@@ -327,5 +327,25 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Hva gruppen bestemte:** Da story 1.5 ble planlagt, ga Claude tre valg og anbefalte å utsette. Brukeren valgte å beholde E30 slik PRD-en har det, føre «lav» i regnearket og flytte spørsmålet til story 5.2, som bygger FR-36. Forslaget om et nytt eksempel ble ikke fulgt nå, fordi FR-36 er bør-ha, og et nytt eksempel ville endret PRD-en.
 - **Commit eller pull request:** `0ae5920`.
 - **Kilde:** «Boundaries & Constraints» i [spesifikasjonen for story 1.5](../_bmad-output/implementation-artifacts/spec-1-5-reference-spreadsheet-as-the-answer-key.md); [`reference/README.md`](../reference/README.md).
+
+### 34. Beslutningene i BMAD Code Review av story 1.5 (23. november 2026)
+
+- **Hva KI foreslo:** Claude skrev regnearket, kontrollformlene, leseren og testene for story 1.5. Fire KI-granskere i `bmad-code-review` fant 61 funn, og Claude foreslo en vurdering og en beslutning for hvert av dem, med tre valg som bare brukeren kunne ta.
+- **Hva som var feil:**
+  - Testene sammenlignet ikke inndataene med PRD-en.
+  - Kontrollen av R-10 og R-11 var ikke så fullstendig som spesifikasjonen krever.
+  - Flere tester kunne passere uten å sjekke noe.
+  - PRD-en sa «no warning» for E12, der varselet om utsolgte uker må være aktivt.
+  - Ikke alle funnene skulle følges: 5 ble avvist og 2 utsatt.
+- **Hva gruppen bestemte:** Brukeren valgte:
+  - nye tester for inndataene, i stedet for formler som leser cellene;
+  - å rette E12 i PRD-en, med en rad i §12;
+  - å beholde toleransen på 0,0005, med en merknad om hvor mange desimaler en verdi føres med;
+  - å gjøre alle de 21 rettingene.
+
+  Brukeren kontrollerte deretter den nye arbeidsboka i Excel.
+- **Commit eller pull request:** `dd4a269` og PR #16.
+- **Kilde:** «Review Findings» i [spesifikasjonen for story 1.5](../_bmad-output/implementation-artifacts/spec-1-5-reference-spreadsheet-as-the-answer-key.md); kommentaren i PR #16.
+- **QA-loggen:** [feilene fra BMAD Code Review av story 1.5](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-15-dr-9).
 
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).

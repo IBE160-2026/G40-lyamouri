@@ -671,6 +671,17 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Claude skrev leseren `tests/answer_key.py` og 10 nye tester i `tests/test_reference_spreadsheet.py`. Testene leser listen over eksemplene og FR-21-tabellen fra PRD-en. 21 feil som ble lagt inn i regnearket og PRD-en én om gangen, ble alle fanget, og 142 tester og Ruff passerte.
 * Reviewen i `bmad-build` (Blind Hunter) ga 13 funn: 4 ble rettet i `reference/README.md` og testen, og 9 ble avvist. Ett av dem, grensene for innstillingene i FR-20, er et åpent punkt for story 1.7.
 * Kontrollerte regnearket i Excel for Mac 16.78 (23100802): sammendraget i `checks` viste at alle 376 kontrollene stemmer (K1 = 376, K2 = 376, K3 = SANN). Lukket regnearket uten å lagre, og kontrollen står i `check_log`.
+* Godkjente commit, push og PR #16 (`0ae5920` og `99b73bc`), men ikke flettingen. CI-kjøring nr. 21 passerte på `99b73bc`.
+* Kjørte BMAD Code Review med fire KI-granskere: 61 funn, samlet i 3 beslutninger, 21 rettinger, 2 utsatte punkter og 5 avviste funn. Bestemte:
+  * nye tester for inndataene, i stedet for formler som leser cellene;
+  * å rette E12 i PRD §5.7 til «no old-data warning», med en rad i §12, fordi varselet om utsolgte uker må være aktivt der;
+  * å beholde toleransen på 0,0005;
+  * å gjøre alle rettingene.
+* Claude rettet testene, leseren og arket `checks` med radene «other» og formlene for R-11, og skrev arbeidsboka på nytt. Alle 401 kontrollene stemmer i den uavhengige utregningen. 50 feil som ble lagt inn én om gangen, ble alle fanget, og 151 tester og Ruff passerte.
+* Kontrollerte den nye arbeidsboka i Excel for Mac 16.78: K1 = 401, K2 = 401 og K3 = SANN. Lukket den uten å lagre, og kontrollen står i `check_log`.
+* Godkjente to commits, én med rettingene (`dd4a269`) og én med dokumentene, push og en kommentar i PR #16 med alle funnene og beslutningene, men ikke flettingen.
+
+**Status:** Story 1.5 er i review. Flettingen av PR #16 venter på brukerens godkjenning, etter eksporten av økten og sesjonsloggen. De åpne punktene for story 1.6, 1.7, 5.1 og 5.2 føres i `issues.md` med sesjonsloggen.
 
 ## 4. Videre dokumentasjon
 
