@@ -747,7 +747,15 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Brukeren oppga iOS 27.0.1 for iPhone-testen, bekreftet at `PROGNOSE_LAN_HOST` bare var satt på startkommandoen og at serveren var stoppet med Ctrl+C, og eksporterte økta. Claude maskerte eksporten (stien til den midlertidige mappa ble `<scratchpad>`), og kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler eller tokens.
 * Brukeren godkjente commit, SSH-push, PR og fletting. Koden, testene, README og planleggingsdokumentene ligger i `a078c90`. Hashen er fylt inn i endringsloggene og i QA- og KI-loggene.
 
-**Status:** Story 1.8 står som `review` i sprintstatusen. Fletting venter på grønn CI og Windows-kjøring på siste commit. Story 1.9 er fjernet fra planen, og story 2.1 er ikke startet.
+* Pushet grenen over SSH og opprettet PR #22 med en kommentar med alle 35 funnene og beslutningene (`a078c90` er rettings-commiten). CI-kjøring nr. 38 og Windows-kjøring nr. 15 passerte på siste commit `5b681c5`. CI kjørte 313 tester, med Docker-testen, og Ruff. Windows-jobben (Windows Server 2025 x64, uten Docker) kjørte oppsettet, og klonesteget fikk meldingen «Databasen har allerede data». Innloggingen på Windows testes på PC-en 25. november (story 1.3).
+* Godkjente flettingen av PR #22. Claude flettet lokalt med `git merge --no-ff`, uten squash eller rebase, og med noreply-adressen som forfatter:
+  * merge-commiten `d147241` har den gamle `main` (`7aeb0a7`) og PR-hodet (`5b681c5`) som foreldre;
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * `main` ble pushet over SSH, og GitHub viser PR #22 som flettet 23. november kl. 23.00, med `d147241` som merge-commit;
+  * CI-kjøring nr. 39 på `main` passerte;
+  * grenen `story/1-8-log-in-and-see-only-your-own-companys-products` er beholdt.
+
+**Status:** Story 1.8 er flettet inn i `main` (`d147241`), og milepæl M1 er nådd bortsett fra story 1.3, som kjører 25. november. Story 1.9 er fjernet fra planen, og story 2.1 er ikke startet. Åpne punkter for story 2.3, 2.7 og 4.4 står i `issues.md`.
 
 ## 4. Videre dokumentasjon
 
