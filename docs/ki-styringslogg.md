@@ -318,4 +318,14 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Triage Log» og «Review Findings» i [spesifikasjonen for story 1.4](../_bmad-output/implementation-artifacts/spec-1-4-norwegian-app-shell-and-error-pages.md); kommentaren i PR #14; [sesjonsloggen for story 1.4](../.logs/mounia-03/980-2026-11-22-19-51-47-story-1-4-app-skall-og-feilsider.md).
 - **QA-loggen:** [feilene fra byggingen og reviewene av story 1.4](qa-logg.md#2026-11-22--feil-i-ki-generert-kode-og-tekst-fra-byggingen-og-reviewene-av-story-14-dr-9).
 
+**Story 1.5.** Story 1.5 ga tilfelle 33. Ellers godtok brukeren hver anbefaling fra Claude i øktene 22. og 23. november 2026. Feilene som byggingen fant i KI-generert kode, står i QA-loggen, under [byggingen av story 1.5](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-15-dr-9).
+
+### 33. E30 og tillitsmerket (22. november 2026)
+
+- **Hva KI foreslo:** KI-gjennomgangen av PRD-en mot vurderingskriteriene 15. november fant at E30 ikke kan vise at varselet om sesongmønster (FR-36) påvirker tillitsmerket. Den foreslo et nytt eksempel i stil med E29: 104 uker med sesongmønster, «middels» uten og «høy» med sesongjustering ([`review-rubric-2026-11-15.md`](../_bmad-output/planning-artifacts/prds/prd-G40-lyamouri-2026-11-02/review-rubric-2026-11-15.md), linje 101). Funnet sto som et åpent punkt som skulle avgjøres før referanseregnearket ble laget.
+- **Hva som var feil:** E30 bruker dataene i E14, som har 8 gyldige uker, så R-16 gir «lav» både med og uten varselet. E30 kan derfor ikke vise det FR-36 lover.
+- **Hva gruppen bestemte:** Da story 1.5 ble planlagt, ga Claude tre valg og anbefalte å utsette. Brukeren valgte å beholde E30 slik PRD-en har det, føre «lav» i regnearket og flytte spørsmålet til story 5.2, som bygger FR-36. Forslaget om et nytt eksempel ble ikke fulgt nå, fordi FR-36 er bør-ha, og et nytt eksempel ville endret PRD-en.
+- **Commit eller pull request:** `0ae5920`.
+- **Kilde:** «Boundaries & Constraints» i [spesifikasjonen for story 1.5](../_bmad-output/implementation-artifacts/spec-1-5-reference-spreadsheet-as-the-answer-key.md); [`reference/README.md`](../reference/README.md).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).

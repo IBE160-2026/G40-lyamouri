@@ -704,3 +704,42 @@ Safari ba også selv om `/apple-touch-icon.png` og `/apple-touch-icon-precompose
 **Åpne punkter.** De åpne punktene som denne oppføringen viser til, står i `issues.md` fra [sesjonsloggen for story 1.4](../.logs/mounia-03/980-2026-11-22-19-51-47-story-1-4-app-skall-og-feilsider.md), og den maskerte eksporten av økten ligger i `.logs/mounia-03/sessions/1-4-2026-11-22.txt` (BH-11, AA-2).
 
 **KI-styringsloggen:** [tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-ytterste-mellomvaren-22-november-2026).
+
+## 2026-11-23 – Kontrollen av referanseregnearket (Story 1.5; DR-3, AD-17, DR-9)
+
+**Hvorfor.** Story 1.5 krever at hvert forventet resultat i referanseregnearket regnes ut på nytt, for hånd eller med synlige formler, og at regnearket fører kontrollen med dato. Et avvik fra PRD §5.7 skal regnes ut på nytt for hånd, og den siden som var feil, skal rettes og føres her (AD-17, DR-9).
+
+**Oppsett.**
+- Claude Code tastet inn de forventede verdiene fra PRD §5.7 og regnet ut FR-21-variantene og regeltestproduktene for hånd. Regnearket [`reference/reference-examples.xlsx`](../reference/reference-examples.xlsx) ble skrevet med openpyxl fra et skript i den midlertidige mappa. Skriptet er ikke committet, fordi regnearket er den eneste fasiten (AD-17).
+- Det samme skriptet regnet ut hvert tilfelle og hvert produkt på nytt med en egen utregning av R-1 til R-17, uavhengig av verdiene fra PRD-en. Det regnet også ut de 376 kontrollformlene i arket `checks` med avrundingen i Excel.
+- Skriptet sjekket at Strøsand 25 kg får de utsolgte ukene 38 og 39 og den uvanlige uka 42 når siste registrerte uke er uke 45 i 2026, som i mockupen.
+- Brukeren åpnet regnearket i Excel for Mac 16.78 (23100802) 23. november 2026, leste sammendraget i arket `checks` (cellene K1 til K3) og lukket det uten å lagre. Excel regnet da ut alle formlene selv. Kontrollen står i arket `check_log`.
+
+**Resultat.**
+
+| Kontroll | Resultat |
+|---|---|
+| Verdiene fra PRD §5.7 mot den uavhengige utregningen | ingen avvik i de 52 tilfellene |
+| FR-21-variantene og regeltestproduktene mot den uavhengige utregningen | ingen avvik |
+| Kontrollformlene i `checks`, regnet ut med avrundingen i Excel | 376 av 376 stemmer |
+| Brukerens kontroll i Excel for Mac 16.78 | K1 = 376 kontroller som stemmer, K2 = 376 kontroller, K3 = SANN |
+| 21 feil lagt inn i regnearket og PRD-en, én om gangen | testene fanget alle |
+
+Etter kontrollen ble regnearket skrevet på nytt med brukerens rad i `check_log`. De andre arkene er identiske med versjonen brukeren kontrollerte. Regnearket, leseren og testene er committet i `0ae5920`.
+
+**Funn som ikke er en feil.** R-17 (bør-ha) gir Strøsand 25 kg indeksen 1,5735 for ukenummer 42 på grunn av den uvanlige uka. Når FR-36 bygges, får produktet derfor et varsel om sesongmønster som mockupen ikke viser. Story 5.2 avgjør det (`issues.md`).
+
+## 2026-11-23 – Feil i KI-generert kode og tekst fra byggingen av story 1.5 (DR-9)
+
+**Hvordan det ble funnet.** Claude Code skrev regnearket, kontrollformlene, leseren og testene i story 1.5 med `bmad-build`. Skriptet som skrev regnearket, sammenlignet hver kontrollformel med verdien i fasiten før fila ble skrevet. Deretter gikk byggeøkten selv gjennom diffen med Blind Hunter, uten subagenter, og fant 13 funn (BH-1 til BH-13): 4 ble rettet i 3 punkter og 9 avvist.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Kontrollformlene for varslene om utsolgte uker, uvanlige uker og nytt nivå de siste 12 ukene sammenlignet den siste slike uka med «N − 12». Var historikken kortere enn 12 uker og produktet hadde ingen slik uke, ble formelen sann, og 33 kontroller ga feil svar | Sammenligningen i skriptet, før regnearket ble skrevet | Formlene sammenligner med den første uka i perioden, `MAX(1; N − 11)`, og alle 376 kontrollene stemmer | `0ae5920` |
+| `reference/README.md` sa ikke at openpyxl ikke flytter referansene i formlene når rader settes inn eller slettes, og at testene ikke regner ut formlene. En senere endring kunne dermed gitt formler som viser til feil rad, uten at noen test feilet | Blind Hunter i `bmad-build` (BH-1) | README-en sier at nye rader legges til slutt i `checks`, og at sammendraget leses i Excel eller Numbers etter hver endring | `0ae5920` |
+| README-en forklarte ikke hva `recorded` er for visningstekst og for uker og varsler, og sa uten å ha sjekket det at Numbers viser funksjonsnavnene på programmets språk | Blind Hunter i `bmad-build` (BH-6, BH-13) | README-en forklarer begge, og setningen nevner bare Excel | `0ae5920` |
+| Testen for lokale stier så ikke etter `/home/` | Blind Hunter i `bmad-build` (BH-4) | `/home/` er med i mønsteret | `0ae5920` |
+
+**Avvist.** Blind Hunter fant 13 funn, og 9 ble avvist. Testene regner ikke ut formlene, men skriptet regnet dem ut før fila ble skrevet, og kontrollen i Excel leser resultatet (BH-2). Grensene for innstillingene i FR-20 defineres én gang i `forecasting/settings.py` i story 1.7, og testen bør sjekke dem derfra (BH-3, et åpent punkt for story 1.7). De andre er feil, høylytte feil som stopper testene, eller ord som beskriver tilstanden da kontrollen ble gjort (BH-5, BH-7 til BH-12). Alle står under «Review Triage Log» i [spesifikasjonen for story 1.5](../_bmad-output/implementation-artifacts/spec-1-5-reference-spreadsheet-as-the-answer-key.md).

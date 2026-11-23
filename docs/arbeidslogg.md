@@ -662,6 +662,16 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 1.4 er flettet inn i `main` (`c5bd9cc`), og de åpne punktene står i `issues.md`. Neste story følger rekkefølgen i sprintplanen, og story 1.5 er ikke startet.
 
+### 22.–23. november 2026 – Story 1.5: referanseregnearket som fasit
+
+* Startet story 1.5 med `bmad-build` på grenen `story/1-5-reference-spreadsheet-as-the-answer-key`, laget fra `main` (`da87fd7`). Epic-1-konteksten var formelt utdatert av samme grunn som i story 1.4, så Claude brukte den som den var. Subagenter brukes bare til gjennomgangene.
+* Bestemte at E30 står som i PRD-en, at regnearket fører «lav», og at spørsmålet om et eksempel som viser hvordan varselet om sesongmønster påvirker tillitsmerket, flyttes til story 5.2 ([tilfelle 33](ki-styringslogg.md#33-e30-og-tillitsmerket-22-november-2026)). Godkjente spesifikasjonen, også størrelsen på om lag 2 700 tokens.
+* Claude lagde `reference/reference-examples.xlsx` med 52 tilfeller, 11 regeltestprodukter, kontrollarket `checks` og `check_log`. Tilfellene er E1–E30 fra PRD §5.7, med én rad per variant, og de fire FR-21-variantene. Claude dokumenterte arkene og notasjonen i `reference/README.md`. Verdiene fra PRD §5.7 er ført med samme presisjon, og FR-21-variantene og regeltestproduktene er regnet ut for hånd.
+* Claude regnet ut hvert tilfelle på nytt med et uavhengig skript og regnet ut de 376 kontrollformlene med avrundingen i Excel. Ingen verdi avvek fra PRD §5.7. Sammenligningen fant én feil i Claudes egne formler for varslene, og den ble rettet før fila ble skrevet ([QA-loggen](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-15-dr-9)).
+* Claude skrev leseren `tests/answer_key.py` og 10 nye tester i `tests/test_reference_spreadsheet.py`. Testene leser listen over eksemplene og FR-21-tabellen fra PRD-en. 21 feil som ble lagt inn i regnearket og PRD-en én om gangen, ble alle fanget, og 142 tester og Ruff passerte.
+* Reviewen i `bmad-build` (Blind Hunter) ga 13 funn: 4 ble rettet i `reference/README.md` og testen, og 9 ble avvist. Ett av dem, grensene for innstillingene i FR-20, er et åpent punkt for story 1.7.
+* Kontrollerte regnearket i Excel for Mac 16.78 (23100802): sammendraget i `checks` viste at alle 376 kontrollene stemmer (K1 = 376, K2 = 376, K3 = SANN). Lukket regnearket uten å lagre, og kontrollen står i `check_log`.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
