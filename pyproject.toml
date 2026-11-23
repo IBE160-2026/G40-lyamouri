@@ -25,7 +25,7 @@ required-version = ">=0.12.13"
 # --ds wins over a DJANGO_SETTINGS_MODULE exported for another project.
 addopts = "--ds=prognose.settings"
 django_find_project = false
-pythonpath = ["src"]
+pythonpath = ["src", "reference", "data"]
 testpaths = ["tests"]
 
 [tool.ruff]

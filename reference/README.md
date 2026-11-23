@@ -1,8 +1,8 @@
 # Referanseregnearket
 
-[`reference-examples.xlsx`](reference-examples.xlsx) er fasiten for Prognose (DR-3, AD-17). Testene leser inndata og forventede verdier herfra med openpyxl, så ingen forventet verdi står i testkoden. Fra story 1.6 leser seed-generatoren også seriene og lagerbeholdningen til regeltestproduktene herfra (AD-15). Sensor kan sammenligne tallene på skjermen med det samme regnearket.
+[`reference-examples.xlsx`](reference-examples.xlsx) er fasiten for Prognose (DR-3, AD-17). Testene leser inndata og forventede verdier herfra med openpyxl, så ingen forventet verdi står i testkoden. Seed-generatoren [`data/generate_seed.py`](../data/generate_seed.py) leser også seriene og lagerbeholdningen til regeltestproduktene herfra (AD-15, story 1.6). Sensor kan sammenligne tallene på skjermen med det samme regnearket.
 
-Denne fila beskriver arkene, kolonnene og notasjonen. [`tests/answer_key.py`](../tests/answer_key.py) leser regnearket slik det står her. [`tests/test_reference_spreadsheet.py`](../tests/test_reference_spreadsheet.py) feiler hvis et tilfelle, en variant, et produkt, en forventet verdi eller en kontroll mangler eller er feil. Testene sammenligner også seriene og innstillingene med PRD §5.7, Strøsand 25 kg med mockupen og tallene i kontrollformlene med inndataene.
+Denne fila beskriver arkene, kolonnene og notasjonen. [`answer_key_reader.py`](answer_key_reader.py) i denne mappa leser regnearket slik det står her, og både testene og generatoren bruker den. [`tests/answer_key.py`](../tests/answer_key.py) leser PRD-en og mockupen til testene. [`tests/test_reference_spreadsheet.py`](../tests/test_reference_spreadsheet.py) feiler hvis et tilfelle, en variant, et produkt, en forventet verdi eller en kontroll mangler eller er feil. Testene sammenligner også seriene og innstillingene med PRD §5.7, Strøsand 25 kg med mockupen og tallene i kontrollformlene med inndataene.
 
 ## Arkene
 
@@ -106,7 +106,7 @@ Hvert produkt bruker standardinnstillingene i FR-20, slik de er etter `load_seed
 - E1–E4 bruker samme serie, og E17 bruker serien i E7 med eksponentiell glatting. Innstillingene gjelder hele bedriften, så ett produkt viser begge.
 - E8-produktet har 50 på lager. Behovet på 45,1 er da dekket, så produktet kommer ikke under «Bestill snart», og «Denne uken» viser fortsatt 4 produkter som bør bestilles snart (UX-DR46).
 - Strøsand 25 kg har 104 uker. Posisjon 93–104 er ukene i mockupen: «11, 13, 12, 14, S, S2, 13, 15, 31, 16, 12, 15». De 92 ukene før gjentar serien i E1. Med uke 45 i 2026 som siste registrerte uke (UX-DR46) er posisjon 97 og 98 de utsolgte ukene 38 og 39, og posisjon 101 er den uvanlige uka 42. Grunnprognosen blir 14,3 og bestillingsmengden 11, som i E1 og E4.
-- Story 1.6 bestemmer produktnumrene, navnene på de andre produktene og mønsterproduktene, for eksempel Snøskuffe aluminium.
+- Varenumrene, navnene på produktene og mønsterproduktene, for eksempel Snøskuffe aluminium, står i [`data/README.md`](../data/README.md).
 - R-17 (bør-ha) ville gitt ukenummer 42 hos Strøsand 25 kg indeksen 1,5735 på grunn av den uvanlige uka. Når FR-36 bygges, får produktet derfor også varselet om sesongmønster. Varselet er ikke med i `warnings`, som følger må-ha-reglene. Spørsmålet er et åpent punkt for story 5.2.
 
 ## Kontrollen
