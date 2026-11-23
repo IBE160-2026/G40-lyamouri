@@ -684,9 +684,16 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Claude la inn kommentaren med alle 61 funnene og beslutningene i PR #16. CI-kjøring nr. 22 passerte på `7e62aa3`.
 * Eksporterte økten med `/export`. Claude maskerte den: 25 stier til prosjektmappa ble `<repo>`, og 2 stier til den midlertidige mappa ble `<tmp>`, også der stiene var brutt over to linjer. Kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler eller tokens.
 * Sesjonsloggen og fem nye åpne punkter i `issues.md` er ført, og punktene om regnearket og E30 er løst. Story 1.5 står som `done` i sprintstatusen.
-* Godkjente commit og push av eksporten (`024b204`), sesjonsloggen med `issues.md` (`df5ebbd`) og dokumentene.
+* Godkjente commit og push av eksporten (`024b204`), sesjonsloggen med `issues.md` (`df5ebbd`) og dokumentene (`c0959b2`). CI-kjøring nr. 23 passerte på `c0959b2`.
+* Godkjente flettingen av PR #16 på vilkår av grønn CI og grønn Windows-test på siste commit. Windows-testen startet ikke av seg selv, fordi PR-en ikke endret koden eller avhengighetene, så Claude startet den for hånd, og kjøring nr. 9 passerte på `c0959b2`. Claude flettet lokalt med «Create a merge commit» (`git merge --no-ff`), uten squash eller rebase, og med noreply-adressen som forfatter:
+  * merge-commiten `4dc963a` har den gamle `main` (`da87fd7`) og PR-hodet (`c0959b2`) som foreldre;
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * `main` ble pushet over HTTPS, fordi ingen workflow-filer var endret, og GitHub viser PR #16 som flettet 23. november kl. 16.48, med `4dc963a` som merge-commit;
+  * CI-kjøring nr. 24 på `main` passerte;
+  * lokal `main` og GitHub ble synkronisert og sto på samme commit, og arbeidskopien var ren;
+  * grenen `story/1-5-reference-spreadsheet-as-the-answer-key` er beholdt.
 
-**Status:** Story 1.5 er ferdig på grenen `story/1-5-reference-spreadsheet-as-the-answer-key`. Flettingen av PR #16 venter på brukerens godkjenning, og de åpne punktene for story 1.6, 1.7, 5.1 og 5.2 står i `issues.md`.
+**Status:** Story 1.5 er flettet inn i `main` (`4dc963a`), og de åpne punktene for story 1.6, 1.7, 5.1 og 5.2 står i `issues.md`. Neste story følger rekkefølgen i sprintplanen, og story 1.6 er ikke startet.
 
 ## 4. Videre dokumentasjon
 

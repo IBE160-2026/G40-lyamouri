@@ -52,7 +52,12 @@ Lese prosjektreglene, sprintplanen, story 1.5 og de relevante BMAD-dokumentene, 
   Brukeren godkjente hver av dem før commit og push. CI-kjøring nr. 21 passerte på `99b73bc`, og nr. 22 på `7e62aa3`.
 - **Eksporten:** [1-5-2026-11-23.txt](sessions/1-5-2026-11-23.txt) dekker økten etter `/clear`. Den er maskert: 25 stier til prosjektmappa ble `<repo>`, og 2 stier til den midlertidige mappa ble `<tmp>`. Noen av stiene var brutt over to linjer, og maskeringen beholdt bruddene. Kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler eller tokens.
 - **`issues.md`:** punktet om regnearket (fra 3. november) og punktet om E30 (fra 21. november) er løst. Punktet om spørsmål 4 i PRD §10 har fått en merknad, og fem nye punkter står under.
-- **Ikke gjort:** flettingen av PR #16 venter på brukerens godkjenning.
+- **Flettingen:**
+  - Etter brukerens godkjenning ble eksporten, denne loggen og dokumentene committet og pushet (`024b204`, `df5ebbd` og `c0959b2`), og CI-kjøring nr. 23 passerte på `c0959b2`.
+  - Brukeren satte grønn CI og grønn Windows-test på siste commit som vilkår for flettingen. Windows-testen startet ikke av seg selv, fordi PR-en ikke endret koden eller avhengighetene, så Claude startet den for hånd, og kjøring nr. 9 passerte på `c0959b2`.
+  - PR #16 ble flettet lokalt med «Create a merge commit» og noreply-adressen, og `main` ble pushet over HTTPS, fordi ingen workflow-filer var endret.
+  - Merge-commiten er `4dc963a`, med den gamle `main` (`da87fd7`) og PR-hodet (`c0959b2`) som foreldre, og innholdet er identisk med PR-hodet. GitHub viser PR #16 som flettet 23. november kl. 16.48.
+  - CI-kjøring nr. 24 på `main` passerte. Lokal `main` og GitHub ble synkronisert på `4dc963a`, og grenen `story/1-5-reference-spreadsheet-as-the-answer-key` er beholdt.
 
 ### Åpne punkter
 - Story 1.6: den eneste leseren av notasjonen i regnearket («S», «S2», «none», listene og flaggene) ligger i `tests/answer_key.py`. Bestem hvor den felles leseren skal ligge, så generatoren ikke kopierer den (BH-31, `deferred-work.md`).
