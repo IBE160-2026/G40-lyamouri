@@ -403,7 +403,7 @@ Touch screens: every button, field, radio button, switch and stand-alone link (s
 
 ## Elevation & Depth
 
-Flat. Depth comes from the three tonal layers (canvas, pane, surface) and 1 px `border` hairlines, never from shadows. The header bar is the only dark surface. Selection is shown by `blue-tint` fill plus a 2 px blue border; focus by a 3 px blue outline 2 px outside the element. Nothing floats: there are no modals, popovers or sticky overlays.
+Flat. Depth comes from the three tonal layers (canvas, pane, surface) and 1 px `border` hairlines, never from shadows. The header bar is the only dark surface. Selection is shown by `blue-tint` fill plus a 2 px blue border; focus by a 3 px blue outline 2 px outside the element, white in the app header, where blue on navy gives only about 2.4:1. Nothing floats: there are no modals, popovers or sticky overlays.
 
 ## Shapes
 

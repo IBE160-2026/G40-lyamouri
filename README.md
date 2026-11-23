@@ -39,7 +39,7 @@ uv run python src/manage.py runserver --insecure
 2. `uv sync --locked` installerer Python 3.13 hvis det mangler, og de nøyaktige pakkeversjonene i `uv.lock`.
 3. `migrate` lager tabellene i databasen.
 4. `load_seed` lager nøkkelen som signerer øktene (se [Nøkler og hemmeligheter](#nøkler-og-hemmeligheter)) og laster de to testbedriftene inn i den tomme databasen (se [Testbedrifter](#testbedrifter)).
-5. `runserver --insecure` starter Prognose. Åpne http://127.0.0.1:8000/ i nettleseren. `--insecure` lar utviklingsserveren levere appens statiske filer, som stilark, selv om feilsøkingsmodus er av. Det åpner ikke appen for andre maskiner.
+5. `runserver --insecure` starter Prognose. Åpne http://127.0.0.1:8000/ i nettleseren og logg inn som en av testbedriftene (se [Testbedrifter](#testbedrifter)). `--insecure` lar utviklingsserveren levere appens statiske filer, som stilark, selv om feilsøkingsmodus er av. Det åpner ikke appen for andre maskiner.
 
 Både appen og databasen svarer bare på din egen maskin (127.0.0.1).
 
@@ -54,12 +54,27 @@ Prognose har to syntetiske testbedrifter, uten virkelige data. Dataene lages av 
 | Testbedrift A | 1001 | `testbedrift-a` |
 | Testbedrift B | 1002 | `testbedrift-b` |
 
-Generatoren kjøres med `uv run python data/generate_seed.py`, og den skriver de samme filene hver gang. Dataene lastes inn i databasen med `uv run python src/manage.py load_seed`. Innloggingen kommer i story 1.8.
+Generatoren kjøres med `uv run python data/generate_seed.py`, og den skriver de samme filene hver gang. Dataene lastes inn i databasen med `uv run python src/manage.py load_seed`.
 
 `load_seed` sjekker først alle filene i `data/seed/`: skjemaversjonen, at hver uke har et helt tall på 0 eller mer, at alle produktene i en bedrift slutter samme uke, og at passordfeltet er en hash og ikke et passord. Er en fil feil, laster og sletter kommandoen ingenting og sier hva som er galt. Deretter lager den bedriftene med produkter, salgsuker og innstillinger, med standardverdiene fra FR-20.
 
 - **Ikke tom database:** `load_seed` stopper med en melding og endrer ingenting. Den sletter og overskriver aldri data på egen hånd. Dataene og innstillingene ligger igjen når appen og databasen stoppes og startes på nytt, for eksempel med `docker compose down` og `docker compose up -d --wait`. Bruker du `docker compose down -v`, slettes volumet med databasen, og du må kjøre `migrate` og `load_seed` på nytt.
 - **Tilbake til testdataene:** `uv run python src/manage.py load_seed --reset` sletter alle bedrifter med produkter, salgsuker og innstillinger og alle økter, og laster testdataene på nytt, uten duplikater. Et `--reset` nullstiller derfor også innstillingene og de justerte mengdene, som ligger i øktene. Kommandoen ber deg skrive `nullstill`. Skriver du noe annet, endres ingenting. Ingen annen kommando eller bygging kjører `--reset`, og `.secret_key` beholdes.
+
+### Logg inn og logg ut
+
+Åpne http://127.0.0.1:8000/ og skriv inn kundenummeret og passordet fra tabellen over, for eksempel `1001` og `testbedrift-a`. Du kommer til produktoversikten med bare den bedriftens produkter. Toppfeltet viser bedriften og den siste registrerte uka, og «Logg ut» avslutter økten. Feil kundenummer eller passord gir den samme meldingen, uten å si hvilket av dem som er feil. Alle andre sider krever innlogging. Trykker du Tilbake etter utloggingen, laster Safari siden på nytt (et lite script, `app.js`), og du ender på innloggingen. Uten script kan Tilbake vise den gamle siden, men et klikk eller en oppdatering gir innloggingen.
+
+Innloggingen bruker en økt som ligger i databasen. Nøkkelen i `.secret_key` signerer økten, så fila må finnes før du starter appen (`load_seed` lager den). Mangler den, får hver start av serveren en ny nøkkel, og du må logge inn på nytt.
+
+### Test på en ekte telefon over lokalnettet
+
+Dette er bare for den manuelle testen av telefonvisningen (NFR-6), og trengs ikke for å bruke Prognose. Maskinen og telefonen må være på samme private nettverk som du stoler på: appen bruker vanlig HTTP, så passordet og øktinformasjonskapselen går ukryptert over nettverket. Testpassordene er offentlige og gjelder bare testdataene. Telefonen og maskinen får hver sin økt, siden adressen er en annen enn 127.0.0.1.
+
+1. Finn maskinens IPv4-adresse på det private nettverket, for eksempel `192.168.1.20`.
+2. Start appen i et nytt terminalvindu: `PROGNOSE_LAN_HOST=192.168.1.20 uv run python src/manage.py runserver --insecure 0.0.0.0:8000` (i PowerShell: `$env:PROGNOSE_LAN_HOST = "192.168.1.20"` og så `uv run python src/manage.py runserver --insecure 0.0.0.0:8000`). Feilsøkingsmodus er av, og databasen svarer fortsatt bare på 127.0.0.1.
+3. Åpne `http://192.168.1.20:8000/` i Safari på telefonen og logg inn som hver testbedrift.
+4. Stopp appen med Ctrl+C og fjern variabelen etterpå (`Remove-Item Env:PROGNOSE_LAN_HOST` i PowerShell, eller lukk terminalvinduet på macOS).
 
 ## Nøkler og hemmeligheter
 

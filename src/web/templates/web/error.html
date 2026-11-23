@@ -6,8 +6,7 @@
       <h1>{% block heading %}{% endblock %}</h1>
       {% block text %}{% endblock %}
       {% block link %}
-      {# The product overview from the URL map in AD-11, which Story 1.8 builds. #}
-      <p><a class="standalone-link" href="/produkter/">Til produktoversikten</a></p>
+      <p><a class="standalone-link" href="{% url 'products' %}">Til produktoversikten</a></p>
       {% endblock %}
     </div>
   </main>

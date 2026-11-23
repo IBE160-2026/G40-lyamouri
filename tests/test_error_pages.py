@@ -14,6 +14,7 @@ import re
 from pathlib import Path
 
 import pytest
+from django.contrib.auth.decorators import login_not_required
 from django.core.exceptions import PermissionDenied
 from django.db import InterfaceError, OperationalError
 from django.test import Client
@@ -21,6 +22,7 @@ from django.urls import path
 from pytest_django.asserts import assertContains, assertNotContains
 
 from prognose.urls import urlpatterns as app_urlpatterns
+from web.models import Company
 
 EXPERIENCE = (
     Path(__file__).resolve().parents[1]
@@ -47,8 +49,10 @@ ERRORS = {
 }
 
 
+@login_not_required
 def raise_error(request, name):
-    """A test view that raises the named error."""
+    """A test view that raises the named error. It is exempt from the login, so
+    that the logged-out tests reach it (AD-6)."""
     raise ERRORS[name]("Testfeil")
 
 
@@ -169,10 +173,16 @@ def test_database_error_shows_the_503_page_also_with_debug_on(settings):
     assert_error_page(response, 503, "Database unavailable")
 
 
+@pytest.mark.django_db
 def test_failed_csrf_check_shows_the_expired_form_page():
-    """AD-12, NFR-10, NFR-5, UX-DR13, UX-DR41: a form sent without a valid CSRF
-    token gives 403 with the Expired form text, never the Server error text."""
-    response = Client(enforce_csrf_checks=True).post("/")
+    """AD-12, NFR-10, NFR-5, UX-DR13, UX-DR41: a form of a logged-in user sent
+    without a valid CSRF token gives 403 with the Expired form text, never the
+    Server error text. A visitor who is not logged in gets the login page
+    instead (Story 1.8), so this needs a login."""
+    client = Client(enforce_csrf_checks=True)
+    client.force_login(Company.objects.create_user("1", "x", name="Bedrift"))
+
+    response = client.post("/logg-ut/")
 
     assert_error_page(response, 403, "Expired form")
     assertNotContains(response, heading("Server error"), status_code=403)
@@ -201,7 +211,7 @@ def test_wrong_method_shows_the_server_error_page_and_keeps_allow(client):
     response = client.options("/")
 
     assert_error_page(response, 405, "Server error")
-    assert response["Allow"] == "GET, HEAD"
+    assert response["Allow"] == "GET, HEAD, POST"
 
 
 @pytest.fixture

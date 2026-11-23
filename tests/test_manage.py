@@ -59,7 +59,7 @@ def test_pytest_uses_prognose_settings_when_another_module_is_exported():
             "-q",
             "-p",
             "no:cacheprovider",
-            "tests/test_start_page.py",
+            "tests/test_company.py",
         ],
         cwd=REPO_ROOT,
         env={**os.environ, "DJANGO_SETTINGS_MODULE": "annet.settings"},

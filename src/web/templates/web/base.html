@@ -1,5 +1,5 @@
 {% load static %}<!doctype html>
-{# The shell of every page (AD-11, UX-DR14). Without a login, the header shows only the wordmark. #}
+{# The shell of every page (AD-11, UX-DR14). Without app_header, which only the logged-in views give, the header shows only the wordmark and the page has no script. #}
 <html lang="nb">
 <head>
   <meta charset="utf-8">
@@ -7,10 +7,21 @@
   <title>{% block title %}Prognose{% endblock %}</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="{% static 'web/app.css' %}">
+  {% if app_header %}<script src="{% static 'web/app.js' %}" defer></script>{% endif %}
 </head>
 <body>
   <header class="app-header">
     <span class="wordmark">Prognose</span>
+    {% if app_header %}
+    <span class="header-meta">{{ app_header.company_name }}{% if app_header.latest_week %} · siste registrerte uke: {{ app_header.latest_week }}{% endif %}</span>
+    <nav class="header-nav" aria-label="Hovedmeny">
+      <a href="{% url 'products' %}"{% if app_header.current == "products" %} aria-current="page"{% endif %}>Produktoversikt</a>
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logg ut</button>
+      </form>
+    </nav>
+    {% endif %}
   </header>
   {% block main %}{% endblock %}
 </body>

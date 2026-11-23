@@ -1,0 +1,978 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   ~/G40-lyamouri
+
+
+❯ /clear                                                                        
+
+❯ Start story 1.8 etter prosjektreglene, BMAD og sensorveiledningen. Kontrller  
+  at main er ren og synkronisert med GitHub. Les kun nødvendige prosjektfiler,  
+  sprintplanen og relevante punkter i issues.md. Gjenbruk eksisterendearbeid og 
+  hold deg til storyens scope. Lag spesifikasjon, implementer og test grundig.  
+  Gjennomfør BMAD Code Review med fire uavhengige faglige besluttninger og      
+  manuelle tester. Dokumenter faktiske resultater, og be om /export når det     
+  trengs. Jeg godkjenner commit, push, PR og fletting når personvernkontroll og 
+  alle relevente tester, inkludert CI og Windows test er grønne på siste        
+  commit. Stopp ved feil eller usikkerhet. Kontroller CI på main og fullfør     
+  fletteloggen etter etablert rutine. Ikke les utenfor prosjektmappen eller     
+  eksponer hemmeligheter. Ikke start story 1.9                                  
+
+⏺ Jeg starter med å sjekke at main er ren og synkronisert med GitHub, og finner
+  prosjektreglene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Main er ren og synkronisert (0/0 mot origin/main). Nå finner jeg sprintplanen,
+  story 1.8 og issues.md.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ CI på main er grønn. Jeg leser sprintplanen og sprint-status.
+
+  Read 1 file, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Åpne punkter for 1.8 er funnet (linje 87, 96, 109–111, 124). Nå leser jeg
+  epic-konteksten, utsatt arbeid og reglene som gjelder alle stories, samt
+  sensorveiledningen.
+
+  Listed 3 directories, ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg har nok oversikt til å starte. Nå laster jeg BMAD-byggeskillen som styrer
+  arbeidsflyten.
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+  Read 2 files, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Jeg har lest planen og story 1.8, og leser nå den eksisterende koden som
+  storyen bygger på. Epic-konteksten gjenbruker jeg uendret, som i story 1.7. 
+  · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå leser jeg bare de relevante UX- og arkitekturpunktene (UX-DR8/14/38,
+  AD-3/6/7/10/11/13, FR-1/2, meldingskatalogen).
+
+  Ran 7 shell commands (ctrl+o to expand)
+
+⏺ Jeg har fått det jeg trenger fra planen, UX-en og den eksisterende koden, og
+  sjekker nå modellene og DESIGN.md-komponentene for felt, knapp, feilrad og
+  toppfelt før jeg skriver spesifikasjonen. · summary
+
+  Ran 5 shell commands (ctrl+o to expand)
+
+⏺ Docker er ikke i PATH i dette skallet (som i story 1.7), så jeg sjekker at
+  databasen likevel svarer ved å lage grenen og kjøre grunnlinjen av testene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Grunnlinjen er grønn (238 bestått, 1 hoppet over, Ruff ren). Neste steg i
+  arbeidsflyten er planleggingen.
+
+  Read 2 files, ran 1 shell command (ctrl+o to expand)
+
+⏺ Én ekte beslutning gjenstår som bare du kan ta (to andre tar jeg selv og
+  noterer i spesifikasjonen):
+
+⏺ User answered Claude's questions:
+  ⎿  · Story 1.8 legger «Produktoversikt» og «Logg ut» i det marineblå 
+     toppfeltet. Den blå fokusringen (#1D56C4 på #0E2236) gir bare om lag 2,4:1,
+     under de 3:1 som WCAG 1.4.11 krever. Hvilken fokusfarge skal lenkene og 
+     knappen i toppfeltet få? Valget krever en rad i endringsloggen til 
+     DESIGN.md. → Hvit ring (Recommended)
+
+⏺ Beslutningen er tatt (hvit ring). Nå skriver jeg spesifikasjonen.
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-1-8-log-in-and-see-only-your-
+       own-companys-products.md)
+  ⎿  Wrote 95 lines to _bmad-output/implementation-artifacts/spec-1-8-log-i
+     n-and-see-only-your-own-companys-products.md
+      1 ---
+      2 title: 'Story 1.8: Log in and see only your own company''s produc
+        ts'
+      3 type: 'feature'
+      4 created: '2026-11-23'
+      5 status: 'draft'
+      6 route: 'dispatch'
+      7 review_loop_iteration: 0
+      8 context: ['{project-root}/_bmad-output/implementation-artifacts/e
+        pic-1-context.md']
+     … +87 lines (ctrl+o to expand)
+
+⏺ Spesifikasjonen er skrevet: _bmad-output/implementation-artifacts/spec-1-8-log
+  -in-and-see-only-your-own-companys-products.md.
+
+  Sjekkpunkt 1: spesifikasjonen
+
+  Status: main var ren og synkronisert med origin/main (7aeb0a7), og CI på main
+  er grønn. Jeg har laget grenen
+  story/1-8-log-in-and-see-only-your-own-companys-products. Grunnlinjen er 238
+  tester bestått, 1 hoppet over, og Ruff er ren.
+
+  Hva storyen bygger (ett mål, ingen ny modell, migrering eller avhengighet):
+  - Innlogging på /: Innlogging-wireframen, med én feilmelding (role="alert")
+    for feil nummer, feil passord og tomme felt. Kundenummeret beholdes og
+    passordet tømmes.
+  - Utlogging: /logg-ut/ tar bare POST.
+  - Nektet som standard: Djangos LoginRequiredMiddleware, uten next-parameter.
+  - Produktoversikt: /produkter/ viser bare bedriftens egne produkter, sortert
+    etter varenummer.
+  - Toppfelt: viser «Testbedrift A · siste registrerte uke: uke 45, 2026».
+    Ukeetiketten lages i en ny forecasting/display.py, med test (issues.md
+    linje 87).
+  - Datatilgang: all lesing av bedriftsdata går gjennom web/queries.py, med
+    bedriften som første argument.
+  - Tester: to-konto-testen, med en liste over ruter som senere stories utvider.
+    Den utnytter at A slutter i uke 45 og B i uke 44 (issues.md linje 124).
+
+  Beslutninger:
+  - Fokusfarge i toppfeltet (din beslutning): hvit 3 px ring. Det gir en rad i
+    endringsloggen til DESIGN.md.
+  - Dobbel innsending: Django roterer CSRF-tokenet ved innlogging, så en andre
+    POST av samme skjema ville gitt 403-siden. Det bryter NFR-10. Derfor
+    omdirigerer en feilet CSRF-sjekk til /produkter/ for en innlogget bruker på
+    /, og til / for en utlogget bruker på /logg-ut/.
+  - Advarsel for manglende .secret_key (BH-13, issues.md linje 96): jeg bygger
+    ingen. load_seed lager nøkkelen og README sier det. Punktet lukkes som «ikke
+    bygd». Si fra hvis du vil ha advarselen.
+  - Feilsidene (min beslutning): de forblir bare med ordmerke, som i story 1.4.
+    En header med bedriftsdata ville lest databasen på en feilside.
+  - Lageret: vises som det er, siden Django ikke grupperer tusener med nb. Story
+    2.3 tar over formateringen.
+
+  Slik går jeg videre:
+  - Kodegjennomgang: BMAD Code Review kjører med fire uavhengige subagenter (BH,
+    EC, VG, AA), og bygget gjøres inline.
+  - Dine manuelle tester: Safari ved 320 px, 390 × 844 og 820 × 1180, og den
+    ekte iPhone 13 over lokalnettet. Jeg gir deg kommandoene når koden er klar,
+    og du rapporterer i chatten.
+  - Commit, push, PR og fletting: jeg gjør ingenting av dette uten din
+    godkjenning.
+  - Ikke i scope: story 1.9 er fjernet fra planen, og jeg starter ikke story
+    2.1.
+
+  Før du godkjenner kan du åpne spesifikasjonen og si hva som skal endres.
+
+  Hva vil du?
+  1. Godkjenn og fortsett med implementeringen i denne økten.
+  2. Godkjenn og stopp, så spesifikasjonen står som ready-for-dev til en ny økt.
+  3. Gjennomgå spesifikasjonen først.
+
+✻ Baked for 4m 40s · done 7:53 PM
+
+❯ Jeg velger alternativ 1. Godkjenn spesifikasjonen og fortsett med             
+  implementeringen i samme økt. Følg BMAD og test spesielt tilgang mellom       
+  bedriftene og CSRF håndtering. Be meg om de manuelle yestene når appen er     
+  klar. Ikke start neste story.                                                 
+
+  Read 1 file, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Implementerer nå inline, begynner med kjernen (ukeetikett) og datatilgangen.
+
+  Ran 6 shell commands (ctrl+o to expand)
+⏺ Jeg retter CSS-en så vekter og linjehøyde bruker designtokens (testen fra
+  story 1.4 krever det), og kjører testene på nytt.
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Jeg skriver nå testene: først felles testdata (to bedrifter), deretter
+  innlogging/CSRF, produktoversikt og isolasjon.
+
+  Read 1 file, ran 3 shell commands (ctrl+o to expand)
+  ⎿  You've hit your 5-hour limit · resets 8:50pm (Europe/Oslo)
+     /upgrade or /usage-credits to finish what you’re working on.
+
+⏺ Usage limit reached · continuing automatically at 8:50pm · esc to 
+  cancel
+
+✻ Cogitated for 4m 14s · done 8:03 PM
+
+⏺ Usage limit reset · Continuing automatically
+
+⏺ Innloggings- og CSRF-testene er grønne (37). Nå produktoversikten og
+  to-konto-testen.
+
+  Read 1 file, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Alle 294 tester består. Nå mutasjonssjekk: jeg bryter koden på sju steder og
+  bekrefter at testene fanger hver feil.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle ni mutasjoner fanges, og filene er gjenopprettet. Nå en ekte røyktest mot
+  utviklingsserveren og den lokale databasen, med curl.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Røyktesten bekrefter innlogging, isolasjon (30 produkter for A, 0 fra B),
+  feilmelding og at GET på utlogging gir 405. Jeg leser DESIGN.md og
+  statustabellen nå. · summary
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Status: fokusregelen er ført i designdokumentene. Jeg legger til en CSS-test
+  for den hvite ringen, og oppdaterer README og statustabellen.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Koden og testene er ferdige. README er oppdatert; resten av dokumentene tar
+  jeg etter gjennomgangen, som i story 1.7. Neste steg er gjennomgangen.
+
+  Read 1 file, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Diffen er 73 kB og klar. Nå kjører jeg BMAD Code Review, som starter fire
+  uavhengige granskere.
+
+⏺ Skill(bmad-code-review)
+  ⎿  Successfully loaded skill
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Granskingsmålet er identifisert. Jeg starter de fire granskerne samtidig.
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   ├ Verification Gap review
+   └ Acceptance Auditor review
+
+⏺ Jeg skrev feil diff-sti i prompten til Acceptance Auditor (skråstrek i stedet
+  for bindestrek). Jeg laster SendMessage og retter det.
+  ⎿  Message queued for delivery to ad134e411a37786bf at its next tool 
+     round. If it finishes first, it is resumed with the message and 
+     notifies again, so wait for that notification before resending.
+
+⏺ Fire granskere kjører nå i bakgrunnen (jeg rettet sti-feilen til Acceptance
+  Auditor). Jeg venter på at alle fire melder tilbake før jeg trier funnene.
+
+✻ Churned for 4m 31s · done 8:55 PM
+
+› Message from general-purpose
+  I reviewed `<scratchpad>/story-1-8.diff` against the spec. I
+  had already read the correct file when your correction arrived. I read only
+  the diff and the spec and did not run the tests.
+
+  ## Acceptance audit findings
+
+  - **The CSRF failure on `/logg-ut/` for a logged-out user is not handled
+  (High).**
+    - Constraint: Boundaries "Always" (PRG), NFR-10, matrix row "Logout". The
+  spec says a failed CSRF check "on `/logg-ut/` for a logged-out user redirects
+  to `/`", so the second logout POST "also" gives 302 to `/`.
+    - Evidence: `web/views.py::csrf_failure` redirects only when `request.path
+  == reverse("login")` and the user is authenticated. Every other case falls
+  through to `csrf.csrf_failure(...)`, which is the 403 page. Nothing covers
+  `/logg-ut/`.
+    - Evidence: `test_second_logout_gives_the_same_result` only passes because
+  the CSRF cookie and token stay valid after `auth.logout`. No test covers a
+  logged-out POST to `/logg-ut/` with a missing or forged token, or without the
+  cookie, which is the case a real second submit can hit.
+
+  - **A logged-out POST to any other route can get 403 instead of 302 to `/`
+  (Medium).**
+    - Constraint: matrix row "Not logged in", "any route but `/`, with GET or
+  POST → 302 to `/`".
+    - Evidence: `settings.py` puts `CsrfViewMiddleware` before
+  `LoginRequiredMiddleware`, and the `csrf_failure` view only special-cases `/`.
+  A browser POST to `/produkter/` with no token therefore gets the 403 page,
+  not the redirect.
+    - Evidence:
+  `test_every_page_but_the_login_sends_a_visitor_to_the_login_page` uses the
+  default test client, which does not enforce CSRF, so it cannot see this.
+  Either the spec's "any route" is meant loosely, or `csrf_failure` should also
+  redirect logged-out users to `/`.
+
+  - **The "hash unchanged" requirement is not really tested (Medium).**
+    - Constraint: Boundaries "Always" ("The hash is not rewritten by a login")
+  and the Tasks line "the hash unchanged".
+    - Evidence: `test_login_keeps_the_hash_and_stores_no_plain_password` only
+  asserts `startswith("pbkdf2_sha256$")` and `last_login is not None`.
+    - Evidence: it never compares the stored hash with the seed hash from before
+  the login. Django's `check_password` rewrites a hash whose iteration count
+  differs from the default, and this test would still pass.
+    - Evidence: the diff has no code that prevents the rewrite, such as a custom
+  backend.
+
+  - **A NUL-character login does not keep the customer number (Low).**
+    - Constraint: matrix row "Wrong login" lists a NUL character with "number
+  kept".
+    - Evidence: `LoginForm` rejects a NUL in the field, so
+  `form.cleaned_data.get("customer_number", "")` is empty. The test also skips
+  the "number kept" assertion for NUL (`if "\x00" not in
+  data["customer_number"]`). The test hides the deviation, but it may be
+  acceptable because the database cannot store a NUL.
+
+  - **Required documents and trackers are not in the diff or the `git status`
+  (Medium).**
+    - Constraint: Code Map "Documents" and the Tasks line "documents above,
+  `sprint-status.yaml` to `review`, the open points" (DR-7).
+    - Evidence: the diff shows README, `epics.md`, DESIGN.md and EXPERIENCE.md
+  only. `git status` lists no changes to `docs/statustabell.md`,
+  `docs/qa-logg.md`, `docs/ki-styringslogg.md`, `docs/arbeidslogg.md` or
+  `deferred-work.md`.
+    - Evidence: `.logs/mounia-03/issues.md` is not in the status either (it may
+  be ignored or committed later). `sprint-status.yaml` is modified but outside
+  the diff, so I could not check its `review` value.
+    - Evidence: the QA log entry for the phone test (date and iOS version,
+  NFR-6) is also missing, though that one is expected to wait for the user's
+  report.
+
+  - **The focus-ring change-log row is not in the DESIGN.md change log (Low).**
+    - Constraint: Boundaries "Always" ("the change is a row in the DESIGN.md
+  change log").
+    - Evidence: DESIGN.md's diff changes only the Elevation & Depth sentence.
+  The new change-log rows are in EXPERIENCE.md (line 1739) and `epics.md`. If
+  DESIGN.md has its own change log, a row is missing there.
+
+  - **The seed's 30-products flow is not exercised (Low).**
+    - Constraint: matrix row "Correct login" ("A's 30 products").
+    - Evidence: all new tests use the `two_companies` fixture with 3 and 2
+  products, and the same fixture is used for the isolation tests. Only the seed
+  hashes are real, so nothing checks the real seed's product list through the
+  app.
+
+  - **The source scan allows a manager use outside `queries.py` (Low).**
+    - Constraint: Boundaries "Always" ("`web/queries.py` holds every read of
+  company data").
+    - Evidence: `MANAGER_USERS` in `tests/test_isolation.py` also exempts
+  `web/seed.py` besides `queries.py` and `load_seed.py`. It is justified in the
+  comment (plain records, no database). It is a deviation from the spec text,
+  not a code defect.
+
+  ## Checked and consistent with the spec
+
+  - `LoginRequiredMiddleware` subclasses Django's, sits after
+  `AuthenticationMiddleware`, and has `redirect_field_name = None`, so there is
+  no `next` parameter.
+  - `login` is exempt with `login_not_required`, and `raise_error` in the
+  error-page tests is exempt too.
+  - GET `/` for a logged-in user redirects to `/produkter/`.
+  - The double submit of the login form is handled in `csrf_failure`.
+  - `/logg-ut/` takes only POST (`require_POST`).
+  - The login error uses `role="alert"`, comes before the fields, is identical
+  for every failure, and the password is never echoed.
+  - The header is built from the view context with the label from
+  `forecasting/display.py`. The current page is marked with `aria-current`, and
+  "Logg ut" is a POST form with a CSRF token.
+  - The white focus ring in the header and the 44 px targets for header links
+  are in `app.css`.
+  - Error pages stay wordmark-only, and the `error.html` link uses `{% url %}`.
+  - `queries.py` functions take the company first.
+  - The two-account isolation test exists with a `ROUTES` list.
+  - The README login and phone-test sections are added.
+  - There is no new model, migration or dependency.
+
+⏺ Acceptance Auditor har meldt tilbake. Jeg venter på Blind Hunter, Edge Case
+  Hunter og Verification Gap før jeg trier alle funnene samlet.
+
+✻ Brewed for 2s · done 8:56 PM
+
+⏺ Agent "Acceptance Auditor review" finished · 54s
+
+› Message from general-purpose
+  ### Latest-data-week ordering across a year boundary is not pinned by any test
+
+  - **Changed surface:** `queries.latest_data_week` orders by `-iso_year,
+  -iso_week` and takes `.first()` (`src/web/queries.py`, diff lines 702-712). It
+  feeds the app header's «siste registrerte uke: uke N, YYYY» (`header_context`
+  in `src/web/views.py`, diff lines 413-426).
+  - **Impacted consumer or site:** the header of `/produkter/`, rendered through
+  `base.html` (`app_header.latest_week`). It is shown on every logged-in page.
+  - **Existing test evidence (`Regression gap`):**
+    - Every fixture company in `tests/conftest.py` (`create_account`, diff lines
+  781-807) builds 3 weeks that all share one `iso_year` (2026). A ends at 45
+  and B at 44, so no fixture week sequence crosses a year boundary.
+    - `test_latest_data_week_is_derived_from_the_sales_weeks`
+  (`tests/test_product_overview.py`, diff lines 97-114) asserts `(2026, 45)`,
+  `(2026, 44)` and `None` on those fixtures.
+    - `test_app_header_shows_the_company_and_its_own_latest_week` and the `OWN`
+  strings in `tests/test_isolation.py` use the same fixtures.
+    - `tests/test_load_seed.py:181` loads the real seed, but it computes the
+  latest week with Python `max()` over `values_list` tuples. It never calls
+  `queries.latest_data_week`.
+    - I grepped `tests/` for `latest_data_week` and `header_week_label`. The
+  only callers are the fixture-based tests above and
+  `tests/test_forecasting_display.py`, which tests only the formatter.
+    - The real seed data does cross a year boundary.
+  `data/seed/testbedrift-a.json` has `first_week` 2024-W46 and 104 weeks, ending
+  at 2026-W45.
+  - **Missing verification:** a test that gives a company weeks spanning two ISO
+  years (for example 2025-W51, 2025-W52, 2026-W01, 2026-W02). It should assert
+  `queries.latest_data_week(company) == (2026, 2)` and that the header shows
+  «uke 2, 2026». Alternatively, it could log in against `load_seed()` data and
+  assert «uke 45, 2026».
+  - **Demonstration:** change the ordering to `.order_by("-iso_week")`, or drop
+  `-iso_year`. Every fixture lives in a single year, so all assertions above
+  still pass. On the real seed data the header would then show «uke 52, 2025»
+  instead of «uke 45, 2026».
+  - **Consequence:** the header can name a wrong «latest registered week» for
+  real companies whose history spans a New Year. Nothing would flag it.
+  - **Disposition:** `patch`. Add one case to `tests/test_product_overview.py`.
+  It would either call `create_account` with `weeks` large enough to span the
+  boundary (extend the helper so the week number wraps into the previous year),
+  or create `SalesWeek` rows by hand. It would assert the `(iso_year, iso_week)`
+  tuple and the header text.
+
+  ### The "no manager outside queries.py" guard can be bypassed by a qualified
+  model reference
+
+  - **Changed surface:**
+  `test_no_view_or_form_uses_a_model_manager_for_company_data`
+  (`tests/test_isolation.py`, diff lines 1007-1025). It is the AD-7 enforcement
+  that views and forms read company data only through `web/queries.py`.
+  - **Impacted consumer or site:** every module under `src/web/*.py` apart from
+  `queries.py`, `load_seed.py` and `seed.py`, for example `src/web/views.py` and
+  `src/web/forms.py`.
+  - **Existing test evidence (`Broken-verification gap`):** I read the test. It
+  flags an `ast.Attribute` only when:
+    - `attr == "objects"` and `node.value` is an `ast.Name` in `COMPANY_MODELS`;
+  or
+    - `attr` is in `MANAGER_NAMES` (`_default_manager`, `_base_manager`,
+  `products`, `sales_weeks`, `company_settings`).
+    - `models.Product.objects` has an `ast.Attribute` as its `.value`, not an
+  `ast.Name`, so it is not flagged.
+    - Aliased imports are not flagged either (`from web.models import Product as
+  P; P.objects...`).
+    - `apps.get_model(...)` is not flagged.
+  - **Missing verification:** the check should also resolve attribute chains and
+  import aliases, or the guard should be described as best-effort.
+  - **Demonstration:** a future view that does `from web import models` and
+  `models.Product.objects.all()` (or an aliased import) returns every company's
+  products. The AST guard passes. The two-account route test (`ROUTES`) would
+  catch it only if that route is listed and the other company's strings are in
+  `OWN`.
+  - **Consequence:** the structural guard gives false assurance for a
+  cross-company read. Only the per-route data tests would catch it.
+  - **Disposition:** `defer`. Only one route exists today and the route-level
+  isolation test covers it. Tighten the guard when Epic 2 adds more views, or
+  add a case that checks the walker flags `models.Product.objects` and an alias.
+
+  ## Other findings
+
+  - `tests/test_app_shell.py::test_every_page_has_the_shell` was changed only to
+  swap `web/start.html` for `web/login.html`. The new full-page template
+  `web/products.html` is not in `PAGES`, so the shell checks (lang, viewport,
+  data icon, stylesheet, single h1, no script, no host URL) do not run against
+  it. The product-overview tests check only the h1 count and the title for that
+  page.
+  - The CSS added in `app.css` for `.header-meta`, `.header-nav`,
+  `.error-message` and the forms has no behavior test beyond the new focus-ring
+  and 44 px target tests. I treated this as static source and did not file it as
+  a gap.
+
+  I found no verification gaps in the login, logout, middleware or CSRF-failure
+  paths. I read the middleware ordering test, `redirect_field_name = None`,
+  `login_not_required` exemption, `csrf_failure`, second-submit, forged-login,
+  stopped-database and `next`-ignoring tests, and each one asserts the changed
+  behavior.
+
+⏺ Verification Gap er inne (to funn). Jeg venter fortsatt på Blind Hunter og
+  Edge Case Hunter.
+✻ Brewed for 1s · done 8:56 PM
+
+⏺ Agent "Verification Gap review" finished · 56s
+
+› Message from general-purpose
+  N = min(floor(sqrt(71.7) + 1), 10) = min(floor(8.47 + 1), 10) = 9, since the
+  diff is 73,451 bytes, about 71.7 kB. This is a read-only review of the diff. I
+  did not run the tests or the app.
+
+  - **Placeholder left in committed docs.** The change-log rows in `epics.md`
+  and `EXPERIENCE.md` end with "Story 1.8 (hash follows)". The earlier rows in
+  both files cite real commit hashes. Fill it in at merge, or add a check that
+  the placeholder is gone.
+
+  - **No brute-force protection on the login.** `login` (`src/web/views.py`) and
+  `LoginForm` (`src/web/forms.py`) have no throttling, lockout, delay or
+  logging of failed attempts. The seed passwords are public and follow a
+  guessable pattern (`testbedrift-a`), and customer numbers are sequential. The
+  work also has no `max_length` on either form field, so a very long customer
+  number is echoed back and a very long password is hashed. If throttling is out
+  of scope for v1, write that down as a decision. Otherwise add it, with a
+  test.
+
+  - **Logged-in pages can be cached, so Back after logout may show another
+  company's data.** `product_overview` and the other logged-in pages set no
+  `Cache-Control: no-store` or `never_cache`. On a shared machine, Back after
+  "Logg ut" can show the cached product list. The story cites NFR-10 ("Reload,
+  Back"), but no test or header covers this case.
+
+  - **The logout test cannot show that the session died on the server.**
+  `session_ids()` only reads the client's cookie, and it also returns `None` for
+  a deleted or empty cookie. No test checks that the `Session` row is gone, or
+  that replaying the old session id after logout fails. The test only proves the
+  cookie was dropped, not that the session ended.
+
+  - **The shell test skips the new products page.** In
+  `tests/test_app_shell.py`, `PAGES` swaps `web/start.html` for `web/login.html`
+  but never adds `web/products.html`. The checks for one `<h1>`, no `<script>`
+  and no external src/href therefore don't run on the logged-in page. That page
+  also uses the new app header.
+
+  - **The product table has no empty state and may overflow.**
+    - `products.html` has a `{% for %}` with no `{% empty %}`. A company with no
+  products gets a header-only table. The test for a company without sales weeks
+  only checks the header, not the table body.
+    - The page CSS says "nothing scrolls sideways", but `.product-table` has no
+  `overflow-wrap` or `word-break` handling for long product names at 320 px.
+    - The table has no `<caption>` or accessible name.
+
+  - **The no-cross-company-access check has gaps.** The AST test in
+  `tests/test_isolation.py` only flags `Product.objects`-style names and a fixed
+  list of attribute names.
+    - An alias such as `from web.models import Product as P`, `apps.get_model`,
+  or `models.Product.objects` passes.
+    - Templates are not scanned, so `{{ company.products.all }}` passes.
+    - `node.attr in MANAGER_NAMES` flags any attribute called `products` in
+  `web/`, including unrelated ones.
+    - The seed reader and loader are exempt wholesale.
+    - Say how much this test is meant to guarantee, or tighten it.
+
+  - **The isolation test can fail by chance.**
+  `test_each_company_sees_only_its_own_data` asserts that strings such as
+  `"7372"` and `"8481"` are absent from the page. Every page now carries a
+  random masked CSRF token (in the logout form), and the token can contain those
+  digits. The chance is tiny but not zero. Strip the tokens first, as
+  `test_login.py` already does with `TOKEN.sub`.
+
+  - **`test_manage` now runs the whole login suite in a subprocess.** The
+  settings-module check points at `tests/test_login.py`. The old target was a
+  database-free page test. The new file needs the `two_companies` fixture and
+  the database. It also imports `test_error_pages` as a top-level module and
+  reads `catalogue_text(...)` at import time. A catalogue or DB problem would
+  now break an unrelated test with a confusing failure. Pick a small
+  database-free test file for that check instead.
+
+  - **A failed CSRF check on `/` gives no feedback to a logged-in user.** In
+  `csrf_failure`, any failed POST to the login path by an authenticated user is
+  silently redirected to the overview. This covers both the double submit and a
+  stale token. A user who deliberately tries to log in as another company with
+  an expired form is shown their old company's products, with no message. Limit
+  the redirect to the double-submit case, or show a notice.
+
+  - **Sessions have no declared lifetime, and the login redirect has no `next`
+  handling.** The README and settings say nothing about session age or
+  inactivity timeout. With `redirect_field_name = None`, an expired session
+  always lands on the overview. A bookmark to a later page, such as the Story
+  2.7 product page, loses its destination. Either record this as a deliberate
+  trade-off or add a safe `next`, checked with
+  `url_has_allowed_host_and_scheme`.
+
+  - **The failed-login form has gaps.**
+    - Neither input has `aria-invalid="true"`, and focus does not move to the
+  error or the first field after a failed submit.
+    - The customer-number field is `type="text"` with no `inputmode="numeric"`.
+  That is a small cost on the phone testing this story targets.
+    - `.button-primary` has no disabled or "sending" state, so the double-submit
+  protection is server-side only.
+
+  - **The new global CSS will leak into later screens.** Bare `label`,
+  `input[type="text"]` and `input[type="password"]` selectors apply to every
+  future form, including the Epic 3 settings fields and the switch. They also
+  add a 16px top margin to every label. Scope them, for example to `.form`.
+
+  - **Header text is hard-coded and awkward.**
+    - "siste registrerte uke: uke 45, 2026" says "uke" twice, and the template
+  hard-codes the string.
+    - The tests take the login error from the EXPERIENCE.md Message Catalogue,
+  but this header copy and the login intro are not checked against it.
+  `views.LOGIN_ERROR` is also a separate hard-coded copy of the catalogue text.
+    - The README and `login.html` say the header shows the "latest registered
+  week". `display.header_week_label` is a bare f-string with no tests for week
+  padding or invalid values.
+
+  - **The README's LAN instructions don't mention plain-HTTP risk.** The new
+  "Test på en ekte telefon" section now has the user log in over unencrypted
+  HTTP on the local network, with `0.0.0.0` binding. It doesn't say that
+  passwords and the session cookie travel in clear text, or that the test
+  passwords are public. It also doesn't say that Safari may need the
+  "Remove-Item" cleanup, or that the session cookie from the LAN host is
+  separate from `127.0.0.1`.
+
+⏺ Blind Hunter er inne (14 funn). Bare Edge Case Hunter gjenstår.
+
+✻ Worked for 6s · done 8:56 PM
+
+⏺ Agent "Blind Hunter review" finished · 1m 26s
+
+› Message from general-purpose
+  [
+  {"location":"src/web/views.py:482-494","trigger_condition":"Claim: a failed
+  CSRF check on /logg-ut/ for a logged-out user redirects to
+  /","guard_snippet":"csrf_failure only redirects when the path is the login
+  path and the user is authenticated. A failed CSRF check on /logg-ut/ always
+  returns the 403 expired-form page.","potential_consequence":"A visitor with a
+  stale or cleared CSRF cookie who submits logout gets a 403 page. The spec says
+  this redirects to the login page.","kind":"claim","confidence":"high"},
+  {"location":"src/web/views.py:488-493","trigger_condition":"Logged-in user (A)
+  submits a stale login form with B's credentials; CSRF
+  fails","guard_snippet":"if request.method == 'POST' and request.path ==
+  reverse('login') and request.user.is_authenticated: return
+  redirect('products')  # no check that the posted number matches
+  request.user","potential_consequence":"The user meant to switch to B but
+  silently stays logged in as A, with no message."},
+  {"location":"src/web/views.py:482-494","trigger_condition":"POST /logg-ut/
+  fails CSRF (no cookie or token, or expired) while the session is still
+  valid","guard_snippet":"if request.method == 'POST' and request.path ==
+  reverse('logout'): return redirect('login')  # or show the retry
+  page","potential_consequence":"A user whose CSRF cookie was cleared cannot log
+  out from the header form. They get a 403 page."},
+  {"location":"src/web/forms.py:679-680","trigger_condition":"customer_number
+  and password CharFields have no max_length","guard_snippet":"customer_number =
+  forms.CharField(max_length=20); password = forms.CharField(strip=False,
+  max_length=1024)","potential_consequence":"Megabyte-sized passwords go through
+  PBKDF2 and a 500-character number is echoed back into the page."},
+  {"location":"src/web/views.py:431-457","trigger_condition":"Repeated failed
+  POSTs to the login view with no limit or delay","guard_snippet":"count
+  failures per client or customer_number and delay or lock after N attempts
+  (e.g. cache-based throttle before authenticate)","potential_consequence":"Seed
+  passwords of known customer numbers can be guessed without limit."},
+  {"location":"src/web/views.py:446-455","trigger_condition":"Claim: on a wrong
+  login the number is kept; NUL character is a listed case","guard_snippet":"For
+  a NUL character, customer_number fails validation and is absent from
+  cleaned_data, so the code echoes ''. The test excludes the NUL
+  case.","potential_consequence":"The number field is emptied after a NUL input,
+  which contradicts the spec's 'number kept' in every
+  case.","kind":"claim","confidence":"medium"},
+  {"location":"src/web/templates/web/products.html:733-741","trigger_condition":
+  "Logged-in company with no products","guard_snippet":"{% for product in
+  products %}...{% empty %}<tr><td colspan=\"3\">Ingen produkter.</td></tr>{%
+  endfor %}","potential_consequence":"The page shows only a table header with no
+  rows and no explanation."},
+  {"location":"tests/test_login.py:1277-1282","trigger_condition":"urls.urlpatte
+  rns holds an include() resolver, which has no
+  callback","guard_snippet":"getattr(getattr(pattern, 'callback', None),
+  'login_required', True)  # and skip or recurse into
+  resolvers","potential_consequence":"Adding an include() route raises
+  AttributeError in the exempt-route and every-page tests, contrary to the
+  'needs no change' docstring."},
+  {"location":"tests/test_isolation.py:1022","trigger_condition":"A view or form
+  aliases the model import or reaches the manager
+  indirectly","guard_snippet":"also flag aliased imports, e.g. ast.ImportFrom of
+  Product/SalesWeek as another name, and getattr(Model,
+  'objects')","potential_consequence":"A manager use outside web/queries.py
+  passes the AD-7 source scan unnoticed."}
+  ]
+
+⏺ Alle fire granskere har levert. Jeg trier funnene mot koden. Først sjekker jeg
+  hvordan test_load_seed peker SECRET_KEY_FILE til en midlertidig fil, siden
+  jeg vil teste innlogging mot de ekte seed-dataene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Edge Case Hunter review" finished · 1m 37s
+
+⏺ Jeg retter nå funnene jeg har bekreftet. Først koden: CSRF-feil for utloggede
+  brukere, nummeret beholdes alltid, ingen mellomlagring av innloggede sider og
+  aria-invalid på feltene.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå testene som dekker funnene (utlogget CSRF, hash uendret, serversiden av
+  utloggingen, årsskifte, strammere kildeskanning, ekte seed-data).
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Skanningstesten dupliserer logikken sin. Jeg trekker den ut i én felles
+  funksjon.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Alle seks mutasjoner mot rettelsene fanges. Nå fører jeg trieringen og
+  implementasjonsnotatene i spesifikasjonen.
+
+  Searched for 1 pattern, ran 5 shell commands (ctrl+o to expand)
+
+⏺ Gjennomgangen er ferdig med 308 grønne tester, og nå fører jeg QA-logg,
+  KI-styringslogg, arbeidslogg, statustabell, sprintstatus og issues.md.
+  Manuelle tester tar jeg etterpå. · summary
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Story 1.8 er bygd og gjennomgått, og alle automatiske kontroller er grønne
+  lokalt. Det som gjenstår før commit, er dine manuelle tester.
+
+  Status
+
+  - Tester og Ruff: 308 tester består, 1 hoppes over (Docker-sjekken, siden
+    docker ikke er i PATH i dette skallet). ruff check, ruff format --check og
+    makemigrations --check er rene.
+  - Mutasjoner: 15 brudd i koden ble fanget av testene.
+  - Røyktest: ekte runserver med curl. A fikk 30 produkter og ingen fra B, og
+    feil innlogging ga meldingen med nummeret beholdt.
+  - BMAD Code Review: fire uavhengige granskere ga 35 funn. 19 er rettet, 13
+    avvist og 3 var feil. Ingen er utsatt, og ingen trengte en beslutning fra
+    deg. Trieringen står i spesifikasjonen. Du ba om særlig vekt på CSRF og
+    tilgang mellom bedriftene, og begge fikk tester.
+  - Funn som ble rettet: en mislykket CSRF-sjekk fra en utlogget besøkende gir
+    nå innloggingssiden, ikke 403. Innloggede sider lagres ikke i nettleseren.
+    Skanningen etter direkte tilgang til bedriftsdata kan ikke lenger omgås.
+    Siste registrerte uke er testet over et årsskifte.
+  - Dokumenter: spesifikasjon, README, statustabell, QA-logg, KI-styringslogg,
+    DESIGN/EXPERIENCE-endringslogg og sprintstatus (review) er oppdatert.
+    Arbeidsloggen og issues.md oppdaterer jeg etter dine tester, sammen med
+    sesjonsloggen.
+  - Ikke gjort: ingen commit, push eller PR. Story 1.9 er fjernet fra planen, og
+    jeg har ikke startet story 2.1.
+
+  Manuelle tester jeg ber deg om
+
+  Svar i chatten med resultatene.
+
+  1. Safari på macOS, responsiv visning (320 px, 390 × 844 og 820 × 1180)
+
+  Start appen med uv run python src/manage.py runserver --insecure, og åpne
+  http://127.0.0.1:8000/ med open -a Safari. Sjekk:
+  - Innlogging: siden følger wireframen, Enter sender skjemaet, og ingenting
+    ruller sideveis.
+  - Feil innlogging: feil passord for 1001 gir meldingen over feltene, med
+    nummeret beholdt og passordfeltet tomt.
+  - Produktoversikt: 1001 / testbedrift-a viser «Testbedrift A · siste
+    registrerte uke: uke 45, 2026» og 30 produkter. 1002 / testbedrift-b viser
+    uke 44, 2026 og 32 produkter.
+  - Toppfelt: hos begge brytes toppfeltet pent ved 320 px.
+  - Tastatur: Tab gjennom toppfeltet gir en synlig hvit ring på
+    «Produktoversikt» og «Logg ut».
+  - Utlogging: «Logg ut» gir innloggingssiden, og Tilbake-knappen viser ikke
+    produktlisten.
+
+  2. Ekte iPhone 13 i Safari over lokalnettet (NFR-6)
+  - Start: PROGNOSE_LAN_HOST=<maskinens IPv4> uv run python src/manage.py 
+    runserver --insecure 0.0.0.0:8000. Åpne http://<IPv4>:8000/ på telefonen.
+  - Innlogging: logg inn som begge testbedriftene, og se at hver bare ser sine
+    egne produkter.
+  - Berøring: knapper og lenker er lette å treffe, og feltene zoomer ikke inn
+    når du trykker på dem (issues.md linje 111).
+  - Rapport: si fra dato og iOS-versjon.
+  - Rydding: stopp appen (Ctrl+C) og fjern variabelen etterpå.
+
+  Etter testene
+
+  Jeg fører resultatene i QA-loggen og arbeidsloggen, lukker de åpne punktene
+  for 1.8 i issues.md og ber deg kjøre /export til
+  .logs/mounia-03/sessions/1-8-2026-11-23.txt. Jeg gjør personvernkontrollen på
+  eksporten og hele diffen og ber deretter om godkjenning av commit. Push går
+  over SSH, og PR og fletting følger når CI og Windows-kjøringen er grønne på
+  siste commit.
+
+✻ Sautéed for 12m 10s · done 9:03 PM
+
+❯ Manuell Safari test avdekket feil: utlogging fra både A og Bviser Tilbake     
+  knappen produktoversikten igjen. Oppdatering av siden etter utlogging sendte  
+  meg til innloggingen. Jeg fikk også Skjemaet er utløpt da jeg sendt et        
+  gammelt innloggingsskjema på nytt. Undersøk årsakene, rett det som er         
+  nødvendig og kjør relevante tester. Ikke commit eller push ennå. Vi           
+  fortsetter manuelle tester etter rettinggen.                                  
+
+⏺ Jeg undersøker de tre observasjonene hver for seg. Først hva serveren faktisk
+  sender for /produkter/ og utloggingen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Serveren sender riktige no-store-hoder, og utlogging fungerer.
+  Tilbake-observasjonen tyder på Safaris tilbake-hurtigbuffer, så jeg sjekker
+  hvordan Safari håndterer no-store før jeg velger rettingen. · summary
+
+⏺ Web Search("Safari back-forward cache Cache-Control no-store bfcache HTTP page
+            restored after logout pageshow persisted")
+  ⎿  Did 1 search in 7s
+
+⏺ Safari viser den gamle siden fra tilbake-hurtigbufferen, ikke serveren, og
+  «skjemaet er utløpt» skyldes at innloggingen bytter CSRF-token. Jeg retter den
+  siste først. · summary
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Et redirect logges ikke av Django, så CSRF-feil ville forsvunnet fra
+  konsollen. Jeg beholder loggen og oppdaterer de to story 1.4-testene.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Innloggingsskjemafiksen er ferdig og testet. Tilbake-problemet krever en
+  arkitekturbeslutning fra deg, fordi den eneste løsningen som fungerer i Safari
+  endrer arkitekturen. · summary
+
+⏺ User answered Claude's questions:
+  ⎿  · Etter utlogging viser Safari den gamle produktoversikten når du trykker 
+     Tilbake. Serveren er riktig (`no-store` sendes, og oppdatering gir 
+     innlogging), men Safari viser siden fra sin tilbake-hurtigbuffer. WebKit 
+     sier selv at `Cache-Control` bare gjelder HTTP-bufferen. Hva skal vi gjøre?
+     → Liten app.js (Recommended)
+
+⏺ Du valgte app.js. Jeg finner først hvor AD-11 og «ett valgfritt script» er
+  beskrevet, så endringen blir ført konsekvent.
+  Searched for 1 pattern, ran 5 shell commands (ctrl+o to expand)
+
+⏺ Status: begge rettelsene er verifisert mot en ekte server og i node. Nå
+  mutasjonssjekker jeg dem, og så fører jeg dokumentene.
+
+  Ran 5 shell commands (ctrl+o to expand)
+
+⏺ Alle tre observasjonene er undersøkt, og to av dem er rettet. Det tredje var
+  riktig oppførsel. Jeg har ikke committet eller pushet noe.
+
+  Årsaker og rettinger
+
+  Observasjon: Tilbake etter utlogging viser oversikten
+  Årsak: Serveren er riktig. Jeg bekreftet med curl at Cache-Control: no-store
+  sendes, og at utloggingen sletter økta på serveren. Safari viser den gamle
+  siden fra tilbake-hurtigbufferen. WebKit sier selv at Cache-Control bare
+  gjelder HTTP-bufferen. Min never_cache fra reviewen var derfor ikke nok i
+  Safari.
+  Retting: Du valgte en liten app.js. Den laster en side på nytt når Safari
+  gjenoppretter den fra hurtigbufferen, og ligger bare på innloggede sider.
+  AD-11 er utvidet med en rad i spinens og epics' endringslogg.
+  ────────────────────────────────────────
+  Observasjon: Oppdatering etter utlogging gir innloggingen
+  Årsak: Ikke en feil: serveren sender en besøkende uten økt til innloggingen.
+  Retting: Ingen.
+  ────────────────────────────────────────
+  Observasjon: «Skjemaet er utløpt» på gammelt innloggingsskjema
+  Årsak: Innloggingen bytter CSRF-token, så skjemaet fra Tilbake-historikken
+  feiler sjekken. Jeg gjenskapte det med curl (403).
+  Retting: En POST fra en besøkende som ikke er innlogget, gir nå en ny
+  innloggingsside, og ingen blir logget inn. Avslaget logges fortsatt i
+  konsollen. «Skjemaet er utløpt» vises bare for en innlogget brukers andre
+  skjemaer.
+
+  Kontroll
+
+  - Tester og Ruff: 312 tester består, og 1 hoppes over (Docker-sjekken). Ruff
+    og makemigrations --check er rene.
+  - Mutasjoner: fem nye mutasjoner ble fanget: gammelt skjema som gir 403,
+    avslag uten logg, script som laster alltid, script uten tag og script på
+    innloggingssiden.
+  - Gammelt skjema mot server: verifisert mot en ekte server. Den gamle F1 etter
+    innlogging og utlogging gir 302 til /.
+  - app.js i node: en vanlig innlasting laster ikke på nytt, mens en
+    gjenopprettet side gjør det. Selve Safari-oppførselen kan bare du bekrefte.
+  - Nye tester: bl.a.
+    test_old_login_form_after_a_login_and_logout_gives_a_fresh_form og
+    test_script_reloads_a_page_that_the_browser_restores_from_its_cache.
+  - Dokumenter oppdatert: spesifikasjonen, README, QA-loggen (Safari-funnene),
+    KI-styringsloggen (tilfelle 37), statustabellen og AD-11.
+  - Merknad til flettelogg: endringslogg-radene i spinen, epics, EXPERIENCE og
+    DESIGN har «hash følger». De fylles inn etter commiten.
+
+  Den ene avveiningen
+
+  Et gammelt innloggingsskjema sendt på nytt gir nå bare et tomt, nytt skjema
+  uten melding. Hvis du heller vil ha teksten «Skjemaet er utløpt. Last siden på
+  nytt og prøv igjen.» som feilrad over feltene, er det en liten endring. Si
+  fra.
+
+  Retest i Safari
+
+  Restart serveren (runserver --insecure), og hold nede Cmd+Shift+R eller tøm
+  bufferen for 127.0.0.1, siden app.js er ny. Sjekk så:
+  1. A og B: logg ut og trykk Tilbake. Siden skal laste på nytt og vise
+     innloggingen, ikke oversikten.
+  2. Gammelt skjema: logg inn, logg ut, gå Tilbake til det gamle
+     innloggingsskjemaet og send det. Du skal få et nytt, tomt skjema, ikke
+     «Skjemaet er utløpt».
+  3. Resten fra før: de tre breddene og hvit fokusring i toppfeltet. Deretter
+     iPhone-testen.
+
+  Si fra hvilke av punktene som består, så fortsetter vi.
+
+✻ Sautéed for 6m 39s · done 9:35 PM
+
+❯ Manuell retest av story 1.8 er gjennomført 23.11.2026. Safari på Mac:-Tilbake 
+  etter utlogging fungerer for Testbedrift A og B. Produktoversikten vises      
+  ikke.- Gammelt innloggingsskjema gir nytt, tomt skjema uten                   
+  CSRF-feilmelding.-Innlogging og produktoversikt ser riktig ut ved 320,390 og  
+  820px. -Hvit fokusring bekreftet på Produktoversikt og loggut ved 320px.      
+  Ekte Iphone 13: -Innlogging fungere for begge testbedriftene.-A viser egne    
+  produkter og uke 45,2026.-Bviser egne produkter og uke 44,2026. -Layout,      
+  tekst og berøringsknapper fungerer visuelt bra. - eTTER UTLOGGING OG TILBAKE  
+  VISES INNLOGGINGSSIDEN. -Automatisk zoom ved inntasting er ikke sikkert       
+  bekreftet. Lan serveren er stoppet. Terminal viste med faktiske               
+  testresultater. Vurder eventuelle åpne punkter og gjennomfør nødvendige       
+  sluttkontroller etter BMAD. Ikke commit eller push før du har presentert      
+  status og bedt om godkjenning.                                                
+
+⏺ Takk for testresultatene. Jeg gjør sluttkontrollene nå: personvernskanning av
+  alt som skal committes, kontroll av død kode, og full test- og Ruff-kjøring.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Skanningen er ren: ingen lokale stier, e-poster, nøkler eller feilsøkingskode
+  i de 32 filene. Jeg leser sesjonslogg-skillen som CLAUDE.md krever ved
+  avslutning.
+
+⏺ Skill(sesjonslogg)
+  ⎿  Successfully loaded skill
+
+⏺ CLAUDE.md sier at skillen committer loggen lokalt, men du har bedt om at jeg
+  ikke committer før du godkjenner. Jeg skriver loggen og issues.md uten å
+  committe, og ser på forrige sesjonslogg for formatet først. · summary
+
+  Ran 5 shell commands (ctrl+o to expand)
+
+⏺ Retesten består, og jeg har gjort sluttkontrollene. Ingenting er committet
+  eller pushet. Jeg trenger iOS-versjonen fra deg før commit.
+
+  Statusrapport
+
+  - Branch: story/1-8-log-in-and-see-only-your-own-companys-products, fra main
+    (7aeb0a7). main er uendret og synkronisert med GitHub (0/0), og CI på main
+    var grønn.
+  - Lokale kontroller: 312 tester består, og 1 hoppes over (Docker-sjekken,
+    siden docker ikke er i PATH i dette skallet). ruff check, ruff format 
+    --check og makemigrations --check er rene.
+  - Personvernskanning: de 35 endrede og nye filene har ingen lokale stier,
+    e-poster, nøkler eller feilsøkingskode, og .secret_key er ignorert.
+    Eksporten av økta kommer i tillegg (se under).
+  - Mutasjoner: 20 mutasjoner i koden ble alle fanget.
+  - BMAD Code Review: fire uavhengige granskere ga 35 funn. 19 er rettet, 13
+    avvist og 3 var feil, og ingen er utsatt.
+  - Safari-funn: de to feilene fra Safari-testen er rettet. AD-11 er utvidet med
+    app.js etter ditt valg.
+  - Dine manuelle tester: alt bestått. Det eneste som ikke er bekreftet, er
+    automatisk zoom ved inntasting på iPhone. Det er ført som åpent punkt for
+    story 4.4.
+  - Dokumenter: spesifikasjonen står som done, sprintstatusen som review.
+    README, statustabellen (FR-1 bygd, FR-2 delvis bygd, siden produktsiden
+    først kommer i story 2.7), QA-loggen, KI-styringsloggen (tilfelle 37),
+    arbeidsloggen, sesjonsloggen og issues.md er oppdatert.
+
+  Åpne punkter (issues.md)
+
+  - Lukket: punktene for story 1.8 om ukeetiketten, advarselen for .secret_key,
+    lenken i error.html, fokusfargen, berøringsreglene og to-konto-testen med
+    uke 45 og 44.
+  - Nye:
+    - fylle inn commit-hashen i endringsloggene («hash følger») etter commit
+    - sjekke zoom ved inntasting på iPhone i story 4.4
+    - hver ny rute må inn i ROUTES, få never_cache og en eksempeladresse
+    - story 2.3 overtar tallformatet for lager
+
+  Det jeg trenger fra deg
+
+  1. iOS-versjonen på iPhone 13. QA-loggen har plassholderen {{IOS_VERSJON}}, og
+     NFR-6 krever dato og versjon.
+  2. Bekreft at PROGNOSE_LAN_HOST er fjernet. Det er acceptance-kriteriet etter
+     telefontesten. Jeg regner med at variabelen bare sto på kommandolinjen.
+  3. /export til .logs/mounia-03/sessions/1-8-2026-11-23.txt. Jeg maskerer den
+     og gjør personvernkontrollen før den committes.
+
+  Godkjenning jeg ber om
+
+  - Commit: CLAUDE.md sier at sesjonsloggen committes lokalt av skillen. Jeg har
+    bevisst ikke gjort det, fordi du ba om å vente. Forrige gang gikk loggene i
+    commiten sammen med dokumentene, i to commits: koden og testene først, så
+    loggene, eksporten og dokumentene. Jeg foreslår det samme.
+  - Etter commit: jeg fyller inn hashen i endringsloggene og QA-/KI-loggen i en
+    egen liten commit. Det vil kreve at du godkjenner den også.
+  - Push: over SSH, siden jeg ikke endrer workflows, men windows-setup.yml
+    kjører likevel på PR-en. HTTPS-tokenet mangler workflow-rettigheten, så SSH
+    er tryggest.
+  - PR: jeg lager den med alle 35 funn og beslutningene i en kommentar.
+  - Fletting: jeg fletter først når CI og Windows-kjøringen er grønne på siste
+    commit. Deretter kontrollerer jeg CI på main og fullfører fletteloggen etter
+    vanlig rutine. Story 2.1 starter jeg ikke.
+
+  Godkjenner du de to commitene, med iOS-versjonen og eksporten klar?
+
+✻ Sautéed for 2m 33s · done 10:42 PM

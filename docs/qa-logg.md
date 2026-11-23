@@ -894,3 +894,66 @@ Begge står i `deferred-work.md`.
 
 **Avvist.** 20 funn, og 4 var feil. Blant dem: et valg som hopper over den skrevne bekreftelsen (`--noinput`), at to kjøringer samtidig kan passere sjekken, at databasen ikke er migrert, `OverflowError` for uke 9999, og at `--reset` kan forkortes til `--res`. Alle står under «Review Triage Log» i [spesifikasjonen](../_bmad-output/implementation-artifacts/spec-1-7-load-the-seed-data-with-an-explicit-reset.md).
 
+## 2026-11-23 – Feil i KI-generert kode og tekst fra byggingen av story 1.8 (DR-9)
+
+**Hvordan det ble funnet.** Av testene, Ruff og en ny lesing av koden før første kjøring, under byggingen av story 1.8 på grenen `story/1-8-log-in-and-see-only-your-own-companys-products` (baseline `7aeb0a7`). Claude bygde innloggingen, utloggingen, produktoversikten og toppfeltet inline, uten subagent.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Første utkast av `login` kalte en metode som ikke finnes (`form.cleaned_data_for_login()`), og `csrf_failure` brukte et attributt som ikke finnes (`request.resolver_match_path`). Begge var plassholdere skrevet før koden var koblet sammen | Ny lesing av koden før første kjøring | `authenticate()` får verdiene fra `cleaned_data`, og stien sammenlignes med `reverse("login")` | `a078c90` |
+| CSS-en brukte `font-weight: 600` og `700` og `line-height: 1` direkte, mot regelen i story 1.4 om at skrifter bare kommer fra designtokens | `test_rules_take_colors_fonts_and_radii_only_from_the_tokens` | Reglene bruker `var(--font-label-weight)`, `var(--font-page-title-weight)` og ingen egen linjehøyde | `a078c90` |
+| Testhjelperen `session_ids` brukte klientens `session`-egenskap, som lager og lagrer en økt når det ikke finnes noen. Testen av at en mislykket CSRF-sjekk ikke lager økter, så en økt som ikke var der | `test_login_without_a_valid_csrf_token_is_refused` (`Session.objects.count()` var 1) | Hjelperen leser den lagrede økta fra informasjonskapselen | `a078c90` |
+| To sider med hvert sitt maskerte CSRF-token er aldri like byte for byte, så testen av at en ny innlasting gir samme side feilet | `test_logged_in_user_is_sent_from_the_login_page_to_the_overview` | Testen fjerner tokenene før sammenligningen | `a078c90` |
+| `error.html` hadde en fast lenke til `/produkter/` (BH-6 i story 1.4), som nå er en rute | Åpent punkt i `issues.md` | Lenken bruker `{% url 'products' %}` | `a078c90` |
+
+**Mutasjoner.** Koden ble brutt på 9 steder og satt tilbake, og testene fanget alle: produktene eller uka uten filter på bedriften, innloggingskravet fjernet, CSRF-feilvisningen fjernet, utloggingen som tar GET, innloggingen uten CSRF-sjekk, en melding som nevner feltet og `next` som følges.
+
+## 2026-11-23 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 1.8 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige KI-granskere i `bmad-code-review` gikk gjennom arbeidstreet til story 1.8 mot `main` (`7aeb0a7`), før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Diffen var på 73,5 kB. Spesifikasjonen gikk bare til Edge Case Hunter og Acceptance Auditor. De fant 35 funn: 7 med middels alvor (som grupper) og resten lave eller feil. 19 ble rettet, 13 avvist og 3 var feil funn. Ingen trengte en beslutning av brukeren. Brukeren ba om særlig tester av tilgangen mellom bedriftene og av CSRF-håndteringen.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| En mislykket CSRF-sjekk på en side som ikke er innloggingen, ga 403 også når ingen var logget inn. En utlogging fra et skjema som overlevde økta og CSRF-kapselen, ga «Skjemaet er utløpt». Spesifikasjonen sier at utloggede besøkende får innloggingssiden | EC-1, AA-1 og AA-2 | `csrf_failure` sender en POST fra en besøkende uten innlogging til innloggingssiden, og testen av «ikke innlogget» kjører nå også med CSRF-sjekken på | `a078c90` |
+| Innloggede sider ble ikke merket som ikke-lagringsverdige, så Tilbake etter «Logg ut» kunne vise en annen bedrifts liste fra nettleserens historikk | BH-3 | `@never_cache` på oversikten, og en test av `Cache-Control` for hver rute i `ROUTES` | `a078c90` |
+| Testen av utloggingen leste bare informasjonskapselen, så den viste ikke at økta var slettet på tjeneren | BH-4 | Testen krever at økt-raden er borte og at den gamle kapselen ikke lenger gir innlogging | `a078c90` |
+| Kildeskanningen etter managers utenfor `queries.py` kunne omgås med `models.Product.objects`, en importert alias, `get_model` og en related manager i en mal | BH-7, EC-9 og VG-2 | Alle `.objects`, import av en bedriftsmodell og `get_model` teller, malene skannes, og en test viser at skanningen finner de fire omgåelsene | `a078c90` |
+| Testen av at innloggingen ikke skriver om hashen sjekket bare `startswith` og at `last_login` var satt, så en omskriving av hashen ville ikke blitt fanget | AA-3 | Hashen før og etter sammenlignes. En mutasjon som skrev om hashen, ble fanget | `a078c90` |
+| Siste registrerte uke over et årsskifte var ikke testet, selv om seed-dataene krysser nyttår. Sorteringen på bare uke ville gitt «uke 52, 2025» | VG-1 | `test_latest_data_week_crosses_the_new_year`. En mutasjon på sorteringen ble fanget | `a078c90` |
+| Kundenummeret ble ikke beholdt etter et mislykket forsøk med et NUL-tegn, mot matrisen i spesifikasjonen, og testen hoppet over det tilfellet | EC-6 og AA-4 | Det innskrevne nummeret vises igjen (malen escaper det), og testen har ikke lenger unntaket | `a078c90` |
+| Siden for produktoversikten var ikke under skall-testen, og testen av tilgangen brukte bare to små bedrifter | BH-5, VG-3 og AA-7 | `test_logged_in_page_has_the_shell_and_the_app_header`, og `test_the_seed_companies_see_only_their_own_products` med de ekte seed-dataene og passordene | `a078c90` |
+| Isolasjonstesten kunne feile tilfeldig på sifre i et maskert CSRF-token, og `test_manage` samlet hele innloggingssuiten med en feil innstillingsmodul | BH-8 og BH-9 | Tokenene fjernes før sjekken, og `test_manage` samler `tests/test_company.py` | `a078c90` |
+| Feltene hadde ikke `aria-invalid` etter en feil, og README nevnte ikke at telefontesten sender passordet over vanlig HTTP | BH-12 og BH-15 | `aria-invalid="true"` på begge feltene, og en setning i README | `a078c90` |
+
+**Utsatt.** Ingen funn ble utsatt. Hashen i endringslogg-radene («hash følger») ble fylt inn etter commiten (`a078c90`).
+
+**Avvist.** 13 funn, og 3 var feil. Blant dem: ingen begrensning av antall forsøk eller lengden på feltene (én bruker per maskin, passordene er offentlige), ingen tom-tilstand eller tabelltekst for en bedrift uten produkter (katalogen har ingen tekst, og Epic 2 erstatter listen), at en utdatert innloggingsskjema fra en innlogget bruker bare sender brukeren til oversikten (spesifikasjonen, og en mislykket sjekk skal aldri bytte bedrift), ingen `next` etter innlogging, og at CSS-reglene for felt gjelder alle skjemaer. De står under «Review Triage Log» i [spesifikasjonen](../_bmad-output/implementation-artifacts/spec-1-8-log-in-and-see-only-your-own-companys-products.md).
+
+## 2026-11-23 – Funn i Safari-testen av story 1.8 (FR-1, NFR-10, DR-9)
+
+**Hvordan det ble funnet.** Brukeren testet innloggingen i Safari på macOS 23. november 2026, på arbeidstreet til story 1.8 etter BMAD Code Review. Resultatet står her slik brukeren meldte det i chatten. Claude kjørte ikke Safari selv.
+
+**Feilene.**
+
+| Feil | Årsak | Retting | Commit |
+|---|---|---|---|
+| Etter utlogging fra A og B viste Tilbake-knappen produktoversikten igjen. En oppdatering av siden sendte til innloggingen | Serveren var riktig: `Cache-Control: no-store` ble sendt (sjekket med curl), og en forespørsel uten økt ble sendt til innloggingen. Safari viser siden fra tilbake-hurtigbufferen, og WebKit overlater det til `pageshow`. Claudes rettelse i reviewen (`never_cache`) var derfor ikke nok i Safari | `app.js` laster en gjenopprettet side på nytt (`pageshow` med `persisted`), bare på innloggede sider. Brukeren valgte det, og AD-11 er utvidet med en rad i endringsloggene. Testene sjekker script-taggen, innholdet og at utloggede sider ikke har script. Verifisert i node og med en ekte server | `a078c90` |
+| Et gammelt innloggingsskjema sendt på nytt etter innlogging og utlogging ga «Skjemaet er utløpt» | Innloggingen bytter CSRF-token, så skjemaet fra Tilbake-historikken feiler sjekken. Visningen fra reviewen omdirigerte bare innloggede brukere. Gjenskapt med curl | `csrf_failure` sender hver POST fra en besøkende uten innlogging til en ny innloggingsside (ingen innlogging skjer), og logger avslaget selv, siden Django bare logger en 403. Siden «Skjemaet er utløpt» er igjen for en innlogget brukers andre skjemaer. Tre tester og to mutasjoner | `a078c90` |
+
+**Ikke en feil.** At en oppdatering etter utlogging sender til innloggingen er riktig oppførsel.
+
+## 2026-11-23 – Manuelle tester av innlogging og isolasjon (Story 1.8; FR-1, FR-2, NFR-6, NFR-10, SM-4)
+
+**Hva som ble testet.** At hver testbedrift logger inn og ser bare egne produkter og egen siste uke, at utloggingen og Tilbake-knappen virker, at et gammelt innloggingsskjema ikke gir en feilside, og at sidene ser riktige ut ved 320 px, 390 × 844 og 820 × 1180 og på en ekte telefon.
+
+**Hvordan.** Brukeren testet 23. november 2026, på arbeidstreet til story 1.8, først etter BMAD Code Review ([funnene fra Safari](#2026-11-23--funn-i-safari-testen-av-story-18-fr-1-nfr-10-dr-9)) og så på nytt etter rettingene. Resultatet står her slik brukeren meldte det i chatten. Claude kjørte ikke Safari selv.
+
+**Resultat av retesten: bestått.**
+- **Safari på Mac (responsiv visning):** Tilbake etter utlogging virker for Testbedrift A og B, og produktoversikten vises ikke. Et gammelt innloggingsskjema sendt på nytt gir et nytt, tomt skjema uten CSRF-melding. Innloggingen og produktoversikten ser riktige ut ved 320, 390 og 820 px. Den hvite fokusringen er bekreftet på «Produktoversikt» og «Logg ut» ved 320 px.
+- **Ekte iPhone 13 i Safari over lokalnettet (NFR-6), iOS 27.0.1:** innloggingen virker for begge testbedriftene. A viser egne produkter og uke 45, 2026, og B egne produkter og uke 44, 2026. Layout, tekst og berøringsknapper fungerer visuelt bra. Etter utlogging og Tilbake vises innloggingssiden. Appen ble stoppet med Ctrl+C etter testen, og `PROGNOSE_LAN_HOST` var bare satt på startkommandoen.
+
+**Ikke bekreftet.** At iPhone ikke zoomer inn ved inntasting i feltene (16 px tekst). Det sjekkes på nytt på den ekte telefonen i story 4.4 (`issues.md`). Windows er ikke testet (testmaskinen er tilgjengelig 25. november og 7. desember).

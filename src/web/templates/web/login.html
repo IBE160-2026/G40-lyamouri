@@ -1,0 +1,23 @@
+{% extends "web/base.html" %}
+{# Innlogging (FR-1, UX-DR8, UX-DR38). The error row stands above the fields, with the customer number kept and no password sent back. #}
+{% block title %}Logg inn – Prognose{% endblock %}
+{% block main %}
+  <main class="panel-page">
+    <div class="panel">
+      <h1>Logg inn</h1>
+      <p>Prognose foreslår hvor mye du bør bestille neste uke, og viser hvordan tallene er regnet.</p>
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {% if error %}
+        <p class="error-message" id="login-error" role="alert"><span class="error-icon" aria-hidden="true">!</span>{{ error }}</p>
+        {% endif %}
+        <label for="id_customer_number">Kundenummer</label>
+        <input type="text" id="id_customer_number" name="customer_number" value="{{ customer_number }}" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false"{% if error %} aria-invalid="true" aria-describedby="login-error"{% endif %}>
+        <label for="id_password">Passord</label>
+        <input type="password" id="id_password" name="password" autocomplete="current-password"{% if error %} aria-invalid="true" aria-describedby="login-error"{% endif %}>
+        <button type="submit" class="button-primary">Logg inn</button>
+      </form>
+      <p class="note">Innloggingen for testbedriftene står i README.</p>
+    </div>
+  </main>
+{% endblock %}

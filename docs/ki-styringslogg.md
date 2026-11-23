@@ -380,4 +380,18 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Triage Log» i [spesifikasjonen for story 1.7](../_bmad-output/implementation-artifacts/spec-1-7-load-the-seed-data-with-an-explicit-reset.md).
 - **QA-loggen:** [feilene fra byggingen av story 1.7](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-17-dr-9) og [fra BMAD Code Review av story 1.7](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-17-dr-9).
 
+### 37. Utlogging, CSRF og tilgangen mellom bedriftene i story 1.8 (23. november 2026)
+
+- **Hva KI foreslo:** Claude bygde innloggingen med Djangos `LoginRequiredMiddleware`, en POST-utlogging og en egen visning for mislykket CSRF-sjekk, og skrev to-konto-testen med en liste over ruter som senere stories utvider. Claude foreslo å la en mislykket CSRF-sjekk på innloggingen sende en innlogget bruker til oversikten, og lot utloggingen gå gjennom den vanlige 403-siden.
+- **Hva som var feil:**
+  - Innloggingen bytter CSRF-token, så en andre innsending av samme skjema ga 403-siden. Det bryter kravet om at en dobbel innsending gir samme resultat (NFR-10). Claude oppdaget det før første kjøring og la til visningen, og testet det med CSRF-sjekken på.
+  - Visningen dekket bare innloggingen. En utlogget besøkende som sendte inn et skjema fra en side som overlevde økta, fikk likevel 403-siden. Spesifikasjonen sa at utloggede får innloggingssiden. Fire granskere i `bmad-code-review` fant det.
+  - Innloggede sider kunne bli liggende i nettleserens historikk, så Tilbake etter «Logg ut» kunne vise en bedrifts liste. Skanningen etter managers utenfor `queries.py` kunne omgås, og testen av hashen sjekket for lite.
+  - Spesifikasjonen sa at en andre utlogging trengte en egen omdirigering ved CSRF-feil. Testen viste at utloggingen ikke bytter token, så den andre utloggingen går gjennom. Omdirigeringen ble i stedet en regel for hver POST fra en besøkende som ikke er innlogget.
+  - Claude regnet `never_cache` som nok mot at Tilbake viser en side etter utlogging, og testet bare hodet. Brukerens Safari-test viste at Safari gjenoppretter siden fra tilbake-hurtigbufferen likevel, og at et gammelt innloggingsskjema ga «Skjemaet er utløpt». Claude fant årsakene (curl og WebKit-dokumentasjonen), rettet CSRF-visningen og la fram valget om et script, siden det krever en endring i AD-11.
+- **Hva gruppen bestemte:** Brukeren valgte en hvit fokusring i toppfeltet (WCAG 1.4.11), godkjente spesifikasjonen og ba om særlig tester av tilgangen mellom bedriftene og av CSRF-håndteringen. Etter Safari-testen valgte brukeren en liten `app.js` som laster en gjenopprettet side på nytt, og AD-11 ble utvidet med det. Ingen funn trengte en beslutning. 19 ble rettet og 16 avvist eller feil.
+- **Commit eller pull request:** `a078c90`.
+- **Kilde:** «Review Triage Log» i [spesifikasjonen for story 1.8](../_bmad-output/implementation-artifacts/spec-1-8-log-in-and-see-only-your-own-companys-products.md).
+- **QA-loggen:** [feilene fra byggingen av story 1.8](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-18-dr-9) og [fra BMAD Code Review av story 1.8](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-18-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).
