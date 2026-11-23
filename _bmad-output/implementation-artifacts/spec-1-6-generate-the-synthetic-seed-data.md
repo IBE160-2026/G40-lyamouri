@@ -69,12 +69,68 @@ context: ['{project-root}/_bmad-output/implementation-artifacts/epic-1-context.m
 - [x] `data/seed/testbedrift-a.json`, `testbedrift-b.json` -- generated and committed.
 - [x] `data/README.md` -- in Norwegian: the schema, how to run the generator, every product with its number, the pattern or E-n it shows (FR-3, SM-7), and that Story 1.7 loads the files.
 - [x] `tests/test_seed_data.py` -- one test per matrix row, plus the counts, the history ranges, the disjoint numbers and the patterns.
-- [ ] `README.md`, `reference/README.md`, `docs/statustabell.md`, `docs/qa-logg.md`, `docs/ki-styringslogg.md`, `docs/arbeidslogg.md`, `sprint-status.yaml`, `.logs/mounia-03/issues.md`, `deferred-work.md` -- the logins and the generator command, the reader, the FR-3 row, the checks and any difference, the work log, the story status and the open points.
+- [x] `README.md`, `reference/README.md`, `docs/statustabell.md`, `docs/qa-logg.md`, `docs/ki-styringslogg.md`, `docs/arbeidslogg.md`, `sprint-status.yaml`, `.logs/mounia-03/issues.md`, `deferred-work.md` -- the logins and the generator command, the reader, the FR-3 row, the checks and any difference, the work log, the story status and the open points.
 
 **Acceptance Criteria:**
 - Given `uv run pytest`, `uv run ruff check` and `uv run ruff format --check`, when they run locally and in CI, then they pass.
 - Given the generator run twice, when the files are compared, then they are identical and equal the committed files.
 - Given each company, when its products are counted, then the ranges, the patterns, A's «Denne uken» figures and the rule test products agree with the sections above.
+
+## Review Findings
+
+BMAD Code Review of PR #18 (2026-11-23): Blind Hunter (BH), Edge Case Hunter (EC), Verification Gap (VG) and Acceptance Auditor (AA), as four independent subagents, on the diff from `main` to `1dff8db` without the seed JSON and the spec. 42 findings: 9 medium and 33 low, none high. 26 patches, 5 decisions and 11 rejected. The fixes are in `ecbf55d`.
+
+The user's decisions (2026-11-23):
+1. Windows (EC-12, VG-1): soften the text in `data/README.md` (tested on macOS and Linux only) and extend the deferred point about `pytest` in the Windows job; no workflow change.
+2. «Denne uken» (EC-13, VG-2, AA-2, BH-7): add a test that computes R-8 on the last three valid weeks and compares with the mockup's quantities, totals and the four warnings; story 2.8 replaces it with the core and checks the labels.
+3. Apply all patches P1–P9.
+
+| ID | Finding | Verdict | Route |
+|---|---|---|---|
+| BH-1 | Seed JSON files left out of the diff | low | reject — left out to save tokens; the files are reproduced by running the generator, and the diff said where they were |
+| BH-2 | Seasonal peak is in ISO week 27 and the trough in week 1, not 26 and 52 | low | patch |
+| BH-3 | A workbook product that no company places is dropped silently | medium | patch |
+| BH-4 | `validate` skips names, customer numbers, empty series and the schema's exact keys | low | patch — prefix, types and the `first_week` format rejected: derived from date arithmetic, and the committed files are tested |
+| BH-5 | The salt comment says «128 bits of entropy»; iterations are not pinned | low | patch — comment fixed; pinning the iterations rejected (Django's default is chosen in the spec, and the hash test is the tripwire) |
+| BH-6 | The privacy scan reads the base64 hash | low | patch |
+| BH-7 | The mockup test never checks the suggested quantity or the totals | medium | patch — new «Denne uken» test (decision 2); the labels are deferred to story 2.8 |
+| BH-8 | The mockup parser is fragile | low | reject — fails loudly |
+| BH-9 | Pattern checks are ad hoc, and the cover threshold is undefined | low | patch — the threshold is now in `data/README.md`; the approximations stay (the core comes in Epic 2) |
+| BH-10 | Trend and season exist only in Testbedrift B, unexplained | low | patch |
+| BH-11 | The status table lists too few tests | low | patch |
+| BH-12 | The LF test only reads `.gitattributes` text | low | patch — now uses `git check-attr` |
+| BH-13 | `main` catches only `ValueError` | low | reject — any other error is loud and writes nothing |
+| BH-14 | The two files are written one after the other | low | patch |
+| BH-15 | The logins carry no «demo only» note | low | patch |
+| EC-1 | Raw traceback for a missing workbook | low | reject — same as BH-13 |
+| EC-2 | A workbook product row without company, sales or stock gives a `KeyError` | medium | patch — with BH-3 |
+| EC-3 | Two workbook rows with the same product silently keep the last | medium | patch — with BH-3 |
+| EC-4 | `validate` accepts repeated names and customer numbers | low | patch — with BH-4 |
+| EC-5 | `dumps` regex rewrites list-like text inside strings | low | reject — the names are fixed, and a fix is more than a direct correction |
+| EC-6 | A failure on the second file leaves a half-written pair | low | patch — with BH-14 |
+| EC-7 | `mockup_products` gives a `TypeError` when «Foreslått» is missing | low | reject — fails loudly |
+| EC-8 | `mockup_products` drops a malformed product silently | low | reject — the count of 8 catches it |
+| EC-9 | `pattern_table` reads rows past the next heading | low | patch |
+| EC-10 | The cover pattern passes a product with no valid weeks | low | patch |
+| EC-11 | The privacy regex can match inside the hash | low | patch — with BH-6 |
+| EC-12 | The Windows claim is tested only on Linux | medium | decision — decision 1: soften the text and defer |
+| EC-13 | «Denne uken» claim has no committed test | medium | decision — decision 2: test added; the core in story 2.8 |
+| VG-1 | No test of the byte-for-byte claim runs on Windows | medium | decision — decision 1 (with EC-12) |
+| VG-2 | Suggested quantities, labels and totals are not asserted | medium | decision — decision 2; the labels deferred to story 2.8 |
+| VG-3 | Skruer and 20014 fall back to 9 in the middle of the new level | low | patch |
+| VG-4 | «Long ago» stockouts of 20012 are not checked | low | reject — the text is more precise than the approximation, with no harm |
+| VG-5 | 20015 has 10 stockout weeks, the test needs 9 | low | reject — same |
+| VG-6 | Several `validate` and `series_of` branches have no test | low | patch |
+| AA-1 | The documentation task is not done | low | reject — not a defect: planned after the review, and done in the documentation commit |
+| AA-2 | «Denne uken» for A is not checked by a committed test | medium | decision — decision 2 |
+| AA-3 | `data/README.md` does not list every product | low | patch |
+| AA-4 | `validate` does not compare the end week with the configured latest week | low | patch — with BH-4 |
+| AA-5 | The test counts in the Implementation Notes are off | low | patch |
+| AA-6 | The odd week among Skruer's new-level weeks | low | patch — same as VG-3 |
+| AA-7 | `.gitattributes` is outside the spec | low | reject — a logged addition from BH-3 of the build review, with a test |
+| AA-8 | The phone-number pattern can match inside the hash | low | patch — same as BH-6 |
+
+**Deferred** (`deferred-work.md`): the core-based check of «Denne uken», the labels and the 21 quiet products (story 2.8); `pytest` and the seed tests in the Windows job.
 
 ## Implementation Notes
 
@@ -83,8 +139,8 @@ context: ['{project-root}/_bmad-output/implementation-artifacts/epic-1-context.m
 - The generator writes 30 products for A and 32 for B. Strøsand 25 kg (10012) and the E8 product (10025) are in A and the nine other rule test products (20001–20009) in B, each placed in the company the workbook names; the generator checks that.
 - The independent R-1 to R-16 script in the scratchpad (not committed) found that A's «Denne uken» gives 4 products to order soon (Isskrape 7, Strøsand 11, Lyspære 9, Skruer 4: 31 units), 1 without a forecast and 4 with warnings, that no other A product has a warning, that every one of the 11 workbook products gets the expected base forecast, order quantity, unusual weeks, level-shift weeks, warnings and label, and that no product has an unintended unusual week, level shift or stockout. Skruer's forecast is 21,3 and Kabelstrips' cover 3,75 (3,8).
 - Found by the tests, not by the build: the first salt, «prognoseSeedA» (13 letters), has about 77 bits of entropy, and Django's `must_update` asks for 128, so the first login would have rewritten the hash with a random salt and the fixed salt would not hold. The salts now have 24 letters (QA log). The first level-shift proxy in the pattern test also ignored that R-10 leaves out earlier unusual weeks from the baseline, so it missed Skruer; it now uses the baseline before the first of the three weeks.
-- 16 tests in `tests/test_seed_data.py`, 167 in all. Nine mutations, each applied to the committed files or the README and then restored, were all caught: a changed stock, a plain password, a local path, a wrong pattern product, a removed pattern row, a wrong README password, a changed hash, CRLF line endings and a dropped week.
-- Not tested here, because it needs the core of Epic 2: «Denne uken» for A (4, 31, 1, 4) and every product's label. The open point for story 2.8 says so.
+- 17 tests in `tests/test_seed_data.py` at the first commit, 168 in all. Nine mutations, each applied to the committed files or the README and then restored, were all caught: a changed stock, a plain password, a local path, a wrong pattern product, a removed pattern row, a wrong README password, a changed hash, CRLF line endings and a dropped week.
+- After the review (`ecbf55d`): 21 test functions in the file and 173 tests in all. «Denne uken» for A (4 products, 31 units, 1 without a forecast, 4 with warnings) is checked by a stand-in R-8 in `tests/test_seed_data.py`; the core and the labels are checked in story 2.8.
 
 ## Spec Change Log
 

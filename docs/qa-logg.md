@@ -796,3 +796,45 @@ Begge står i `deferred-work.md`.
 - **BH-30:** ankeret uke 45 i 2026 står i README-en.
 - **EC-17:** «none» i en tall-liste gir en høylytt feil.
 - **EC-3, EC-18 og EC-19:** overskrifter og kontrollrader endres ikke for hånd, og Excel-kontrollen viser en 1 i stedet for TRUE.
+
+## 2026-11-23 – Feil i KI-generert kode og tekst fra byggingen av story 1.6 (DR-9)
+
+**Hvordan det ble funnet.** Claude Code skrev generatoren, testene og dokumentene i story 1.6 med `bmad-build`. Et uavhengig skript for R-1 til R-16 (ikke committet) regnet ut begge seed-filene før de ble committet, og testene i `tests/test_seed_data.py` ble kjørt mot dem. Deretter gikk byggeøkten selv gjennom diffen med Blind Hunter, uten subagenter, og fant 10 funn (BH-1 til BH-10): 6 ble rettet og 4 avvist.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Saltet «prognoseSeedA» hadde 13 tegn. Django godtar et salt først fra 22 tegn, så første innlogging ville ha skrevet hashen om med et tilfeldig salt, og det faste saltet ville ikke holdt | `must_update` i testen av hashene | Saltene har 24 tegn («prognoseSeedTestbedriftA» og «…B») | `1dff8db` |
+| Testen for nytt nivå sammenlignet hver uke med de tre foregående ukene, også de uvanlige, så den overså Skruer | Testen av mønstrene | Testen bruker grunnlinjen før den første av de tre ukene | `1dff8db` |
+| Windows med `core.autocrlf` ville ha sjekket seed-filene ut med CRLF, så testen som sammenligner byte for byte feilet hos en sensor på Windows | Blind Hunter i `bmad-build` (BH-3) | `.gitattributes` holder JSON-filene med LF, og en test leser den | `1dff8db` |
+| `patches` og `tail` kunne treffe feil uke med en negativ indeks, `validate` godtok negativt lager, en konstant var ubrukt, feilmeldingen brukte ordet «frø», og importen av leseren var uten forklaring | Blind Hunter i `bmad-build` (BH-1, BH-2, BH-4 til BH-6) | Begge gir feil, lageret sjekkes, konstanten er slettet, og meldingen og kommentaren er rettet | `1dff8db` |
+
+**Avvist.** BH-7 til BH-10: hash-testen er varsellampen når Django endrer standarden, mønstertestene er med vilje enklere enn reglene, parserne feiler høylytt, og `data` på stien skygger ingen moduler. De står under «Review Triage Log» i [spesifikasjonen for story 1.6](../_bmad-output/implementation-artifacts/spec-1-6-generate-the-synthetic-seed-data.md).
+
+## 2026-11-23 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 1.6 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige KI-granskere i `bmad-code-review` gikk gjennom PR #18: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. De så diffen fra `main` til `1dff8db`, uten seed-filene og spesifikasjonen. De fant 42 funn: 9 med middels alvor og 33 med lavt, ingen høye. 26 ble rettet, 5 ble beslutninger som brukeren tok, og 11 ble avvist. CI og Windows-testen passerte på `1dff8db` før reviewen.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Skruer (10004) og Gjerdestolpe (20014) hadde en uke på 9 midt i det nye nivået (21, 22, 21, 9, 22, 21, 21). Reglene ble ikke brutt, men serien så feil ut for den som leste grafen | VG-3 og AA-6 | Uka er satt til 22. Halen og dermed prognosene og forslagene er uendret | `ecbf55d` |
+| Generatoren hoppet stille over regnearkprodukter som ingen bedrift plasserer, og beholdt den siste av to rader med samme produkt. En rad uten bedrift, salg eller lager ga en rå `KeyError` | BH-3, EC-2 og EC-3 | Alle tre gir en feil med navnet på produktet, og ingenting skrives | `ecbf55d` |
+| `validate` sammenlignet ikke siste uke med den konfigurerte, og sjekket ikke tomme eller gjentatte navn, kundenumre eller tom serie | BH-4, EC-4 og AA-4 | Alle er med, og testene dekker grenene i `validate` og `series_of` (VG-6) | `ecbf55d` |
+| Testen for personvern skannet også base64-hashen, så `+47` eller åtte sifre kunne treffe ved en tilfeldighet etter en ny generering | BH-6, EC-11 og AA-8 | Hashen hoppes over i skanningen | `ecbf55d` |
+| De to filene ble skrevet én og én, så en feil på den andre kunne etterlate et halvt par | BH-14 og EC-6 | Begge tekstene lages før noen fil åpnes | `ecbf55d` |
+| Ingen committet test dekket «Denne uken» for Testbedrift A: forslagene, summen på 31, produktet uten prognose, de fire varslene og de 21 rolige produktene. Lager 25→5 på Kabelstrips ga fortsatt grønne tester | EC-13, VG-2, AA-2 og BH-7 | Ny test som regner R-8 på de tre siste gyldige ukene og sammenligner med mockupen. Fire feil som ble lagt inn, ble fanget | `ecbf55d` |
+| Teksten sa at sesongen har toppen i uke 26 og bunnen i uke 52, men formelen gir uke 27 og uke 1 | BH-2 | Teksten er rettet | `ecbf55d` |
+| `data/README.md` lister ikke alle produktene, terskelen for «lager dekker» var ikke definert, og trend og sesong bare i B var uten forklaring | AA-3, BH-9 og BH-10 | De 21+11 stabile produktene og B-mønsterproduktene er listet, terskelen er definert, og forklaringen står der | `ecbf55d` |
+| Testene av skjemaet og LF-linjeslutt var for svake: ingen test sjekket nøklene i skjemaet, og LF-testen leste bare teksten i `.gitattributes`. `pattern_table` leste forbi neste overskrift, og «lager dekker»-mønsteret godtok et produkt uten gyldige uker | BH-4, BH-12, EC-9 og EC-10 | Nøklene testes, `git check-attr` brukes, tabellen kuttes ved neste overskrift, og mønsteret krever 3 gyldige uker | `ecbf55d` |
+| Statustabellen nevnte 7 av testene, kommentaren om saltet sa «128 bit entropi», innloggingene manglet «bare for demo», og notatene hadde feil testtall | BH-11, BH-5, BH-15 og AA-5 | Rettet | `ecbf55d` |
+
+**Brukerens beslutninger.** Windows (EC-12, VG-1): teksten i `data/README.md` sier at testene bare er kjørt på macOS og Linux, og det utsatte punktet om pytest i Windows-jobben er utvidet. «Denne uken»: testen over, og story 2.8 sjekker det med kjernen. Alle patchene ble gjort.
+
+**Utsatt.**
+- **Story 2.8:** «Denne uken», tillitsmerkene og de 21 rolige produktene sjekkes mot kjernen, og R-8-regningen i testen byttes ut med kjernen.
+- **Windows:** pytest med seed-testene i Windows-jobben, og stifiltrene i `windows-setup.yml`.
+
+**Avvist.** 11 funn: blant annet at `main()` bare fanger `ValueError`, at iterasjonene ikke er festet, at mockup-parseren er skjør, at `.gitattributes` ligger utenfor spesifikasjonen og at seed-filene lå utenfor diffen. Alle står under «Review Findings» i [spesifikasjonen](../_bmad-output/implementation-artifacts/spec-1-6-generate-the-synthetic-seed-data.md).

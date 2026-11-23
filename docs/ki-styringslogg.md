@@ -348,4 +348,19 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Findings» i [spesifikasjonen for story 1.5](../_bmad-output/implementation-artifacts/spec-1-5-reference-spreadsheet-as-the-answer-key.md); kommentaren i PR #16.
 - **QA-loggen:** [feilene fra BMAD Code Review av story 1.5](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-15-dr-9).
 
+### 35. Det første saltet og beslutningene i BMAD Code Review av story 1.6 (23. november 2026)
+
+- **Hva KI foreslo:** Claude skrev generatoren for seed-dataene med et fast salt per bedrift, som spesifikasjonen ba om, og valgte salt på 13 tegn. Claude lot også sjekken av «Denne uken» vente på story 2.8, med det uavhengige skriptet som eneste kontroll. Fire KI-granskere i `bmad-code-review` fant 42 funn, og Claude foreslo en vurdering og en behandling for hvert av dem.
+- **Hva som var feil:**
+  - Saltet var for kort for Django. `must_update` krever 22 tegn, så første innlogging ville ha skrevet hashen om med et tilfeldig salt. Testen av hashene fanget det, ikke Claudes egen gjennomgang.
+  - Nivåskiftet i Skruer og Gjerdestolpe hadde en uke som falt tilbake til 9, og «Denne uken» var ikke dekket av noen test, så en feil lager på ett produkt ga grønne tester.
+  - Ikke alle funnene skulle følges: 11 ble avvist, og to valg var brukerens.
+- **Hva gruppen bestemte:** Brukeren valgte:
+  - å mykne teksten om Windows og utsette pytest i Windows-jobben, i stedet for å endre workflowen;
+  - en test av «Denne uken» nå, med R-8 i testen som story 2.8 bytter ut med kjernen;
+  - å gjøre alle patchene.
+- **Commit eller pull request:** `1dff8db`, `ecbf55d` og PR #18.
+- **Kilde:** «Review Findings» i [spesifikasjonen for story 1.6](../_bmad-output/implementation-artifacts/spec-1-6-generate-the-synthetic-seed-data.md); kommentaren i PR #18.
+- **QA-loggen:** [feilene fra byggingen av story 1.6](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-16-dr-9) og [fra BMAD Code Review av story 1.6](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-16-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).
