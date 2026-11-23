@@ -695,6 +695,19 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 1.5 er flettet inn i `main` (`4dc963a`), og de åpne punktene for story 1.6, 1.7, 5.1 og 5.2 står i `issues.md`. Neste story følger rekkefølgen i sprintplanen, og story 1.6 er ikke startet.
 
+### 23. november 2026 – Story 1.6: de syntetiske seed-dataene
+
+* Startet story 1.6 med `bmad-build` på grenen `story/1-6-generate-the-synthetic-seed-data`, laget fra `main` (`1610325`). Epic-1-konteksten var formelt utdatert, men endringene gjelder ikke seed-data, så Claude brukte den som den var. Subagenter brukes bare til gjennomgangene.
+* Brukeren bestemte at den felles leseren av regnearket ligger i `reference/answer_key_reader.py` (BH-31). Godkjente spesifikasjonen, også størrelsen på om lag 2 700 tokens. Claude valgte selv kundenumre (1001 og 1002) og passord (de står i README-en), og at Testbedrift B slutter i uke 44 mens A slutter i uke 45.
+* Claude skrev generatoren `data/generate_seed.py`, de to seed-filene (30 og 32 produkter), `data/README.md`, 17 nye tester i `tests/test_seed_data.py` og flyttet leseren. Et uavhengig skript for R-1 til R-16 (ikke committet) ga 4 produkter å bestille snart (7, 11, 9 og 4, til sammen 31), 1 uten prognose og 4 med varsel for Testbedrift A, og alle 11 regnearkprodukter fikk de forventede verdiene. Ni feil som ble lagt inn én om gangen, ble alle fanget.
+* Testene fant at det første saltet var for kort for Django, og at testen av nytt nivå oversåg Skruer ([QA-loggen](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-16-dr-9)). Blind Hunter i byggeøkten ga 10 funn: 6 rettet og 4 avvist.
+* Godkjente commit, push og PR #18 (`1dff8db`). CI og Windows-testen passerte på `1dff8db`.
+* Kjørte BMAD Code Review med fire KI-granskere: 42 funn, 26 rettet, 5 beslutninger og 11 avvist ([tilfelle 35](ki-styringslogg.md#35-det-første-saltet-og-beslutningene-i-bmad-code-review-av-story-16-23-november-2026)). Brukeren bestemte å mykne teksten om Windows og utsette pytest i Windows-jobben, å legge til en test av «Denne uken» med R-8 i testen til story 2.8, og å gjøre alle patchene.
+* Claude rettet generatoren, testene og dokumentene, og kjørte det uavhengige skriptet på nytt med samme resultat. 173 tester og Ruff passerte. Fire feil som ble lagt inn i «Denne uken»-testen, ble alle fanget.
+* Godkjente commit og push av rettingene (`ecbf55d`) og dokumentene (`5bfc29e`), og la inn kommentaren i PR #18 med alle 42 funnene og beslutningene. CI-kjøring og Windows-testen passerte på `ecbf55d` og på `5bfc29e`.
+* Eksporterte økten med `/export`. Claude maskerte den: 4 stier til prosjektmappa ble `<repo>`, også der en sti var brutt over to linjer. Kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler eller tokens. De to testpassordene fra README-en er syntetiske og står i teksten.
+* Sesjonsloggen `978-2026-11-23-18-09-42-story-1-6-seed-dataene.md` og fem nye åpne punkter i `issues.md` er ført, og BH-31 er løst. Story 1.6 står som `done` i sprintstatusen.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

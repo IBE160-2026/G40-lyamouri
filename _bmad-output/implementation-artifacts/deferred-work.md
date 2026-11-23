@@ -30,3 +30,8 @@
 
 - The only parser of the answer key's notation («S», «S2», «none», the lists and flags) is `tests/answer_key.py`, which pytest puts on `sys.path`, so `data/generate_seed.py` cannot import it cleanly (BH-31). AD-15 and AD-17 have the generator read the same workbook, so Story 1.6 decides where the shared reader lives instead of copying the parser.
 - E14's week forecasts with seasonal adjustment off, the «flat» side of the last row in FR-21's table («E14: flat → seasonal»), are not in the answer key (BH-23). The story covers only the four FR-21 variants beyond PRD §5.7, so Story 5.1, which builds FR-9, records them, for example on E30 (off).
+
+## Deferred from: code review of spec-1-6-generate-the-synthetic-seed-data.md (2026-11-23)
+
+- The «Denne uken» figures of Testbedrift A (4 products to order soon, 31 units, 1 without a forecast, 4 with warnings), every product's confidence label and the claim that the 21 other products are quiet are checked only by a stand-in R-8 on the last three valid weeks in `tests/test_seed_data.py` (`suggested_quantity`, `warning_shapes`) and by an uncommitted script (VG-2, AA-2, EC-13). Story 2.8 checks them with the core and removes the stand-in.
+- `uv run pytest`, including `tests/test_seed_data.py`, does not run in `.github/workflows/windows-setup.yml`, and its `paths:` filter omits `data/**`, `reference/**`, `tests/**` and `.gitattributes`, so the claim that the seed files are identical on Windows is untested (VG-1, EC-12). This extends the point of Story 1.3 above: run `uv run pytest` in the Windows workflow too. A change to a workflow needs an SSH push.

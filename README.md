@@ -45,6 +45,17 @@ Både appen og databasen svarer bare på din egen maskin (127.0.0.1).
 
 Er en `DATABASE_URL` eksportert i terminalen, for eksempel for et annet prosjekt, bruker Prognose og testene den databasen i stedet for databasen fra `compose.yaml`, og pytest lager og sletter da testdatabasen sin der. Fjern variabelen først, med `unset DATABASE_URL` i Terminal på macOS eller `Remove-Item Env:DATABASE_URL` i PowerShell.
 
+## Testbedrifter
+
+Prognose har to syntetiske testbedrifter, uten virkelige data. Dataene lages av en generator som gir de samme filene hver gang, og ligger i [`data/seed/`](data/seed/). [`data/README.md`](data/README.md) forklarer skjemaet, produktene og mønstrene. Filene har bare passordhasher, så passordene står her. De gjelder bare for disse testdataene på din egen maskin, og skal ikke brukes noe annet sted:
+
+| Bedrift | Kundenummer | Passord |
+|---|---|---|
+| Testbedrift A | 1001 | `testbedrift-a` |
+| Testbedrift B | 1002 | `testbedrift-b` |
+
+Generatoren kjøres med `uv run python data/generate_seed.py`. Dataene lastes først inn i databasen når `load_seed` kan det (story 1.7), og innloggingen kommer i story 1.8.
+
 ## Nøkler og hemmeligheter
 
 - Prognose trenger ingen API-nøkkel, betalt tjeneste eller tredjepartskonto.
