@@ -22,7 +22,11 @@ Starte story 1.7 («Load the seed data into an empty database, with an explicit 
 - **Omstartssjekken** (FR-4, SM-5), kjørt av brukeren på macOS: 2 bedrifter, 62 produkter, 5 016 salgsuker og 2 innstillinger uendret etter Docker-omstart, `window=5` bevart, `--reset` med «nullstill» satte den tilbake til 3, og «nei» endret ingenting ([QA-loggen](../../docs/qa-logg.md#2026-11-23--omstartssjekken-av-dataene-story-17-fr-4-sm-5)). FR-4 står som bygd i statustabellen, og FR-20 som delvis bygd.
 - **Avvik fra BMAD:** Claude gjorde patchene uten å vente på valget i trinn 5 i `bmad-code-review`, og brukeren fikk se dem før commiten. Loggfilene ligger i commiten med dokumentene, ikke i en egen tredje commit, fordi brukeren godkjente to commits.
 - **Eksporten** `.logs/mounia-03/sessions/1-7-2026-11-23.txt` er maskert: den ene stien til prosjektmappa ble `<repo>`, og stien til den midlertidige mappa ble `<scratchpad>`. Kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler eller tokens.
-- **Neste:** commit av dokumentene og loggene, SSH-push (en workflow-fil er endret), PR, kontroll av CI og Windows-testen på siste commit, fletting og fletteloggen. Resultatet av disse trinnene føres i arbeidsloggen etter flettingen.
+- **Flettingen:**
+  - Etter brukerens godkjenning ble koden og dokumentene committet (`85308ac` og `b3b5157`), og grenen ble pushet over SSH. PR #20 ble opprettet med en kommentar med alle 46 funnene.
+  - CI-kjøring nr. 34 og Windows-kjøring nr. 14 passerte på `b3b5157`. Windows lastet 62 produkter og 5 016 salgsuker, og klonesteget fikk meldingen «Databasen har allerede data», så Windows-steget er verifisert.
+  - Claude flettet lokalt med `git merge --no-ff` (merge-commit `10b048a`, foreldre `16d93b7` og `b3b5157`) og pushet `main` over SSH. Det første forsøket feilet på et flagg som `git merge` ikke har, før noe var flettet. GitHub viser PR #20 som flettet 23. november kl. 19.29, og CI-kjøring nr. 35 på `main` passerte. Grenen er beholdt.
+  - Story 1.7 står som `done` i sprintstatusen og i spesifikasjonen. Story 1.8 er ikke startet.
 
 ### Åpne punkter
 - Story 3.1: modellen `CompanySettings` har ingen validering av grensene i FR-20, bare testene bruker dem (`deferred-work.md`, BH-6 og EC-10).

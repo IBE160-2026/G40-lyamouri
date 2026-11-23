@@ -724,6 +724,16 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Claude bygde `forecasting/settings.py`, modellene `Product`, `SalesWeek` og `CompanySettings` med migrasjon `0002`, leseren, `load_seed --reset`, 66 nye tester og dokumentene. Ruff og testene fant tre feil under byggingen, og Blind Hunter i byggeøkten ga 10 funn: 3 rettet, 6 avvist og 1 utsatt ([QA-loggen](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-17-dr-9)). 11 feil som ble lagt inn én om gangen, ble alle fanget. Claude kjørte `migrate` og `load_seed` mot den lokale databasen: 2 bedrifter, 62 produkter og 5 016 salgsuker, og en ny kjøring stoppet med den norske meldingen.
 * Kjørte BMAD Code Review med fire uavhengige KI-granskere på arbeidstreet før noe var committet: 46 funn, 20 rettet, 2 utsatt, 4 feil og 20 avvist, og ingen trengte en beslutning ([tilfelle 36](ki-styringslogg.md#36-grensene-i-leseren-og-reviewen-av-story-17-23-november-2026)). Claude gjorde patchene uten å vente på valget i trinn 5, og sa fra om det. 238 tester og Ruff passerte etterpå.
 * Brukeren kjørte omstartssjekken på macOS: 2 bedrifter, 62 produkter, 5 016 salgsuker og 2 innstillinger var uendret etter at Docker ble stoppet og startet, `window=5` ble bevart, og `load_seed --reset` med «nullstill» satte den tilbake til 3, mens «nei» ikke endret noe ([QA-loggen](qa-logg.md#2026-11-23--omstartssjekken-av-dataene-story-17-fr-4-sm-5)). FR-4 står som bygd i statustabellen.
+* Godkjente de to commitene, SSH-push, opprettelse av PR og fletting når alle kontroller var grønne. Claude maskerte eksporten (stien til prosjektmappa ble `<repo>` og stien til den midlertidige mappa `<scratchpad>`), og kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler eller tokens. Commitene er `85308ac` (koden) og `b3b5157` (loggene, eksporten og dokumentene). Loggene ligger i én commit, ikke tre som for story 1.6, fordi brukeren godkjente to. Branchen ble pushet til `git@github.com` fordi `windows-setup.yml` er endret, og Claude opprettet PR #20 med en kommentar med alle 46 funnene.
+* CI-kjøring nr. 34 og Windows-kjøring nr. 14 passerte på `b3b5157`. Windows-jobben lastet seed-dataene (62 produkter og 5 016 salgsuker), og klonesteget fikk meldingen «Databasen har allerede data», så det utsatte punktet om Windows-steget er verifisert.
+* Godkjente flettingen av PR #20. Claude flettet lokalt med «Create a merge commit» (`git merge --no-ff`), uten squash eller rebase, og med noreply-adressen som forfatter. Det første forsøket feilet på et flagg som `git merge` ikke har, før noe var flettet, og `main` var uendret. Deretter:
+  * merge-commiten `10b048a` har den gamle `main` (`16d93b7`) og PR-hodet (`b3b5157`) som foreldre;
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * `main` ble pushet over SSH, fordi en workflow-fil er endret, og GitHub viser PR #20 som flettet 23. november kl. 19.29, med `10b048a` som merge-commit;
+  * CI-kjøring nr. 35 på `main` passerte;
+  * grenen `story/1-7-load-the-seed-data-with-an-explicit-reset` er beholdt.
+
+**Status:** Story 1.7 er flettet inn i `main` (`10b048a`), og story 1.8 er ikke startet. Åpne punkter for story 3.1 og 4.4 står i `issues.md`.
 
 ## 4. Videre dokumentasjon
 
