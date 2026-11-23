@@ -2,7 +2,7 @@
 title: 'Story 1.7: Load the seed data into an empty database, with an explicit reset'
 type: 'feature'
 created: '2026-11-23'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 baseline_commit: '16d93b77d885918d3161b69233ce2b5c6a6fe058'
 review_loop_iteration: 0
@@ -87,7 +87,7 @@ context: ['{project-root}/_bmad-output/implementation-artifacts/epic-1-context.m
 - `ordering` on `SalesWeek` was dropped after `makemigrations --check` found that a tuple differs from the list in the generated migration; queries order by `position` themselves. Ruff's RUF012 asked for tuples in `Meta`.
 - Mutations applied to the code and then restored, all caught: the hash rewritten, sessions not deleted, the non-empty check removed, the confirmation check removed, the transaction removed, the key created after the data check, a changed default (the window), the end-week check removed, the hash check removed and the gap check removed. After the code review, a `--reset` added to `pyproject.toml` was caught by the widened scan.
 - Run locally against the development database: `migrate`, `load_seed` (2 companies, 62 products, 5 016 sales weeks), a second `load_seed` (stops, exit code 1) and `--reset` with no input (stops, exit code 1). The restart check (FR-4, SM-5) needs Docker and was the user's: it passed on 2026-11-23 (QA log).
-- The Windows job's clone step now expects `load_seed` to create the key and stop with exit code 1. It cannot be run here, so the result shows in the pull request's Windows run; the push needs SSH.
+- The Windows job's clone step now expects `load_seed` to create the key and stop with exit code 1. It cannot be run here, so the result shows in the pull request's Windows run; the push needs SSH. Windows run 14 and CI run 34 passed on `b3b5157`, and the clone step got the message «Databasen har allerede data», so the step is verified. PR #20 was merged as `10b048a` and CI run 35 on `main` passed.
 
 ## Spec Change Log
 
