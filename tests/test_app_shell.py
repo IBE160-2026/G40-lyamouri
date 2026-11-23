@@ -23,7 +23,7 @@ DESIGN = (
 STYLESHEET = REPO_ROOT / "src/web/static/web/app.css"
 # Every template that renders a whole page.
 PAGES = [
-    "web/start.html",
+    "web/login.html",
     "400.html",
     "403.html",
     "403_csrf.html",
@@ -227,11 +227,12 @@ def test_header_is_navy_and_wraps_instead_of_being_cut_off():
 
 
 def test_touch_screens_get_44_pixel_targets_and_16_pixel_fields():
-    """NFR-6, UX-DR7: on a touch screen, buttons, fields, selects, text areas and
-    stand-alone links are at least 44 × 44 px, and fields use 16 px text."""
+    """NFR-6, UX-DR7, UX-DR14: on a touch screen, buttons, fields, selects, text
+    areas, stand-alone links and the links of the app header are at least
+    44 × 44 px, and fields use 16 px text."""
     targets = (
         'button, input:not([type="radio"], [type="checkbox"]), select, textarea, '
-        ".standalone-link"
+        ".standalone-link, .header-nav a"
     )
 
     assert rule(targets, TOUCH) == {"min-width": "44px", "min-height": "44px"}
@@ -260,3 +261,50 @@ def test_every_page_has_the_shell(template):
     assert html.count("<h1") == 1
     assert "<script" not in html
     assert not re.search(r'(?:src|href)="(?:[a-z]+:)?//', html)
+
+
+def test_focus_ring_in_the_app_header_is_white():
+    """NFR-11, UX-DR4, UX-DR14: a focused control in the app header gets a white
+    outline instead of the blue one, which gives only about 2.4:1 on navy, under
+    the 3:1 of WCAG 1.4.11. It is no thinner and no nearer than the blue ring."""
+    blue = rule(":focus-visible")
+    header = rule(".app-header :focus-visible")
+
+    assert blue["outline"] == "3px solid var(--color-blue)"
+    assert blue["outline-offset"] == "2px"
+    assert header == {"outline-color": "var(--color-on-header)"}
+    tokens = token_properties()
+    assert tokens["--color-on-header"] == "#FFFFFF"
+    assert tokens["--color-header"] == "#0E2236"
+
+
+def test_script_reloads_a_page_that_the_browser_restores_from_its_cache():
+    """NFR-10, AD-6, AD-10, AD-11: app.js reloads a page that Safari restores
+    from its back/forward cache (`pageshow` with `persisted`), so Back after
+    «Logg ut» asks the server. It keeps no state, makes no request of its own and
+    names no address with a host (NFR-1)."""
+    script = finders.find("web/app.js")
+    source = Path(script).read_text(encoding="utf-8")
+    code = "\n".join(
+        line for line in source.splitlines() if not line.lstrip().startswith("//")
+    )
+
+    assert 'addEventListener("pageshow"' in code
+    assert "event.persisted" in code
+    assert "window.location.reload()" in code
+    for forbidden in (
+        "fetch(",
+        "XMLHttpRequest",
+        "localStorage",
+        "sessionStorage",
+        "cookie",
+    ):
+        assert forbidden not in code
+    assert not re.search(r"https?://|//[a-z]", code)
+
+
+def test_pages_without_a_login_have_no_script(client):
+    """NFR-1, AD-11: the login page and the error pages load no script, so the
+    logged-out pages work as plain HTML."""
+    assert "<script" not in client.get("/").content.decode()
+    assert "<script" not in client.get("/finnes-ikke/").content.decode()

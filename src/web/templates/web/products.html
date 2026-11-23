@@ -1,0 +1,26 @@
+{% extends "web/base.html" %}
+{# The product overview (FR-2). It lists the company's products only, until Epic 2 replaces it. The stock is printed as it is: Django groups no digits under nb. #}
+{% block title %}Produktoversikt – Prognose{% endblock %}
+{% block main %}
+  <main class="page">
+    <h1>Produktoversikt</h1>
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th scope="col">Varenr.</th>
+          <th scope="col">Produkt</th>
+          <th scope="col" class="number">Lager</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td>{{ product.product_number }}</td>
+          <td>{{ product.name }}</td>
+          <td class="number">{{ product.stock_on_hand }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+{% endblock %}

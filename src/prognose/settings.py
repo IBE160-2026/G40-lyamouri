@@ -56,6 +56,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # AD-6: after the authentication, so that every page but the login needs a login.
+    "web.middleware.LoginRequiredMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -77,6 +79,10 @@ TEMPLATES = [
 
 # AD-6: the company is the user, and passwords use Django's default PBKDF2 hasher.
 AUTH_USER_MODEL = "web.Company"
+LOGIN_URL = "login"
+
+# NFR-10: a second submit of the login form must not give the 403 page.
+CSRF_FAILURE_VIEW = "web.views.csrf_failure"
 
 LANGUAGE_CODE = "nb"
 TIME_ZONE = "Europe/Oslo"

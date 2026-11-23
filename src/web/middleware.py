@@ -8,6 +8,7 @@ can mark the request there, and ErrorPageMiddleware then shows the 503 page.
 
 import sys
 
+from django.contrib.auth import middleware as auth_middleware
 from django.db import InterfaceError, OperationalError
 from django.template.loader import render_to_string
 
@@ -57,3 +58,15 @@ def replace_page(response, template, status):
     response.content = render_to_string(template)
     response["Content-Length"] = str(len(response.content))
     return response
+
+
+class LoginRequiredMiddleware(auth_middleware.LoginRequiredMiddleware):
+    """Denies every page by default: a request without a login goes to the login page (AD-6).
+
+    Only a view marked login_not_required is exempt, which the login page is.
+    Error pages are not routed views, so the middleware never sees them. The
+    redirect has no next parameter: the login always opens the product
+    overview, so no address from the request is trusted.
+    """
+
+    redirect_field_name = None

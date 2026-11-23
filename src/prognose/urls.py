@@ -5,5 +5,7 @@ from django.urls import path
 from web import views
 
 urlpatterns = [
-    path("", views.start, name="start"),
+    path("", views.login, name="login"),
+    path("logg-ut/", views.logout, name="logout"),
+    path("produkter/", views.product_overview, name="products"),
 ]

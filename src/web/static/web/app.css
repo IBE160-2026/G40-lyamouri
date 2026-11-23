@@ -212,6 +212,55 @@ a {
   line-height: var(--font-wordmark-line-height);
 }
 
+/* The meta line and the navigation of a logged-in header (UX-DR14): white links
+   on navy, the current page in weight 600 with a 2 px white underline, and
+   «Logg ut», a POST form, set like a link. The focus ring is white here, because
+   the blue one gives about 2.4:1 on navy, under the 3:1 of WCAG 1.4.11. */
+
+.header-meta {
+  color: var(--color-header-meta);
+  font-family: var(--font-meta-family);
+  font-size: var(--font-meta-size);
+  font-weight: var(--font-meta-weight);
+  line-height: var(--font-meta-line-height);
+}
+
+.header-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  margin-left: auto;
+}
+
+.header-nav form {
+  margin: 0;
+}
+
+.header-nav a,
+.header-nav button {
+  padding: 0 0 2px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--color-on-header);
+  font-family: var(--font-body-sm-family);
+  font-size: var(--font-body-sm-size);
+  font-weight: var(--font-body-sm-weight);
+  line-height: var(--font-body-sm-line-height);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.header-nav [aria-current="page"] {
+  border-bottom-color: var(--color-on-header);
+  font-weight: var(--font-label-weight);
+}
+
+.app-header :focus-visible {
+  outline-color: var(--color-on-header);
+}
+
 /* Panel: one question or task per panel, never a panel inside a panel (UX-DR21). */
 
 .panel {
@@ -242,6 +291,112 @@ a {
   padding: var(--space-8) var(--space-4);
 }
 
+/* Forms: a visible label above each field, the field border from the design,
+   and the error row above the fields with the red «!» ring (UX-DR38). */
+
+label {
+  display: block;
+  margin: var(--space-4) 0 var(--space-1);
+  font-family: var(--font-label-family);
+  font-size: var(--font-label-size);
+  font-weight: var(--font-label-weight);
+  line-height: var(--font-label-line-height);
+}
+
+input[type="text"],
+input[type="password"] {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-field);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-body-family);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+}
+
+.button-primary {
+  margin-top: var(--space-5);
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--color-blue);
+  border-radius: var(--radius-md);
+  background: var(--color-blue);
+  color: var(--color-on-blue);
+  font-family: var(--font-label-lg-family);
+  font-size: var(--font-label-lg-size);
+  font-weight: var(--font-label-lg-weight);
+  line-height: var(--font-label-lg-line-height);
+  cursor: pointer;
+}
+
+.error-message {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-red-tint);
+  color: var(--color-ink);
+}
+
+.error-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-red);
+  border-radius: var(--radius-full);
+  color: var(--color-red);
+  font-size: var(--font-meta-size);
+  font-weight: var(--font-page-title-weight);
+}
+
+.note {
+  margin-top: var(--space-5);
+  color: var(--color-muted);
+  font-size: var(--font-meta-size);
+  line-height: var(--font-meta-line-height);
+}
+
+/* A page of the logged-in app: the content wraps and nothing scrolls sideways. */
+
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: var(--space-2) var(--space-4) var(--space-8);
+}
+
+.product-table {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-collapse: collapse;
+  background: var(--color-surface);
+}
+
+.product-table th,
+.product-table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.product-table th {
+  color: var(--color-muted);
+  font-family: var(--font-label-family);
+  font-size: var(--font-label-size);
+  font-weight: var(--font-label-weight);
+  line-height: var(--font-label-line-height);
+}
+
+.product-table .number {
+  text-align: right;
+}
+
 /* Touch screens: every control has a target of at least 44 × 44 px, and form
    fields use 16 px text, so that a phone does not zoom in (UX-DR7). Radio
    buttons and checkboxes, the switch among them, are smaller than that, so
@@ -251,12 +406,14 @@ a {
   input:not([type="radio"], [type="checkbox"]),
   select,
   textarea,
-  .standalone-link {
+  .standalone-link,
+  .header-nav a {
     min-width: 44px;
     min-height: 44px;
   }
 
-  .standalone-link {
+  .standalone-link,
+  .header-nav a {
     display: inline-flex;
     align-items: center;
   }
