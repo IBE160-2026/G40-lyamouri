@@ -69,7 +69,7 @@ context: ['{project-root}/_bmad-output/implementation-artifacts/epic-1-context.m
 - [x] `tests/answer_key.py` -- create the reader (typed values, the sales parser, «none», flags and lists; it raises on a formula) and the PRD parsers.
 - [x] `tests/test_reference_spreadsheet.py` -- create one test per matrix row.
 - [x] `README.md` -- one sentence in «Tester» that links `reference/README.md`.
-- [ ] `docs/statustabell.md`, `docs/qa-logg.md`, `docs/ki-styringslogg.md`, `docs/arbeidslogg.md`, `sprint-status.yaml`, `.logs/mounia-03/issues.md` -- the tests in the FR-3 and FR-21 rows and the status paragraph; the hand check and any difference; a case if AI output is corrected; the work log; the story status; the open points.
+- [x] `docs/statustabell.md`, `docs/qa-logg.md`, `docs/ki-styringslogg.md`, `docs/arbeidslogg.md`, `sprint-status.yaml`, `.logs/mounia-03/issues.md` -- the tests in the FR-3 and FR-21 rows and the status paragraph; the hand check and any difference; a case if AI output is corrected; the work log; the story status; the open points.
 
 **Acceptance Criteria:**
 - Given `uv run pytest`, `uv run ruff check` and `uv run ruff format --check`, when they run locally and in CI, then they pass.
@@ -98,7 +98,7 @@ BMAD Code Review of PR #16 (2026-11-23): Blind Hunter (BH), Edge Case Hunter (EC
 - [x] [Review][Patch] `read_rows` and `read_typed` bind `WORKBOOK` when the module loads, so a test that points `answer_key.WORKBOOK` elsewhere still reads the committed file (EC-2) [tests/answer_key.py:178]
 - [x] [Review][Patch] A §5.7 example marked «(Could)» breaks the parser with AttributeError (EC-6) [tests/answer_key.py:250]
 - [x] [Review][Patch] One test covers two matrix rows, so a missing case hides «No expected value» (AA-10) [tests/test_reference_spreadsheet.py:31]
-- [ ] [Review][Patch] `issues.md` lacks the open points that the logs and the spec cite: lines 20 and 99 are still open, and the points for Stories 1.6, 1.7 and 5.2 are missing (AA-6, BH-14) [.logs/mounia-03/issues.md]
+- [x] [Review][Patch] `issues.md` lacks the open points that the logs and the spec cite: lines 20 and 99 are still open, and the points for Stories 1.6, 1.7 and 5.2 are missing (AA-6, BH-14) [.logs/mounia-03/issues.md]
 - [x] [Review][Patch] The Story 1.5 entry in the work log has no status line (BH-15) [docs/arbeidslogg.md]
 - [x] [Review][Patch] Three wrong statements: «52 tilfellene» for the §5.7 row, which has 48; the «Avvist» paragraph's reasons for BH-10 to BH-12; and «Rad 1 i hvert ark har kolonnenavnene» (BH-16) [docs/qa-logg.md:722]
 - [x] [Review][Patch] `reference/README.md` does not describe `note`, the `check_log` columns, the ISO text date or run items such as «4, 5, 6» (AA-9) [reference/README.md]
@@ -131,6 +131,7 @@ BMAD Code Review of PR #16 (2026-11-23): Blind Hunter (BH), Edge Case Hunter (EC
   - **Mutations:** 50, the 21 earlier ones and 29 from the review findings, are all caught, and the workbook and the PRD are restored byte for byte afterwards.
   - **The PRD:** E12 says «8 weeks: no old-data warning», with a §12 row.
 - 2026-11-23, after the fixes: the user opened the new workbook in Excel for Mac 16.78 and read K1 = 401, K2 = 401 and K3 = TRUE. The file's SHA-1, `fa2e7b5…`, was unchanged afterwards. The builder then wrote the workbook again with the user's row in `check_log`, and the four other sheets are identical to the checked version.
+- 2026-11-23, the end of the session: the user exported it to `.logs/mounia-03/sessions/1-5-2026-11-23.txt`, which is masked: 25 project paths became `<repo>` and 2 temporary paths `<tmp>`, also where a path was broken across two lines. The session log `979-2026-11-23-16-07-25-story-1-5-referanseregnearket-som-fasit.md` and five new open points in `issues.md` resolve AA-6 and BH-14, and the documents task is done.
 
 ## Spec Change Log
 

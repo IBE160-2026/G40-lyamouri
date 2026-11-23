@@ -681,7 +681,12 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Kontrollerte den nye arbeidsboka i Excel for Mac 16.78: K1 = 401, K2 = 401 og K3 = SANN. Lukket den uten å lagre, og kontrollen står i `check_log`.
 * Godkjente to commits, én med rettingene (`dd4a269`) og én med dokumentene, push og en kommentar i PR #16 med alle funnene og beslutningene, men ikke flettingen.
 
-**Status:** Story 1.5 er i review. Flettingen av PR #16 venter på brukerens godkjenning, etter eksporten av økten og sesjonsloggen. De åpne punktene for story 1.6, 1.7, 5.1 og 5.2 føres i `issues.md` med sesjonsloggen.
+* Claude la inn kommentaren med alle 61 funnene og beslutningene i PR #16. CI-kjøring nr. 22 passerte på `7e62aa3`.
+* Eksporterte økten med `/export`. Claude maskerte den: 25 stier til prosjektmappa ble `<repo>`, og 2 stier til den midlertidige mappa ble `<tmp>`, også der stiene var brutt over to linjer. Kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler eller tokens.
+* Sesjonsloggen og fem nye åpne punkter i `issues.md` er ført, og punktene om regnearket og E30 er løst. Story 1.5 står som `done` i sprintstatusen.
+* Godkjente commit og push av eksporten (`024b204`), sesjonsloggen med `issues.md` (`df5ebbd`) og dokumentene.
+
+**Status:** Story 1.5 er ferdig på grenen `story/1-5-reference-spreadsheet-as-the-answer-key`. Flettingen av PR #16 venter på brukerens godkjenning, og de åpne punktene for story 1.6, 1.7, 5.1 og 5.2 står i `issues.md`.
 
 ## 4. Videre dokumentasjon
 
