@@ -1,12 +1,13 @@
 """Read the PRD and the mockup for the answer-key tests (Story 1.5; DR-3, AD-17).
 
-The tests read the reference examples, the FR-21 table and the FR-20 defaults
-from the PRD, and Strøsand 25 kg's weeks from the mockup, so that no expected
-value is copied into test code. The workbook itself is read by
+The tests read the reference examples, the FR-21 table, and the FR-20 defaults
+and ranges from the PRD, and Strøsand 25 kg's weeks from the mockup, so that no
+expected value is copied into test code. The workbook itself is read by
 reference/answer_key_reader.py, which the seed generator shares (Story 1.6).
 """
 
 import re
+from decimal import Decimal
 from pathlib import Path
 
 from answer_key_reader import Week, parse_sales
@@ -169,6 +170,24 @@ def prd_defaults():
         "safety_margin": int(defaults["Safety margin"].rstrip("%")),
         "unusual_weeks_setting": defaults["Unusual weeks"].lower(),
         "seasonal_adjustment": defaults["Seasonal adjustment"].lower(),
+    }
+
+
+def prd_ranges():
+    """Return the FR-20 allowed values of each number setting by its column, as
+    (minimum, maximum) Decimals."""
+    ranges = {}
+    for line in _prd_section("#### FR-20:", "#### FR-21:").splitlines():
+        if line.startswith("| ") and not line.startswith("| Setting"):
+            setting, _default, allowed = _cells(line)
+            match = re.fullmatch(r"([0-9.]+)%? to ([0-9.]+)(?:%| weeks)?", allowed)
+            if match:
+                ranges[setting] = (Decimal(match[1]), Decimal(match[2]))
+    return {
+        "window": ranges["Window (moving average)"],
+        "smoothing_factor": ranges["Smoothing factor (exponential smoothing)"],
+        "scenario_percentage": ranges["Scenario percentage"],
+        "safety_margin": ranges["Safety margin"],
     }
 
 

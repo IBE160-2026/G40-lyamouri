@@ -20,6 +20,9 @@ _dotenv = env.read_dotenv(BASE_DIR / ".env")
 SECRET_KEY_FILE = BASE_DIR / ".secret_key"
 SECRET_KEY = env.load_secret_key(SECRET_KEY_FILE)
 
+# AD-15: the seed files that load_seed reads, written by data/generate_seed.py.
+SEED_DIR = BASE_DIR / "data" / "seed"
+
 # AD-12: only PROGNOSE_DEBUG in .env turns DEBUG on, and never during the phone test.
 DEBUG = env.debug_setting(os.environ, _dotenv)
 
