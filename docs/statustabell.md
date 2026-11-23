@@ -12,7 +12,7 @@ Statustabellen oppfyller DR-8 i PRD-en. Den viser hvert funksjonskrav (FR) og DR
 - **Stories:** storyen som bygger kravet, står først. I parentes står de andre storyene i [`epics.md`](../_bmad-output/planning-artifacts/epics.md) som dekker en del av det.
 - **Tester:** fylles ut når testene finnes. Hver test nevner FR-n eller E-n som den kontrollerer (DR-5), og en test som ikke kontrollerer noen FR, nevner NFR-, DR- eller AD-ID-ene sine (D-10).
 
-**Status 22. november 2026.** Ingen FR er bygd eller delvis bygd. Prosjektskjelettet fra story 1.1 del A har brukermodellen `web.Company` og databasen i Docker Compose, som FR-1 og FR-4 bygger på, men kravene bygges i story 1.8 og 1.7. Story 1.4 har laget app-skallet og de norske feilsidene (NFR-10, AD-12). FR-2 skal vise siden «Siden finnes ikke» for andre bedrifters produkter, men kravet bygges i story 1.8.
+**Status 23. november 2026.** Ingen FR er bygd eller delvis bygd. Prosjektskjelettet fra story 1.1 del A har brukermodellen `web.Company` og databasen i Docker Compose, som FR-1 og FR-4 bygger på, men kravene bygges i story 1.8 og 1.7. Story 1.4 har laget app-skallet og de norske feilsidene (NFR-10, AD-12). FR-2 skal vise siden «Siden finnes ikke» for andre bedrifters produkter, men kravet bygges i story 1.8. Story 1.5 har laget referanseregnearket i `reference/` (DR-3): fasiten med referanseeksemplene, de fire FR-21-variantene og de forventede verdiene for regeltestproduktene. FR-3 og FR-21 er likevel ikke bygd, fordi datasettet lages i story 1.6 og 1.7, og innstillingene i epic 3. Testene for regnearket står i FR-3- og FR-21-raden.
 
 **Oppsett på Windows (D-3).** Oppsettet med Docker Desktop og oppstarten uten nett er ikke testet på Windows, fordi gruppen ikke har en Windows x64-PC der uv og Docker Desktop kan installeres. Delen uten Docker testes automatisk på Windows Server 2025 x64 i GitHub Actions for hver pull request som endrer koden eller avhengighetene, og passerte første gang 22. november 2026 (se [QA-loggen](qa-logg.md#2026-11-22--oppsettet-på-windows-story-13-sm-2-nfr-1-dr-1-d-3)).
 
@@ -20,7 +20,7 @@ Statustabellen oppfyller DR-8 i PRD-en. Den viser hvert funksjonskrav (FR) og DR
 |---|---|---|---|---|---|---|
 | FR-1 | Innlogging med kundenummer og passord | må-ha | ikke bygd | 1.8 | `tests/test_company.py`: `test_company_is_the_user_model_with_customer_number_as_login`, `test_password_is_stored_as_a_pbkdf2_hash` og `test_customer_number_is_required` | – |
 | FR-2 | Isolasjon av bedriftens data | må-ha | ikke bygd | 1.8 (2.7, 2.8, 2.11, 3.1, 3.3, 6.2, 6.3, 8.2, 8.3) | – | – |
-| FR-3 | Syntetisk datasett med kjente mønstre | må-ha | ikke bygd | 1.6 (1.5, 2.6) | – | – |
+| FR-3 | Syntetisk datasett med kjente mønstre | må-ha | ikke bygd | 1.6 (1.5, 2.6) | `tests/test_reference_spreadsheet.py`: `test_every_rule_test_product_has_its_series_stock_and_expected_results` og `test_products_use_the_series_of_their_source` | – |
 | FR-4 | Data lagres mellom øktene | må-ha | ikke bygd | 1.7 | – | – |
 | FR-5 | Glidende gjennomsnitt | må-ha | ikke bygd | 2.2 | – | – |
 | FR-6 | Eksponentiell glatting | må-ha | ikke bygd | 2.2 | – | – |
@@ -39,7 +39,7 @@ Statustabellen oppfyller DR-8 i PRD-en. Den viser hvert funksjonskrav (FR) og DR
 | FR-18 | Varsel om gamle data | må-ha | ikke bygd | 2.5 | – | – |
 | FR-19 | Tillitsmerke | må-ha | ikke bygd | 2.5 (2.7, 4.2, 5.2) | – | – |
 | FR-20 | Felles innstillinger for bedriften | må-ha | ikke bygd | 3.1 (5.1, 8.1) | – | – |
-| FR-21 | Endringer gjelder alle produktene med en gang | må-ha | ikke bygd | 3.2 (1.5, 3.3, 5.1, 8.1) | – | – |
+| FR-21 | Endringer gjelder alle produktene med en gang | må-ha | ikke bygd | 3.2 (1.5, 3.3, 5.1, 8.1) | `tests/test_reference_spreadsheet.py`: `test_every_fr21_variant_changes_the_setting_the_prd_names` | – |
 | FR-22 | Innstillingene lagres mellom øktene | må-ha | ikke bygd | 3.1 | – | – |
 | FR-23 | Innstillinger per produkt | kan-ha | ikke bygd | 8.1 | – | – |
 | FR-24 | Produktoversikt | må-ha | ikke bygd | 2.8 (2.6, 2.11; 1.8 viser den første produktlisten) | – | – |

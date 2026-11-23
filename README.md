@@ -66,6 +66,8 @@ uv run ruff format --check
 - `uv run ruff check` sjekker kodestilen i alle Python-filene i repoet, unntatt de genererte migreringene og skriptene som BMAD (`_bmad/`) og Claude Code (`.claude/`) har med seg, og skal svare `All checks passed!`.
 - `uv run ruff format --check` sjekker formateringen av de samme filene og skal svare at alle er formatert (`files already formatted`).
 
+Fasiten for testene er referanseregnearket [`reference/reference-examples.xlsx`](reference/reference-examples.xlsx), med referanseeksemplene fra PRD-en og de forventede verdiene for regeltestproduktene. [`reference/README.md`](reference/README.md) forklarer arkene og hvordan verdiene er kontrollert.
+
 GitHub Actions kjører de samme kommandoene på Linux for hver pull request og hver push til `main`, etter `uv sync --locked` og med databasen fra `compose.yaml` ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)). Gruppen fletter en pull request først når kjøringen på dens siste commit har bestått, og kjører den på nytt hvis `main` har endret seg siden. Det er gruppens rutine. GitHub håndhever den ikke, fordi gruppen ikke har admin-rettigheter i organisasjonen.
 
 ## Medlemmer

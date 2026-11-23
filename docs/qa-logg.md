@@ -704,3 +704,95 @@ Safari ba også selv om `/apple-touch-icon.png` og `/apple-touch-icon-precompose
 **Åpne punkter.** De åpne punktene som denne oppføringen viser til, står i `issues.md` fra [sesjonsloggen for story 1.4](../.logs/mounia-03/980-2026-11-22-19-51-47-story-1-4-app-skall-og-feilsider.md), og den maskerte eksporten av økten ligger i `.logs/mounia-03/sessions/1-4-2026-11-22.txt` (BH-11, AA-2).
 
 **KI-styringsloggen:** [tilfelle 31](ki-styringslogg.md#31-503-siden-og-den-ytterste-mellomvaren-22-november-2026).
+
+## 2026-11-23 – Kontrollen av referanseregnearket (Story 1.5; DR-3, AD-17, DR-9)
+
+**Hvorfor.** Story 1.5 krever at hvert forventet resultat i referanseregnearket regnes ut på nytt, for hånd eller med synlige formler, og at regnearket fører kontrollen med dato. Et avvik fra PRD §5.7 skal regnes ut på nytt for hånd, og den siden som var feil, skal rettes og føres her (AD-17, DR-9).
+
+**Oppsett.**
+- Claude Code tastet inn de forventede verdiene fra PRD §5.7 og regnet ut FR-21-variantene og regeltestproduktene for hånd. Regnearket [`reference/reference-examples.xlsx`](../reference/reference-examples.xlsx) ble skrevet med openpyxl fra et skript i den midlertidige mappa. Skriptet er ikke committet, fordi regnearket er den eneste fasiten (AD-17).
+- Det samme skriptet regnet ut hvert tilfelle og hvert produkt på nytt med en egen utregning av R-1 til R-17, uavhengig av verdiene fra PRD-en. Det regnet også ut de 376 kontrollformlene i arket `checks` med avrundingen i Excel.
+- Skriptet sjekket at Strøsand 25 kg får de utsolgte ukene 38 og 39 og den uvanlige uka 42 når siste registrerte uke er uke 45 i 2026, som i mockupen.
+- Brukeren åpnet regnearket i Excel for Mac 16.78 (23100802) 23. november 2026, leste sammendraget i arket `checks` (cellene K1 til K3) og lukket det uten å lagre. Excel regnet da ut alle formlene selv. Kontrollen står i arket `check_log`.
+
+**Resultat.**
+
+| Kontroll | Resultat |
+|---|---|
+| Verdiene fra PRD §5.7 mot den uavhengige utregningen | ingen avvik i de 48 tilfellene fra §5.7 (E12 ble først ført som avvik i BMAD Code Review, se under) |
+| FR-21-variantene og regeltestproduktene mot den uavhengige utregningen | ingen avvik |
+| Kontrollformlene i `checks`, regnet ut med avrundingen i Excel | 376 av 376 stemmer |
+| Brukerens kontroll i Excel for Mac 16.78 | K1 = 376 kontroller som stemmer, K2 = 376 kontroller, K3 = SANN |
+| 21 feil lagt inn i regnearket og PRD-en, én om gangen | testene fanget alle |
+
+Etter kontrollen ble regnearket skrevet på nytt med brukerens rad i `check_log`. Fila brukeren kontrollerte, hadde SHA-1 `c019e309f3a84b4564822beeeeadecb32fe4e7ab` både før og etter at den var åpen i Excel. Claude sammenlignet den med den nye fila celle for celle med openpyxl: arkene `about`, `cases`, `products` og `checks` var identiske, og `check_log` hadde fått én rad. Regnearket, leseren og testene er committet i `0ae5920`.
+
+**Etter BMAD Code Review.** Rettingene endret arket `checks`: hver liste med uker fikk en rad «other», R-11 fikk egne formler, og varslene viser til radene. PRD-en fikk også rettet E12 (se under). Claude regnet ut alle 401 kontrollene på nytt med det uavhengige skriptet og avrundingen i Excel: alle stemmer, og ingen verdi avviker fra PRD §5.7. 50 feil som ble lagt inn i regnearket og PRD-en én om gangen, ble alle fanget av testene: de 21 fra byggingen og 29 nye fra reviewen.
+
+**Brukerens andre kontroll.** Brukeren åpnet den nye versjonen i Excel for Mac 16.78 (23100802) 23. november 2026 og lukket den uten å lagre. Versjonen hadde SHA-1 `fa2e7b57076836b360aae3eb216c17bd2af18f98`, både før og etter at den var åpen. Sammendraget i `checks` viste K1 = 401 kontroller som stemmer, K2 = 401 kontroller og K3 = SANN. Etter kontrollen ble regnearket skrevet på nytt med brukerens rad i `check_log`. Claude sammenlignet celle for celle med openpyxl: de fire andre arkene var identiske med versjonen brukeren kontrollerte.
+
+**Funn som ikke er en feil.** R-17 (bør-ha) gir Strøsand 25 kg indeksen 1,5735 for ukenummer 42 på grunn av den uvanlige uka. Når FR-36 bygges, får produktet derfor et varsel om sesongmønster som mockupen ikke viser. Story 5.2 avgjør det (`issues.md`).
+
+## 2026-11-23 – Feil i KI-generert kode og tekst fra byggingen av story 1.5 (DR-9)
+
+**Hvordan det ble funnet.** Claude Code skrev regnearket, kontrollformlene, leseren og testene i story 1.5 med `bmad-build`. Skriptet som skrev regnearket, sammenlignet hver kontrollformel med verdien i fasiten før fila ble skrevet. Deretter gikk byggeøkten selv gjennom diffen med Blind Hunter, uten subagenter, og fant 13 funn (BH-1 til BH-13): 4 ble rettet i 3 punkter og 9 avvist.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Kontrollformlene for varslene om utsolgte uker, uvanlige uker og nytt nivå de siste 12 ukene sammenlignet den siste slike uka med «N − 12». Var historikken kortere enn 12 uker og produktet hadde ingen slik uke, ble formelen sann, og 33 kontroller ga feil svar | Sammenligningen i skriptet, før regnearket ble skrevet | Formlene sammenligner med den første uka i perioden, `MAX(1; N − 11)`, og alle 376 kontrollene stemmer | `0ae5920` |
+| `reference/README.md` sa ikke at openpyxl ikke flytter referansene i formlene når rader settes inn eller slettes, og at testene ikke regner ut formlene. En senere endring kunne dermed gitt formler som viser til feil rad, uten at noen test feilet | Blind Hunter i `bmad-build` (BH-1) | README-en sier at nye rader legges til slutt i `checks`, og at sammendraget leses i Excel eller Numbers etter hver endring | `0ae5920` |
+| README-en forklarte ikke hva `recorded` er for visningstekst og for uker og varsler, og sa uten å ha sjekket det at Numbers viser funksjonsnavnene på programmets språk | Blind Hunter i `bmad-build` (BH-6, BH-13) | README-en forklarer begge, og setningen nevner bare Excel | `0ae5920` |
+| Testen for lokale stier så ikke etter `/home/` | Blind Hunter i `bmad-build` (BH-4) | `/home/` er med i mønsteret | `0ae5920` |
+
+**Avvist.** Blind Hunter fant 13 funn, og 9 ble avvist:
+- **BH-2:** Testene regner ikke ut formlene, men skriptet regnet dem ut før fila ble skrevet, og kontrollen i Excel leser resultatet.
+- **BH-3:** Grensene for innstillingene i FR-20 defineres én gang i `forecasting/settings.py` i story 1.7, og testen bør sjekke dem derfra. Det er et åpent punkt for story 1.7.
+- **BH-5:** gir en høylytt feil som stopper testene.
+- **BH-7:** handler om tall som beskriver tilstanden da kontrollen ble gjort.
+- **BH-8 og BH-9:** stemte ikke.
+- **BH-10:** ville bare endret spesifikasjonen.
+- **BH-11:** gjelder standardverdiene, som kommer fra PRD-en.
+- **BH-12:** gjelder et importvalg som prosjektet ikke bruker.
+
+Alle funnene står under «Review Triage Log» i [spesifikasjonen for story 1.5](../_bmad-output/implementation-artifacts/spec-1-5-reference-spreadsheet-as-the-answer-key.md).
+
+## 2026-11-23 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 1.5 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige KI-granskere i `bmad-code-review` gikk gjennom PR #16: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. De så diffen fra `da87fd7` til `99b73bc` og en tekstutgave av regnearket. De fant 61 funn, og funn med samme årsak ble samlet i punkter:
+- 3 beslutninger, som brukeren tok;
+- 21 rettinger;
+- 2 utsatte punkter;
+- 5 avviste funn.
+
+Alle står under «Review Findings» i spesifikasjonen. Rettingene i regnearket, testene, leseren og PRD-en er committet i `dd4a269`.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting |
+|---|---|---|
+| Ingen test sammenlignet seriene, innstillingene og lagerbeholdningen med PRD-en, og formlene i `checks` bruker innskrevne tall. For eksempel passerte både testene og Excel-kontrollen hvis E20 fikk serien «10, 10, 10, 12» eller E8-produktet lager 40 i stedet for 50 | AA-1, VG-1, BH-17, BH-18 og EC-26 | Brukeren valgte nye tester uten å endre formlene. Testene sammenligner hver serie og innstillingene og lageret som PRD-teksten oppgir, med PRD §5.7. De sammenligner også produktene med alle tilfellene i eksempelet sitt, Strøsand 25 kg med tabellen i mockupen og tallene i kontrollformlene med inndataene |
+| E12 (96) hadde varselet om utsolgte uker, mens PRD §5.7 sa «8 weeks: no warning». Uke 97–104 må være utsolgte, så det var PRD-en som var upresis: eksempelet tester bare varselet om gamle data | AA-2 | Brukeren godkjente å rette PRD-en til «no old-data warning», med en rad i PRD §12. Regnearket siterer den nye teksten |
+| Ikke alle beslutningene etter R-10 og R-11 hadde en kontrollert formel. Uka etter de uvanlige ukene i E8, E15 og E19 hadde ingen sjekk, så en uvanlig uke som manglet i lista, slapp gjennom. Radene som holdt en uke uvanlig, kopierte bare R-10-flagget, og varslene brukte innskrevne uker | AA-5, BH-19, EC-23, EC-27 og VG-5 | Hver liste med uker har en rad «other», R-11 har egne formler, og varslene viser til radene. Arbeidsboka ble skrevet på nytt og kontrollert igjen |
+| En innstilling kunne mangle eller stå som «none», og et må-ha-tilfelle kunne ha varselet om sesongmønster | AA-4, VG-2, BH-21, EC-1, EC-13 og EC-16 | Alle ni innstillingene må stå i hvert tilfelle, «none» avvises for inndata, og `seasonal_pattern` står bare i bør-ha-tilfeller |
+| Testen sjekket ikke innstillingen som en FR-21-variant endrer, og godtok varianter som PRD-en ikke har | VG-2, EC-9 og EC-10 | Variantene må være nøyaktig dem PRD-en har. Hver variant har den nye verdien, og ellers samme serie og innstillinger som eksempelet |
+| En variant, E18 b-produktet eller Strøsand 25 kg kunne forsvinne uten at noen test feilet | BH-20, EC-8, EC-11 og EC-12 | Testene krever begge variantene av hvert eksempel, hvert bokstavtilfelle i FR-3 og demoproduktet |
+| Lista i FR-3 kunne bli tom hvis PRD-en skrev den annerledes | VG-4, BH-22 og EC-7 | Lista leses strengt og kan ikke være tom |
+| Ingen test knyttet `match` og sammendraget K1–K3 til raden sin, så `=TRUE` eller en slettet rad kunne blinde Excel-kontrollen | VG-3, BH-28 og EC-22 | Testene sjekker formelen i hver match-celle og de tre formlene i sammendraget |
+| Feil i skjemaet sa ikke hvilken celle det gjaldt, og leseren så ikke etter formler utenfor kolonnene i overskriften | AA-3, AA-7, BH-26, EC-4 og EC-5 | Feilen nevner arket og cellen, og hele raden sjekkes for formler |
+| Testen for NFR-4 sjekket ikke navnet på den som sist lagret fila | BH-27 og EC-25 | Testen krever `G40-lyamouri` som oppretter og ingen `lastModifiedBy` |
+| Mindre hull i testene: uker i feil rekkefølge, gjentatte uker, uker som er utsolgte, gjentatte varsler, visningstekst som «14.3», en siste rad i `check_log` som ikke dekker kontrollene, en periode ført som FALSE, en fast sti i leseren, prioriteten «(Could)» og én test for to rader i matrisen | EC-2, EC-6, EC-14, EC-15, EC-20, EC-21, EC-24, BH-24 og AA-10 | Hver er rettet i testene eller leseren |
+| Dokumentene hadde tre feil: «52 tilfellene» for raden om §5.7, grunnene for BH-10 til BH-12 og «Rad 1 i hvert ark». I tillegg manglet kolonnene `note` og `check_log` i README-en, arbeidsloggen manglet statuslinjen, og det var ikke skrevet ned at fila som ble committet, er den som ble kontrollert | BH-15, BH-16, AA-8, AA-9 og BH-29 | Rettet i QA-loggen, README-en og arbeidsloggen |
+| `issues.md` manglet de åpne punktene som loggene viser til | AA-6 og BH-14 | Føres med sesjonsloggen før flettingen |
+
+**Utsatt.**
+- **Story 1.6 (BH-31):** den eneste leseren av notasjonen ligger i `tests/`, og story 1.6 bestemmer hvor den felles leseren skal ligge.
+- **Story 5.1 (BH-23):** ukeprognosene for E14 uten sesongjustering er ikke ført, og story 5.1 fører dem.
+
+Begge står i `deferred-work.md`.
+
+**Avvist.**
+- **BH-30:** ankeret uke 45 i 2026 står i README-en.
+- **EC-17:** «none» i en tall-liste gir en høylytt feil.
+- **EC-3, EC-18 og EC-19:** overskrifter og kontrollrader endres ikke for hånd, og Excel-kontrollen viser en 1 i stedet for TRUE.

@@ -25,3 +25,8 @@
 
 - The focus ring and the link color would fail on the navy app header (BH-12). DESIGN.md gives every focusable element a 3 px blue ring and the header no focus color, and blue on navy is about 2.4:1, under the 3:1 that WCAG 2.2 1.4.11 asks of a focus indicator. Nothing in the logged-out header can take focus yet. Story 1.8 adds «Produktoversikt» and «Logg ut» there and needs a design decision, for example a white ring in the header.
 - The database connection has no connect timeout (EC-6). `env.database_config` from Story 1.1 sets none, so psycopg waits up to 130 seconds when the port answers but PostgreSQL does not, for example while the container is paused. A stopped database refuses the connection at once and gives the 503 page. Story 1.4 does not change `env.py`.
+
+## Deferred from: code review of spec-1-5-reference-spreadsheet-as-the-answer-key.md (2026-11-23)
+
+- The only parser of the answer key's notation («S», «S2», «none», the lists and flags) is `tests/answer_key.py`, which pytest puts on `sys.path`, so `data/generate_seed.py` cannot import it cleanly (BH-31). AD-15 and AD-17 have the generator read the same workbook, so Story 1.6 decides where the shared reader lives instead of copying the parser.
+- E14's week forecasts with seasonal adjustment off, the «flat» side of the last row in FR-21's table («E14: flat → seasonal»), are not in the answer key (BH-23). The story covers only the four FR-21 variants beyond PRD §5.7, so Story 5.1, which builds FR-9, records them, for example on E30 (off).
