@@ -76,7 +76,14 @@ jobs:
           $clone = Join-Path $env:USERPROFILE 'prognose'
           git clone --quiet $env:GITHUB_WORKSPACE $clone
           Push-Location $clone
-          uv run python src/manage.py load_seed
+          # The database already holds the seed from the step above, so load_seed
+          # creates .secret_key here and then stops with exit code 1 and the
+          # message about the existing data (Story 1.7). Any other message is a
+          # failure.
+          $ErrorActionPreference = 'Continue'
+          $output = uv run python src/manage.py load_seed 2>&1 | Out-String
+          if ($LASTEXITCODE -ne 1 -or $output -notmatch 'Databasen har allerede data') { throw "load_seed ended with code $LASTEXITCODE and this output: $output" }
+          if (-not (Test-Path .secret_key)) { throw "load_seed did not create .secret_key in the clone" }
           $access = icacls .secret_key
           Pop-Location
           $access

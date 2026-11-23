@@ -363,4 +363,21 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Findings» i [spesifikasjonen for story 1.6](../_bmad-output/implementation-artifacts/spec-1-6-generate-the-synthetic-seed-data.md); kommentaren i PR #18.
 - **QA-loggen:** [feilene fra byggingen av story 1.6](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-16-dr-9) og [fra BMAD Code Review av story 1.6](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-16-dr-9).
 
+**Story 1.7.** Story 1.7 ga tilfelle 36. Ellers godtok brukeren hver anbefaling fra Claude i økten 23. november 2026. Feilene som byggingen og reviewene fant i KI-generert kode og tekst, står i QA-loggen.
+
+### 36. Grensene i leseren og reviewen av story 1.7 (23. november 2026)
+
+- **Hva KI foreslo:** Claude bygde `load_seed` med en leser som validerer seed-filene og en `--reset` som krever ordet «nullstill». Leseren hadde egne konstanter for lengdene, og Claude vurderte byggereviewen selv. Fire KI-granskere i `bmad-code-review` fant deretter 46 funn.
+- **Hva som var feil:**
+  - Konstantene var kopier av modellene, og passordhashen kunne være 200 tegn mot 128 i kolonnen. En fil som leseren godtok, ville ha feilet i databasen etter at `--reset` var bekreftet. Tre granskere fant det, og Claudes egen gjennomgang gjorde det ikke.
+  - En fil som ikke kan leses, ga en melding med hele den lokale stien, selv om spesifikasjonen sa at ingen melding skal ha lokale stier.
+  - Steget i Windows-jobben godtok hvilken som helst feil med kode 1, så en ødelagt seed-fil ville ha gått gjennom.
+  - Claude gjorde patchene uten å vente på valget i trinn 5 i `bmad-code-review` («Apply every patch»), fordi ingen funn trengte en beslutning. Alt lå uncommittet, så brukeren kunne se det før commiten, men trinnet ble ikke fulgt slik det står.
+  - Claude satte FR-4 til «delvis bygd» mot spesifikasjonen, som sier «bygd», og endret det først da brukeren hadde meldt at omstartssjekken var bestått.
+  - Claude sa først «2 til 4 med middels alvor» og rettet 17 funn. Den ferdige tellingen i triagen viste 7 middels og 20 rettede rader. Tallene i loggene følger triagen.
+- **Hva gruppen bestemte:** Brukeren godkjente spesifikasjonen med ordet «nullstill» og justeringen av Windows-steget, og ba om å føre omstartssjekken i QA-loggen. Ingen funn trengte en beslutning. 20 ble rettet, 2 utsatt til Story 3.1 og Windows-kjøringen, og 24 avvist eller feil.
+- **Commit eller pull request:** `85308ac`.
+- **Kilde:** «Review Triage Log» i [spesifikasjonen for story 1.7](../_bmad-output/implementation-artifacts/spec-1-7-load-the-seed-data-with-an-explicit-reset.md).
+- **QA-loggen:** [feilene fra byggingen av story 1.7](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-17-dr-9) og [fra BMAD Code Review av story 1.7](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-17-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).

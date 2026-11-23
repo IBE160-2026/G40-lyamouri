@@ -1,6 +1,6 @@
 # Testdata
 
-Denne mappa har generatoren [`generate_seed.py`](generate_seed.py) og dataene den skriver i [`seed/`](seed/): de to testbedriftene Testbedrift A og Testbedrift B med produkter, salgshistorikk og lager (FR-3, AD-15). Alt er syntetisk. Ingen virkelig bedrift, kunde eller person er med (NFR-4). Story 1.7 laster filene inn i databasen med `load_seed`, og til da leser ingenting i appen dem.
+Denne mappa har generatoren [`generate_seed.py`](generate_seed.py) og dataene den skriver i [`seed/`](seed/): de to testbedriftene Testbedrift A og Testbedrift B med produkter, salgshistorikk og lager (FR-3, AD-15). Alt er syntetisk. Ingen virkelig bedrift, kunde eller person er med (NFR-4). `load_seed` laster filene inn i databasen (story 1.7), og appen leser dem derfra, aldri fra filene.
 
 ## Generatoren
 
@@ -37,7 +37,7 @@ Hvert produkt:
 | `stockout_positions` | posisjonene (fra 1) til de utsolgte ukene. En utsolgt uke har tallet i `units_sold` som salg |
 | `stock_on_hand` | lager ved slutten av siste registrerte uke (R-13) |
 
-Historikken er en rekke av påfølgende ISO-uker uten hull. Siste registrerte uke lagres ikke. Den er `first_week` pluss antall uker, og er den samme for alle produktene i en bedrift (AD-8): uke 45 i 2026 for Testbedrift A og uke 44 i 2026 for Testbedrift B. Innstillingene lagres ikke her. `load_seed` lager dem fra standardverdiene i FR-20 (story 1.7).
+Historikken er en rekke av påfølgende ISO-uker uten hull. Siste registrerte uke lagres ikke. Den er `first_week` pluss antall uker, og er den samme for alle produktene i en bedrift (AD-8): uke 45 i 2026 for Testbedrift A og uke 44 i 2026 for Testbedrift B. Innstillingene lagres ikke her. `load_seed` lager dem fra standardverdiene i FR-20, som står i `src/forecasting/settings.py` (story 1.7).
 
 ## Bedriftene
 

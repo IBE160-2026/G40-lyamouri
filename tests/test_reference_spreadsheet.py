@@ -8,11 +8,14 @@ neither holds an expected value. They use no database.
 import re
 import zipfile
 from datetime import date
+from decimal import Decimal
 
 import answer_key
 import answer_key_reader as reader
 import openpyxl
 import pytest
+
+from forecasting import settings as defaults
 
 # The columns that each FR-21 «value that changes» names.
 FR21_COLUMNS = {
@@ -255,6 +258,24 @@ def test_check_formulas_use_the_inputs_of_their_subject():
             assert written == expected, (check["key"], check["recalculated"])
             compared += 1
     assert compared
+
+
+def test_every_case_uses_settings_inside_the_fr20_limits():
+    """FR-20, AD-9, DR-3: the method of each case is one of the core's, and its
+    window, smoothing factor, scenario percentage and safety margin lie inside
+    the ranges that forecasting/settings.py holds, so no case asks the core for
+    a setting that a company cannot choose."""
+    ranges = {
+        "window": defaults.WINDOW,
+        "smoothing_factor": defaults.SMOOTHING_FACTOR,
+        "scenario_percentage": defaults.SCENARIO_PERCENTAGE,
+        "safety_margin": defaults.SAFETY_MARGIN,
+    }
+    for case in reader.cases():
+        assert case["method"] in defaults.METHODS, case["case"]
+        for column, allowed in ranges.items():
+            value = Decimal(str(case[column]))
+            assert allowed.minimum <= value <= allowed.maximum, (case["case"], column)
 
 
 def test_every_value_follows_the_schema():

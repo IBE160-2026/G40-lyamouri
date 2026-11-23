@@ -38,7 +38,7 @@ uv run python src/manage.py runserver --insecure
 1. `docker compose up -d --wait` starter databasen og venter til den er klar. Første gang laster Docker ned PostgreSQL-imaget.
 2. `uv sync --locked` installerer Python 3.13 hvis det mangler, og de nøyaktige pakkeversjonene i `uv.lock`.
 3. `migrate` lager tabellene i databasen.
-4. `load_seed` lager nøkkelen som signerer øktene (se [Nøkler og hemmeligheter](#nøkler-og-hemmeligheter)).
+4. `load_seed` lager nøkkelen som signerer øktene (se [Nøkler og hemmeligheter](#nøkler-og-hemmeligheter)) og laster de to testbedriftene inn i den tomme databasen (se [Testbedrifter](#testbedrifter)).
 5. `runserver --insecure` starter Prognose. Åpne http://127.0.0.1:8000/ i nettleseren. `--insecure` lar utviklingsserveren levere appens statiske filer, som stilark, selv om feilsøkingsmodus er av. Det åpner ikke appen for andre maskiner.
 
 Både appen og databasen svarer bare på din egen maskin (127.0.0.1).
@@ -54,7 +54,12 @@ Prognose har to syntetiske testbedrifter, uten virkelige data. Dataene lages av 
 | Testbedrift A | 1001 | `testbedrift-a` |
 | Testbedrift B | 1002 | `testbedrift-b` |
 
-Generatoren kjøres med `uv run python data/generate_seed.py`. Dataene lastes først inn i databasen når `load_seed` kan det (story 1.7), og innloggingen kommer i story 1.8.
+Generatoren kjøres med `uv run python data/generate_seed.py`, og den skriver de samme filene hver gang. Dataene lastes inn i databasen med `uv run python src/manage.py load_seed`. Innloggingen kommer i story 1.8.
+
+`load_seed` sjekker først alle filene i `data/seed/`: skjemaversjonen, at hver uke har et helt tall på 0 eller mer, at alle produktene i en bedrift slutter samme uke, og at passordfeltet er en hash og ikke et passord. Er en fil feil, laster og sletter kommandoen ingenting og sier hva som er galt. Deretter lager den bedriftene med produkter, salgsuker og innstillinger, med standardverdiene fra FR-20.
+
+- **Ikke tom database:** `load_seed` stopper med en melding og endrer ingenting. Den sletter og overskriver aldri data på egen hånd. Dataene og innstillingene ligger igjen når appen og databasen stoppes og startes på nytt, for eksempel med `docker compose down` og `docker compose up -d --wait`. Bruker du `docker compose down -v`, slettes volumet med databasen, og du må kjøre `migrate` og `load_seed` på nytt.
+- **Tilbake til testdataene:** `uv run python src/manage.py load_seed --reset` sletter alle bedrifter med produkter, salgsuker og innstillinger og alle økter, og laster testdataene på nytt, uten duplikater. Et `--reset` nullstiller derfor også innstillingene og de justerte mengdene, som ligger i øktene. Kommandoen ber deg skrive `nullstill`. Skriver du noe annet, endres ingenting. Ingen annen kommando eller bygging kjører `--reset`, og `.secret_key` beholdes.
 
 ## Nøkler og hemmeligheter
 

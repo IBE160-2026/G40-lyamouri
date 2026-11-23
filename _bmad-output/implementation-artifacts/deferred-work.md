@@ -35,3 +35,9 @@
 
 - The «Denne uken» figures of Testbedrift A (4 products to order soon, 31 units, 1 without a forecast, 4 with warnings), every product's confidence label and the claim that the 21 other products are quiet are checked only by a stand-in R-8 on the last three valid weeks in `tests/test_seed_data.py` (`suggested_quantity`, `warning_shapes`) and by an uncommitted script (VG-2, AA-2, EC-13). Story 2.8 checks them with the core and removes the stand-in.
 - `uv run pytest`, including `tests/test_seed_data.py`, does not run in `.github/workflows/windows-setup.yml`, and its `paths:` filter omits `data/**`, `reference/**`, `tests/**` and `.gitattributes`, so the claim that the seed files are identical on Windows is untested (VG-1, EC-12). This extends the point of Story 1.3 above: run `uv run pytest` in the Windows workflow too. A change to a workflow needs an SSH push.
+
+## Deferred from: code review of spec-1-7-load-the-seed-data-with-an-explicit-reset.md (2026-11-23)
+
+- `CompanySettings` stores any window, factor, percentage or method name, because the FR-20 ranges in `src/forecasting/settings.py` are used only by the tests (BH-6, EC-10). Story 3.1 builds the form that reads the ranges, and should also decide whether the model gets validators or a check constraint, so a value outside the ranges can never reach the core.
+- The clone step of `.github/workflows/windows-setup.yml` expects `load_seed` to create `.secret_key` and then stop with exit code 1 and the message «Databasen har allerede data». It cannot be run on macOS, so only the pull request's Windows run shows whether PowerShell passes the output through as the step expects (BH-12, EC-13, VG-3). If the run fails on that step, fix the step; the push needs SSH.
+
