@@ -764,8 +764,19 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Mutasjonstest: 20 mutasjoner ble fanget, men et andre sett og reviewen viste tre hull i testene. Alle 29 mutasjoner fanges nå.
 * Kjørte BMAD Code Review med fire uavhengige granskere (Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor, den siste lagt til fordi byggeflyten bare har tre lag) på arbeidstreet før noe var committet: 29 funn, 16 rettet, 5 avvist og 8 feil, og ingen trengte en beslutning ([tilfelle 38](ki-styringslogg.md#38-mutasjonssettet-og-hullene-i-testene-for-story-21-24-november-2026)). 362 tester og Ruff passerer, og `makemigrations --check` finner ingen endring.
 * Ingen manuell test, siden ingen side er endret.
+* Brukeren ba om at granskerne i fremtidige reviews bare skal lese og rapportere, og om å kontrollere antallet granskere. Byggeflyten har bare tre lag, mens rutinen og story 1.1 til 1.8 bruker fire, så Claude kjørte Acceptance Auditor på hele diffen før commiten, skrivebeskyttet. Den ga 4 nye funn (ett rettet, ett avvist, to feil), så reviewen endte på 29 funn, 16 rettet, 5 avvist og 8 feil.
+* Personvernskanningen av alle tilføyde linjer og nye filer (stier, e-postadresser, nøkler, passord og telefonnumre) fant ingenting.
+* Brukeren godkjente tre commits, SSH-push, PR og fletting når alle kontroller var grønne. Commitene er `5548f4e` (koden og testene, med alle rettingene), `338ff87` (spesifikasjonen, epic-konteksten og dokumentene) og `1c3924b` (sesjonsloggen og åpne punkter).
+* Pushet grenen over SSH og opprettet PR #24 med en kommentar med alle 29 funnene og beslutningene (`5548f4e` er rettings-commiten). CI-kjøring nr. 42 (363 tester, med Docker-testen, og Ruff) og Windows-kjøring nr. 16 passerte på siste commit `1c3924b`. Windows-jobben (Windows Server 2025 x64, uten Docker) kjørte oppsettet uten Docker.
+* Godkjente flettingen av PR #24. Claude flettet lokalt med `git merge --no-ff`, uten squash eller rebase, og med noreply-adressen som forfatter:
+  * merge-commiten `25a0403` har den gamle `main` (`1b8927d`) og PR-hodet (`1c3924b`) som foreldre;
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * `main` ble pushet over SSH, og GitHub viser PR #24 som flettet 24. november kl. 12.29, med `25a0403` som merge-commit;
+  * CI-kjøring nr. 43 på `main` passerte;
+  * grenen `story/2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts` er beholdt.
+* Eksporten av økta med `/export` er ikke med, siden den må kjøres av brukeren.
 
-**Status:** Story 2.1 er ferdig bygd og gjennomgått, og `sprint-status.yaml` står på `review`. Ingenting er committet eller pushet; det venter på godkjenning. Neste er story 2.2 (grunnprognosen).
+**Status:** Story 2.1 er flettet inn i `main` (`25a0403`). Story 2.2 er ikke startet.
 
 ## 4. Videre dokumentasjon
 
