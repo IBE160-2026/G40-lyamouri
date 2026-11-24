@@ -403,7 +403,7 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
   - Claude skrev feil filsti i oppdraget til én gransker, som fant filen likevel og meldte «ingen funn». En «ingen funn» fra en gransker som ikke har lest det riktige er ikke et funn, så oppdraget ble gjentatt.
   - Granskerne endret `weeks.py` i arbeidstreet for sine egne mutasjoner, og én satte filen tilbake med en feil verdi. Claude fant ingen feil fordi filen ble sammenlignet byte for byte med kopien fra før.
 - **Hva gruppen bestemte:** Brukeren ba om mutasjonstester og review uten å bestemme enkeltfunnene, og ba senere om at granskerne i fremtidige reviews bare skal lese og rapportere, og om at antallet granskere skal kontrolleres. Ingen funn trengte en beslutning. 16 ble rettet, 5 avvist og 8 var feil.
-- **Commit eller pull request:** `5548f4e`.
+- **Commit eller pull request:** `5548f4e`, i PR #24 (`25a0403`).
 - **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.1](../_bmad-output/implementation-artifacts/spec-2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts.md).
 - **QA-loggen:** [feilene fra byggingen av story 2.1](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-21-dr-9) og [fra BMAD Code Review av story 2.1](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-21-dr-9).
 
