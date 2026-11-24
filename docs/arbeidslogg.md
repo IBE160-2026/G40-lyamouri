@@ -783,6 +783,17 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 2.1 er flettet inn i `main` (`25a0403`), og sesjonseksporten og fletteloggene er flettet (`49b63c7`, `04b7a41`). Story 2.2 er ikke startet.
 
+### 24. november 2026 – Story 2.2: grunnprognosen med glidende gjennomsnitt eller eksponentiell glatting
+
+* Startet story 2.2 med `bmad-build` etter sprintplanen, BMAD og prosjektreglene. `main` var ren (`a66efb4`), og Claude laget grenen `story/2-2-calculate-the-base-forecast-with-the-moving-average-or-exponential-smoothing`. Epic 2-konteksten og story 2.1 fantes fra før. Claude skrev spesifikasjonen uten åpne spørsmål og anslo den til omtrent 1 700 tokens, litt over målet på 1 600. Brukeren valgte å beholde spesifikasjonen samlet og godkjente den, og ba om at subagenter bare brukes til BMAD Code Review.
+* Claude bygde `ForecastSettings` i `src/forecasting/settings.py`, `src/forecasting/forecast.py` (`ProductResult`, `forecast_product`) og `tests/test_forecast.py`, som leser alle forventede verdier fra `reference/reference-examples.xlsx`: 24 tilfeller (E14 er utelatt, siden den har sesongjustering) og de 11 regeltestproduktene. `weeks.py` og regnearket er ikke endret, og ingen side, modell eller migrasjon er endret.
+* Mutasjonstest: Claude kjørte 55 mutasjoner av `forecast.py`, selv og ikke gjennom granskerne. 54 ble fanget. Den siste er en ekvivalent mutant: sjekken av 3 gyldige uker gjort på kalkulasjonsukene, som ikke kan skilles fra den ekte, siden 3 gyldige uker alltid gir minst 3 kalkulasjonsuker.
+* Kjørte BMAD Code Review med fire uavhengige, skrivebeskyttede granskere (Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor) på arbeidstreet før noe var committet: 23 funn, 14 rettet, 7 avvist og 2 feil. Ett punkt gikk til brukeren, som ba om en vurdering av om kjernen skal avvise ugyldig vindu og α (se under) ([tilfelle 39](ki-styringslogg.md#39-den-andre-feilskrevne-stien-og-tellingene-som-ikke-kunne-feile-i-story-22-24-november-2026)). Hashene av `src`, `tests`, `reference`, `docs` og implementasjonsfilene var like før og etter reviewen, så ingen gransker endret en fil. 443 tester og Ruff passerer, og `makemigrations --check` finner ingen endring.
+* Beslutning om kjernen: brukeren ba om en vurdering av om `forecast_product` skal avvise vindu 0 og ugyldig α selv om skjemaet i story 3.1 skal kontrollere dem. Claude vurderte at den skal det: uten kontroll ga vindu 0 `ZeroDivisionError`, og et negativt vindu eller en α utenfor området ga et tall som ligner en prognose. `check_settings` leser grensene fra `settings.py` (AD-9), kontrollerer metode, vindu og α før noe beregnes, og omfanget ble ikke utvidet. 28 nye tester og 19 nye mutasjoner, og de fire granskerne ble ikke kjørt på nytt. Skjemaet i story 3.1 gir fortsatt brukeren en norsk melding.
+* Ingen manuell test, siden ingen side er endret.
+
+**Status:** Story 2.2 er ferdig bygd og gjennomgått, og `sprint-status.yaml` står på `review`. Brukeren godkjente tre commits (koden og testene `0c31ef6`, spesifikasjonen og dokumentene, og sesjonsloggen), SSH-push og PR. Story 2.3 er ikke startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

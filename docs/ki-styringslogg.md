@@ -407,4 +407,16 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.1](../_bmad-output/implementation-artifacts/spec-2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts.md).
 - **QA-loggen:** [feilene fra byggingen av story 2.1](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-21-dr-9) og [fra BMAD Code Review av story 2.1](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-21-dr-9).
 
+### 39. Den andre feilskrevne stien og tellingene som ikke kunne feile i story 2.2 (24. november 2026)
+
+- **Hva KI foreslo:** Claude bygde `forecast_product` for R-2, R-3, R-4 og R-6 og skrev testene slik at de leser alle forventede verdier fra regnearket. Claude kjørte 55 mutasjoner selv og lot fire skrivebeskyttede granskere i `bmad-code-review` gå gjennom arbeidstreet.
+- **Hva som var feil:**
+  - Claude skrev en feil filsti i oppdraget til Verification Gap-granskeren, som i story 2.1. Granskeren fant filen via reservestien og meldte «ingen hull» på 40 sekunder, mens de andre fant svakheter i testene. Oppdraget ble gjentatt med riktig sti, og granskeren oppga størrelsen på diffen den leste. Den fant fortsatt ingen hull, men én observasjon (ingen test av at det glidende gjennomsnittet ikke har nivåer).
+  - To tellinger i testen sammenlignet leseren med sitt eget filter og kunne aldri feile, selv om teksten sa at en fjernet rad ikke går ubemerket hen. Dessuten stod E23 og FR-21-variantene i matrisen, men ikke i listen over eksempler som vaktene sjekker.
+  - To grenser i R-6 var ikke testet: 2 gyldige uker med et vindu som de to ukene fyller, og nøyaktig 3 gyldige uker for eksponentiell glatting. Mutasjonen «3-ukerssjekken fjernet» var ikke i det første settet.
+- **Hva gruppen bestemte:** Brukeren ba om fire uavhengige, skrivebeskyttede granskere og om mutasjonstester, og lot Claude vurdere enkeltfunnene. Ett punkt gikk til brukeren: Claude avviste først funnene om at kjernen ikke kontrollerer vindu og α (skjemaet i story 3.1 skal gjøre det), og brukeren ba om en vurdering. Claude vurderte at kjernen skal avvise dem med `ValueError`, fordi vindu 0 ga `ZeroDivisionError` og et negativt vindu eller en α utenfor området ga et tall som ligner en prognose. Grensene leses fra `settings.py`, og omfanget ble ikke utvidet (ingen kontroll av desimaler, negative tall, `None` eller lagerbeholdning). Til slutt ble 14 rettet, 7 avvist og 2 var feil. Skrivebeskyttelsen holdt, siden hashene av alle filer var like før og etter reviewen.
+- **Commit eller pull request:** `0c31ef6`, i pull requesten for story 2.2.
+- **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.2](../_bmad-output/implementation-artifacts/spec-2-2-calculate-the-base-forecast-with-the-moving-average-or-exponential-smoothing.md).
+- **QA-loggen:** [feilene fra byggingen av story 2.2](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-22-dr-9) og [fra BMAD Code Review av story 2.2](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-22-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).
