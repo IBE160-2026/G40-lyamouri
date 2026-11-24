@@ -1,0 +1,826 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   ~/G40-lyamouri
+
+
+❯ /clear                                                                        
+
+❯ Start BMAD arbeidet med story 2.1. Følg sprintplanen, lærerkravene og         
+  prosjektets rutiner. Arbeid selvstendig og effektivt, med kvalitet først.     
+  Presenter kun nødvendige beslutninger for godkjenning. Ikke commit eller push 
+  uten godkjenning.                                                             
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+  Read 2 files, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg leser sprintplanen, story 2.1 i epics.md og forrige story-spec. Epic
+  2-konteksten finnes ikke, så jeg kompilerer den selv. Jeg sjekker også
+  prosjektets rutiner.
+
+  Read 4 files, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg går gjennom reglene R-1, R-10 og R-11 i PRD-en og arkitekturen, samt
+  facit-leseren og den eksisterende forecasting/-koden, før jeg setter sammen
+  epic 2-konteksten og skriver spesifikasjonen. · summary
+
+  Ran 5 shell commands (ctrl+o to expand)
+
+⏺ Write(_bmad-output/implementation-artifacts/epic-2-context.md)
+  ⎿  Wrote 54 lines to
+     _bmad-output/implementation-artifacts/epic-2-context.md
+      1 # Epic 2 Context: See what to order, how it was calculated and wh
+        ether to trust it
+      2 
+      3 <!-- Compiled from planning artifacts. Edit freely. Regenerate wi
+        th compile-epic-context if planning docs change. -->
+      4 
+      5 ## Goal
+      6 
+      7 Build the pure forecasting core and the screens on top of it, so 
+        that the purchasing manager sees, per product, the week forecasts
+     … +48 lines (~6 KB) (ctrl+o to expand)
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Jeg leser nå spec-malen og facit-arket med regeltestproduktene. Etterpå
+  skriver jeg spesifikasjonen for story 2.1.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-2-1-find-the-valid-weeks-unus
+       ual-weeks-and-level-shifts.md)
+  ⎿  Wrote 79 lines to _bmad-output/implementation-artifacts/spec-2-1-find-
+     the-valid-weeks-unusual-weeks-and-level-shifts.md
+      1 ---
+      2 title: 'Story 2.1: Find the valid weeks, unusual weeks and level 
+        shifts'
+      3 type: 'feature'
+      4 created: '2026-11-24'
+      5 status: 'draft'
+      6 route: 'dispatch'
+      7 review_loop_iteration: 0
+      8 context: ['{project-root}/_bmad-output/implementation-artifacts/e
+        pic-2-context.md']
+     … +71 lines (ctrl+o to expand)
+
+⏺ Spesifikasjonen for story 2.1 er skrevet, og det er ingen åpne spørsmål.
+  Ingenting er kodet, committet eller pushet.
+
+  Spec: _bmad-output/implementation-artifacts/spec-2-1-find-the-valid-weeks-unus
+  ual-weeks-and-level-shifts.md
+
+  Grunnlag
+  - Sprintplanen setter story 2.1 først i epic 2, og M2 er 30. november.
+  - Epic 1 er ferdig (M1 passert). Story 1.3 er Windows-testen 25. november og
+    blokkerer ikke.
+  - Arbeidstreet er rent, og jeg står på main. Jeg lager grenen
+    story/2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts når du
+    godkjenner.
+  - Epic 2-konteksten manglet, så jeg kompilerte epic-2-context.md selv.
+
+  Hva som bygges
+  - Kjernen: src/forecasting/weeks.py får Week, WeekClassification og
+    classify_weeks. Funksjonen gir posisjonene til gyldige uker, uvanlige uker
+    og uker med nytt nivå etter R-1, R-10 og R-11, i én gjennomgang.
+  - Regler: Bare heltallsregning, ingen kalenderregning (AD-8) og bare
+    standardbiblioteket (AD-1). Funksjonen leser ikke innstillingen for uvanlige
+    uker, for den hører til story 2.2.
+  - Testene: tests/test_week_classification.py leser alle oppgitte verdier fra
+    reference/reference-examples.xlsx, for tilfellene og for
+    regeltestproduktene. Det dekker E7, E8, E9, E10, E15, E16, E18 a og b og
+    E19. Hver test navngir E-n og FR-n. I tillegg kommer kanttilfeller (tom
+    historikk, utsolgte uker og at inndata ikke endres) og en kontroll av at
+    mutasjoner i koden feiler testene.
+  - Dokumenter: statustabell, QA-logg, KI-styringslogg, arbeidslogg,
+    sprint-status.yaml (epic 2 og story 2.1) og åpne punkter.
+  - Utenfor omfanget: ingen modell, migrasjon, skjerm, avhengighet eller endring
+    av regnearket. Ingen manuell Safari-test, siden ingen side endres.
+
+  Størrelse: Spesifikasjonen er litt over 1600 tokens, men det er ett enkelt
+  mål, så jeg foreslår å beholde den som den er.
+
+  Beslutninger:
+  1. Godkjenning: Velg mellom «Godkjenn og fortsett» (jeg bygger i denne økten),
+     «Godkjenn og stopp» og «Gjennomgå spesifikasjonen».
+  2. Subagenter: Gjelder det som tidligere, at subagenter bare brukes til BMAD
+     Code Review, mens bygging og byggegjennomgang gjøres her?
+  3. Commit og push: Jeg committer ikke og pusher ikke uten din godkjenning. Du
+     får en oversikt etter review, og først da lager jeg loggføringen med
+     sesjonslogg.
+
+✻ Baked for 2m 10s · done 12:01 PM
+
+❯ Godkjenn og fortsett med story 2.1. Behold spesifikasjonen og følg BMAD,      
+  sensorveiledningen og prosjektets rutiner. Bruk subagenter kun til BMAD Code  
+  Review, som tidligere. Gjennomfør implementering, tester, mutasjonstester og  
+  nødvendig review selvstendig. Prioriter kvalitet. Presenter samlet resultat   
+  og eventuelle nødvendige beslutninger før commit , push.                      
+
+  Read 1 file, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Write(src/forecasting/weeks.py)
+  ⎿  Wrote 72 lines to src/forecasting/weeks.py
+       1 """Valid weeks, unusual weeks and level shifts (R-1, R-10, R-11;
+          FR-15, FR-16, FR-17).
+       2 
+       3 The rules work on positions in the sales history, from 1 for the
+          oldest week (AD-8),
+       4 and on whole units, so the comparison with 2 × the baseline is e
+         xact. They do not read
+       5 the setting that includes or excludes unusual weeks; the calcula
+         tion weeks (R-2) do.
+       6 Only the standard library is imported (AD-1).
+     … +66 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Koden for weeks.py er skrevet. Nå skriver jeg testene, som leser alle
+  forventede verdier fra regnearket.
+
+⏺ Write(tests/test_week_classification.py)
+  ⎿  Wrote 177 lines to tests/test_week_classification.py
+      1 """Valid weeks, unusual weeks and level shifts (Story 2.1; FR-15,
+         FR-16, FR-17, R-1, R-10, R-11).
+      2 
+      3 The expected valid weeks, unusual weeks and level-shift weeks are
+         read from the
+      4 reference spreadsheet for every case and rule test product that s
+        tates them, so
+      5 no expected value is copied into the tests (AD-17). They use no d
+        atabase.
+      6 """
+     … +171 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle 64 tester passerer. Nå kjører jeg mutasjonstestene: jeg endrer weeks.py
+  ti ganger på ulike måter og sjekker at minst én test feiler hver gang.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle 20 mutasjoner ble fanget, og filen er gjenopprettet. Nå kjører jeg hele
+  testpakken, Ruff og makemigrations --check.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alt grønt: 359 bestått og 1 hoppet over (Docker-sjekken, som før). Nå
+  oppdaterer jeg prosjektdokumentene. Først ser jeg på formatene.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Dokumentene oppdaterer jeg etter reviewen, slik de gjorde for story 1.8. Nå
+  leser jeg review-steget.
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg starter nå de tre BMAD Code Review-lagene som uavhengige subagenter,
+  parallelt.
+⏺ 3 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   └ Verification Gap review
+
+⏺ Jeg skrev feil diff-sti til Verification Gap-reviewerne i den siste
+  oppstarten. Jeg starter den på nytt med riktig sti.
+
+⏺ Agent(Verification Gap review (corrected path))
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ Fire reviewere kjører i bakgrunnen: Blind Hunter, Edge Case Hunter og to
+  Verification Gap. Den første av dem hadde feil diff-sti, så jeg ignorerer
+  resultatet fra den når det kommer. Jeg venter på resultatene før jeg trierer
+  funnene og oppdaterer dokumentene.
+
+✻ Crunched for 2m 22s · done 12:09 PM
+
+› Message from general-purpose
+  Size: 24,848 bytes is about 24.3 kB, so N = min(floor(sqrt(24.3) + 1), 10) =
+  min(floor(5.93), 10) = 5. I found 11 issues.
+
+  - **Spec and sprint status disagree.** The spec's Tasks say
+  "`sprint-status.yaml` to `review`" and its frontmatter says `status:
+  'in-review'`. The diff sets story 2-1 to `in-progress`. Every Execution
+  checkbox is still `[ ]`.
+  - **Required documents are missing from the diff.** The spec's Tasks and the
+  epic-2 context list `docs/statustabell.md` (FR-15 to FR-17 rows),
+  `docs/qa-logg.md`, `docs/ki-styringslogg.md`, `docs/arbeidslogg.md` and
+  `.logs/mounia-03/issues.md`. None of them is in the diff. The Implementation
+  Notes, Spec Change Log and Review Triage Log sections are empty. The epic's
+  per-story rules require each of these to be updated.
+  - **The spec asks for a frozen dataclass but the code uses a `NamedTuple`.**
+  The Code Map says new modules use "frozen dataclass as in `settings.Range`".
+  `Week` is a `NamedTuple`, and the Design Notes don't explain why. `Week` is
+  also a positional tuple, so `Week(True, 5)` would silently swap its fields.
+  - **The "integer arithmetic only" guarantee is not enforced.**
+  `classify_weeks` has no type hints and doesn't validate its input.
+    - Floats, `Decimal`, `None` or negative `units_sold` pass straight through.
+  A float input would break the exact 2 × comparison.
+    - `statistics.median` returns a float for an even-sized sample, so changing
+  `BASELINE_WEEKS` would also break exactness.
+    - Nothing tests or documents what happens with bad input.
+  - **The code and the docstring accept different inputs.** The test title says
+  "takes any sequence", but the code indexes `weeks[earlier_position - 1]`. A
+  generator or iterator would fail there, even though `enumerate` accepts it.
+  The docstring should say "indexable sequence", or the code should convert the
+  input to a tuple first.
+  - **The valid weeks are only compared as a count against the spreadsheet.**
+    - `assert_stated_values_match` checks `len(result.valid) ==
+  row["valid_weeks"]`. A wrong set of positions with the right size would pass,
+  for example a stockout counted as valid while a normal week is dropped.
+    - The one position-level check
+  (`test_stockout_weeks_are_not_valid_weeks...`) rebuilds the expected positions
+  from the same stockout flags the function reads. That makes it partly
+  circular.
+    - The spec matrix states explicit positions (1, 2, 5, 6) for E7, but no test
+  asserts them literally.
+  - **Two spreadsheet-driven tests can pass with nothing in them, and one
+  example is unguarded.**
+    - Nothing asserts that `PRODUCTS` is non-empty or that all 11 rule test
+  products are covered. If the reader renames the `unusual_weeks` column, the
+  parametrised test is skipped without any failure.
+    - The guard test covers only `LISTED_EXAMPLES`. The Code Map also lists E11
+  and E29 as covered, but they are not guarded.
+    - `test_the_listed_examples_are_all_checked` also checks nothing about which
+  columns each listed example states.
+  - **The zero-baseline rule has no inline test.** E10 is only checked through
+  the spreadsheet. There is no direct test that a baseline of 0 never flags a
+  week, such as `history(0, 0, 0, 5)`. There is none for a median of 0 from
+  mixed weeks, such as `history(0, 0, 9, 5)`. There is none for the "fewer than
+  3 earlier weeks" case either, such as week 3 being high. The inline tests
+  cover other rules but skip the one most likely to fail by division or
+  comparison.
+  - **Fixed test names and invented examples blur the E-n traceability.**
+    - The product test cites `FR-3`, which the spec doesn't list.
+    - `test_a_run_of_unusual_weeks_is_broken...` is labelled E8 and
+  `test_the_same_run_with_a_stockout_inside...` is labelled E9, but both use
+  made-up histories, not the spreadsheet rows.
+    - DR-5 and AD-17 ask that each test names the E-n it checks.
+  - **The import-check test is brittle and duplicates an existing one.**
+  `test_the_module_imports_only_what_it_needs...` asserts that the import set
+  equals exactly `{"dataclasses", "statistics", "typing"}`. Adding any harmless
+  standard-library import, such as `collections.abc` for type hints, fails it.
+  It also repeats `tests/test_core_imports.py`, which the spec says already
+  covers `weeks.py`. It parses the source twice, and it ignores `import x.y`
+  forms and relative imports.
+  - **The mutation-testing acceptance criterion has no evidence or automation.**
+  The spec says five mutations (`>=` for `>`, a baseline that skips level-shift
+  weeks, a baseline over all earlier weeks, a stockout counted as valid, a run
+  broken by a stockout) must each make at least one test fail. Nothing in the
+  diff records that this was run or how. There is no mutation script or recorded
+  result. Two of the mutations are covered only by tests built from invented
+  data.
+  - **Smaller code and documentation points.**
+    - `classify_weeks` rebuilds the `earlier` list from all valid weeks on every
+  iteration, which is O(n²). A rolling window would be simpler and would show
+  the "3 most recent" rule directly.
+    - The module has no `__all__`, so the public API (`Week`,
+  `WeekClassification`, `classify_weeks`) is unmarked.
+    - The module-level constants `BASELINE_WEEKS`, `OUTLIER_FACTOR` and
+  `LEVEL_SHIFT_WEEKS` look configurable, but R-10 and R-11 fix them. The epic
+  says rule defaults live once in `forecasting/settings.py` (AD-9), so the
+  comment should say why these are not there.
+    - `sprint-status.yaml` has a hand-typed `last_updated` of 12:00, which looks
+  invented.
+    - The Code Map mentions "E19 per setting" but gives no test or note for how
+  the per-setting variants are handled.
+
+⏺ Blind Hunter er ferdig. Jeg venter på Edge Case Hunter og Verification Gap før
+  jeg trierer alle funnene samlet.
+
+✻ Worked for 1s · done 12:10 PM
+
+⏺ Agent "Blind Hunter review" finished · 54s
+
+› Message from general-purpose
+  [
+  {"location":"src/forecasting/weeks.py:226-233","trigger_condition":"weeks
+  passed as a generator or other non-indexable iterable","guard_snippet":"weeks
+  = tuple(weeks)  # before the loop; enumerate consumes the iterator and
+  weeks[i] needs indexing","potential_consequence":"TypeError at
+  weeks[earlier_position - 1], or silent mis-indexing, for a non-sequence
+  input."},
+  {"location":"src/forecasting/weeks.py:226-236","trigger_condition":"non-stocko
+  ut week has units_sold None, negative or non-integer","guard_snippet":"if not
+  isinstance(week.units_sold, int) or week.units_sold < 0: raise
+  ValueError(...)","potential_consequence":"None gives TypeError in median or
+  comparison; negatives and floats silently skew baselines, contradicting the
+  integer-only claim."},
+  {"location":"src/forecasting/weeks.py:229-233","trigger_condition":"every
+  valid week rebuilds the full baseline list from all earlier valid
+  weeks","guard_snippet":"keep a running list of non-unusual valid positions and
+  read its last 3 entries","potential_consequence":"Quadratic cost per product
+  on long histories; baseline list is stale-prone if unusual changes."},
+  {"location":"src/forecasting/weeks.py:237-241","trigger_condition":"week
+  unusual and two previous valid weeks are already unusual, but earlier
+  levelled-up weeks interleave","guard_snippet":"assert the run is contiguous
+  among valid weeks only; current code relies on valid[-2:] being in
+  unusual","potential_consequence":"Correct today; no test covers a second
+  level-shift run directly after the first (7, 8, 9 unusual becoming a
+  shift)."},
+  {"location":"tests/test_week_classification.py:296-303","trigger_condition":"s
+  preadsheet row states valid_weeks only as a count; positions never
+  compared","guard_snippet":"assert result.valid == tuple(p for p, w in
+  enumerate(sales, 1) if not w.stockout)","potential_consequence":"Wrong valid
+  positions with the right count (E16, E29) pass the spreadsheet tests; only E7
+  checks positions."},
+  {"location":"tests/test_week_classification.py:283-284","trigger_condition":"P
+  RODUCTS filtered on unusual_weeks only; CASES filter needs any one stated
+  column","guard_snippet":"PRODUCTS = [r for r in reader.products() if any(c in
+  r for c in STATED)]  # and assert all 11 are
+  present","potential_consequence":"A product row with only level_shift_weeks
+  stated, or a dropped row, is silently skipped; no count guard exists for
+  products."},
+  {"location":"tests/test_week_classification.py:421-435","trigger_condition":"m
+  odule gains a relative import (node.module is None) or any other stdlib
+  import","guard_snippet":"compare against an allow-list subset, and skip None
+  modules; test_core_imports.py already enforces
+  AD-1","potential_consequence":"Exact-set equality makes a harmless import fail
+  this test, and duplicates the AD-1 guard."},
+  {"location":"_bmad-output/implementation-artifacts/sprint-status.yaml:46-50","
+  trigger_condition":"Spec Tasks claim: documents above and sprint-status.yaml
+  moved to review (DR-7)","guard_snippet":"Diff sets 2-1 to in-progress;
+  docs/statustabell.md, qa-logg.md, ki-styringslogg.md, arbeidslogg.md and .logs
+  issues.md are unchanged in git status","potential_consequence":"Someone
+  trusting the task as done finds the story still in-progress and the FR-15 to
+  FR-17 status rows and logs not
+  updated.","kind":"claim","confidence":"medium"},
+  {"location":"_bmad-output/implementation-artifacts/spec-2-1-find-the-valid-wee
+  ks-unusual-weeks-and-level-shifts.md:5","trigger_condition":"Spec frontmatter
+  says status in-review while Tasks checkboxes are all
+  unchecked","guard_snippet":"Tasks list shows [ ] for the module, tests and
+  documents; sprint-status says in-progress","potential_consequence":"Status
+  sources disagree, so a reader cannot tell if the story is
+  finished.","kind":"claim","confidence":"low"}
+  ]
+
+⏺ Edge Case Hunter er ferdig. Jeg venter på de to Verification Gap-reviewerne.
+
+✻ Churned for 1s · done 12:10 PM
+
+⏺ Agent "Edge Case Hunter review" finished · 1m 2s
+
+› Message from general-purpose
+  No verification gaps found.
+
+  Notes on how I got there:
+  - The diff path in the request, `<scratchpad-path-with-a-stray-slash>/story-2-1.diff`,
+  does not exist, because of a stray `/` in the folder name. I read the diff at
+  `<scratchpad>/story-2-1.diff` (24,848 bytes, same session ID).
+  The review prompt itself read fine.
+  - Behavior under review: the new `classify_weeks` in
+  `src/forecasting/weeks.py` (R-1, R-10, R-11). The spec, epic context and
+  sprint-status changes are documentation and not behavioral.
+  - `classify_weeks` has no production consumer yet. Searching the repo for
+  `classify_weeks`, `WeekClassification` and `forecasting.weeks` finds only the
+  module, the spec and `tests/test_week_classification.py`. Story 2.2 is the
+  next consumer, so there is no missing-adoption gap.
+  - `uv run pytest tests/test_week_classification.py` gives 46 passed. CI
+  (`.github/workflows/ci.yml:43-53`) runs `uv run pytest`, `ruff check` and
+  `ruff format --check`. `pyproject.toml:28-29` sets `pythonpath = ["src",
+  "reference", "data"]` and `testpaths = ["tests"]`, so the new tests run in the
+  normal path. `tests/test_core_imports.py` globs every file under
+  `forecasting/`, so `weeks.py` is covered by the AD-1 import check.
+  - I read the spreadsheet rows through `answer_key_reader`. `STATED` filters on
+  `valid_weeks`, `unusual_weeks` and `level_shift_weeks`, and I checked what it
+  selects:
+    - Every case that states one of these three columns is selected: E1, E7 to
+  E11, E15, E16, E18 a and b, E19, and E29 a, b, c, d, f and g.
+    - Every product that states `unusual_weeks` is selected: E1, E7 to E10, E15,
+  E16, E18 a and b, E19 and `Strøsand 25 kg`. Each of these also states
+  `level_shift_weeks`, so the `"unusual_weeks" in row` filter on `PRODUCTS`
+  drops nothing.
+  - Mutations: I ran my own mutations against `weeks.py` on top of the ones in
+  `scratchpad/mutate.py`, and restored the file afterwards (diff against a
+  backup is clean).
+    - Caught (the tests failed): `len(earlier) >= 1`, median replaced by max,
+  min, first or last, run window of the last 1 valid week,
+  `difference_update(run[:-1])`, `level_shift.update(run[1:])`, `issuperset`
+  replaced by `any`, `baseline > 1`, dropping the `len(run) == 3` check, and
+  `baseline >= 0` (27 failures when I re-ran it alone).
+    - My batch script first reported `baseline >= 0` as surviving. A standalone
+  re-run showed it is caught, so that was a stale-bytecode artefact of my
+  harness and not a test gap.
+    - I did not run the caller's `mutate.py`.
+  - The tests assert on the exact positions (`unusual`, `level_shift`) for the
+  matrix rows and for the E8, E9, E15, E16, E18 and E19 shapes. The 2x boundary
+  (20 is not unusual, 21 is) is pinned in
+  `test_the_baseline_uses_the_three_most_recent_earlier_weeks_only`. A run
+  broken by a normal week, a run kept by a stockout, stockout units being
+  ignored, and empty or all-stockout input are each pinned too. Each of these
+  would fail under a plausible regression.
+
+  ## Other findings
+
+  - None.
+
+⏺ Den første Verification Gap-reviewen fant riktig fil selv med den feil skrevne
+  stien og meldte ingen funn. Den rettede kjøringen er ennå ikke ferdig, så jeg
+  venter på den før triagen.
+
+✻ Sautéed for 2s · done 12:10 PM
+
+⏺ Agent "Verification Gap review" finished · 1m 13s
+
+› Message from general-purpose
+  ### The "fewer than 3 earlier weeks means the week is not checked" rule of
+  R-10 is not pinned by any test
+
+  - **Changed surface:** `src/forecasting/weeks.py:234` (`if len(earlier) ==
+  BASELINE_WEEKS:`). This is the guard that leaves a valid week unchecked when
+  fewer than 3 earlier valid, non-unusual weeks exist (R-10, E19). The behaviour
+  is new in this diff.
+  - **Impacted consumer or site:** `classify_weeks` (`weeks.py:213`). The spec
+  names Story 2.2 as its next consumer, but nothing in `src` or `tests` imports
+  it yet. The observable boundary is therefore the tests themselves:
+  `tests/test_week_classification.py:313-325` (spreadsheet-driven cases and
+  products) and the hand-written tests at lines 341-410.
+  - **Existing test evidence:**
+    - `Broken-verification gap`: the test that looks like it covers this rule is
+  the E19 row, run through
+  `test_every_case_that_states_its_weeks_matches_the_spreadsheet` and
+  `test_every_rule_test_product_matches_the_spreadsheet`. I read the E19 series
+  with the answer-key reader: `[40, 10, 10, S, S, 25, 10]`, expected unusual
+  weeks `[6]`. Weeks 1 to 3 are never high relative to their early baselines
+  (week 2 is 10 against a baseline of 40, week 3 is 10 against a median of 25).
+  The series therefore gives the same result whether weeks 1 to 3 are checked or
+  not.
+    - I then ran the test file (46 pass) with two mutations of `weeks.py:234`,
+  `len(earlier) >= 1` and `len(earlier) >= 2`. In both runs the 46 tests still
+  passed.
+    - The other tests that build histories (`history(...)` at lines 379-410) all
+  start with `20, 22, 21` or `100, 100, 100`, and the first three weeks are
+  never a jump. Several other mutants of the same file, such as `>=` for `>`, an
+  all-time baseline, a baseline of 2 or 4 weeks, `max` for the median and a
+  stockout week counted as valid, do fail the suite. This guard is the
+  exception.
+    - A search for `classify_weeks` and `forecasting.weeks` across the repo
+  finds no other caller or test.
+  - **Missing verification:** an assertion that a high week with fewer than 3
+  earlier valid, non-unusual weeks is not flagged. For example, week 2 or 3 at
+  more than 2 × the earlier baseline, with a stockout week in front to show that
+  only valid weeks count.
+  - **Demonstration:** change the guard to `>= 1` or `>= 2`. Then `history(20,
+  22, 60, 21)` flags week 3 as unusual, because the baseline of 2 weeks is 21
+  and 60 is more than 42. The original returns no unusual week. All 46 tests
+  pass either way. The same applies to `history(20, 60, 60, 60)`: the mutant
+  reports a level shift (2, 3, 4), the original reports nothing.
+  - **Consequence:** a product whose first weeks contain a jump, such as a new
+  product's launch weeks, would get unusual-week or level-shift flags and
+  warnings. The calculation weeks would also change. The change would reach
+  Stories 2.2 and 2.5 unnoticed. The spec's I/O matrix states "week 1 to 3
+  unchecked" for E19, and the guard exists to enforce it.
+  - **Disposition:** `patch`. Add one test to
+  `tests/test_week_classification.py`, in the style of the existing
+  `history(...)` tests. It should assert `classify_weeks(history(20, 22, 60,
+  21)).unusual == ()` and `classify_weeks(history(20, 60, 60, 60)).level_shift
+  == ()`. It should also cover a stockout week among the earlier weeks, for
+  example `history(20, "S", 60, 22, 21)`, where week 3 has only 1 earlier valid
+  week.
+
+  ## Other findings
+
+  - `classify_weeks` indexes `weeks[earlier_position - 1]` after iterating with
+  `enumerate(weeks)`, so it needs a re-indexable sequence. A generator or
+  iterator would raise `TypeError` or give wrong results. The test
+  `test_the_classification_does_not_change_its_input_and_takes_any_sequence`
+  only tries a list and a tuple. This is harmless for the current callers (lists
+  and tuples) and is mentioned only because the test name says "any sequence".
+  - The mutation `len(run) == LEVEL_SHIFT_WEEKS and ...` can be removed with no
+  test failing. I judge it an equivalent mutant: an unusual week needs at least
+  3 earlier valid weeks, so `run` always has 3 entries whenever
+  `unusual.issuperset(run[:-1])` can be true. That makes the check redundant,
+  not a gap.
+  - During the review I mutated `src/forecasting/weeks.py` temporarily and
+  restored it from a copy. One restore was found to be wrong (the file had
+  `OUTLIER_FACTOR = 3`). I restored it again, confirmed it is byte-identical to
+  the original, and re-ran the tests (46 pass). The file is untracked in git, so
+  `git diff` would not show any change. I suggest a quick `cat` of that
+  constant before committing.
+
+⏺ Alle fire reviewere er ferdige. Reviewerne har selv mutert weeks.py og
+  gjenopprettet den, og én av dem sier at en gjenoppretting gikk galt en gang.
+  Derfor sjekker jeg først at filen er identisk med min egen kopi.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Verification Gap review (corrected path)" finished · 1m 22s
+
+⏺ Filen er uendret og testene går fortsatt. Jeg retter nå funnene fra triagen
+  som patcher, blant annet testene og dekningskontrollen. · summary
+
+  Read 1 file, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Én mutant overlevde: en baseline på 1 blir aldri flagget. Jeg legger til en
+  test for det og kjører alle mutantene på nytt.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alt er grønt: 362 bestått, 1 hoppet over, og 29 av 29 mutanter fanget. Nå
+  oppdaterer jeg dokumentene. Først ser jeg på formatet til forrige story.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Nå fører jeg reviewresultatene inn i spesifikasjonen (triagelogg,
+  implementasjonsnotater, oppgaver).
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Nå kjører jeg alt på nytt for å se at dokumentendringene ikke bryter noen
+  test, for eksempel personvern- eller lenketestene. Så leser jeg siste
+  BMAD-steg.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Skill(sesjonslogg)
+  ⎿  Successfully loaded skill
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(.logs/mounia-03/975-2026-11-24-12-15-17-story-2-1-uker-og-nytt-niva.md)  ⎿  Wrote 24 lines to
+     .logs/mounia-03/975-2026-11-24-12-15-17-story-2-1-uker-og-nytt-niva.md
+       1 # Story 2.1: de gyldige ukene, de uvanlige ukene og nytt nivå
+       2 
+       3 ## 2026-11-24 kl. 12:15 — Mounia-03
+       4 
+       5 ### Oppgave
+       6 Starte BMAD-arbeidet med story 2.1 etter sprintplanen, lærerkrav
+         ene og prosjektets rutiner, arbeide selvstendig med kvalitet før
+         st, bruke subagenter bare til BMAD Code Review, og ikke committe
+          eller pushe uten godkjenning.
+       7 
+     … +17 lines (ctrl+o to expand)
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Story 2.1 er bygget, testet og gjennomgått på grenen
+  story/2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts. Ingenting er
+  committet eller pushet.
+
+  Resultat
+  - Koden: src/forecasting/weeks.py har classify_weeks, som finner gyldige uker,
+    uvanlige uker og uker med nytt nivå etter R-1, R-10 og R-11 (FR-15, FR-16,
+    FR-17). Ingen skjerm, modell eller migrasjon er endret.
+  - Testene: tests/test_week_classification.py har 49 tester. De leser alle
+    forventede verdier fra regnearket for E7, E8, E9, E10, E15, E16, E18 a og b
+    og E19, og for de 11 regeltestproduktene.
+  - Kjøringen: Hele testpakken gir 362 bestått og 1 hoppet over, som er
+    Docker-sjekken som før. Ruff og makemigrations --check er grønne.
+  - Mutasjonstest: Alle 29 mutasjoner av weeks.py ble fanget. Det første settet
+    på 20 lot tre hull stå. Reviewen og et andre sett fant at uker som sjekkes
+    fra 1 eller 2 tidligere uker, en baseline på 1 og en generator som inndata
+    ikke var testet. Alle tre er nå dekket.
+  - BMAD Code Review: Tre subagenter (Blind Hunter, Edge Case Hunter og
+    Verification Gap) ga 25 funn. 15 er rettet, 4 avvist og 6 var feil funn.
+    Ingenting er utsatt, og ingen funn trengte en beslutning fra deg. Triagen
+    står i spesifikasjonen.
+  - Dokumenter og status:
+    - Statustabellen har FR-15, FR-16 og FR-17 som «delvis bygd». Markørene,
+      varslene og visningen kommer i story 2.2, 2.5, 2.9 og 2.10.
+    - QA-loggen og arbeidsloggen er oppdatert.
+    - KI-styringsloggen har tilfelle 38, som er første tilfelle for epic 2.
+    - Spesifikasjonen står som done. sprint-status.yaml har story 2.1 på review
+      og epic 2 på in-progress.
+  - Sesjonslogg: Loggfila er skrevet, og tre åpne punkter er ført i issues.md.
+    Jeg har ikke committet den, siden du ba om godkjenning først.
+
+  Avvik fra planen
+  - Den første Verification Gap-kjøringen fikk en feil diff-sti fra meg, fant
+    filen likevel og meldte ingen funn. Jeg gjentok den med riktig sti.
+  - To granskere endret weeks.py for sine egne mutasjoner, og én satte filen
+    tilbake feil én gang. Jeg sammenlignet filen med kopien fra før reviewen, og
+    den var identisk. Det står i QA-loggen, og neste review skal si at
+    granskerne ikke skal endre filer.
+
+  Beslutninger før commit
+  1. Skal jeg committe nå? Jeg foreslår tre commits: koden og testene,
+     dokumentene med spesifikasjonen og epic-konteksten, og sesjonsloggen med
+     issues.md. Commit-meldingene får attribusjonen din.
+  2. Etter commiten fyller jeg inn hashen der QA-loggen og KI-styringsloggen
+     sier «commit følger».
+  3. Skal jeg pushe grenen over SSH og lage PR-en? Den får story, FR-n, tester
+     og alle 25 funn med beslutning og fix-commit, slik D-8 krever.
+
+✻ Crunched for 8m 36s · done 12:16 PM
+
+❯ Jeg godkjenner de tre foreslåtte commitene, oppdatering av commit-hasher,     
+  SSH-push og opprettelse av PR for story 2.1. Gjennomfør personvernkontroll    
+  før commit. Dokumenter alle 25 review-funn med beslutninger og relevante fix  
+  commits. Sørg for at CI og Windows kontrllene er grønne på siste commit før   
+  fletting. Flett først etter vellykkede kontroller , og fullfør fletteloggen   
+  etter vanlig rutine. Ved fremtidige BMAD Code Review skal subagentene kun     
+  lese og rapportere, ikke endre prosjektfiler. Kontroller også at antall       
+  uavhengige granskere oppfyller lørerkravene. Ikke start story 2.2.            
+
+⏺ Jeg starter med å lagre regelen om skrivebeskyttede granskere i minnet. Så
+  sjekker jeg lærerkravet til antall granskere og rutinene for
+  personvernkontroll, PR og flettelogg.
+
+  Searched for 1 pattern, listed 1 directory, ran 4 shell commands, wrote 1 memory (ctrl+o to expand)
+
+⏺ Jeg sjekker nå hvilke granskerlag bmad-code-review har som standard. Da ser
+  jeg om de tre lagene i build-flyten oppfyller kravet, eller om det mangler en
+  fjerde gransker.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Reviewen mangler den fjerde granskeren, Acceptance Auditor, så jeg kjører
+  bmad-code-review skrivebeskyttet mot hele diffen og spesifikasjonen. · summary
+
+⏺ Agent(Acceptance Auditor review)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+⏺ Mens Acceptance Auditor kjører, ser jeg på hvordan PR #22, kommentaren og
+  fletteloggen ble gjort sist.
+
+  Searched for 1 pattern, ran 5 shell commands (ctrl+o to expand)
+
+⏺ Personvernskanningen av alle tilføyde linjer og nye filer fant ingenting:
+  ingen stier, e-poster, nøkler, passord eller telefonnumre. Jeg venter nå på
+  Acceptance Auditor før jeg committer.
+
+✻ Brewed for 1m 38s · done 12:25 PM
+
+› Message from general-purpose
+  Acceptance audit of Story 2.1 (diff against the spec and epic-2-context.md). I
+  found no violation of the I/O matrix, the R-10 and R-11 behavior, AD-1 or the
+  Never list. The remaining findings are low severity.
+
+  Read-only checks I ran:
+  - `uv run pytest -q tests/test_week_classification.py` gives 49 passed.
+  - The spreadsheet has 24 cases and 11 products that state at least one of the
+  three columns, which matches the spec and the logs.
+  - `weeks.py` matches R-1, R-10 and R-11:
+    - 2 × is compared as an integer (`>`, not `>=`).
+    - A baseline of 0 never flags a week, and fewer than 3 earlier weeks means
+  no check.
+    - The baseline excludes unusual weeks but keeps level-shift weeks.
+    - A stockout does not break a run, because the run is built from `valid`
+  only.
+    - Stockout units are never read.
+  - I did not re-run the 29 mutations, because the rules forbid mutating the
+  code. That AC is verified only from the Implementation Notes.
+
+  I traced E7, E8, E9, E15, E16, E18 a and b, and E19 by hand against the code
+  and the spreadsheet rows. All match.
+
+  ## Findings
+
+  - **Not every test names both an E-n and an FR-n.** This violates the
+  constraint "Each test names its E-n and FR-n (AD-17, DR-5)". Evidence in
+  `tests/test_week_classification.py`:
+    - `test_low_sales_are_never_flagged` names only "R-10".
+    - `test_the_classification_does_not_change_its_input_and_takes_any_iterable`
+  names only "AD-1".
+    - `test_the_module_imports_only_what_it_needs_and_reads_no_calendar` names
+  only "AD-1, AD-8".
+    - `test_a_history_without_valid_weeks_has_nothing_to_classify` names FR-15
+  and R-1 but no E-n.
+    - `test_every_rule_test_product_matches_the_spreadsheet` names "FR-3, FR-16,
+  FR-17" but no E-n in its docstring. The product ids are the E-n names only by
+  coincidence of the data.
+    - `test_every_case_that_states_its_weeks_matches_the_spreadsheet` names no
+  E-n in its docstring ("the case name in the test id gives its E-n").
+    - The docs claim "24 tilfeller med E-n i testnavnet", which holds only
+  through the parametrize ids.
+
+  - **Expected positions are computed or hard-coded in the tests instead of read
+  from the spreadsheet.** This sits uneasily with "compare only the values a
+  row states" and "No expected value copied into code".
+    - `assert_stated_values_match` always asserts `result.valid ==
+  tuple(non-stockout positions)`, even when the row does not state
+  `valid_weeks`. That is an R-1 re-derivation in test code, not a stated value.
+    - `test_stockout_weeks_are_not_valid_weeks_and_never_flagged` hard-codes
+  `result.valid == (1, 2, 5, 6)`.
+    - The matrix itself states E7's positions, and the spec's own notes defend
+  the extra check, so I count this as a minor deviation and not a defect.
+
+  - **Spec status and sprint status differ.** The spec front matter says
+  `status: 'done'`, while `sprint-status.yaml` sets the story to `review`. The
+  logs say this is intended, and the task asks for `review`, so I count it as a
+  consistency note only.
+
+  - **The review log says the documents are "the last task", but the "commit
+  følger" placeholders are still open.** `docs/qa-logg.md` and
+  `docs/ki-styringslogg.md` carry "commit følger" in the commit columns. The
+  open point is logged in `issues.md`, so this is not an AC violation. The
+  documents task is only provisionally complete until the hash is filled in.
+
+  No spec constraint is contradicted by the code, and none of the AC behaviors
+  are missing.
+
+  Relevant files:
+  - `<repo>/src/forecasting/weeks.py`
+  - `<repo>/tests/test_week_classification.py`
+  - `<repo>/_bmad-output/implementation-artifacts/spec-2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts.md`
+
+⏺ Acceptance Auditor ga 4 nye funn, så reviewen har nå 29 funn, ikke 25. Ingen
+  av dem er alvorlige. Jeg trierer dem, retter det som er et reelt avvik, og
+  oppdaterer alle tellinger og logger før commit.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Acceptance Auditor review" finished · 44s
+
+⏺ Acceptance Auditor endret ingen filer. Nå fører jeg 29 funn, fire granskere og
+  de nye tellingene inn i alle dokumentene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle tellinger er oppdatert. Nå kjører jeg full verifikasjon én gang til og
+  lager commit 1 med koden og testene.
+
+  Searched for 1 pattern, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Nå kjører jeg personvernskanningen på nytt på det som er igjen, og lager
+  commit 2 (dokumenter) og commit 3 (loggene).
+
+  Pushed to story/2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts, ran 1 shell command (ctrl+o to expand)
+
+⏺ Grenen er pushet over SSH. Nå lager jeg PR-en, og så kommentaren med alle 29
+  funn og beslutninger.
+
+  Created PR #24, edited PR #24 (ctrl+o to expand)
+
+⏺ PR #24 er opprettet med kommentaren på 29 funn. Nå venter jeg på CI og
+  Windows-kontrollene.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Begge kontrollene er grønne på siste commit 1c3924b. Jeg henter kjørenumrene
+  og testantallet til loggen, og ser på formatet til forrige merge-commit.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ CI-kjøring nr. 42 (363 tester, Ruff) og Windows-kjøring nr. 16 er grønne på
+  1c3924b, og main er uendret. Nå fletter jeg etter vanlig rutine: lokalt med
+  --no-ff, deretter push over SSH.
+
+  Pushed to main, ran 2 shell commands (ctrl+o to expand)
+
+⏺ main er flettet (25a0403), og CI-kjøring nr. 43 på main er grønn. Nå fullfører
+  jeg fletteloggen på en egen gren, som sist.
+
+  Pushed to docs/log-pr-24-merge, main, created PR #25, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Story 2.1 er flettet inn i main, og fletteloggen er ferdig. Story 2.2 er ikke
+  startet.
+
+  Personvern: Skanningen av alle tilføyde linjer og nye filer fant ingenting.
+  Jeg søkte etter lokale stier, e-postadresser, nøkler, passord og telefonnumre,
+  og kjørte den før commit 1 og før hver av de neste commitene.
+
+  Commits og PR-er
+
+  ┌────────┬──────────────────────────────────────────────────────┬─────────┐
+  │        │                         Hva                          │  Hash   │
+  ├────────┼──────────────────────────────────────────────────────┼─────────┤
+  │ Commit │ Koden og testene, med alle rettinger                 │ 5548f4e │
+  │  1     │                                                      │         │
+  ├────────┼──────────────────────────────────────────────────────┼─────────┤
+  │ Commit │ Spesifikasjon, epic-kontekst og dokumenter, med hash │ 338ff87 │
+  │  2     │  fylt inn i QA-loggen og KI-styringsloggen           │         │
+  ├────────┼──────────────────────────────────────────────────────┼─────────┤
+  │ Commit │ Sesjonslogg og åpne punkter                          │ 1c3924b │
+  │  3     │                                                      │         │
+  ├────────┼──────────────────────────────────────────────────────┼─────────┤
+  │ PR #24 │ Story 2.1, flettet kl. 12.29                         │ 25a0403 │
+  ├────────┼──────────────────────────────────────────────────────┼─────────┤
+  │ PR #25 │ Fletteloggen, flettet                                │ 49b63c7 │
+  └────────┴──────────────────────────────────────────────────────┴─────────┘
+
+  - Review-funn: PR #24 har en kommentar med alle funnene, beslutningene og
+    rettings-commiten 5548f4e. Tallet er 29, ikke 25, fordi jeg la til en fjerde
+    gransker (se under). Fordeling: 16 rettet, 5 avvist og 8 feil, ingen
+    utsatt.
+  - Kontroller: CI-kjøring nr. 42 (363 tester og Ruff) og Windows-kjøring nr. 16
+    var grønne på siste commit før flettingen. CI på main er grønn etter begge
+    flettingene (nr. 43 og nr. 45). Windows-jobben kjørte ikke på PR #25, som
+    bare endrer dokumenter.
+  - Flettelogg: 25a0403 har main og PR-hodet som foreldre, og innholdet er
+    identisk med PR-hodet. Arbeidsloggen og sesjonsloggen er oppdatert, og story
+    2.1 står som done i sprint-status.yaml. Grenen
+    story/2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts er beholdt.
+
+  Antall granskere: Byggeflyten (bmad-build) har bare tre lag: Blind Hunter,
+  Edge Case Hunter og Verification Gap. Rutinen for kodegjennomgang og story 1.1
+  til 1.8 bruker fire, med Acceptance Auditor. Jeg kjørte den derfor før
+  commiten, skrivebeskyttet. Den ga 4 lave funn og endret ingen filer. Jeg fant
+  ingen eksplisitt lærerkrav om antall granskere i prosjektdokumentene, så jeg
+  la rutinens fire lag til grunn. Det står også i sesjonsloggen som et åpent
+  punkt: kjør alle fire lag.
+
+  Skrivebeskyttede granskere: Regelen er lagret i minnet, og forrige gang endret
+  to granskere filer. Jeg legger den inn i hvert review-oppdrag. Acceptance
+  Auditor ble kjørt med den instruksen.
+
+  Gjenstår
+  - Sesjonseksporten: Rutinen for KI-økter krever en eksport av økta i
+    .logs/mounia-03/sessions/. Den er ikke med i PR #24, siden /export må kjøres
+    av deg. Det er ført som et åpent punkt i issues.md. Kjør /export til
+    2-1-2026-11-24.txt, så maskerer og committer jeg den.
+  - Andre åpne punkter: Story 2.2 skal bruke classify_weeks og lage
+    beregningsukene. Windows-testen er fortsatt planlagt 25. november (story
+    1.3).
+✻ Worked for 9m 7s · done 12:33 PM
