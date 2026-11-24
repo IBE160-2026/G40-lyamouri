@@ -1,0 +1,797 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   ~/G40-lyamouri
+
+
+❯ /clear                                                                        
+
+❯ Start BMAD-arbeidet med story 2.3. Følg sprintplanen, sensorveiledningen og   
+  prosjektets rutiner. Arbeid selvstendig og effektivt, med kvalitet først.     
+  Bruk alle fire uavhengige, skrivebeskyttede granskere ved BMAD Code Review.   
+  Presenter nødvendige beslutninger før implementering. Ingen commit eller push 
+  uten godkjenning.                                                             
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+  Read 2 files, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg leser epic-2-konteksten, sprintplanen, story 2.3 i epics.md og forrige
+  story (2.2) for å planlegge.
+
+  Searched for 3 patterns, read 3 files, listed 1 directory, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Jeg leser nå AD-3, R-9 og UX-DR42 og eksemplene E5, E20 og E21 i fasiten, så
+  jeg kan skrive spesifikasjonen.
+
+  Searched for 1 pattern, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Jeg har nå det meste jeg trenger. Det siste jeg sjekker er det åpne punktet om
+  tallfilteret og resten av spesifikasjonsmalen. Etter det skriver jeg
+  spesifikasjonen.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-2-3-round-and-format-every-nu
+       mber-the-same-way.md)
+  ⎿  Wrote 80 lines to _bmad-output/implementation-artifacts/spec-2-3-round
+     -and-format-every-number-the-same-way.md
+      1 ---
+      2 title: 'Story 2.3: Round and format every number the same way'
+      3 type: 'feature'
+      4 created: '2026-11-24'
+      5 status: 'draft'
+      6 route: 'dispatch'
+      7 review_loop_iteration: 0
+      8 context: ['{project-root}/_bmad-output/implementation-artifacts/e
+        pic-2-context.md']
+      9 ---
+     … +71 lines (ctrl+o to expand)
+
+⏺ Spesifikasjonen for story 2.3 er skrevet. Jeg har ikke begynt på
+  implementeringen.
+
+  Fil: _bmad-output/implementation-artifacts/spec-2-3-round-and-format-every-num
+  ber-the-same-way.md (status draft, omtrent 1 500 tokens)
+
+  Kort om stien:
+  - Trinn 1 og 2 er gjort. Epic 2-konteksten var gyldig, og sprintplanen gir
+    ingen avvik for 2.3.
+  - main er ren.
+  - Story 2.2 er done.
+  - Hele story 2.3 er ett mål, så jeg foreslår ingen splitting.
+
+  Hva som bygges:
+  - Avrunding: forecasting/rounding.py runder først til 6 desimaler og så opp
+    til hele enheter, eller halvt bort fra null for visning. Den bruker decimal
+    og aldri round().
+  - Formatering: display.py får desimalkomma, minustegn U+2212, ingen
+    tusenskille og hardt mellomrom før «%». Uke-etiketter blir «uke 46», «uke
+    10/2025», akse-etiketter «46» og «1/2027». header_week_label er uendret.
+  - Malfiltre: web/templatetags/prognose.py kaller bare display. Lageret i
+    products.html går gjennom filteret. Det lukker det åpne punktet fra story
+    1.8.
+  - Tester: de leser forventede verdier fra regnearket, nemlig E1, E2, E13, E20,
+    E21, E27 og E5 (70, ikke 71). I tillegg kommer en vakttest som sjekker at
+    ingenting utenfor kjernen runder eller formaterer.
+
+  Beslutninger jeg har tatt, og som du kan endre før du godkjenner:
+  1. 6-desimalstegget kjøres også før visningsavrunding, slik AD-3 sier det.
+     Dermed gir 10,249999999999998 «10,3».
+  2. Uke 1 viser året også i lister («uke 1/2027»), ikke bare på aksen.
+  3. «–» for manglende verdi (E23) og kolonneetiketten «Uke 1 · uke 46» venter
+     til story 2.4–2.7, der verdiene oppstår.
+  4. Filtrene tar ett tall og ingen uke-argumenter. Ukeetiketter lages i
+     visningene.
+
+  Det er ingen åpne spørsmål som blokkerer. Subagenter brukes bare til de fire
+  skrivebeskyttede granskerne ved BMAD Code Review, og jeg gjør bygging og test
+  selv. Ingenting committes eller pushes uten din godkjenning.
+
+  Før du godkjenner kan du åpne filen eller stille spørsmål. Jeg kan også kjøre
+  bmad-advanced-elicitation på spesifikasjonen.
+
+  Hva velger du?
+  - Godkjenn og fortsett: jeg setter status til ready-for-dev og går rett på
+    implementeringen i denne økta.
+  - Godkjenn og stopp: spesifikasjonen blir ready-for-dev, og en ny
+    bmad-build-økt tar over.
+  - Gjennomgå spesifikasjonen: du sier hva som skal endres.
+
+✻ Brewed for 2m 59s · done 2:03 PM
+
+❯ Godkjenn og fortsett med story 2.3. Behold spesifikasjonen samlet og følg     
+  BMAD, arkitekturreglene og sensorveiledningen. Kontroller spesielt at         
+  avrundingen samsvarer med AD-3 og referanseregnarket. Implementer og test     
+  selvstendig, inkludert mutasjonstester. Bruk alle fire uavhengige,            
+  skrivebeskyttede granskere ved BMAD Code Review. Presenter samlet resultat    
+  før commit/push. Ikke start neste story.                                      
+
+  Read 1 file, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Write(src/forecasting/rounding.py)
+  ⎿  Wrote 45 lines to src/forecasting/rounding.py
+       1 """Rounding (R-8, R-9; AD-3).
+       2 
+       3 Every rounding in the app goes through this module. A value is f
+         irst rounded to 6
+       4 decimals, so that a computer result such as 70.00000000000001 is
+          70 and not 71 (E5),
+       5 and then either up to whole units (R-8) or half away from zero f
+         or display (R-9). The
+       6 rounding uses `decimal` on the exact value of the float, never `
+         round()`, which rounds
+     … +39 lines (ctrl+o to expand)
+
+⏺ Write(src/forecasting/display.py)
+  ⎿  Added 57 lines, removed 1 line
+       1 -"""Norwegian display text (AD-3). Story 2.3 adds the number for
+         -mats and the other week labels."""                             
+       1 +"""Norwegian display text (AD-3, NFR-5, UX-DR42).              
+       2  
+       3 +Numbers are rounded through `rounding.py` (R-9) and written wit
+         +h a decimal comma, the                                         
+       4 +minus sign U+2212, no thousands grouping and a no-break space b
+         +efore «%». Week labels                                         
+       5 +come from an ISO year and week. The template filters, the expla
+         +nation and the chart all                                       
+       6 +call this module, and nothing else formats a domain number. Onl
+         +y the standard library                                         
+       7 +is imported (AD-1).                                            
+       8 +"""                                                            
+       9  
+      10 +from forecasting.rounding import round_for_display             
+      11 +                                                               
+      12 +MINUS_SIGN = "−"                                               
+      13 +NO_BREAK_SPACE = " "                                           
+      14 +# R-9: the decimals of each kind of number. Seasonal indices an
+         +d adjusted values come with FR-9.                              
+      15 +FORECAST_DECIMALS = 1                                          
+      16 +UNROUNDED_ORDER_DECIMALS = 2                                   
+      17 +WHOLE_NUMBER_DECIMALS = 0                                      
+      18 +                                                               
+      19 +                                                               
+      20 +def format_number(value, decimals):                            
+      21 +    """The value rounded half away from zero to `decimals` and 
+         +written as «−40,00»."""                                        
+      22 +    rounded = round_for_display(value, decimals)               
+      23 +    text = f"{abs(rounded):.{decimals}f}".replace(".", ",")    
+      24 +    return MINUS_SIGN + text if rounded < 0 else text          
+      25 +                                                               
+      26 +                                                               
+      27 +def one_decimal(value):                                        
+      28 +    """A forecast, a scenario, the weeks of cover or the safety
+         + margin amount: «10,3»."""                                     
+      29 +    return format_number(value, FORECAST_DECIMALS)             
+      30 +                                                               
+      31 +                                                               
+      32 +def two_decimals(value):                                       
+      33 +    """The unrounded result on the order calculation line: «0,0
+         +7»."""                                                         
+      34 +    return format_number(value, UNROUNDED_ORDER_DECIMALS)      
+      35 +                                                               
+      36 +                                                               
+      37 +def whole_number(value):                                       
+      38 +    """An order quantity, a stock on hand or any whole number: 
+         +«70»."""                                                       
+      39 +    return format_number(value, WHOLE_NUMBER_DECIMALS)         
+      40 +                                                               
+      41 +                                                               
+      42 +def percent(value):                                            
+      43 +    """A percentage as a whole number, with a no-break space be
+         +fore «%»: «10 %»."""                                           
+      44 +    return f"{whole_number(value)}{NO_BREAK_SPACE}%"           
+      45 +                                                               
+      46 +                                                               
+      47  def header_week_label(iso_year, iso_week):
+      48      """The latest data week as the app header shows it, with th
+          e year: «uke 45, 2026»."""
+      49      return f"uke {iso_week}, {iso_year}"
+      50 +                                                               
+      51 +                                                               
+      52 +def week_label(iso_year, iso_week, with_year=False):           
+      53 +    """A week in a list: «uke 46», or «uke 10/2025» in a list t
+         +hat reaches before the                                         
+      54 +    recent period. The first week of a new year always carries 
+         +its year: «uke 1/2027»."""                                     
+      55 +    if with_year or iso_week == 1:                             
+      56 +        return f"uke {iso_week}/{iso_year}"                    
+      57 +    return f"uke {iso_week}"                                   
+      58 +                                                               
+      59 +                                                               
+      60 +def axis_week_label(iso_year, iso_week):                       
+      61 +    """A week on a chart axis, the week number only: «46», and 
+         +«1/2027» in a new year."""                                     
+      62 +    return f"{iso_week}/{iso_year}" if iso_week == 1 else str(i
+         +so_week)                                                       
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Kjernen og filtrene er skrevet. Nå kobler jeg lageret i products.html til
+  filteret og skriver testene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(tests/test_rounding.py)
+  ⎿  Wrote 205 lines to tests/test_rounding.py
+      1 """Rounding (Story 2.3; R-8, R-9, AD-3, E5, E20, E21).
+      2 
+      3 The expected order quantities and display values are read from th
+        e reference
+      4 spreadsheet for every case that states them, so no expected value
+         is copied into the
+      5 tests (AD-17). They use no database.
+      6 """
+      7 
+      8 import math
+     … +197 lines (ctrl+o to expand)
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Nå testene for formatering, filtre og vakten mot formatering utenfor kjernen.
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Alle 54 mutasjoner ble fanget. Jeg kontrollerer at filene er satt tilbake, og
+  så oppdaterer jeg dokumentene.
+
+  Read 1 file, listed 1 directory, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Bygget er ferdig og testet. Nå forbereder jeg BMAD Code Review: diff uten
+  spesifikasjonen, hasher før granskingen, og så de fire granskerne parallelt.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   ├ Verification Gap review
+   └ Acceptance Auditor review
+
+⏺ De fire granskerne kjører nå i bakgrunnen: Blind Hunter, Edge Case Hunter,
+  Verification Gap og Acceptance Auditor. Jeg venter på alle fire før jeg leser
+  noe av resultatet.
+✻ Sautéed for 5m 45s · done 2:12 PM
+
+› Message from general-purpose
+  Size arithmetic: diff-2-3.diff is 24109 bytes, or about 23.55 kB. N =
+  min(floor(sqrt(23.55) + 1), 10) = min(floor(4.85 + 1), 10) = 5. I report 8
+  findings.
+
+  - **The guard test misses most rounding and number formatting.** `<home>/G40-lyamouri/tests/test_no_formatting_outside_the_core.py` says
+  `display.py` is "the only one that writes a number as text", but it checks
+  only a short list of names.
+    - Missing calls: `format()`, `%`-formatting, f-string specs such as
+  `f"{x:.1f}"`, `str(round…)`, `math.trunc`, `int()` truncation, `numpy` and
+  `Decimal.normalize`.
+    - Missing rounding modes: `ROUND_UP`, `ROUND_DOWN`, `ROUND_HALF_DOWN` and
+  `ROUND_05UP` are not in `ROUNDING_MODES`.
+    - Missing import forms: `import decimal; decimal.ROUND_HALF_UP` is not
+  caught, because only import aliases are checked. `from decimal import *` is
+  not caught either.
+    - A second module can format numbers by hand and the suite stays green.
+
+  - **Client-side number formatting is not guarded.**
+  `src/web/static/web/app.js` exists, and the `display.py` docstring says the
+  chart calls this module. A browser cannot call Python.
+    - The guard scans only `*.py` and `*.html`. A `toFixed`, `toLocaleString`,
+  `Intl.NumberFormat` or `Math.round` in `app.js` or an inline `<script>` would
+  give a point decimal, a hyphen or grouping unnoticed.
+    - The diff has no mechanism for chart values to arrive preformatted, for
+  example Python-formatted labels passed with `json_script`. It also has no test
+  that the JS never formats.
+
+  - **The Django-filter regex has holes and false positives.**
+  `DJANGO_NUMBER_FILTER` matches `localize` and `floatformat` as bare
+  substrings, so a template comment or a CSS class containing "localize" fails
+  the test.
+    - It does not match filters and tags that also round or format numbers: `{%
+  widthratio %}`, `|add`, `|pluralize`, `|time`, `|timesince`, `|yesno`,
+  `|divisibleby` and `{% now %}`.
+    - Django's own `USE_THOUSAND_SEPARATOR` and `NUMBER_GROUPING` settings are
+  not asserted off, so a bare `{{ x }}` of a float or Decimal elsewhere could
+  still be localised.
+
+  - **The week labels have no template filters.** `week_label` and
+  `axis_week_label` exist in `display.py` and are tested.
+  `src/web/templatetags/prognose.py` registers only the four number filters.
+    - Templates that need a week label have no sanctioned way to get one.
+    - The guard forbids Django's `|date`, so a future template is pushed toward
+  formatting weeks by hand, which defeats the single-module rule.
+    - The two label functions also take any `iso_week` and `iso_year`. They do
+  not check that the week is 1 to 53 or that the year has 53 ISO weeks. A bad
+  week such as 0, 54 or 53 in a 52-week year would be labelled without
+  complaint.
+
+  - **Rounding fails in uneven ways on bad input and on large values.**
+    - `rounding._to_intermediate` calls `Decimal(value)` and checks only
+  `is_finite`.
+    - `None` raises `TypeError`.
+    - An unparseable string such as `"70,5"` raises `decimal.InvalidOperation`,
+  which is not a `ValueError`.
+    - A `bool` is silently accepted as 0 or 1.
+    - A string like `"70"` is accepted silently, so a template could print an
+  unrounded string through the filter.
+    - `quantize` runs under the default 28-digit context. A value of about 1e22
+  or more with 6 decimals raises `InvalidOperation`.
+    - Nothing normalises these errors to one documented exception, and no test
+  covers a string, a bool or a very large value. The `ValueError` tests cover
+  only NaN and infinity.
+    - Using a local `decimal` context with explicit precision would also stop
+  other code from changing the global context under it.
+
+  - **`test_a_filter_refuses_what_is_not_a_number` is weak.** In
+  `<home>/G40-lyamouri/tests/test_number_filters.py` it uses
+  `pytest.raises(Exception)` with a `noqa: B017`, so any failure passes,
+  including a broken template-library import. It should name the real exception
+  type (`TypeError` for `None`). The claim that the failure appears "in the
+  template" is also not shown. In production, the filter's exception becomes a
+  500 on that page.
+
+  - **The products template change is checked only by regex on the source.**
+  `test_the_product_list_shows_the_stock_through_the_whole_number_filter` reads
+  `products.html` as text. Nothing renders the page through the view with a
+  seeded product, so the `{% load prognose %}` line, the filter registration and
+  the live output are not covered together. A typo in the library name would
+  pass the regex test. Only the separate render test would catch it, and that
+  test renders a different template string.
+
+  - **Test gaps in the number and display tests.**
+    - `test_a_filter_output_is_not_changed_by_the_template_engine` claims the
+  output is not turned into entities, but autoescape never touches U+2212 or
+  U+00A0. The test would pass even if the filter returned `mark_safe` text. It
+  should use a value that autoescape would change, or assert the output type.
+    - `test_a_number_never_has_a_point_a_hyphen_or_an_ordinary_space` never
+  asserts that U+2212 is present for negatives or that the no-break space is
+  present for `percent`.
+    - It also skips `-0.04`, huge values and a `1e22`-style value.
+    - Negative input to `round_up_to_units` is only tested for `-0.4`. The
+  `max(0, …)` clamp lives in the test helper, not in code, so no production code
+  enforces R-8's floor of zero.
+
+⏺ Blind Hunter har levert rapporten sin med 8 funn. Jeg trier dem først når alle
+  fire granskerne har rapportert, og venter på de tre andre.
+
+✻ Churned for 3s · done 2:13 PM
+
+⏺ Agent "Blind Hunter review" finished · 49s
+
+› Message from general-purpose
+  No verification gaps found.
+
+  I ran `uv run pytest -p no:cacheprovider`. It gave 591 passed and 1 skipped;
+  the skip is the docker compose test, which is unrelated to this change.
+
+  What I checked, by part of the change:
+  - **`rounding.py` and `display.py` number formats:** `tests/test_rounding.py`
+  and `tests/test_forecasting_display.py` run the code and assert exact outputs.
+  They cover half-away-from-zero (10.25 and 0.285), the 6-decimal pre-rounding
+  (E5 gives 70 and not 71), a value that rounds to zero printing as "0,0" and
+  not "−0,0", NaN and infinity, out-of-range decimals, the decimal comma, U+2212
+  and the no-break space. Expected values come from the reference spreadsheet
+  through `answer_key_reader`, so inverting any of these branches would fail a
+  test.
+  - **Week labels:** `week_label` and `axis_week_label` are tested for week 1,
+  week 53, and `with_year` true and false.
+  - **Template filters:** `tests/test_number_filters.py` renders each filter
+  through the Django engine and compares the output with `display`. It also
+  checks that U+2212 and the no-break space are not escaped, and that `None`
+  raises. `web` is in `INSTALLED_APPS`, so `{% load prognose %}` resolves. If
+  the `{% load %}` line were removed from `products.html`, the product overview
+  tests in `tests/test_product_overview.py` would fail.
+  - **`products.html` using `|whole_number`:** the only test of this is a
+  source-text regex (`tests/test_number_filters.py:395-403`), which does not
+  count as verification. I did not file it as a gap. `stock_on_hand` is a
+  `PositiveIntegerField` (`src/web/models.py:53`), so `{{ product.stock_on_hand
+  }}` and `{{ product.stock_on_hand|whole_number }}` render the same. Dropping
+  the filter would produce no observable regression today.
+
+  ## Other findings
+
+  - **Guard is narrower than its docstring.**
+  `tests/test_no_formatting_outside_the_core.py` says `display.py` is "the only
+  one that writes a number as text". It only checks for rounding calls (`round`,
+  `quantize`, `ceil`, `floor`, `to_integral_*`), rounding-mode imports and
+  Django filters in templates (`floatformat`, `intcomma`, `localize`,
+  `stringformat`, `date`, among others). It would not flag f-string format specs
+  such as `f"{x:.1f}"`, `"%.1f" % x`, or `format()`. It would also miss
+  attribute access such as `decimal.ROUND_HALF_UP`, because only import aliases
+  are checked for modes. The snippet tests at lines 329-341 pin only what the
+  checker does find.
+  - **Inconsistent failure types in `rounding.py`.** NaN and infinity raise
+  `ValueError("cannot round ...")` (`src/forecasting/rounding.py:99-100`). A
+  non-numeric string such as `""` or `"abc"` raises `decimal.InvalidOperation`.
+  A magnitude of about 1e22 or more also raises `InvalidOperation`, because
+  `quantize` exceeds the default 28-digit context; I confirmed both by running
+  them. Neither case is tested. Only the NaN and infinity cases are, and the
+  template test uses `pytest.raises(Exception)` for `None`, which would pass on
+  any error. This is unlikely to matter for real stock and forecast values.
+  - **A bool is accepted silently.** `display.one_decimal(True)` returns "1,0",
+  because `Decimal(True)` converts without error.
+
+⏺ Verification Gap har også levert. Blind Hunter og Verification Gap er ferdige,
+  så jeg venter på Edge Case Hunter og Acceptance Auditor.
+
+✻ Crunched for 1s · done 2:13 PM
+
+⏺ Agent "Verification Gap review" finished · 1m 0s
+
+⏺ Agent "Acceptance Auditor review" finished · 1m 0s
+
+› Message from general-purpose
+  Acceptance audit of Story 2.3 against the spec, epics.md Story 2.3 and AD-3.
+  The core behavior matches the spec and I found no violation of a
+  Given/When/Then. In a read-only run, the five new or changed test files plus
+  `tests/test_product_overview.py` give 162 passed. `ruff check` passes and
+  `ruff format --check` reports all files formatted. I did not run
+  `makemigrations --check` or the full suite.
+
+  Findings:
+
+  - **Documents task unfinished (spec Tasks, last item; DR-7; epic "Every
+  story").**
+    - The task `[ ] documents above, sprint-status.yaml to review` is still
+  open, and the diff has no changes to `docs/statustabell.md`,
+  `docs/qa-logg.md`, `docs/ki-styringslogg.md` or `docs/arbeidslogg.md`.
+    - `sprint-status.yaml` is modified but only to `in-progress` (`2-3-...:
+  backlog` to `in-progress`), not `review`.
+    - The 2026-11-23 point on Story 2.3 in `.logs/mounia-03/issues.md:131` is
+  still `- [ ]`.
+    - The spec frontmatter says `status: in-review`, which does not match the
+  sprint-status value.
+
+  - **Guard test does not cover Python source for `floatformat`, `intcomma` or
+  `localize` (spec Never: no such call "in `src` or a template"; epics AC
+  "nothing outside `forecasting/` rounds or formats a domain number").**
+    - `DJANGO_NUMBER_FILTER` is applied only to `TEMPLATES` (`*.html`).
+    - `rounding_in()` over `SOURCE_FILES` looks only at `round`, `quantize`,
+  `to_integral_*`, `ceil`, `floor` and the rounding modes imported with `from
+  ... import`.
+    - A `.py` file in `src` that imports
+  `django.template.defaultfilters.floatformat` or `django.contrib.humanize`
+  intcomma would pass.
+    - `decimal.ROUND_HALF_UP` used as an attribute, not a from-import, also
+  escapes the guard.
+    - The ban is a stated constraint and the whole point of the guard, so this
+  is a real gap, though small.
+
+  - **Order-quantity formula is re-implemented in tests (spec Never: "No order
+  quantity ... calculation (Story 2.4)").**
+    - `unrounded_order()` in `tests/test_rounding.py` computes `base * (1 +
+  margin/100) - stock`, and `test_the_order_quantity_...` applies `max(0, ...)`.
+    - It is test-only and commented as a stand-in, so it is not a src violation.
+  It does duplicate Story 2.4's formula, which Story 2.4 will have to replace.
+    - Its use for E23 and "FR-21 d" assumes `forecast_product` returns a numeric
+  `base_forecast` for those cases. It passes today, so I did not find a failing
+  case.
+
+  - **Stated values partly hardcoded in tests (spec Always: "Tests read every
+  stated value (`*_shown`, `suggested_order_quantity`) from the xlsx", AD-17).**
+    - `tests/test_rounding.py` reads them from the spreadsheet, except that
+  `test_e21_is_shown_with_two_decimals_and_ordered_as_one_unit` also asserts the
+  literals `"0,07"` and `1`.
+    - `tests/test_forecasting_display.py` hardcodes matrix values such as
+  14.333..→"14,3", 10.25→"10,3" and 0.0667→"0,07", with docstrings citing E20
+  and E21.
+    - These duplicate the matrix and the spreadsheet-driven tests also cover
+  them, so the effect is low. Strictly, though, E-n values appear in code
+  outside the answer-key path.
+
+  - **Non-ValueError failures for non-numeric input (I/O matrix "Not a number:
+  `ValueError`", AD-3).**
+    - `round_up_to_units` and `round_for_display` raise `ValueError` for NaN and
+  infinity, as specified.
+    - `Decimal(None)` raises `TypeError`, and a non-numeric string raises
+  `decimal.InvalidOperation`. `decimal.InvalidOperation` is not a `ValueError`.
+    - `test_a_filter_refuses_what_is_not_a_number` accepts any `Exception` for
+  this case.
+    - This is outside the matrix and consistent with the spec's "fails instead
+  of printing", but the error type is not pinned.
+
+  Checked and conforming:
+  - **Rounding:** `rounding.py` uses `decimal` on the float's exact value. It
+  rounds to 6 decimals first, then `ROUND_CEILING` for round-up or
+  `ROUND_HALF_UP` for display. E5 gives 70, and a value that rounds to zero
+  loses its minus sign.
+  - **Number formats:** `display.py` uses the decimal comma, U+2212, no grouping
+  and U+00A0 before «%». `one_decimal`, `two_decimals`, `whole_number` and
+  `percent` use 1, 2, 0 and 0 decimals.
+  - **Week labels:** `week_label` and `axis_week_label` give «uke 46», «uke
+  10/2025», «1/2027» and the year on week 1. `header_week_label` is unchanged.
+  - **Template filters:** `web/templatetags/prognose.py` registers the four
+  filters as direct calls to `display` and has no week filters. `products.html`
+  loads `prognose` and uses `stock_on_hand|whole_number`.
+  - **Mutation coverage:** the tests would fail on each listed mutation. These
+  are dropping the 6-decimal step, `ROUND_HALF_EVEN`, rounding up before the 6
+  decimals, a hyphen for U+2212, a point for the comma, a normal space before
+  «%», and dropping the year at week 1.
+  - **Scope:** no model, migration or dependency change, and no "–" placeholder
+  or column label added.
+
+  Files: `<home>/G40-lyamouri/_bmad-output/implementation-artifact
+  s/spec-2-3-round-and-format-every-number-the-same-way.md`, `<home>/G40-lyamouri/tests/test_no_formatting_outside_the_core.py`,
+  `<home>/G40-lyamouri/tests/test_rounding.py`,
+  `<home>/G40-lyamouri/.logs/mounia-03/issues.md`.
+
+⏺ Tre av fire granskere har rapportert. Edge Case Hunter mangler fortsatt, så
+  jeg trier ikke noe ennå.
+
+⏺ Edge Case Hunter (a0e63eb4424bfd8aa) kjører fortsatt. Jeg venter på varselet
+  om at den er ferdig.
+
+✻ Cooked for 3s · done 2:13 PM
+
+› Message from general-purpose
+  [
+  {"location":"src/forecasting/rounding.py:96-101","trigger_condition":"Finite
+  value too large for the 28-digit decimal context, e.g. 1e23 or larger, reaches
+  quantize","guard_snippet":"try: return number.quantize(unit,
+  rounding=ROUND_HALF_UP) except InvalidOperation: raise ValueError(f\"cannot
+  round {value!r}\")","potential_consequence":"InvalidOperation
+  (ArithmeticError) escapes instead of the documented ValueError; callers
+  catching ValueError miss it."},
+  {"location":"src/forecasting/rounding.py:98","trigger_condition":"Non-numeric
+  input: None, '' or a non-numeric string passed to
+  Decimal(value)","guard_snippet":"try: number = Decimal(value) except
+  (InvalidOperation, TypeError): raise ValueError(f\"cannot round
+  {value!r}\")","potential_consequence":"TypeError or InvalidOperation instead
+  of ValueError; template with '' or None raises a mixed exception type."},
+  {"location":"src/forecasting/rounding.py:104-106","trigger_condition":"round_u
+  p_to_units receives a negative value, e.g. E6 unrounded
+  -50","guard_snippet":"return max(0, int(_to_intermediate(value).to_integral_va
+  lue(rounding=ROUND_CEILING)))","potential_consequence":"Returns a negative
+  order quantity unless every caller remembers to clamp with max(0, ...)
+  first."},
+  {"location":"src/forecasting/display.py:26-30","trigger_condition":"format_num
+  ber called with decimals outside 0..6, or a non-int such as 1.0 or
+  True","guard_snippet":"if type(decimals) is not int: raise TypeError('decimals
+  must be an int')","potential_consequence":"Error is thrown from deep in
+  rounding; bool decimals silently treated as 1 or 0."},
+  {"location":"src/forecasting/display.py:58-63","trigger_condition":"iso_week
+  passed as a string like '1', or out of range (0, 54,
+  None)","guard_snippet":"if type(iso_week) is not int or not 1 <= iso_week <=
+  53: raise ValueError(f'bad ISO week
+  {iso_week!r}')","potential_consequence":"String '1' skips the week-1 year
+  rule, giving 'uke 1' without year; 'uke 0' or 'uke 54' is printed."},
+  {"location":"src/forecasting/display.py:66-68","trigger_condition":"axis_week_
+  label with a string week or an out-of-range week","guard_snippet":"if
+  type(iso_week) is not int or not 1 <= iso_week <= 53: raise ValueError(f'bad
+  ISO week {iso_week!r}')","potential_consequence":"Axis shows '1' without year
+  for string '1', or prints nonexistent weeks."},
+  {"location":"src/forecasting/display.py:58-63","trigger_condition":"A list
+  crosses a year boundary but with_year is left False and week 1 is not in the
+  list","guard_snippet":"derive with_year from the first and last (year, week)
+  of the list instead of a caller flag","potential_consequence":"Weeks 52/53 and
+  weeks 2+ of the next year are printed without a year, so they look
+  ambiguous."},
+  {"location":"tests/test_no_formatting_outside_the_core.py:279-299","trigger_co
+  ndition":"Code rounds or formats outside rounding.py with
+  ROUND_DOWN/UP/HALF_DOWN, math.trunc, int(), format(), % or an f-string spec,
+  or decimal.ROUND_HALF_UP as an attribute","guard_snippet":"extend
+  ROUNDING_CALLS with trunc, ROUNDING_MODES with ROUND_DOWN/UP/HALF_DOWN/05UP;
+  flag ast.Attribute names in ROUNDING_MODES, ast.FormattedValue with
+  format_spec, and format()/% on str","potential_consequence":"A module can
+  round or write numbers on its own and the guard stays green."},
+  {"location":"tests/test_no_formatting_outside_the_core.py:282-284","trigger_co
+  ndition":"Template uses another number or date filter (add, divisibleby, time,
+  timesince, widthratio, json_script) or a non-.html template (.txt,
+  .js)","guard_snippet":"scan SRC.rglob('*.html','*.txt','*.js') and add |add,
+  widthratio, |time to DJANGO_NUMBER_FILTER; also flag raw '{{ x.number }}'
+  prints of domain numbers","potential_consequence":"Raw float prints such as
+  14.333333 in a template, or other Django formatting, pass the guard."},
+  {"location":"tests/test_no_formatting_outside_the_core.py:264","trigger_condit
+  ion":"Docstring says display.py is the only module that writes a number as
+  text, but nothing checks it","guard_snippet":"add a check that fails when a
+  module other than display.py uses an f-string format spec or str.format on a
+  number","potential_consequence":"Text formatting of numbers outside display.py
+  goes undetected, so '14.3' next to '14,3' can return."},
+  {"location":"tests/test_rounding.py:440-444","trigger_condition":"A
+  spreadsheet row with suggested_order_quantity lacks seasonal_adjustment,
+  safety_margin or sales, or has base_forecast
+  None","guard_snippet":"row.get('seasonal_adjustment') == 'off' and guard
+  unrounded_order against base is None","potential_consequence":"Module import
+  fails with KeyError or TypeError, breaking collection of the whole file."},
+  {"location":"tests/test_rounding.py:453-465","trigger_condition":"unrounded_or
+  der is used for rows where the spreadsheet order is not week-1
+  base*(1+margin)-stock (e.g. E24 A/B state stock 0 with the quantity from a
+  different forecast)","guard_snippet":"assert the computed unrounded value
+  against row['order_unrounded'] within reader.TOLERANCE where the row states
+  it","potential_consequence":"The test can pass or fail through the wrong
+  formula rather than the rounding under test."},
+  {"location":"tests/test_number_filters.py:389-392","trigger_condition":"Only
+  value=None is tried against the filters; '' , 'abc', nan and inf are
+  not","guard_snippet":"parametrize over None, '', 'abc', float('nan'),
+  float('inf') and assert a specific exception type per
+  case","potential_consequence":"A filter that returns '' or the raw value for
+  '' or nan would go unnoticed; pytest.raises(Exception) accepts any error."},
+  {"location":"tests/test_number_filters.py:395-403","trigger_condition":"The
+  product page is checked by reading template source, not by rendering with a
+  product","guard_snippet":"render products.html with a Product of stock 5 and
+  assert '<td class=\"number\">5</td>' appears","potential_consequence":"A
+  broken load tag or filter name would only show in test_product_overview, not
+  here."},
+  {"location":"tests/test_forecasting_display.py:218-229","trigger_condition":"T
+  he no-point/hyphen/space check runs over only 6 values, and 1e6 as a
+  float","guard_snippet":"add values such as -0.04, 1e15, 12345678.9, Decimal
+  inputs","potential_consequence":"Grouping or exponent formatting in large or
+  tiny values (e.g. '1e+22' style) is not exercised."},
+  {"location":"tests/test_rounding.py:575-585","trigger_condition":"Spec says
+  stated values are compared within TOLERANCE where numeric, but tests compare
+  spreadsheet 3-decimal numbers for exact text and use no
+  reader.TOLERANCE","guard_snippet":"kind: claim; code uses == on shown text and
+  suggested_order_quantity only; reader.TOLERANCE is never referenced in the
+  new tests","potential_consequence":"Someone trusting the spec would think
+  numeric spreadsheet values are tolerance-checked; they are only matched
+  exactly after rounding.","kind":"claim","confidence":"low"},
+  {"location":"src/forecasting/rounding.py:98-101","trigger_condition":"Spec
+  claims NaN and infinity are refused with ValueError (and rounding 'refuses'
+  non-numbers)","guard_snippet":"kind: claim; only NaN and infinity give
+  ValueError; None gives TypeError, non-numeric strings InvalidOperation, and
+  out-of-context large values InvalidOperation","potential_consequence":"A
+  caller catching ValueError for any not-a-number input misses these exceptions
+  and fails with 500.","kind":"claim","confidence":"medium"},
+  {"location":"src/forecasting/display.py:1-14","trigger_condition":"Docstring
+  says only the standard library is imported (AD-1)","guard_snippet":"kind:
+  claim; display.py also imports forecasting.rounding (own package, allowed by
+  test_core_imports ALLOWED)","potential_consequence":"Minor: statement is
+  imprecise, but AD-1 test still passes because own-package imports are
+  allowed.","kind":"claim","confidence":"low"}
+  ]
+
+⏺ Alle fire granskerne har rapportert. Jeg kontrollerer først at de ikke har
+  endret noen fil, og ser på app.js og eksisterende f-strenger før jeg trier
+  funnene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Edge Case Hunter review" finished · 1m 29s
+
+⏺ Granskerne har ikke endret noen fil, så jeg går videre med å triere funnene og
+  rette de reelle feilene. Vakttesten er smalere enn det beskrivelsen tilsier,
+  og det retter jeg også. · summary
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Alle patcher er verifisert: 641 tester består, ruff og makemigrations --check
+  er rene. Neste er dokumentene, og først formatet på loggene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Skill(sesjonslogg)
+  ⎿  Successfully loaded skill
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Spesifikasjonen er oppdatert. Nå logger jeg i statustabellen, QA-loggen,
+  KI-styringsloggen, arbeidsloggen og issues.md.
+
+  Read 1 file, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Story 2.3 er bygd og gjennomgått, men ingenting er committet eller pushet. Alt
+  ligger ukommittert på grenen
+  story/2-3-round-and-format-every-number-the-same-way, og HEAD er fortsatt
+  1e213d4.
+
+  Hva som er bygd
+  - Avrunding: src/forecasting/rounding.py runder først til 6 desimaler og så
+    opp til hele enheter, eller halvt bort fra null for visning. Den bruker
+    decimal og aldri round().
+  - Format: src/forecasting/display.py har desimalkomma, minustegn U+2212, ingen
+    tusenskille og hardt mellomrom før «%». Uke-etikettene er «uke 46», «uke
+    10/2025», «46» på akser og «1/2027» ved nytt år.
+  - Filtre: src/web/templatetags/prognose.py har fire tallfiltre som bare kaller
+    display. Lageret i products.html går nå gjennom whole_number.
+
+  Samsvar med AD-3 og regnearket
+  - Testene leser forventede verdier fra reference-examples.xlsx. Det gjelder
+    bestillingsmengden i åtte tilfeller (E4, E5, E6, E21, E23, E24 A og B, FR-21
+    d) og alle viste verdier (E1, E2, E13, E20, E21, E27).
+  - E5 gir 70 og ikke 71. E20 vises som «10,3» og E21 som «0,07» med
+    bestillingsmengde 1.
+  - E23 («–») er ikke dekket, fordi det kommer med story 2.4.
+
+  Verifisering
+  - 641 tester består og 1 hoppes over (Docker finnes ikke i denne shellen).
+    ruff check, ruff format --check og makemigrations --check er rene.
+  - Jeg kjørte 54 mutasjoner før reviewen og 11 etter. Alle ble fanget, og
+    filene ble satt tilbake og sammenlignet.
+
+  BMAD Code Review
+  - Alle fire granskere kjørte parallelt og skrivebeskyttet: Blind Hunter, Edge
+    Case Hunter, Verification Gap og Acceptance Auditor. Hashene av
+    prosjektfilene var identiske før og etter.
+  - De ga 34 funn i 14 grupper. 7 grupper er rettet og 7 er avvist med
+    begrunnelse i spesifikasjonen. Ingen er utsatt, og ingen gikk til deg.
+  - De viktigste rettingene: avrundingen kaster nå TypeError for None, tekst og
+    bool, og ValueError for NaN, uendelig og for store verdier. Vakttesten
+    finner nå flere måter å avrunde eller formatere utenfor kjernen på, og
+    filtertestene bruker navngitte feiltyper.
+  - Jeg avviste blant annet ukefiltre og kontroll av ukenummer, og gulvet på 0 i
+    round_up_to_units. Gulvet er bestillingsberegningen i story 2.4.
+
+  Dokumenter og logg
+  - Jeg har oppdatert spesifikasjonen (done), sprint-status.yaml (story 2.3
+    review), statustabellen, QA-loggen, KI-styringsloggen (tilfelle 40),
+    arbeidsloggen og issues.md.
+  - Sesjonsloggen er
+    .logs/mounia-03/973-2026-11-24-14-18-04-story-2-3-avrunding-og-format.md.
+    Sesjonsloggen sier at loggfila skal committes umiddelbart. Jeg har ikke
+    gjort det, siden du ba om å godkjenne først.
+  - I QA-loggen og KI-loggen står commit-kolonnen som «ikke committet ennå». Jeg
+    fyller inn hashen etter commiten.
+
+  Åpne punkter (i issues.md)
+  - Story 2.4 må sette gulvet på 0 i koden og erstatte den lånte formelen i
+    tests/test_rounding.py. Den må også lage «–» og kolonneetiketten «Uke 1 ·
+    uke 46» i display.py.
+  - Story 2.7–2.9 avgjør om malene trenger ukefiltre og hvem som setter
+    with_year.
+
+  Hva vil du?
+  - Godkjenn commit på grenen (kode, dokumenter og logg), så lager jeg en PR.
+    Jeg pusher først etter ditt svar.
+  - Gjennomgå endringene først (jeg kan kjøre bmad-walkthrough).
+  - Endre noe før commit.
+
+  Story 2.4 er ikke startet.
+
+✻ Churned for 12m 2s · done 2:18 PM
+
+❯ Godkjenner commit, SSH push og PR for story 2.3. Følg vanlig BMAD rutine med  
+  personvernkontroll, dokumenterte review fun og oppdatering av commit-hasher.  
+  Flett føørst når CI og Windows kontrollene er grønne på siste commit. Fullfør 
+  fletteloggen og oppdater arbeidsloggen og sesjonsloggen. Hussk                
+  sesjonseksport, maskering og siste loggoppdateringer før avslutning.          
+  Kontroller at main er ren og synkronisert. Ikke start story 2.4               
+
+  Ran 5 shell commands (ctrl+o to expand)
+
+⏺ Koden er committet som 92da6bf. Jeg fyller inn hashene i dokumentene,
+  committer dem og loggen, og pusher over SSH.
+
+  Pushed to story/2-3-round-and-format-every-number-the-same-way, created PR #31, commented on PR #31, ran 1 shell command (ctrl+o to expand)
+
+⏺ Pull requesten er #31, og kommentaren med alle funnene er lagt inn. Nå venter
+  jeg på at CI og Windows-jobben blir grønne på siste commit.
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ CI og Windows-kontrollen er grønne på siste commit df49c5e. Jeg fletter nå på
+  samme måte som tidligere: lokal --no-ff-merge og push av main over SSH.
+
+  Pushed to main, docs/log-pr-31-merge, created PR #32, ran 4 shell commands (ctrl+o to expand)
+
+⏺ PR #31 er flettet (df04f10), og CI på main er grønn. Nå venter jeg på CI for
+  fletteloggen i PR #32.
+
+  Pushed to main, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Story 2.3 er flettet, og main er ren og synkronisert med origin/main
+  (3df7682). Det som gjenstår, er sesjonseksporten, som bare du kan kjøre.
+
+  Gjort
+  - Commits: koden og testene er 92da6bf, spesifikasjonen og dokumentene
+    7c017b8, og sesjonsloggen df49c5e. Personvernskanningen av alle tilføyde
+    linjer fant ingenting.
+  - PR #31 (story 2.3): pushet over SSH, med en kommentar som viser alle 34 funn
+    fra BMAD Code Review med beslutning og rettings-commit. CI nr. 56 og
+    Windows nr. 18 var grønne på siste commit df49c5e. Jeg fletet lokalt med
+    --no-ff (df04f10, kl. 14.30), og CI nr. 57 på main var grønn.
+  - PR #32 (fletteloggen): den setter story 2.3 til done i sprint-status.yaml og
+    oppdaterer arbeidsloggen, sesjonsloggen og issues.md. CI var grønn, og jeg
+    fletet den (3df7682). CI nr. 59 på main var grønn.
+  - Commit-hasher: 92da6bf står i QA-loggen og KI-styringsloggen (tilfelle 40),
+    og de rettede funnene er dokumentert der.
+  - Ikke startet: story 2.4. Åpne punkter for den ligger i issues.md.
+
+  Det som gjenstår: sesjonseksport
+  1. Skriv ! /export her, eller kjør /export selv, og si hvor filen havnet.
+  2. Jeg maskerer eksporten for stier, brukernavn, e-poster, nøkler og passord,
+     og kontrollerer den etter maskeringen.
+  3. Jeg legger den som .logs/mounia-03/sessions/2-3-2026-11-24.txt.
+  4. Jeg lukker eksportpunktet i issues.md og oppdaterer arbeidsloggen og
+     sesjonsloggen i én siste PR, som i story 2.2 (PR #30).
+
+  Etter at eksporten er flettet, sjekker jeg på nytt at main er ren og
+  synkronisert.
+
+✻ Worked for 9m 16s · done 2:37 PM

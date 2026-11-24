@@ -19,9 +19,9 @@ Starte BMAD-arbeidet med story 2.3 («Round and format every number the same way
 - 54 mutasjoner før reviewen og 11 etter: alle fanget.
 - BMAD Code Review: 34 funn fra Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. 7 grupper rettet (inndatakontroll i avrundingen, bredere vakttest, sterkere filtertester og dokumentene), 7 avvist, ingen utsatt. Hashene av prosjektfilene var identiske før og etter, så granskerne endret ingenting.
 - Lukket punkt: lageret i `products.html` via filteret (fra story 1.8).
-- Pushet over SSH og opprettet PR #31 med en kommentar med alle funnene. CI-kjøring nr. 56 og Windows-kjøring nr. 18 passerte på `df49c5e`, og PR #31 ble flettet lokalt med `--no-ff` kl. 14.30 (`df04f10`, foreldre `1e213d4` og `df49c5e`). CI-kjøring nr. 57 på `main` passerte. Fletteloggen, `sprint-status.yaml` (story 2.3 `done`) og denne oppdateringen kommer i PR #32.
+- Pushet over SSH og opprettet PR #31 med en kommentar med alle funnene. CI-kjøring nr. 56 og Windows-kjøring nr. 18 passerte på `df49c5e`, og PR #31 ble flettet lokalt med `--no-ff` kl. 14.30 (`df04f10`, foreldre `1e213d4` og `df49c5e`). CI-kjøring nr. 57 på `main` passerte. Fletteloggen og `sprint-status.yaml` (story 2.3 `done`) kom i PR #32 (CI-kjøring nr. 58 grønn, flettet kl. 14.36 som `3df7682`, og CI-kjøring nr. 59 på `main` grønn).
+- Brukeren kjørte `/export`. Eksporten ble maskert (fem hjemmestier ble `<home>`, to av dem brutt over linjeskift), kontrollert før og etter med skanning etter stier, brukernavn, e-poster, nøkler, passord, telefonnumre, maskinnavn og midlertidige mapper, og lagt i `.logs/mounia-03/sessions/2-3-2026-11-24.txt`. Den kommer sammen med de siste loggoppdateringene i PR #33.
 
 ### Åpne punkter
 - Story 2.4: gulvet på 0 i koden, erstatte den lånte formelen i testen, og «–» og kolonneetiketten «Uke 1 · uke 46» i `display.py`.
 - Story 2.7 til 2.9: avgjøre om malene trenger filtre for ukeetiketter, og hvem som setter `with_year`.
-- Sesjonseksporten av økta med `/export` er ikke gjort: brukeren kjører den, og Claude maskerer og committer den.
