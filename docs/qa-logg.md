@@ -957,3 +957,35 @@ Begge står i `deferred-work.md`.
 - **Ekte iPhone 13 i Safari over lokalnettet (NFR-6), iOS 27.0.1:** innloggingen virker for begge testbedriftene. A viser egne produkter og uke 45, 2026, og B egne produkter og uke 44, 2026. Layout, tekst og berøringsknapper fungerer visuelt bra. Etter utlogging og Tilbake vises innloggingssiden. Appen ble stoppet med Ctrl+C etter testen, og `PROGNOSE_LAN_HOST` var bare satt på startkommandoen.
 
 **Ikke bekreftet.** At iPhone ikke zoomer inn ved inntasting i feltene (16 px tekst). Det sjekkes på nytt på den ekte telefonen i story 4.4 (`issues.md`). Windows er ikke testet (testmaskinen er tilgjengelig 25. november og 7. desember).
+
+## 2026-11-24 – Feil i KI-generert kode og tekst fra byggingen av story 2.1 (DR-9)
+
+**Hvordan det ble funnet.** Av mutasjonstestene og testene under byggingen av story 2.1 på grenen `story/2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts` (baseline `1b8927d`). Claude bygde `src/forecasting/weeks.py` og testene inline, uten subagent. Reglene R-1, R-10 og R-11 ga riktig svar for alle tilfellene i regnearket ved første kjøring.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Det første settet med 20 mutasjoner av `weeks.py` fanget alle, men testene hadde tre hull som det ikke dekket: uker som sjekkes fra 1 eller 2 tidligere uker (E19), en baseline på 1 som aldri flagges, og at funksjonen bare virker for en liste. Mutasjonssettet var skrevet ut fra koden og ikke ut fra hvert ledd i R-10 | Verification Gap-granskeren og et andre sett mutasjoner (se neste del) | Tester for hvert ledd: `test_a_week_with_fewer_than_three_earlier_valid_weeks_is_not_checked`, en baseline på 1 i `test_the_baseline_uses_the_three_most_recent_earlier_weeks_only` og en generator i `test_the_classification_does_not_change_its_input_and_takes_any_iterable`. Alle 29 mutasjoner fanges nå | `5548f4e` |
+
+**Mutasjoner.** `weeks.py` ble brutt på 29 steder og satt tilbake etter hvert sett, og filen ble sammenlignet byte for byte med kopien: `>=` for `>`, faktoren 3, baseline på 2 eller 4 uker eller over alle tidligere uker, gjennomsnitt, største eller minste verdi i stedet for medianen, null-baseline tillatt, utsolgte uker regnet som gyldige, nytt nivå av 2 eller 4 uker, et brutt løp, og uker som sjekkes fra 1 eller 2 tidligere uker.
+
+## 2026-11-24 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 2.1 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige KI-granskere i `bmad-code-review` gikk gjennom arbeidstreet til story 2.1 mot `main` (`1b8927d`), før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Diffen var på 24,8 kB (55,3 kB med dokumentene for Acceptance Auditor). Spesifikasjonen gikk til Edge Case Hunter og Acceptance Auditor. Byggeflyten har bare de tre første lagene, så Acceptance Auditor, som rutinen for kodegjennomgang og story 1.1 til 1.8 bruker, ble lagt til før commiten. Den første Verification Gap-kjøringen fikk en feilskrevet filsti i oppdraget fra Claude, fant filen likevel og meldte ingen funn, så den ble gjentatt med riktig sti. De fant 29 funn: 3 med middels alvor (som grupper), og resten lave eller feil. 16 ble rettet, 5 avvist og 8 var feil funn. Ingen trengte en beslutning av brukeren.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Regelen «færre enn 3 tidligere uker sjekkes ikke» var ikke testet: en endring til `>= 1` eller `>= 2` tidligere uker passerte alle 46 testene, fordi første tre uker i E19 aldri hopper | VG-1 | `test_a_week_with_fewer_than_three_earlier_valid_weeks_is_not_checked` | `5548f4e` |
+| Regnearket oppgir de gyldige ukene bare som antall, og testen sammenlignet bare antallet. Feil uker med riktig antall ville passert, og den eneste sjekken av posisjoner gjentok funksjonens egen regel | BH-6 og EC-5 | Hvert tilfelle og produkt sammenligner også posisjonene med R-1, og E7 oppgir 1, 2, 5 og 6 | `5548f4e` |
+| Ingen direkte test av en baseline på 0, av et nytt nivå etter det første, eller av en funksjon som tar en generator, selv om testnavnet sa «any sequence» | BH-8, EC-4, BH-5, EC-1 og VG-2 | Tre nye tester, og `tuple(weeks)` først i funksjonen | `5548f4e` |
+| Testen av produktene kunne bli tom uten feil, og importtesten krevde nøyaktig samme mengde og gjentok AD-1-testen uten å si hvorfor den er nødvendig | BH-7, EC-6, BH-10 og EC-7 | Antallet kontrollerte produkter må være lik antallet i regnearket, og importtesten sjekker en delmengde og sier at den holder klokken ute | `5548f4e` |
+| Testene for håndlagde historier bar E-n-navn som om de var rader i regnearket, en sjekk som ikke kunne feile (`len(run) == 3`) og et tidspunkt i `sprint-status.yaml` som Claude hadde funnet på | BH-9, VG-3, BH-12 og AA-1 | Teksten sier «som i E8» og så videre, sjekken er fjernet, og tidspunktet er klokka da filen ble endret | `5548f4e` |
+
+**Utsatt.** Ingen funn ble utsatt.
+
+**Avvist.** 5 funn, og 8 var feil. Blant dem: ingen kontroll av flyttall, `None` eller negative tall (tallene kommer fra heltallskolonner og den kontrollerte seed-dataen), at `Week` er en `NamedTuple` i stedet for en dataklasse, at basislisten bygges på nytt for hver uke (høyst 104 uker), og at dokumentene og statusen ikke var med i diffen (de er siste oppgave, etter reviewen). De står under «Review Triage Log» i [spesifikasjonen](../_bmad-output/implementation-artifacts/spec-2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts.md).
+
+**Merknad om prosessen.** Granskerne endret `weeks.py` selv for å teste mutasjoner i arbeidstreet, og én av dem satte filen tilbake feil én gang (`OUTLIER_FACTOR = 3`) og rettet det. Claude sammenlignet filen med kopien fra før reviewen, og den var identisk. Neste gang bør oppdraget si at granskerne ikke skal endre filer i arbeidstreet.

@@ -757,6 +757,16 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 1.8 er flettet inn i `main` (`d147241`), og milepæl M1 er nådd bortsett fra story 1.3, som kjører 25. november. Story 1.9 er fjernet fra planen, og story 2.1 er ikke startet. Åpne punkter for story 2.3, 2.7 og 4.4 står i `issues.md`.
 
+### 24. november 2026 – Story 2.1: de gyldige ukene, de uvanlige ukene og nytt nivå
+
+* Startet story 2.1 med `bmad-build` etter sprintplanen, BMAD og prosjektreglene. `main` var ren (`1b8927d`). Epic 2-konteksten fantes ikke, så Claude kompilerte `epic-2-context.md` selv, og laget grenen `story/2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts`. Claude skrev spesifikasjonen uten åpne spørsmål, og brukeren godkjente den og ba om at subagenter bare brukes til BMAD Code Review.
+* Claude bygde `src/forecasting/weeks.py` (`Week`, `WeekClassification`, `classify_weeks`) etter R-1, R-10 og R-11, og `tests/test_week_classification.py`, som leser alle forventede verdier fra `reference/reference-examples.xlsx` for E7, E8, E9, E10, E15, E16, E18 a og b og E19, og for de 11 regeltestproduktene. Ingen side, modell eller migrasjon er endret.
+* Mutasjonstest: 20 mutasjoner ble fanget, men et andre sett og reviewen viste tre hull i testene. Alle 29 mutasjoner fanges nå.
+* Kjørte BMAD Code Review med fire uavhengige granskere (Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor, den siste lagt til fordi byggeflyten bare har tre lag) på arbeidstreet før noe var committet: 29 funn, 16 rettet, 5 avvist og 8 feil, og ingen trengte en beslutning ([tilfelle 38](ki-styringslogg.md#38-mutasjonssettet-og-hullene-i-testene-for-story-21-24-november-2026)). 362 tester og Ruff passerer, og `makemigrations --check` finner ingen endring.
+* Ingen manuell test, siden ingen side er endret.
+
+**Status:** Story 2.1 er ferdig bygd og gjennomgått, og `sprint-status.yaml` står på `review`. Ingenting er committet eller pushet; det venter på godkjenning. Neste er story 2.2 (grunnprognosen).
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
