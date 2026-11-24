@@ -34,3 +34,16 @@ SMOOTHING_FACTOR = Range(
 # Whole numbers, in percent.
 SCENARIO_PERCENTAGE = Range(default=10, minimum=0, maximum=50)
 SAFETY_MARGIN = Range(default=10, minimum=0, maximum=100)
+
+
+@dataclass(frozen=True)
+class ForecastSettings:
+    """The settings that the base forecast reads (FR-20), with the defaults above.
+
+    The smoothing factor may be a `Decimal`, as the model stores it; the core converts it.
+    """
+
+    method: str = DEFAULT_METHOD
+    window: int = WINDOW.default
+    smoothing_factor: Decimal | float = SMOOTHING_FACTOR.default
+    unusual_weeks_included: bool = DEFAULT_UNUSUAL_WEEKS_INCLUDED
