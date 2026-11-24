@@ -806,6 +806,18 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 2.2 er flettet inn i `main` (`30135df`), og fletteloggen er flettet (`10b1e04`). Eksporten og denne loggoppdateringen kommer i PR #30. Story 2.3 er ikke startet.
 
+### 24. november 2026 – Story 2.3: avrunding og felles tallformat
+
+* Startet story 2.3 med `bmad-build` etter sprintplanen, BMAD og prosjektreglene. `main` var ren (`1e213d4`), og Claude laget grenen `story/2-3-round-and-format-every-number-the-same-way`. Epic 2-konteksten var gyldig, og Claude skrev spesifikasjonen uten å spørre brukeren om noe underveis. Beslutningene (6-desimalstegget også for visning, året på uke 1 også i lister, «–» og kolonneetiketten til story 2.4 til 2.7, filtre uten ukeargumenter) ble lagt fram, og brukeren godkjente spesifikasjonen uten endringer.
+* Claude bygde `src/forecasting/rounding.py`, tallformatene og ukeetikettene i `src/forecasting/display.py`, tallfiltrene i `src/web/templatetags/prognose.py` og lageret i `products.html` gjennom filteret. Testene leser de oppgitte verdiene fra regnearket: åtte tilfeller med bestillingsmengde (E4, E5, E6, E21, E23, E24 A og B, FR-21 d) og alle viste verdier (E1, E2, E13, E20, E21, E27). E5 gir 70 og ikke 71, E20 gir «10,3» og E21 «0,07».
+* Mutasjonstest: Claude kjørte 54 mutasjoner av den nye koden før reviewen og 11 etter den. Alle ble fanget, og filene ble sammenlignet byte for byte med kopiene.
+* BMAD Code Review med fire uavhengige, skrivebeskyttede granskere (Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor). 34 funn: 7 grupper rettet og 7 avvist, ingen utsatt. Hashene av filene var identiske før og etter.
+* Kontroll: 641 tester består og 1 hoppes over (Docker), `ruff check` og `ruff format --check` er rene, og `makemigrations --check` finner ingen endring. Brukeren ba om å få godkjenne før noe ble committet eller pushet.
+
+* Brukeren godkjente commit, SSH-push og pull request. Koden og testene ligger i `92da6bf`, spesifikasjonen og dokumentene i neste commit og sesjonsloggen i den siste, alle i PR #31.
+
+**Status:** Story 2.3 står som `review` i `sprint-status.yaml`, i PR #31 (flettes når CI og Windows-kontrollen er grønne på siste commit). Story 2.4 er ikke startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.

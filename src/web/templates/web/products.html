@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
-{# The product overview (FR-2). It lists the company's products only, until Epic 2 replaces it. The stock is printed as it is: Django groups no digits under nb. #}
+{% load prognose %}
+{# The product overview (FR-2). It lists the company's products only, until Epic 2 replaces it. The stock goes through the whole-number filter of forecasting/display.py (AD-3). #}
 {% block title %}Produktoversikt – Prognose{% endblock %}
 {% block main %}
   <main class="page">
@@ -17,7 +18,7 @@
         <tr>
           <td>{{ product.product_number }}</td>
           <td>{{ product.name }}</td>
-          <td class="number">{{ product.stock_on_hand }}</td>
+          <td class="number">{{ product.stock_on_hand|whole_number }}</td>
         </tr>
         {% endfor %}
       </tbody>

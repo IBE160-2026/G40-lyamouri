@@ -419,4 +419,17 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.2](../_bmad-output/implementation-artifacts/spec-2-2-calculate-the-base-forecast-with-the-moving-average-or-exponential-smoothing.md).
 - **QA-loggen:** [feilene fra byggingen av story 2.2](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-22-dr-9) og [fra BMAD Code Review av story 2.2](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-22-dr-9).
 
+### 40. Feiltypene i avrundingen og vakten som var smalere enn teksten i story 2.3 (24. november 2026)
+
+- **Hva KI foreslo:** Claude bygde `rounding.py`, tallformatene, ukeetikettene og tallfiltrene for story 2.3, med tester som leser de oppgitte verdiene fra regnearket, 54 mutasjoner og en vakttest som skulle hindre at noe utenfor kjernen avrunder eller formaterer et tall.
+- **Hva som var feil:**
+  - Avrundingen sjekket bare NaN og uendelig. `None`, en tekst som «70» (som ville skrevet seg ut uavrundet gjennom et filter), en bool og en veldig stor verdi ga hver sin feiltype eller ingen feil. Fire granskere fant det fra hver sin kant.
+  - Vakttesten sa at `display.py` er den eneste modulen som skriver et tall som tekst, men den lette bare etter noen få kall. `decimal.ROUND_UP` som attributt, `math.trunc`, Djangos tallfunksjoner i `.py`-filer, `.txt`-maler og skript slapp gjennom, og regex-en slo ut på «localize» i et klassenavn.
+  - Claude skrev `\u2212` og `\u00a0` slik at redigeringsverktøyet la selve tegnene inn i koden. Det hårde mellomrommet var usynlig, og mutasjonsskriptet fant ikke teksten.
+  - Claude startet med fire eksempler for bestillingsmengden, og vakten viste at regnearket oppgir den for åtte.
+- **Hva gruppen bestemte:** Brukeren ba om alle fire uavhengige, skrivebeskyttede granskere, mutasjonstester og at avrundingen skulle kontrolleres mot AD-3 og regnearket, og lot Claude vurdere enkeltfunnene. Claude rettet inndatakontrollen og vakten, avviste ukefiltre, kontroll av ukenummer og et gulv på 0 i `round_up_to_units` (story 2.4), og førte de åpne punktene i `issues.md`.
+- **Commit eller pull request:** `92da6bf`, i PR #31.
+- **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.3](../_bmad-output/implementation-artifacts/spec-2-3-round-and-format-every-number-the-same-way.md).
+- **QA-loggen:** [feilene fra byggingen av story 2.3](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-23-dr-9) og [fra BMAD Code Review av story 2.3](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-23-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).

@@ -1022,3 +1022,37 @@ Begge står i `deferred-work.md`.
 **Avvist.** 7 funn, og 2 var feil. Blant dem: negative tall og `None` (verdiene kommer fra heltallskolonner og den kontrollerte seed-dataen), at årsaken er en tekststreng og ikke en `Enum` (som metodene og varslene), og at kalkulasjonsukene bare sammenlignes som antall (verdien av prognosen og nivåene viser hvilke uker som er brukt). De står under «Review Triage Log» i [spesifikasjonen](../_bmad-output/implementation-artifacts/spec-2-2-calculate-the-base-forecast-with-the-moving-average-or-exponential-smoothing.md).
 
 **Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle filer i `src`, `tests`, `reference`, `docs` og implementasjonsfilene før og etter reviewen, og de var identiske.
+
+## 2026-11-24 – Feil i KI-generert kode og tekst fra byggingen av story 2.3 (DR-9)
+
+**Hvordan det ble funnet.** Av testene og mutasjonstestene under byggingen av story 2.3 på grenen `story/2-3-round-and-format-every-number-the-same-way` (baseline `1e213d4`). Claude bygde `rounding.py`, formatene i `display.py`, tallfiltrene og testene inline, uten subagent. Avrundingen ga riktig svar for E5 (70, ikke 71), E20 («10,3») og E21 («0,07», 1) og for alle viste verdier i regnearket ved første kjøring.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Testen forventet at flyttallet 0,1234565 ble avrundet opp til 0,123457 med 6 desimaler, men flyttallets eksakte verdi er 0,12345649…, så riktig svar er 0,123456 | `uv run pytest`, første kjøring | Forventningen bruker `Decimal("0.1234565")`, der 7. desimal er en ekte 5-er | `92da6bf` |
+| Testens liste over eksempler med en oppgitt bestillingsmengde hadde fire (E4, E5, E6, E21), men regnearket oppgir den også for E23, E24 A og B og FR-21 d. Vakten feilet, og alle åtte består | `test_the_spreadsheet_examples_for_rounding_are_all_checked` | Listen har alle åtte | `92da6bf` |
+| `\u2212` og `\u00a0` ble skrevet inn i `display.py` som selve tegnene, så det hårde mellomrommet var usynlig i koden | Mutasjonsskriptet fant ikke teksten | Konstantene er skrevet som escape-sekvenser | `92da6bf` |
+
+**Mutasjoner.** Koden ble brutt på 54 steder og satt tilbake, og filene ble sammenlignet byte for byte med kopiene: det første trinnet til 6 desimaler fjernet, endret til 5, 3 eller 7, `ROUND_HALF_EVEN` eller `ROUND_CEILING` i stedet for `ROUND_HALF_UP`, avrunding opp byttet med `math.ceil` eller gjort før de 6 desimalene, `round()` i stedet for `decimal`, minustegn og null, kontrollen av NaN, uendelig og antall desimaler, desimaler på feil sted, bindestrek i stedet for U+2212, punktum i stedet for komma, vanlig mellomrom eller ingen før «%», tusenskille, feil antall desimaler for prognose, utregning og hele tall, året utelatt eller satt på feil uke, feil tegn mellom uke og år, filtre byttet eller fjernet og `|whole_number` fjernet fra `products.html`. Alle 54 ble fanget.
+
+## 2026-11-24 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 2.3 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige, skrivebeskyttede KI-granskere i `bmad-code-review` gikk gjennom arbeidstreet til story 2.3 mot `1e213d4`, før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Spesifikasjonen gikk bare til Edge Case Hunter og Acceptance Auditor. De ga 34 funn.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Avrundingen feilet ujevnt på feil inndata: `None` ga `TypeError`, en tekst som «70» ble avrundet uten feil (og ville skrevet seg ut uavrundet gjennom et filter), en bool ble tatt som 0 eller 1, og en verdi over omtrent 1e22 ga `InvalidOperation` i stedet for `ValueError` som NaN | BH-5, EC-1, EC-2, EC-17, VG-2, VG-3 og AA-5 | Det som ikke er et tall (`None`, tekst, bool) gir `TypeError`, og det som ikke er endelig eller er for stort gir `ValueError`, med tester for hvert tilfelle og for de fire filtrene | `92da6bf` |
+| Vakten mot avrunding og formatering utenfor kjernen var smalere enn teksten sa: `decimal.ROUND_UP` som attributt, andre avrundingsmoduser, `math.trunc`, Djangos tallfunksjoner i `.py`-filer, `.txt`-maler og skript ble ikke sett, regex-en slo ut på «localize» i et klassenavn, og Djangos tusenskille var ikke kontrollert | BH-1, BH-2, BH-3, EC-8, EC-9, EC-10, VG-1 og AA-2 | Vakten leter etter alle `ROUND_`-navn, `trunc`, Djangos formateringsnavn og -moduler, `.txt`-maler og `toFixed` og lignende i skript, har en strammere regex med egne tester og kontrollerer at `USE_THOUSAND_SEPARATOR` er av. Seks injiserte brudd ble fanget | `92da6bf` |
+| Testen av filtrene godtok enhver `Exception` og prøvde bare `None`, og testen av forbudte tegn sjekket ikke at U+2212 og U+00A0 faktisk står der | BH-6, BH-8, EC-13 og EC-15 | Hvert filter mot `None`, tom tekst, «70», bool, NaN og uendelig med navngitt feil, og flere verdier med tegnene sjekket | `92da6bf` |
+| E21-testen gjentok «0,07» og 1 ved siden av regnearkverdiene, og den lånte formelen for bestillingsmengden ble ikke sammenlignet med `order_unrounded` | AA-4, EC-12 og EC-16 | Literalene er fjernet, og formelen sammenlignes med den oppgitte verdien innenfor `TOLERANCE` | `92da6bf` |
+| `display.py` sa at bare standardbiblioteket importeres, men filen importerer også `forecasting/rounding.py` | EC-18 | Teksten nevner begge | `92da6bf` |
+
+**Utsatt.** Ingen funn ble utsatt.
+
+**Avvist.** 7 grupper, blant dem: at lageret i `products.html` bare sjekkes mot kildeteksten (et heltall skrives likt med og uten filteret, og en mutasjon som fjerner filteret fanges), at ukeetikettene mangler filtre og kontroll av ukenummeret (valgt i spesifikasjonen, og ukene kommer fra kontrollerte heltallskolonner), at `round_up_to_units` ikke avrunder negative verdier til 0 i koden (gulvet på 0 er bestillingsberegningen i story 2.4), og en vakt mot alle f-strengformater (`models.py` og `seed.py` bruker `:02d` for uke-identifikatorer).
+
+**Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle filer i `src`, `tests`, `reference`, `docs`, `.logs` og implementasjonsfilene før og etter reviewen, og de var identiske. Mutasjonene på rettingene (5 på inndatakontrollen og 6 injiserte brudd på vakten) ble kjørt av byggeøkta, ikke av granskerne, og alle ble fanget.
