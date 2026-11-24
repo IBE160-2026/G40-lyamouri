@@ -989,3 +989,36 @@ Begge står i `deferred-work.md`.
 **Avvist.** 5 funn, og 8 var feil. Blant dem: ingen kontroll av flyttall, `None` eller negative tall (tallene kommer fra heltallskolonner og den kontrollerte seed-dataen), at `Week` er en `NamedTuple` i stedet for en dataklasse, at basislisten bygges på nytt for hver uke (høyst 104 uker), og at dokumentene og statusen ikke var med i diffen (de er siste oppgave, etter reviewen). De står under «Review Triage Log» i [spesifikasjonen](../_bmad-output/implementation-artifacts/spec-2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts.md).
 
 **Merknad om prosessen.** Granskerne endret `weeks.py` selv for å teste mutasjoner i arbeidstreet, og én av dem satte filen tilbake feil én gang (`OUTLIER_FACTOR = 3`) og rettet det. Claude sammenlignet filen med kopien fra før reviewen, og den var identisk. Neste gang bør oppdraget si at granskerne ikke skal endre filer i arbeidstreet.
+
+## 2026-11-24 – Feil i KI-generert kode og tekst fra byggingen av story 2.2 (DR-9)
+
+**Hvordan det ble funnet.** Av testene og mutasjonstestene under byggingen av story 2.2 på grenen `story/2-2-calculate-the-base-forecast-with-the-moving-average-or-exponential-smoothing` (baseline `a66efb4`). Claude bygde `src/forecasting/forecast.py` og testene inline, uten subagent. Reglene R-2, R-3, R-4 og R-6 ga riktig svar for alle 24 tilfellene og alle 11 produktene i regnearket ved første kjøring.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Ruff (B008) avviste testens hjelpefunksjon, som hadde `ForecastSettings()` som standardverdi for et argument | `uv run ruff check` | En felles `DEFAULT_SETTINGS` utenfor funksjonen | `0c31ef6` |
+| Testen av vinduet brukte en feil rekkevidde (`range(14, 36, 2)` i stedet for `range(14, 38, 2)`), så den beregnede forventningen manglet siste uke | Claude, ved gjennomlesing av testen før første kjøring | Rekkevidden er rettet | `0c31ef6` |
+
+**Mutasjoner.** `forecast.py` ble brutt på 55 steder og satt tilbake, og filen ble sammenlignet byte for byte med kopien: innstillingen snudd, uvanlige uker alltid eller aldri utelatt, nytt nivå utelatt, alle uker brukt, vinduet én for lite eller for mye, de første i stedet for de siste ukene, byttet α, startnivå 0, første uke brukt to ganger, første nivå som prognose, utsolgte uker som salg, grensen på 3 gyldige uker satt til 2, til 4, med `<=` eller fjernet, vindussjekken med `<=` eller fjernet, eksponentiell glatting som krever 2 uker eller vinduet, årsakene byttet, ukjent metode tatt for eksponentiell glatting, avrunding, heltallsdivisjon, `Decimal` uten omgjøring, lagerbeholdningen brukt, ukene ikke gjort om til en tuple, posisjoner fra 0, tomme felt for uvanlige uker, nytt nivå, innstillinger og antall uker, nivåer for det glidende gjennomsnittet, og 19 på kontrollen av innstillinger (ikke kalt, kalt for sent, metoden, vindustypen, hver ende av vinduet eller α flyttet eller gjort streng, `Decimal` mot flyttall, og vinduet ikke kontrollert for eksponentiell glatting). 54 ble fanget. Mellom to runder overlevde to: en kontroll av `bool` som aldri kan slå inn (0 og 1 er under det minste vinduet), som er fjernet, og vinduet for eksponentiell glatting, som fikk en test. Den siste er en ekvivalent mutant: sjekken av 3 gyldige uker gjort på kalkulasjonsukene, som ikke kan skilles fra den ekte, fordi 3 gyldige uker alltid gir minst 3 kalkulasjonsuker (R-10 sjekker aldri de tre første ukene).
+
+## 2026-11-24 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 2.2 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige, skrivebeskyttede KI-granskere i `bmad-code-review` gikk gjennom arbeidstreet til story 2.2 mot `main` (`a66efb4`), før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Diffen var på 18,4 kB. Spesifikasjonen gikk til Edge Case Hunter og Acceptance Auditor. Claude skrev igjen en feil filsti i oppdraget til Verification Gap, som meldte «ingen hull» på 40 sekunder, så oppdraget ble gjentatt med riktig sti og med krav om at granskeren oppgir hvilken diff den leste. De fant 23 funn: 2 med middels alvor (som grupper), og resten lave eller feil. 14 ble rettet, 7 avvist og 2 var feil funn. Ett punkt gikk til brukeren, som ba om en vurdering av om kjernen skal avvise et ugyldig vindu og en ugyldig α (se under).
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| To tellinger i `test_the_listed_examples_are_all_checked` sammenlignet leseren med sitt eget filter og kunne aldri feile, selv om teksten sa at en fjernet rad ikke går ubemerket hen | BH-2, EC-7, EC-8 og EC-10 | Eneste tilfelle som er utelatt må være E14, og alle regeltestprodukter må kontrolleres | `0c31ef6` |
+| E23 og FR-21-variantene stod i matrisen, men ikke i listen over eksempler | BH-3 og AA-2 | E23, FR-21 a og FR-21 b er lagt til | `0c31ef6` |
+| R-6 var ikke testet med 2 gyldige uker og et vindu på 2, eller med nøyaktig 3 gyldige uker for eksponentiell glatting | BH-6 | Vindu 2 i testen av 2 gyldige uker, og en test av 3 gyldige uker for begge metoder | `0c31ef6` |
+| Ingen test sa at det glidende gjennomsnittet ikke har nivåer, og fem tester nevnte bare en av E-n og FR-n | VG-1 og AA-1 | `levels == ()` i testen, og E-n og FR-n i teksten til testene | `0c31ef6` |
+| Kjernen kontrollerte bare metoden: vindu 0 ga `ZeroDivisionError`, og et negativt vindu eller en α utenfor 0,1 til 0,9 ga et tall som ligner en prognose. Funnet ble først avvist, siden skjemaet i story 3.1 skal kontrollere verdiene | BH-1 og EC-1 til EC-4, og brukerens spørsmål | `check_settings` avviser metode, vindu og α utenfor definisjonene i `settings.py` med `ValueError`, før noe beregnes, for begge metodene og også uten prognose. Grensene leses fra `settings.py`. 28 nye tester og 19 mutasjoner | `0c31ef6` |
+
+**Utsatt.** Ingen funn ble utsatt.
+
+**Avvist.** 7 funn, og 2 var feil. Blant dem: negative tall og `None` (verdiene kommer fra heltallskolonner og den kontrollerte seed-dataen), at årsaken er en tekststreng og ikke en `Enum` (som metodene og varslene), og at kalkulasjonsukene bare sammenlignes som antall (verdien av prognosen og nivåene viser hvilke uker som er brukt). De står under «Review Triage Log» i [spesifikasjonen](../_bmad-output/implementation-artifacts/spec-2-2-calculate-the-base-forecast-with-the-moving-average-or-exponential-smoothing.md).
+
+**Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle filer i `src`, `tests`, `reference`, `docs` og implementasjonsfilene før og etter reviewen, og de var identiske.
