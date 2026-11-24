@@ -776,7 +776,12 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
   * grenen `story/2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts` er beholdt.
 * Brukeren eksporterte økta med `/export` etter flettingen. Claude maskerte eksporten (stien til prosjektmappa ble `<repo>` og stien til den midlertidige mappa ble `<scratchpad>`), og kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler, tokens eller passord. Eksporten ligger i `.logs/mounia-03/sessions/2-1-2026-11-24.txt` og ble committet i en egen pull request, siden PR #24 allerede var flettet.
 
-**Status:** Story 2.1 er flettet inn i `main` (`25a0403`). Story 2.2 er ikke startet.
+* Opprettet PR #25 med fletteloggen for PR #24 (CI-kjøring nr. 44 passerte) og flettet den lokalt med `git merge --no-ff` (`49b63c7`, flettet kl. 12.32). CI-kjøring nr. 45 på `main` passerte.
+* Opprettet PR #26 med den maskerte sesjonseksporten (CI-kjøring nr. 46 passerte) og flettet den på samme måte (`04b7a41`, flettet kl. 12.44, foreldre `49b63c7` og `6592527`). `main` ble pushet over SSH, og CI-kjøring nr. 47 på `main` passerte. `main` er ren og lik `origin/main`.
+* Oppdaterte loggene med PR #26 i PR #27, som bare endrer loggene. Den får ikke en egen fletteloggs-PR, ellers ville kjeden aldri tatt slutt.
+* Avslutningen er kontrollert: spesifikasjonen står som `done`, `sprint-status.yaml` har story 2.1 som `done` og epic 2 som `in-progress`, statustabellen har FR-15 til FR-17 som «delvis bygd», QA-loggen og KI-styringsloggen (tilfelle 38) har hashen `5548f4e`, og eksporten, PR-kommentaren med alle 29 funn og de åpne punktene i `issues.md` finnes.
+
+**Status:** Story 2.1 er flettet inn i `main` (`25a0403`), og sesjonseksporten og fletteloggene er flettet (`49b63c7`, `04b7a41`). Story 2.2 er ikke startet.
 
 ## 4. Videre dokumentasjon
 
