@@ -774,7 +774,7 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
   * `main` ble pushet over SSH, og GitHub viser PR #24 som flettet 24. november kl. 12.29, med `25a0403` som merge-commit;
   * CI-kjøring nr. 43 på `main` passerte;
   * grenen `story/2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts` er beholdt.
-* Eksporten av økta med `/export` er ikke med, siden den må kjøres av brukeren.
+* Brukeren eksporterte økta med `/export` etter flettingen. Claude maskerte eksporten (stien til prosjektmappa ble `<repo>` og stien til den midlertidige mappa ble `<scratchpad>`), og kontrollen etterpå fant ingen lokale stier, brukernavn, e-poster, nøkler, tokens eller passord. Eksporten ligger i `.logs/mounia-03/sessions/2-1-2026-11-24.txt` og ble committet i en egen pull request, siden PR #24 allerede var flettet.
 
 **Status:** Story 2.1 er flettet inn i `main` (`25a0403`). Story 2.2 er ikke startet.
 
