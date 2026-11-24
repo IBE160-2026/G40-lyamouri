@@ -394,4 +394,17 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Triage Log» i [spesifikasjonen for story 1.8](../_bmad-output/implementation-artifacts/spec-1-8-log-in-and-see-only-your-own-companys-products.md).
 - **QA-loggen:** [feilene fra byggingen av story 1.8](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-18-dr-9) og [fra BMAD Code Review av story 1.8](qa-logg.md#2026-11-23--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-18-dr-9).
 
+### 38. Mutasjonssettet og hullene i testene for story 2.1 (24. november 2026)
+
+- **Hva KI foreslo:** Claude bygde `classify_weeks` for R-1, R-10 og R-11 og skrev testene slik at de leser alle forventede verdier fra regnearket. Claude skrev også et sett på 20 mutasjoner av koden og meldte at alle ble fanget. Fire granskere i `bmad-code-review` gikk så gjennom arbeidstreet. Byggeflyten har bare tre av lagene, så Claude la til den fjerde, Acceptance Auditor, som rutinen for kodegjennomgang krever, før commiten.
+- **Hva som var feil:**
+  - Mutasjonssettet var skrevet ut fra koden Claude hadde skrevet, ikke ut fra hvert ledd i R-10. En Verification Gap-gransker viste at uker som sjekkes fra bare 1 eller 2 tidligere uker passerte alle 46 testene, fordi første tre uker i E19 aldri hopper. Et andre sett mutasjoner viste at en baseline på 1 heller ikke ble testet.
+  - Regnearket oppgir de gyldige ukene bare som antall, og testen sammenlignet bare antallet. Den eneste sjekken av posisjonene gjentok funksjonens egen regel.
+  - Claude skrev feil filsti i oppdraget til én gransker, som fant filen likevel og meldte «ingen funn». En «ingen funn» fra en gransker som ikke har lest det riktige er ikke et funn, så oppdraget ble gjentatt.
+  - Granskerne endret `weeks.py` i arbeidstreet for sine egne mutasjoner, og én satte filen tilbake med en feil verdi. Claude fant ingen feil fordi filen ble sammenlignet byte for byte med kopien fra før.
+- **Hva gruppen bestemte:** Brukeren ba om mutasjonstester og review uten å bestemme enkeltfunnene, og ba senere om at granskerne i fremtidige reviews bare skal lese og rapportere, og om at antallet granskere skal kontrolleres. Ingen funn trengte en beslutning. 16 ble rettet, 5 avvist og 8 var feil.
+- **Commit eller pull request:** `5548f4e`.
+- **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.1](../_bmad-output/implementation-artifacts/spec-2-1-find-the-valid-weeks-unusual-weeks-and-level-shifts.md).
+- **QA-loggen:** [feilene fra byggingen av story 2.1](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-21-dr-9) og [fra BMAD Code Review av story 2.1](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-21-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).
