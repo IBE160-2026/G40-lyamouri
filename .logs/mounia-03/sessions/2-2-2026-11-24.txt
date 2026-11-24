@@ -1,0 +1,765 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   ~/G40-lyamouri
+
+
+❯ /clear                                                                        
+
+❯ Start BMAD-arbeidet med story 2.2. Følg gjeldende spesifikasjoner,            
+  sensorveiledningen og prosjektets rutiner. Bruk Sonnet 5.5 High. Arbeid       
+  selvstendig og effektivt med kvalitet først. Bruk alle fire skrivebeskyttede  
+  granskere ved BMAD Code Review. Presenter nødvendige beslutninger før         
+  implementering, og ikke commit eller push uten godkjenning.                   
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+  Read 2 files, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg har lest steg 1 og identifisert story 2.2 (grunnprognose med glidende
+  gjennomsnitt eller eksponentiell glatting). Nå går jeg til planleggingssteget
+  og leser epic-kontekst og forrige story.
+
+  Read 3 files, listed 1 directory, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Jeg henter nå en kompakt oversikt over hvilke regnearkrader som oppgir
+  grunnprognose, nivåer og kalkulasjonsuker.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-2-2-calculate-the-base-foreca
+       st-with-the-moving-average-or-exponential-smoothing.md)
+  ⎿  Wrote 84 lines to
+     _bmad-output/implementation-artifacts/spec-2-2-calculate-the-base-fore
+     cast-with-the-moving-average-or-exponential-smoothing.md
+      1 ---
+      2 title: 'Story 2.2: Calculate the base forecast with the moving av
+        erage or exponential smoothing'
+      3 type: 'feature'
+      4 created: '2026-11-24'
+      5 status: 'draft'
+      6 route: 'dispatch'
+      7 review_loop_iteration: 0
+      8 context: ['{project-root}/_bmad-output/implementation-artifacts/e
+        pic-2-context.md']
+     … +76 lines (ctrl+o to expand)
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Spesifikasjonen er rundt 1 700 tokens, litt over grensen på 1 600. Jeg
+  strammer den inn i stedet for å be om en deling.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Spesifikasjonen for story 2.2 er skrevet, og jeg har ikke startet
+  implementeringen. Den ligger i
+  _bmad-output/implementation-artifacts/spec-2-2-calculate-the-base-forecast-wit
+  h-the-moving-average-or-exponential-smoothing.md.
+
+  Hva som bygges
+
+  Kjernen får forecast_product(weeks, stock_on_hand, settings). Den velger
+  kalkulasjonsukene (R-2), regner grunnprognosen med R-3 (glidende gjennomsnitt)
+  eller R-4 (eksponentiell glatting) og gir ingen prognose med en årsak når
+  dataene er for tynne (R-6). Funksjonen returnerer et frosset ProductResult.
+  Det blir ingen skjerm-, modell- eller migrasjonsendringer, og weeks.py endres
+  ikke.
+
+  Testene leser alle forventede verdier fra regnearket. Det gjelder 24 caser og
+  11 regeltestprodukter. Jeg utelater E14, siden den bruker sesongjustering
+  (Epic 5).
+
+  Åpne beslutninger
+
+  Ingen av dem trenger ditt svar. Jeg har bestemt disse selv, og de står i
+  spesifikasjonen:
+  - Innstillingstype: ForecastSettings blir en frossen dataklasse i
+    forecasting/settings.py, med metode, vindu, glattingsfaktor og «ta med
+    uvanlige uker». Standardverdiene hentes fra konstantene der (AD-9).
+  - Årsak uten prognose: resultatet har en kode (for få gyldige uker, eller for
+    få kalkulasjonsuker) og feltet required_calculation_weeks, aldri en ferdig
+    setning (AD-4).
+  - Resultatet: det inneholder innstillingene som er brukt og nivåene for
+    eksponentiell glatting (AD-5).
+  - Lagerbeholdning: stock_on_hand tas imot, men brukes først i 2.4.
+
+  Størrelse
+
+  Spesifikasjonen er anslått til ca. 1 700 tokens (ut fra filstørrelsen), litt
+  over målet på 1 600. Jeg anbefaler å beholde den, fordi det er ett
+  sammenhengende mål. Oppgaven er ikke noe å dele, og grensen er ikke en port.
+  Svar «del» hvis du vil ha den delt likevel.
+
+  Du kan åpne spesifikasjonsfilen og endre den før du godkjenner, eller spørre
+  meg om den.
+
+  Hva vil du gjøre?
+  - Godkjenn og fortsett: jeg setter status til ready-for-dev og implementerer i
+    denne økten.
+  - Godkjenn og stopp: spesifikasjonen blir ready-for-dev, og en ny økt tar
+    implementeringen.
+  - Gjennomgå spesifikasjonen: vi diskuterer og justerer først.
+
+  Jeg committer eller pusher ikke uten din godkjenning.
+
+✻ Baked for 1m 58s · done 12:57 PM
+
+❯ Godkjenn og fortsett med story 2.2. Behold spesifikasjonen samlet. Følg BMAD, 
+  sensorveiledningen og prosjektets rutiner. Implementer og test selvstendig    
+  med kvalitet først. Bruk alle fire uavhengige, skrivebeskyttede granskere ved 
+  BMAD Code Review, og gjennomfør mutasjonstester. Presenter resultatet og      
+  eventuelle nødvendige beslutninger før commit/push. Ikke start neste story.   
+
+  Read 1 file, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg er på steg 3 på grenen story/2-2-…, og spesifikasjonen står nå som
+  in-progress. Feilen i tidsstempelet i sprint-status prøver jeg på nytt, før
+  jeg selv skriver koden. · summary
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Write(tests/test_forecast.py)
+  ⎿  Wrote 304 lines to tests/test_forecast.py
+      1 """The base forecast of a product (Story 2.2; FR-5, FR-6, FR-8, F
+        R-16, FR-17, R-2, R-3, R-4, R-6).
+      2 
+      3 The expected calculation weeks, levels and base forecasts are rea
+        d from the reference
+      4 spreadsheet for every case and rule test product that states them
+        , so no expected value
+      5 is copied into the tests (AD-17). They use no database.
+      6 """
+      7 
+     … +297 lines (ctrl+o to expand)
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Alle 415 tester består, og Ruff er rent. Nå kjører jeg migrasjonssjekken
+  riktig og setter opp mutasjonstestene.
+
+  Listed 1 directory, ran 1 shell command (ctrl+o to expand)
+
+⏺ Mutasjonstestingen fant 35 mutasjoner, hvorav én overlevde; den er ekvivalent
+  og dokumenteres i spesifikasjonen. Jeg lager diffen og går videre til
+  gjennomgangen. · summary
+
+  Searched for 1 pattern, listed 2 directories, ran 5 shell commands (ctrl+o to expand)
+
+⏺ Jeg starter nå de fire uavhengige, skrivebeskyttede granskerne samtidig: Blind
+  Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor.
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   ├ Verification Gap review
+   └ Acceptance Auditor review
+
+⏺ Alle fire granskerne kjører nå i bakgrunnen. De er skrivebeskyttede og leser
+  samme diff. Jeg venter på at alle fire melder tilbake før jeg vurderer
+  funnene. Da sjekker jeg også at ingen prosjektfiler er endret, ved å
+  sammenligne mot hash-oversikten fra før granskingen.
+
+✻ Cooked for 3m 33s · done 1:05 PM
+
+› Message from general-purpose
+  No verification gaps found.
+
+⏺ Verification Gap-granskeren melder «ingen hull». Rapporten er svært kort, og
+  jeg ga den en feilskrevet hovedsti, selv om den riktige stien sto som reserve.
+  Jeg venter på de tre andre og vurderer så om den skal kjøres på nytt med en
+  ren sti, slik jeg måtte i story 2.1.
+
+✻ Worked for 4s · done 1:06 PM
+⏺ Agent "Verification Gap review" finished · 40s
+
+› Message from general-purpose
+  **Floor:** the diff is 18,375 bytes, about 17.9 kB. N = min(floor(sqrt(17.9) +
+  1), 10) = min(floor(5.23), 10) = 5. I report 9 findings.
+
+  - **No validation of window or smoothing factor in the core.**
+  `forecast_product` and `ForecastSettings` only check `method`.
+    - A `window` of 0 or less makes `sales[-0:]` select every week and then
+  divides by 0 or a negative count, so it raises `ZeroDivisionError` or returns
+  a wrong number. It does not fail cleanly with a `ValueError` like an unknown
+  method.
+    - A `smoothing_factor` outside `SMOOTHING_FACTOR.minimum..maximum` (for
+  example 5, or 0) silently gives a meaningless level.
+    - `settings.py` already defines the `Range` bounds that could be checked. No
+  test covers an out-of-range window or factor, although
+  `test_an_unknown_method_is_refused` covers the equivalent method case.
+
+  - **`test_the_listed_examples_are_all_checked` partly asserts nothing.**
+  `len(PRODUCTS) == len([row for row in reader.products() if "base_forecast" in
+  row])` repeats the filter that builds `PRODUCTS`, so it is always true. The
+  `len(CASES) == len(states_a_value)` check couples the test to the way
+  `seasonal_adjustment` is spelled in the spreadsheet. It will fail confusingly
+  if a non-E14 case later turns seasonal adjustment on. `LISTED_EXAMPLES` should
+  be compared with the spreadsheet in a way that does not repeat the production
+  filter.
+
+  - **The test docstring and `LISTED_EXAMPLES` disagree.** The docstring of
+  `test_every_case_matches_the_spreadsheet` names E23 and "the FR-21 variants".
+  `LISTED_EXAMPLES` has no E23 and no FR-21 case, so nothing guarantees they are
+  checked. Either add them to the set or remove them from the docstring.
+
+  - **Calculation weeks are compared by count only.**
+  `assert_stated_values_match` checks `len(result.calculation_weeks) ==
+  row["calculation_weeks"]`, not which positions were chosen. A wrong selection
+  of the right size, for example dropping the wrong unusual weeks, would pass.
+  Only the hand-written E8 and E16 tests check positions.
+
+  - **A "no forecast" row never has its reason checked.** The spreadsheet-driven
+  helper asserts only that `no_forecast_reason is not None`. It does not check
+  `TOO_FEW_VALID_WEEKS` against `TOO_FEW_CALCULATION_WEEKS`, or
+  `required_calculation_weeks`. The order of the two reasons (R-6) is tested by
+  hand only for E11 a and E11 b.
+
+  - **Boundary tests are incomplete.**
+    - R-6 is tested at exactly 3 valid weeks only for the default moving average
+  with window 3. It is not tested for exponential smoothing, and not for window
+  2.
+    - There is no test where exactly 2 valid weeks coexist with enough
+  calculation weeks. That would show the minimum-valid-weeks rule is independent
+  of the window.
+    - There is no test with a mixed history of level-shift weeks plus excluded
+  unusual weeks that checks the forecast value. E16 checks positions only.
+
+  - **A negative or unusual `stock_on_hand` is not handled or tested.** The
+  parameter is accepted and ignored, with only 0 versus 500 compared. Nothing
+  says whether `None` or a negative value is acceptable, and Story 2.4 will have
+  to define that.
+
+  - **The failure reason is a bare string constant.** `no_forecast_reason: str |
+  None` and the two module constants give no type safety. A typo in a future
+  caller, such as the Story 2.4 warning text, will not be caught. An `Enum` or
+  `Literal` type would fit the "numbers only, no text" design (AD-3, AD-4)
+  better. The related invariant (`base_forecast is None` exactly when
+  `no_forecast_reason is not None`) is not enforced in `ProductResult`, for
+  example with `__post_init__`.
+
+  - **Smaller points.**
+    - `position not in classification.unusual` is a linear scan of a tuple
+  inside a loop, so it is O(n²). Converting to a set once is trivial, and the
+  cost is small only because histories are short.
+    - `forecast_product`, `ProductResult` and `ForecastSettings` have no
+  parameter or return type annotations on the function itself, unlike the
+  dataclasses.
+    - The method is validated after the weeks are classified. An invalid method
+  therefore raises only after the work is done, and not at all if validation
+  moves earlier. This is harmless, but the check should come first.
+    - The diff does not include the changes to `sprint-status.yaml` or the new
+  spec file. I could not review whether the story's acceptance criteria are
+  fully covered, for example whether E23 or the FR-21 variants are in scope.
+
+⏺ Blind Hunter har levert 9 funn. Jeg venter fortsatt på Edge Case Hunter og
+  Acceptance Auditor før jeg vurderer noe.
+
+✻ Churned for 2s · done 1:06 PM
+
+⏺ Agent "Blind Hunter review" finished · 47s
+
+› Message from general-purpose
+  [
+  {"location":"src/forecasting/forecast.py:69-71,85","trigger_condition":"settin
+  gs.window is 0 or negative (no range check in ForecastSettings or
+  forecast_product)","guard_snippet":"if not WINDOW.minimum <= settings.window
+  <= WINDOW.maximum: raise ValueError(f\"window out of range:
+  {settings.window!r}\")","potential_consequence":"Window 0 gives
+  ZeroDivisionError. A negative window slices sales[-required:] wrongly and
+  divides by a negative number."},
+  {"location":"src/forecasting/forecast.py:69-71,85","trigger_condition":"settin
+  gs.window is a float, Decimal or None (settings are not
+  type-checked)","guard_snippet":"if not isinstance(settings.window, int) or
+  isinstance(settings.window, bool): raise
+  ValueError(...)","potential_consequence":"sales[-required:] raises TypeError
+  for a non-int window, or a None window fails at len(sales) < required."},
+  {"location":"src/forecasting/forecast.py:87","trigger_condition":"smoothing_fa
+  ctor outside 0.1 to 0.9, NaN, or None; only the method is
+  validated","guard_snippet":"alpha = float(settings.smoothing_factor); if not
+  SMOOTHING_FACTOR.minimum <= alpha <= SMOOTHING_FACTOR.maximum: raise
+  ValueError(...)","potential_consequence":"Out-of-range or NaN alpha silently
+  gives wrong or NaN levels and base_forecast. None raises TypeError."},
+  {"location":"src/forecasting/forecast.py:76-80","trigger_condition":"An
+  unknown method with fewer than 3 valid weeks is already rejected, but an
+  invalid window or alpha is not rejected on the same
+  path","guard_snippet":"validate all of settings before the reason check, not
+  only the method","potential_consequence":"Bad window or factor is hidden
+  whenever a product has no forecast, then fails later on another product."},
+  {"location":"src/forecasting/forecast.py:67,85,91","trigger_condition":"Week.u
+  nits_sold negative for a non-stockout week (no lower bound or type
+  guard)","guard_snippet":"if week.units_sold < 0: raise
+  ValueError(...)","potential_consequence":"Negative sales flow into the average
+  or levels, so base_forecast can be negative and no guard flags it."},
+  {"location":"src/forecasting/forecast.py:58-59","trigger_condition":"settings
+  is None, or weeks is None or a non-iterable","guard_snippet":"if settings is
+  None: raise ValueError(\"settings required\")","potential_consequence":"Raises
+  a bare AttributeError or TypeError that does not name the missing input."},
+  {"location":"tests/test_forecast.py:241-255","trigger_condition":"A case or
+  product row is dropped from the workbook; the counts are derived from the same
+  reader","guard_snippet":"assert len(CASES) == EXPECTED_CASE_COUNT and
+  len(PRODUCTS) == EXPECTED_PRODUCT_COUNT","potential_consequence":"Both length
+  asserts compare reader output with itself and never fail. Only LISTED_EXAMPLES
+  guards drops, and only for 15 names."},
+  {"location":"tests/test_forecast.py:253-255","trigger_condition":"The PRODUCTS
+  count assert is a tautology (same expression as
+  PRODUCTS)","guard_snippet":"assert len(PRODUCTS) ==
+  11","potential_consequence":"A rule test product dropped from the spreadsheet
+  goes unnoticed and its forecast is never checked."},
+  {"location":"tests/test_forecast.py:278-289","trigger_condition":"Moving-avera
+  ge window tests use only increasing history without stockouts or unusual
+  weeks","guard_snippet":"add a window case over a history where the last N
+  positions differ from the last N calculation weeks","potential_consequence":"A
+  mutation taking the last N valid weeks instead of the last N calculation
+  weeks is only caught via spreadsheet rows E8/E19 excluded."},
+  {"location":"tests/test_forecast.py:241-243","trigger_condition":"Claim kind.
+  Test docstring: the count follows the spreadsheet, so a dropped case cannot go
+  unnoticed","guard_snippet":"The count is computed from the same reader and
+  filter, so it is always equal to len(CASES)","potential_consequence":"Someone
+  believing the docstring thinks removal of a spreadsheet case is detected by
+  the count; it is not.","kind":"claim","confidence":"medium"},
+  {"location":"src/forecasting/forecast.py:72-74","trigger_condition":"Claim
+  kind. Spec: the mutation 'level-shift weeks dropped' makes at least one test
+  fail","guard_snippet":"Level-shift weeks stay in classification.valid and
+  never in classification.unusual, so a calculation-week filter cannot drop
+  them; only the E16 test with a changed predicate would catch
+  it","potential_consequence":"The mutation list is only partly checkable;
+  level-shift handling is covered by E16
+  alone.","kind":"claim","confidence":"low"}
+  ]
+
+⏺ Edge Case Hunter har levert 11 funn. Jeg venter på Acceptance Auditor, som er
+  den siste.
+
+✻ Cogitated for 1s · done 1:06 PM
+
+⏺ Agent "Edge Case Hunter review" finished · 1m 9s
+
+› Message from general-purpose
+  Acceptance audit of `story-2-2.diff` against the Story 2.2 spec and
+  `epic-2-context.md`. I found no violations of the acceptance criteria and no
+  contradictions between the spec constraints and the code. Two minor deviations
+  are listed at the end. I did not run pytest or write anything to the
+  repository.
+
+  **What I checked**
+  - **Code vs constraints:**
+    - Calculation weeks (R-2) match: `classification.valid` filtered by
+  `unusual_weeks_included`, so level-shift weeks always stay, and excluded
+  unusual weeks still count as valid weeks for R-6.
+    - R-3 (moving average over the last N calculation weeks) and R-4 (first
+  sales value as the start level, one level per calculation week, forecast is
+  the last level) match.
+    - R-6 checks fewer than 3 valid weeks first, then too few calculation weeks.
+  `required_calculation_weeks` is the window for the moving average and 1 for
+  exponential smoothing.
+    - With no forecast, `base_forecast` is `None` and `levels` is empty. Reasons
+  are codes, not sentences.
+    - `ProductResult` is frozen and holds the settings, the four position
+  tuples, the forecast as a float or `None`, the reason and the required weeks.
+  There is no rounding, formatting, clock, file or environment access.
+    - `ForecastSettings` is a frozen dataclass in `settings.py` built from the
+  existing constants. `Decimal` is converted with `float()`. `stock_on_hand` is
+  accepted and unused. No model, view, template, migration or dependency is
+  touched, and `weeks.py` and the spreadsheet are unchanged.
+  - **Tests vs spreadsheet:**
+    - Using `reader.cases()`/`reader.products()`, I listed every case and
+  product that states a value.
+    - The 24 non-E14 cases (E1 to E28 and FR-21 a/b) and the 11 products are all
+  in the parametrised tests. That includes the E2 and E17 levels and E11 b's 10
+  calculation weeks.
+    - Every matrix row has a spreadsheet-driven test or a direct test, including
+  E11 a and b, E7, E8/E9/E15/E16/E18/E19, E23, E28 and the unused stock on
+  hand.
+    - The LISTED_EXAMPLES guard matches the spec's list. E14 is excluded, as the
+  spec requires.
+  - **Lint:** `ruff check` and `ruff format --check` pass on the changed files.
+  The lines over 88 characters are docstrings and comments, which neither tool
+  flags.
+
+  **Minor findings**
+  - **Some tests do not name both an E-n and an FR-n.**
+    - Constraint: "Each test names its E-n and FR-n (AD-17, DR-5)".
+    - Evidence: the spec says every test, but the sentence sits in the clause
+  about spreadsheet-reading tests, and those do name both. Several direct tests
+  cite only an FR (`test_the_moving_average_takes_the_last_n_calculation_weeks`,
+  `test_three_valid_weeks_are_enough_for_the_moving_average`) or only an AD, R
+  or DR reference. The AD-only and DR-only ones are
+  `test_the_stock_on_hand_does_not_change_the_base_forecast`,
+  `test_the_weeks_are_read_once_and_never_changed`,
+  `test_the_result_is_frozen_and_holds_the_settings_used`,
+  `test_an_unknown_method_is_refused` and
+  `test_the_listed_examples_are_all_checked`.
+  `test_the_forecast_settings_start_at_the_fr_20_defaults` cites FR-20 and AD-9
+  but no E-n. `test_the_base_forecast_keeps_full_precision` cites E1 but no
+  FR-n. This is low severity and only a strict reading of the constraint makes
+  it a deviation.
+  - **E23 is not in `LISTED_EXAMPLES`.**
+    - Constraint: the matrix row "Zero sales, trend lag: E23 and E28".
+    - Evidence: `LISTED_EXAMPLES` lists E28 but not E23. E23 is still checked,
+  because `CASES` includes every non-E14 case that states a value. The guard
+  would therefore not catch E23 being dropped from the spreadsheet. The spec's
+  own list of examples does not name E23 either, so this is cosmetic.
+
+⏺ Alle fire har levert. Verification Gap fant ingenting på 40 sekunder, mens de
+  andre fant svakheter i testene, blant annet de selvrefererende telleassertene.
+  Jeg kjører den derfor på nytt med riktig sti mens jeg sjekker
+  filintegriteten.
+
+⏺ Agent(Verification Gap re-run)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Acceptance Auditor review" finished · 3m 40s
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Filene er identiske etter granskingen (bare rekkefølgen i hash-listen skilte
+  seg). Mens Verification Gap kjører på nytt, sjekker jeg ett påstått hull før
+  jeg vurderer funnene.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Modellen har ingen validatorer ennå. Valideringen av innstillinger kommer i
+  skjemaet i story 3.1 (AD-9), og seed bruker standardverdiene. Jeg venter på
+  Verification Gap-kjøringen før jeg sorterer funnene.
+
+✻ Worked for 39s · done 1:09 PM
+
+› Message from general-purpose
+  No verification gaps found.
+
+  **What I read**
+  - The instruction file `verification-gap.md`, in full.
+  - The diff `<scratchpad>/story-2-2.diff`: 450 lines, 18375
+  bytes.
+  - The sources it touches: `src/forecasting/forecast.py` (new),
+  `src/forecasting/settings.py` (`ForecastSettings` added) and
+  `tests/test_forecast.py` (new).
+  - Supporting files: `src/forecasting/weeks.py`,
+  `reference/answer_key_reader.py`, `pyproject.toml` and
+  `tests/test_core_imports.py`.
+
+  **Evidence**
+  - I ran `uv run pytest -p no:cacheprovider tests/test_forecast.py -q`. 52
+  passed, none skipped.
+  - `pyproject.toml` has `testpaths = ["tests"]` and `pythonpath` includes
+  `reference`. `.github/workflows/ci.yml` runs plain `uv run pytest`, so these
+  tests run in the normal verification path.
+  - `ruff check` and `ruff format --check` on `src` and `tests` are clean.
+  - I grepped `src`, `tests` and `config` for `forecast_product`,
+  `ForecastSettings` and `forecasting.forecast`. The only users are
+  `forecast.py`, `settings.py` and `tests/test_forecast.py`. The one other hit,
+  in `tests/test_core_imports.py:102`, is an import-check example string.
+  `forecast_product` has no production consumer yet, which the module docstring
+  ties to Story 2.4. The regressions I checked are therefore the ones the story
+  tests observe.
+  - `tests/test_core_imports.py` builds `CORE_FILES` with `rglob("*.py")`, so
+  `forecast.py` is covered by the standard-library-only import check (AD-1).
+
+  **Regressions checked against the tests I read**
+
+  The spreadsheet tests are `test_every_case_matches_the_spreadsheet` and
+  `test_every_rule_test_product_matches_the_spreadsheet`. Each regression below
+  would fail at least one assertion.
+
+  - **`sales[-required:]` changed to `sales[:required]`:**
+  `test_the_moving_average_takes_the_last_n_calculation_weeks` (window 2 and
+  window 12) fails, and so do the spreadsheet cases E1, E18 and E19.
+  - **`len(sales) < required` changed to `<=`, or `len(valid) < 3` changed to
+  `<=`:** `test_three_valid_weeks_are_enough_for_the_moving_average` and
+  `test_an_excluded_unusual_week_still_counts_as_a_valid_week` (3 calculation
+  weeks, window 3) fail.
+  - **The two no-forecast checks swapped:**
+  `test_fewer_than_three_valid_weeks_gives_no_forecast` uses 2 valid weeks with
+  window 4 and expects `too_few_valid_weeks`, so it fails.
+  - **Unusual weeks always or never excluded, or level-shift weeks dropped:**
+  `test_the_calculation_weeks_follow_the_setting_for_unusual_weeks` asserts the
+  exact position tuples for E8 and E16. The E8, E15, E18 b and E19 cases check
+  included and excluded forecasts.
+  `test_exponential_smoothing_skips_weeks_that_are_not_calculation_weeks` pins
+  the excluded levels `(20, 20.6, 20.72, 20.804)`.
+  - **Stockout weeks counted as 0, or their units read:** the E7 and E17 cases,
+  plus `test_the_units_of_a_stockout_week_are_never_used` (0 versus 900 units,
+  both methods).
+  - **Smoothing recurrence or alpha wrong:** the E2 levels (8 values) and the
+  E17 levels are compared within `reader.TOLERANCE` and `pytest.approx`.
+  - **`float(settings.smoothing_factor)` removed:**
+  `test_the_smoothing_factor_may_be_a_decimal_as_the_model_stores_it` compares
+  Decimal and float runs for equality, and
+  `test_the_result_is_frozen_and_holds_the_settings_used` asserts that every
+  level is a `float`.
+  - **An unknown method falling through to exponential smoothing:**
+  `test_an_unknown_method_is_refused` expects `ValueError`.
+  - **`required_calculation_weeks` wrong (1 for exponential smoothing, the
+  window for the moving average):**
+  `test_exponential_smoothing_needs_one_calculation_week` and
+  `test_too_few_calculation_weeks_gives_no_forecast_and_names_the_numbers` (E11
+  b: window 12, 10 calculation weeks, 12 valid weeks).
+  - **`stock_on_hand` leaking into the result:**
+  `test_the_stock_on_hand_does_not_change_the_base_forecast` compares 0 with
+  500.
+  - **Weeks mutated, or a generator not accepted:**
+  `test_the_weeks_are_read_once_and_never_changed`.
+  - **A spreadsheet case silently dropped or filtered out of `CASES`:**
+  `test_the_listed_examples_are_all_checked` asserts `LISTED_EXAMPLES <=
+  checked`. The E14 exclusion is deliberate, because E14 has seasonal adjustment
+  on (Epic 5).
+
+  **Smaller observations**
+  - The `ForecastSettings` defaults test compares each field with the constant
+  it is built from. It would only catch a hard-coded value, but the story tests
+  exercise the defaults through the rule test products.
+  - `ProductResult.levels` is documented as empty for the moving average. No
+  test asserts that for a moving-average run that does produce a forecast;
+  `levels == ()` is only asserted for no-forecast results. No consumer reads it
+  yet, so I did not file it as a gap.
+
+⏺ Alle fire granskerne og Verification Gap-omkjøringen har nå levert. Jeg retter
+  de funnene som er reelle i testfilen, og begrunner de øvrige i triagelogg.
+  Først leser jeg de aktuelle delene av testfilen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Verification Gap re-run" finished · 51s
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Mutasjonssettet er nå på 37, og den ene overlevende er fortsatt den
+  ekvivalente mutanten. Jeg kjører hele testsuiten og leser så siste steg i
+  flyten.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg committer ikke, siden du ba om å få se resultatet først. Jeg skriver
+  dokumentene som siste oppgave, slik som i story 2.1, og ser først hvordan 2.1
+  gjorde det.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Jeg skriver nå triageloggen i spesifikasjonen. Av 23 funn er 9 rettet, 12
+  avvist og 2 feil, og ingen er utsatt eller trenger en beslutning.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg retter en unøyaktighet i QA-loggen: vindusfeilen fant jeg ved
+  gjennomlesing før første kjøring, ikke i testkjøringen. Deretter setter jeg
+  sprintstatusen til review.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Jeg skanner alle tilføyde linjer og nye filer for lokale stier, e-postadresser
+  og hemmeligheter før jeg presenterer.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Story 2.2 er ferdig bygd, mutasjonstestet og gjennomgått. Jeg har ikke
+  committet eller pushet noe, og story 2.3 er ikke startet.
+
+  Hva som er bygd
+  - Forecast-modulen: src/forecasting/forecast.py har forecast_product(weeks, 
+    stock_on_hand, settings) og et frosset ProductResult. Den velger
+    kalkulasjonsukene (R-2) og regner grunnprognosen med glidende gjennomsnitt
+    (R-3) eller eksponentiell glatting (R-4). For få data gir ingen prognose,
+    med en årsakskode (R-6).
+  - Innstillinger og tester: ForecastSettings ligger i settings.py.
+    tests/test_forecast.py leser alle forventede verdier fra regnearket: 24
+    tilfeller og de 11 regeltestproduktene. E14 er utelatt fordi den har
+    sesongjustering (Epic 5).
+  - Det jeg ikke har endret: weeks.py, regnearket, modeller, migrasjoner og
+    sider.
+
+  Verifisering
+  - Tester: 415 består og 1 hoppes over (Docker-sjekken). Ruff er rent, og
+    makemigrations --check finner ingen endring.
+  - Mutasjoner: Jeg kjørte 37 mutasjoner selv, og 36 ble fanget. Den siste er en
+    ekvivalent mutant: 3-ukerssjekken gjort på kalkulasjonsukene. Med minst 3
+    gyldige uker finnes alltid minst 3 kalkulasjonsuker, så ingen inndata kan
+    skille den fra den ekte sjekken.
+  - BMAD Code Review: Alle fire granskerne (Blind Hunter, Edge Case Hunter,
+    Verification Gap og Acceptance Auditor) var skrivebeskyttet og fant 23 funn.
+    9 er rettet, 12 avvist og 2 var feil. Ingen er utsatt, og ingen trengte din
+    beslutning. Hashene av alle filer var like før og etter granskingen.
+  - Verification Gap: Jeg skrev igjen en feil filsti i oppdraget til denne
+    granskeren, som i story 2.1. Den meldte «ingen hull» på 40 sekunder, så jeg
+    kjørte den på nytt med riktig sti.
+  - Rettede funn: De viktigste var to tellinger i testene som sammenlignet
+    leseren med sitt eget filter og aldri kunne feile. Dessuten manglet E23 og
+    FR-21-variantene i vaktlisten, og to grenser i R-6 var ikke testet.
+  - Avvist: Blant annet manglende kontroll av vindu og α mot FR-20-områdene.
+    Skjemaet i story 3.1 skal gjøre den kontrollen.
+
+  Dokumenter (jeg la alt til i arbeidstreet)
+  - Statustabellen, QA-loggen (to deler), KI-styringsloggen (tilfelle 39) og
+    arbeidsloggen er oppdatert.
+  - sprint-status.yaml står på review, og spesifikasjonen står som done.
+  - Sesjonsloggen er skrevet til
+    .logs/mounia-03/974-…-story-2-2-grunnprognosen.md, og issues.md har fått tre
+    nye åpne punkter og ett lukket.
+  - Skillen sesjonslogg committer vanligvis loggfilene selv. Det har jeg ikke
+    gjort, fordi du ba om at ingenting committes uten godkjenning.
+  - Personvernskanningen av alle tilføyde linjer og nye filer fant ingenting.
+
+  Åpne punkter som er ført inn
+  - Story 2.4: stock_on_hand tas imot, men brukes ikke ennå.
+  - Story 3.1: vindu og α må kontrolleres i skjemaet før de når kjernen. Et
+    vindu på 0 gir i dag ZeroDivisionError.
+  - Story 2.5: varslene skal bruke no_forecast_reason,
+    required_calculation_weeks og posisjonslistene.
+
+  Trenger din godkjenning: vil du ha tre commits som i story 2.1 (kode og
+  tester, spesifikasjon og dokumenter, sesjonslogg), så SSH-push og PR?
+  Commit-meldingene blir på norsk. De får attribusjonslinjen Co-Authored-By: 
+  Claude Sonnet 5.5, og PR-beskrivelsen får linjen «Generated with Claude Code».
+✻ Worked for 11m 55s · done 1:14 PM
+
+❯ Godkjenner planen med tre commits, SSH push og PR for story 2.2. Før commit.  
+  Vurder om beregningskjernen bør avvise ugyldig vindu (0) og ugyldig a         
+  kontrollert, selv om skjemaet i story 3.1 skal validere dem. Følg gjeldene    
+  srkitektur og spesifikasjon og unngå unødvendig utvidelse av omfanget.        
+  Dokumenter beslutningen og test eventuell retting. Gjennomfør sluttkontroller 
+  og personvernskanning før commit. Dokumenter alle 23 review fun og            
+  beslutninger i PR. Flett først når CI og Windows kontrollene er grønne på     
+  siste commit. Oppdater logger, sesjonseksport og flettelogg etter vanlig      
+  rutine. Ikke start stort 2.3                                                  
+
+⏺ Jeg vurderer først om kjernen skal avvise ugyldige innstillinger. Det er et
+  rimelig lite vern: Range i settings.py har allerede grensene (AD-9), så ingen
+  verdier dupliseres. Uten vernet gir vindu 0 ZeroDivisionError, og et negativt
+  vindu eller en α utenfor området gir stille feil tall. Jeg leser koden og
+  rutinen for økter før jeg endrer noe.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Kjernen skal avvise ugyldige innstillinger med ValueError før noe beregnes,
+  med grensene lest fra settings.py. Skjemaet i story 3.1 beholder sin oppgave
+  med å gi brukeren en norsk melding, og jeg implementerer og tester dette nå. 
+  · summary
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Tre mutanter overlever: to av dem krever en handling, og én er ekvivalent. Jeg
+  fjerner den døde bool-sjekken, legger til en test for at vinduet kontrolleres
+  for eksponentiell glatting, og kjører de to mutasjonene som ikke traff
+  mønsteret. · summary
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Alle mutasjonene er fanget unntatt én ekvivalent; jeg kjører full verifisering
+  og oppdaterer spesifikasjon og logg med tallene 14 rettet, 7 avvist og 2
+  feil. · summary
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Sluttkontrollene er grønne (443 tester, Ruff, makemigrations). Nå kjører jeg
+  personvernskanningen på alt som skal inn, og så de tre commitene.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Commitene ligger lokalt. Loggene sier fortsatt «ikke committet ennå», så jeg
+  fyller inn hashen og PR-nummeret og lager de to siste commitene på nytt før
+  noe er pushet.
+
+  Pushed to story/2-2-calculate-the-base-forecast-with-the-moving-average-or-exponential-smoothing, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Grenen er pushet over SSH. Jeg ser hvordan PR #24 var skrevet, så PR-en for
+  story 2.2 følger samme form.
+
+  Created PR #28, commented on PR #28, ran 1 shell command (ctrl+o to expand)
+
+⏺ Monitor(Wait for PR 28 checks to finish)
+  ⎿  Monitor started · task bm815vt74 · timeout 600s
+
+⏺ PR #28 er opprettet, og kommentaren med alle 23 funn er lagt ut. CI og
+  Windows-kontrollen kjører, og jeg venter på resultatet før jeg fletter.
+
+✻ Cooked for 5m 47s · done 1:35 PM
+
+⏺ Monitor "Wait for PR 28 checks to finish" stream ended
+
+⏺ Begge kontrollene er grønne. Jeg bekrefter at de gjelder siste commit, og
+  fletter så på samme måte som for PR #24.
+
+  Pushed to main, ran 1 shell command (ctrl+o to expand)
+
+⏺ PR #28 er flettet som 30135df (foreldre a66efb4 og ac70f3f), og innholdet i
+  main er identisk med PR-hodet. Jeg venter på CI-kjøringen på main før jeg
+  skriver fletteloggen.
+
+⏺ Monitor(Wait for CI on main after the merge)
+  ⎿  Monitor started · task b62gu678e · timeout 600s
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Monitor "Wait for CI on main after the merge" stream ended
+
+⏺ CI på main (#51) er grønn. Nå skriver jeg fletteloggen på en egen gren:
+  status, flettedetaljer og sprintstatus done.
+
+  Created PR #29, ran 1 shell command (ctrl+o to expand)
+
+⏺ Monitor(Wait for PR 29 checks)
+  ⎿  Monitor started · task b44n64n0s · timeout 600s
+
+⏺ PR #29 (fletteloggen) er opprettet, og jeg venter på at kontrollene blir
+  ferdige.
+
+✻ Worked for 2m 7s · done 1:38 PM
+
+⏺ Monitor "Wait for PR 29 checks" stream ended
+
+⏺ Kontrollen er grønn på PR #29. Windows-jobben kjører bare når kode eller
+  oppsett endres, så den utløses ikke av en ren loggendring. Jeg fletter på
+  samme måte som for PR #25 og PR #27.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Monitor(Wait for CI on main after PR 29 merge)  ⎿  Monitor started · task b14rko5sv · timeout 300s
+
+⏺ Story 2.2 og fletteloggen er flettet. CI på main etter PR #29 (#53) kjører, og
+  jeg venter på resultatet.
+
+  Det som gjenstår, er sesjonseksporten. /export må du kjøre selv, og jeg kan
+  ikke starte den. Skriv /export når du vil avslutte økta. Jeg masker den da
+  (stier og brukernavn), kontrollerer den og fører den inn i en egen PR, slik
+  som for story 2.1.
+
+✻ Worked for 34s · done 1:40 PM
+
+⏺ Monitor "Wait for CI on main after PR 29 merge" stream ended
+
+⏺ CI #53 på main er grønn, så PR #29 er ferdig flettet.
+
+  Status for story 2.2
+
+  - PR #28: flettet som 30135df. Innholdet i main var identisk med PR-hodet. CI
+    #50 og Windows #17 var grønne på siste commit ac70f3f, og CI #51 på main var
+    grønn etter flettingen.
+  - PR #29: fletteloggen er flettet som 10b1e04. CI #53 på main er grønn.
+    Windows-jobben kjører ikke på rene loggendringer.
+  - Review: alle 23 funn med beslutning ligger i en kommentar på PR #28. 14 er
+    rettet, 7 avvist og 2 var feil, og ingen er utsatt.
+  - Beregningskjernen: check_settings avviser nå en ugyldig metode, et vindu
+    utenfor 2 til 12 og en α utenfor 0,1 til 0,9 med ValueError. Kontrollen
+    kjører før noe beregnes. Grensene leses fra settings.py, så ingenting er
+    definert to ganger. Omfanget ble ikke utvidet, og det er dokumentert i
+    spesifikasjonen, QA-loggen, KI-styringsloggen (tilfelle 39) og
+    arbeidsloggen. Skjemaet i story 3.1 skal fortsatt gi brukeren en norsk
+    melding, og det er et åpent punkt i issues.md.
+  - Testing: 443 tester, Ruff og makemigrations --check er grønne. 54 av 55
+    mutasjoner ble fanget, og den siste er en ekvivalent mutant. De fire
+    granskerne ble ikke kjørt på nytt på check_settings. Den ble bygd etter
+    reviewen og dekket av 28 nye tester og 19 nye mutasjoner i stedet.
+  - Story 2.3: er ikke startet.
+
+  Gjenstår
+
+  Sesjonseksporten. Kjør /export selv. Jeg masker eksporten, kontrollerer den og
+  fører den inn i en egen PR. Den PR-en får samme CI-kontroll og flettes som de
+  to andre.
+
+  Hvis du heller vil hoppe over eksporten for denne storyen, sier rutinen at en
+  økt som formet storyens kode, tester eller dokumenter skal lagres. Det gjelder
+  denne økta.
+
+✻ Baked for 7s · done 1:40 PM

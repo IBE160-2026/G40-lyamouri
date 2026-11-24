@@ -801,7 +801,10 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
   * grenen `story/2-2-calculate-the-base-forecast-with-the-moving-average-or-exponential-smoothing` er beholdt.
 * Avslutningen er kontrollert: spesifikasjonen står som `done`, `sprint-status.yaml` har story 2.2 som `done` og epic 2 som `in-progress`, statustabellen har FR-5 og FR-6 som «bygd» og FR-8, FR-16 og FR-17 som «delvis bygd», QA-loggen og KI-styringsloggen (tilfelle 39) har commit-hashene, og åpne punkter står i `issues.md`.
 
-**Status:** Story 2.2 er flettet inn i `main` (`30135df`). Eksporten av økta og fletteloggene følger i egne pull requests. Story 2.3 er ikke startet.
+* Oppdaterte loggene med flettingen i PR #29, som bare endrer loggene og `sprint-status.yaml` (story 2.2 `done`). CI-kjøring nr. 52 passerte på PR-en. Claude flettet den på samme måte (`10b1e04`, flettet kl. 13.39, foreldre `30135df` og `e168af1`), og CI-kjøring nr. 53 på `main` passerte. Windows-jobben kjører ikke på ren loggendring.
+* Brukeren eksporterte økta med `/export` etter flettingen. Claude maskerte eksporten (stien til den midlertidige mappa i en gransker-rapport ble `<scratchpad>`), og kontrollen etter maskeringen (stier, brukernavn, e-poster, nøkler, passord og telefonnumre) fant ingenting mer. Eksporten `sessions/2-2-2026-11-24.txt` er med i PR #30, sammen med denne oppdateringen, som er den eneste pull requesten i tillegg for å unngå en kjede av loggpull requests.
+
+**Status:** Story 2.2 er flettet inn i `main` (`30135df`), og fletteloggen er flettet (`10b1e04`). Eksporten og denne loggoppdateringen kommer i PR #30. Story 2.3 er ikke startet.
 
 ## 4. Videre dokumentasjon
 
