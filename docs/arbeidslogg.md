@@ -791,8 +791,17 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Kjørte BMAD Code Review med fire uavhengige, skrivebeskyttede granskere (Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor) på arbeidstreet før noe var committet: 23 funn, 14 rettet, 7 avvist og 2 feil. Ett punkt gikk til brukeren, som ba om en vurdering av om kjernen skal avvise ugyldig vindu og α (se under) ([tilfelle 39](ki-styringslogg.md#39-den-andre-feilskrevne-stien-og-tellingene-som-ikke-kunne-feile-i-story-22-24-november-2026)). Hashene av `src`, `tests`, `reference`, `docs` og implementasjonsfilene var like før og etter reviewen, så ingen gransker endret en fil. 443 tester og Ruff passerer, og `makemigrations --check` finner ingen endring.
 * Beslutning om kjernen: brukeren ba om en vurdering av om `forecast_product` skal avvise vindu 0 og ugyldig α selv om skjemaet i story 3.1 skal kontrollere dem. Claude vurderte at den skal det: uten kontroll ga vindu 0 `ZeroDivisionError`, og et negativt vindu eller en α utenfor området ga et tall som ligner en prognose. `check_settings` leser grensene fra `settings.py` (AD-9), kontrollerer metode, vindu og α før noe beregnes, og omfanget ble ikke utvidet. 28 nye tester og 19 nye mutasjoner, og de fire granskerne ble ikke kjørt på nytt. Skjemaet i story 3.1 gir fortsatt brukeren en norsk melding.
 * Ingen manuell test, siden ingen side er endret.
+* Brukeren godkjente tre commits, SSH-push, PR og fletting når CI og Windows-kontrollene var grønne på siste commit. Commitene er `0c31ef6` (koden og testene, med alle rettingene), `fbd5805` (spesifikasjonen og dokumentene) og `ac70f3f` (sesjonsloggen). Personvernskanningen av alle tilføyde linjer og nye filer (stier, e-postadresser, nøkler, passord og telefonnumre) fant ingenting.
+* Pushet grenen over SSH og opprettet PR #28 med en kommentar med alle 23 funnene og beslutningene (`0c31ef6` er rettings-commiten). CI-kjøring nr. 50 (443 tester og Ruff) og Windows-kjøring nr. 17 passerte på `ac70f3f`.
+* Flettet PR #28 etter at begge kontrollene var grønne på siste commit. Claude flettet lokalt med `git merge --no-ff`, uten squash eller rebase, og med noreply-adressen som forfatter:
+  * merge-commiten `30135df` har den gamle `main` (`a66efb4`) og PR-hodet (`ac70f3f`) som foreldre;
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * `main` ble pushet over SSH, og GitHub viser PR #28 som flettet 24. november kl. 13.36, med `30135df` som merge-commit;
+  * CI-kjøring nr. 51 på `main` passerte;
+  * grenen `story/2-2-calculate-the-base-forecast-with-the-moving-average-or-exponential-smoothing` er beholdt.
+* Avslutningen er kontrollert: spesifikasjonen står som `done`, `sprint-status.yaml` har story 2.2 som `done` og epic 2 som `in-progress`, statustabellen har FR-5 og FR-6 som «bygd» og FR-8, FR-16 og FR-17 som «delvis bygd», QA-loggen og KI-styringsloggen (tilfelle 39) har commit-hashene, og åpne punkter står i `issues.md`.
 
-**Status:** Story 2.2 er ferdig bygd og gjennomgått, og `sprint-status.yaml` står på `review`. Brukeren godkjente tre commits (koden og testene `0c31ef6`, spesifikasjonen og dokumentene, og sesjonsloggen), SSH-push og PR. Story 2.3 er ikke startet.
+**Status:** Story 2.2 er flettet inn i `main` (`30135df`). Eksporten av økta og fletteloggene følger i egne pull requests. Story 2.3 er ikke startet.
 
 ## 4. Videre dokumentasjon
 
