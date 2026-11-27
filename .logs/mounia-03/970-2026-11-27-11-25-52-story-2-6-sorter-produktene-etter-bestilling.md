@@ -27,10 +27,10 @@ Starte BMAD-arbeidet med story 2.6 («Sort the products by what needs ordering f
 - PR #41 (fletteloggen) ble flettet 27. november kl. 11.42 med `7a662b6` (foreldre `93bd2d1` og `735de89`), etter at CI-kjøring nr. 76 var grønn på PR-en. CI-kjøring nr. 77 på `main` passerte. Lokal `main` var ren.
 - Brukeren eksporterte økta med `/export` til `.logs/mounia-03/sessions/2-6-2026-11-27.txt`. Claude maskerte den (den eneste lokale stien, `~/G40-lyamouri` i toppteksten, ble `<project-root>`; alt annet er uendret, kontrollert mot kopien med `diff`), og skanningen før og etter maskeringen (stier, e-poster, nøkler, passord, brukernavn, maskinnavn og midlertidige mapper) fant ingenting mer.
 - Dokumentasjonen ble kontrollert mot eksporten (prompter, beslutninger, KI-bruk, funn, testresultater, godkjenninger og arbeidsforløp) og rettet der den ikke stemte: CI-kjøringene har 961 tester, ikke 960 (Docker-sjekken kjører i CI), og nivået «High» står i brukerens instruks, mens eksporten bare viser modellen Sonnet 5.5. Midt i økta sa Claude at tre mutanter overlevde; riktig er at to overlevde (en for svak test og en ekvivalent mutant), to traff ikke fordi Ruff hadde brutt linjene, og en femte overlevde i andre kjøring (se QA-loggen).
-- Eksporten og denne loggoppdateringen er med i PR #42, den siste dokumentasjons-PR-en. Story 2.7 er ikke startet.
+- Eksporten og loggoppdateringen ble flettet i PR #42 (`40c4f5c`, CI-kjøring nr. 79 på `main`), og lokal `main` var ren og lik `origin/main`.
+- Brukeren godkjente en ren dokumentasjonsrettelse av testtallet i story 2.5 (CI-kjøring nr. 68 hadde 878 tester, ikke 877; de lokale tallene er riktige) med én commit, SSH-push og pull request (PR #43), og lukket punktet i `issues.md`. Story 2.7 er ikke startet.
 
 ### Åpne punkter
 - Story 2.7 og 2.8: lage «–» for manglende uker dekning (`weeks_of_cover` er `None`) og la visningen koble produktnumrene fra `build_overview` med resultatene.
 - Story 2.8: lasteren (`web/company_data.py`) gir `build_overview` resultatene og en tom `adjustments`; `adjustments` gir `ValueError` til FR-29 er bygd (Epic 8).
-- Story 2.5 sine logger og PR #37 sier at CI hadde 877 tester, men CI-kjøring nr. 68 hadde 878 (Docker-sjekken kjører i CI). Rettes i en egen oppdatering hvis brukeren vil.
 - Story 5.2: mønsterproduktene i spørsmål 4 i PRD §10 (se punktet om E30 og R-17).
