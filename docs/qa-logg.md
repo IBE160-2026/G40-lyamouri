@@ -1130,3 +1130,39 @@ Begge står i `deferred-work.md`.
 **Avvist.** 10 grupper, blant dem: plassholderen for hashen i endringsloggen (fylles ut etter commiten), konstantnavnene i Code Map og at dokumentene ikke var oppdatert før reviewen.
 
 **Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle sporede og usporede filer før og etter reviewen, og de var identiske. Mutasjonene på rettingene (45 i alt etter reviewen) ble kjørt av byggeøkta, ikke av granskerne, og alle ble fanget. Claude skrev en feil sti til diff-filen i prompten til Acceptance Auditor og rettet den med en melding før granskeren hadde rapportert.
+
+
+## 2026-11-27 – Feil i KI-generert kode og tekst fra byggingen av story 2.6 (DR-9)
+
+**Hvordan det ble funnet.** Av testene og mutasjonstestene under byggingen av story 2.6 på grenen `story/2-6-sort-the-products-by-what-needs-ordering-first` (baseline `3671eba`). Claude bygde uker dekning, «bestill snart»-statusen og `build_overview` inline, uten subagent. E13, E23, E24 og Testbedrift A (4 produkter å bestille snart, 31 enheter, 1 uten prognose) ga riktig svar ved første kjøring.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Svepet forventet lister over uker i `valid_weeks` og `calculation_weeks`, men regnearket oppgir antallet (9 av 45 tilfeller feilet) | `uv run pytest` | Svepet sammenligner antall | `94e8b61` |
+| Mutasjonen som snudde produktnummeret i likhetsbryteren overlevde, fordi testene bare hadde «A» og «B», som er like baklengs | mutasjonsskriptet | En test med numrene «10021», «10012», «10005», «2» og «10», som også viser at de sorteres som tekst | `94e8b61` |
+| Mutasjonen «uten prognose» ble skrevet slik at den ble lik koden (en ekvivalent mutant), og to mutasjoner traff ikke fordi Ruff hadde brutt linjene | mutasjonsskriptet | Mutasjonen «et produkt med prognose 0 er uten prognose» og en test av `steady(0, 0)` i gruppene; mønstrene ble rettet | `94e8b61` |
+| Mutasjonen der «bestill snart» leses fra det uavrundede resultatet overlevde: testen brukte 10 × 1,1, som er nøyaktig 11 | mutasjonsskriptet | `steady(50, 55)`: 50 × 1,1 er 55,00000000000001, men mengden er 0 etter R-9, så produktet er ikke «bestill snart» | `94e8b61` |
+
+**Mutasjoner.** Koden ble brutt på 23 steder og satt tilbake, og filene ble sammenlignet med hash før og etter: sorteringen på vist verdi, likhetsbryteren fjernet og snudd, høyeste dekning først, gruppe 2 og 3 byttet, «bestill snart» ved `>= 0` og fra det uavrundede resultatet, dekning ved prognose 0 (`True` og `>= 0`), dekning snudd og med marginen, feil mengde som «uten prognose», forrige og neste forskjøvet eller rundt, hvert av de fire tallene feil, gjennomgangsrekkefølgen med alle produkter og snudd, justeringer ignorert og de andre produktene usortert. Alle ble fanget etter rettingene. Skriptet kjørte med bytekode av og tømt `__pycache__` før hver mutasjon.
+
+## 2026-11-27 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 2.6 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige, skrivebeskyttede KI-granskere gikk gjennom arbeidstreet til story 2.6 mot `3671eba`, før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Spesifikasjonen gikk bare til Edge Case Hunter og Acceptance Auditor. De ga 19 funn (Verification Gap fant ingen hull), i 13 grupper.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Testen av Testbedrift A skrev 4 varsler som en konstant, mens docstringen sa at ingen forventet verdi er kopiert | BH-3 og EC-6 | Docstringen sier at de tre første tallene er mockupens og at 4 er tallet i UX-DR46 | `94e8b61` |
+| Svepet sjekket ikke at E23 sier «ingen merknad om for mye lager», og navnga bare hullet | BH-4 og AA-2 | `overstock_note` sjekkes som fraværende. Scenarioenes bestillingsmengder står bare i E22 (bør-ha, FR-13) og er ikke et hull | `94e8b61` |
+| Seedtesten sjekket ikke likhetsbryteren, ukefigurene, gjennomgangsrekkefølgen og nabolinkene, og docstringen lovet mer enn den sjekket | BH-5 | Testen sjekker at gruppene er disjunkte og lik rekkefølgen, bryteren, figurene, rekkefølgen og naboene | `94e8b61` |
+| Ingen test viste at et varsel ikke avgjør gruppen, bare statusen | BH-9 | `test_a_warning_does_not_decide_the_group_the_status_does` | `94e8b61` |
+| Svepet ville gitt `TypeError` for et tilfelle som oppgir `week_forecasts` som ingen, og overvisningstesten mistet en duplisert produktnummer uten feil | EC-4 og EC-5 | `same_numbers` sammenligner ingen med ingen, og testen krever ett produktnummer per tilfelle | `94e8b61` |
+
+**Utsatt.** Ingen funn ble utsatt.
+
+**Avvist.** 7 grupper, blant dem: flyttallsstøy i likhetsbryteren (like brøker av nøyaktige tall gir samme flyttall, og en toleranse gjør sorteringen ikke-transitiv), en `TypeError` for en dekning som mangler hos et «bestill snart»-produkt (kan ikke forekomme, fordi lageret ikke kan være negativt, og feilen ville vært høylytt), validering av nøkler og `adjustments=None`, en `dict` i den frosne oversikten, to nye påkrevde felter på `ProductResult` (bare `forecast_product` bygger den), negativ prognose i uke 1 og at dokumentene ikke var oppdatert før reviewen.
+
+**Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle sporede og usporede filer før og etter reviewen, og de var identiske. Mutasjonene på rettingene (23 i alt etter reviewen) ble kjørt av byggeøkta, ikke av granskerne, og alle ble fanget. Byggearbeidsflyten har bare tre granskerlag, så Claude startet Acceptance Auditor fra laget i `bmad-code-review` slik brukeren ba om.

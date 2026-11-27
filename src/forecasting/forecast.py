@@ -68,6 +68,10 @@ class ProductResult:
     when there is no forecast (FR-8). `stock_on_hand` is the stock at the end of the latest
     data week (R-13), also without a forecast.
 
+    `weeks_of_cover` is the stock on hand ÷ the week-1 normal forecast, unrounded, and None
+    when there is no forecast or the week-1 forecast is 0 (R-12, E23). `order_soon` is True
+    when the suggested order quantity is above 0 (R-12), and False without a forecast.
+
     `history_length` is the number of weeks in the sales history, stockout weeks included.
     `warnings` are the active warnings of R-15 in its order and `notes` the notes, as codes
     (`forecasting/trust.py`); `confidence_label` is the label of R-16 and
@@ -92,6 +96,8 @@ class ProductResult:
     safety_margin_amount: float | None
     order_unrounded: float | None
     suggested_order_quantity: int | None
+    weeks_of_cover: float | None
+    order_soon: bool
     history_length: int
     warnings: tuple[str, ...]
     notes: tuple[str, ...]
@@ -222,6 +228,7 @@ def forecast_product(weeks, stock_on_hand, settings):
 
     week_forecasts = scenarios = None
     safety_margin_amount = order_unrounded = suggested_order_quantity = None
+    weeks_of_cover = None
     if base_forecast is not None:
         # R-5: without seasonal adjustment (Epic 5) every week repeats the base forecast.
         week_forecasts = (base_forecast,) * HORIZON_WEEKS
@@ -235,6 +242,9 @@ def forecast_product(weeks, stock_on_hand, settings):
         safety_margin_amount = week_1 * margin
         order_unrounded = week_1 * (1 + margin) - stock_on_hand
         suggested_order_quantity = max(0, round_up_to_units(order_unrounded))
+        # R-12: no cover to give when nothing is expected to sell (E23).
+        if week_1 > 0:
+            weeks_of_cover = stock_on_hand / week_1
 
     history_length = len(weeks)
     recent_stockout_weeks = recent_only(
@@ -271,6 +281,9 @@ def forecast_product(weeks, stock_on_hand, settings):
         safety_margin_amount=safety_margin_amount,
         order_unrounded=order_unrounded,
         suggested_order_quantity=suggested_order_quantity,
+        weeks_of_cover=weeks_of_cover,
+        order_soon=suggested_order_quantity is not None
+        and suggested_order_quantity > 0,
         history_length=history_length,
         warnings=warnings,
         # R-15: without seasonal adjustment (Epic 5) weeks 2 and 3 repeat week 1.
