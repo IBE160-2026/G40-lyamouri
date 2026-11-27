@@ -15,6 +15,8 @@ NO_BREAK_SPACE = "\u00a0"
 FORECAST_DECIMALS = 1
 UNROUNDED_ORDER_DECIMALS = 2
 WHOLE_NUMBER_DECIMALS = 0
+# A value that a product does not have, such as the weeks of cover without a forecast (E23, FR-24).
+MISSING = "\u2013"
 
 
 def format_number(value, decimals):
@@ -37,6 +39,16 @@ def two_decimals(value):
 def whole_number(value):
     """An order quantity, a stock on hand or any whole number: «70»."""
     return format_number(value, WHOLE_NUMBER_DECIMALS)
+
+
+def weeks_of_cover(value):
+    """The weeks of cover as «0,3», or «–» when the product has none (FR-24, E23)."""
+    return MISSING if value is None else one_decimal(value)
+
+
+def suggested_quantity(value):
+    """The suggested order quantity as «11», or «–» without a forecast (FR-8, FR-24)."""
+    return MISSING if value is None else whole_number(value)
 
 
 def percent(value):

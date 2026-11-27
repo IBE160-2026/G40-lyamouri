@@ -1,27 +1,9 @@
 {% extends "web/base.html" %}
-{% load prognose %}
-{# The product overview (FR-2). It lists the company's products only, until Epic 2 replaces it. The stock goes through the whole-number filter of forecasting/display.py (AD-3). #}
+{# The product overview (FR-2). It lists the company's products only, until Epic 2 replaces it. #}
 {% block title %}Produktoversikt – Prognose{% endblock %}
 {% block main %}
   <main class="page">
     <h1>Produktoversikt</h1>
-    <table class="product-table">
-      <thead>
-        <tr>
-          <th scope="col">Varenr.</th>
-          <th scope="col">Produkt</th>
-          <th scope="col" class="number">Lager</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for product in products %}
-        <tr>
-          <td>{{ product.product_number }}</td>
-          <td>{{ product.name }}</td>
-          <td class="number">{{ product.stock_on_hand|whole_number }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    {% include "web/_product_list.html" %}
   </main>
 {% endblock %}

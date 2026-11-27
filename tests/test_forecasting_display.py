@@ -86,3 +86,41 @@ def test_week_labels_use_the_iso_week_and_the_year_at_new_year(
     period, and the year on week 1 in lists and on chart axes («1/2027»)."""
     assert display.week_label(year, week, with_year) == label
     assert display.axis_week_label(year, week) == axis
+
+
+@pytest.mark.parametrize(
+    ("function", "value", "expected"),
+    [
+        (display.weeks_of_cover, 0.349, "0,3"),
+        (display.weeks_of_cover, 0.0, "0,0"),
+        (display.weeks_of_cover, 1.5, "1,5"),
+        (display.weeks_of_cover, None, "–"),
+        (display.suggested_quantity, 11, "11"),
+        (display.suggested_quantity, 0, "0"),
+        (display.suggested_quantity, None, "–"),
+    ],
+)
+def test_a_missing_value_is_the_en_dash_and_zero_is_a_number(function, value, expected):
+    """FR-8, FR-24, E23, UX-DR42: «–» (U+2013) stands for a value that a product does not
+    have, and 0 is written as 0, never as «–»."""
+    assert function(value) == expected
+    assert display.MISSING == "–"
+
+
+@pytest.mark.parametrize(
+    "function", [display.weeks_of_cover, display.suggested_quantity]
+)
+@pytest.mark.parametrize(
+    ("value", "error"),
+    [
+        ("", TypeError),
+        ("11", TypeError),
+        (False, TypeError),
+        (float("nan"), ValueError),
+    ],
+)
+def test_a_missing_value_function_refuses_what_is_not_a_number(function, value, error):
+    """AD-3: only None is missing; any other non-number fails as in the rounding, so a
+    wrong value never prints as «–»."""
+    with pytest.raises(error, match="cannot round"):
+        function(value)

@@ -228,11 +228,11 @@ def test_header_is_navy_and_wraps_instead_of_being_cut_off():
 
 def test_touch_screens_get_44_pixel_targets_and_16_pixel_fields():
     """NFR-6, UX-DR7, UX-DR14: on a touch screen, buttons, fields, selects, text
-    areas, stand-alone links and the links of the app header are at least
+    areas, stand-alone links, the links of the product list and the links of the app header are at least
     44 × 44 px, and fields use 16 px text."""
     targets = (
         'button, input:not([type="radio"], [type="checkbox"]), select, textarea, '
-        ".standalone-link, .header-nav a"
+        ".standalone-link, .product-table a, .header-nav a"
     )
 
     assert rule(targets, TOUCH) == {"min-width": "44px", "min-height": "44px"}
@@ -308,3 +308,59 @@ def test_pages_without_a_login_have_no_script(client):
     logged-out pages work as plain HTML."""
     assert "<script" not in client.get("/").content.decode()
     assert "<script" not in client.get("/finnes-ikke/").content.decode()
+
+
+def test_the_product_screen_has_two_columns_that_become_one_up_to_900_px():
+    """NFR-6, UX-DR6, UX-DR7: from 901 px the list (392 px, 340 px up to 1180 px) and the
+    product scroll on their own; up to 900 px one column with the product first on
+    screen and no scroll frame; below 1181 px the panels stack."""
+    narrow, one_column = "@media (max-width: 1180px)", "@media (max-width: 900px)"
+
+    assert rule(".shell")["grid-template-columns"] == (
+        "var(--space-list-width) minmax(0, 1fr)"
+    )
+    assert rule(".list")["overflow-y"] == rule(".detail")["overflow-y"] == "auto"
+    assert rule(".decide")["grid-template-columns"] == "repeat(2, minmax(0, 1fr))"
+    assert rule(".shell", narrow)["grid-template-columns"] == (
+        "var(--space-list-width-narrow) minmax(0, 1fr)"
+    )
+    assert rule(".decide", narrow)["grid-template-columns"] == "minmax(0, 1fr)"
+    assert rule(".shell", one_column) == {
+        "display": "flex",
+        "flex-direction": "column",
+    }
+    assert rule(".detail", one_column)["order"] == "-1"
+    assert rule(".detail", one_column)["overflow"] == "visible"
+    assert rule(".list", one_column)["overflow"] == "visible"
+    assert rule(".has-shell", one_column)["height"] == "auto"
+    tokens = design_tokens()["spacing"]
+    assert (tokens["list-width"], tokens["list-width-narrow"]) == ("392px", "340px")
+
+
+def test_the_skip_link_is_out_of_sight_until_it_has_focus():
+    """UX-DR44: the skip link «Gå til produktet» moves off screen without display:none, so
+    it stays the first focusable element, and shows when it has focus."""
+    hidden, shown = rule(".skip-link"), rule(".skip-link:focus")
+
+    assert hidden["transform"] == "translateY(-100%)"
+    assert "display" not in hidden
+    assert shown["transform"] == "none"
+
+
+def test_the_decision_and_the_trust_panel_use_the_colors_of_the_design():
+    """UX-DR20, UX-DR22, UX-DR24: the quantity is blue and 0 or «–» ink, the trust labels
+    are green, amber and red on their tints, and data problems are red-tint and demand
+    patterns amber-tint."""
+    assert rule(".big .quantity")["color"] == "var(--color-blue)"
+    assert rule(".big .quantity-ink")["color"] == "var(--color-ink)"
+    assert rule(".big .quantity")["font-size"] == "var(--font-order-number-size)"
+    for kind, color in (("hoy", "green"), ("middels", "amber"), ("lav", "red")):
+        assert rule(f".pill-{kind}") == {
+            "background": f"var(--color-{color}-tint)",
+            "color": f"var(--color-{color})",
+        }
+    assert rule(".warning-data")["background"] == "var(--color-red-tint)"
+    assert rule(".warning-pattern")["background"] == "var(--color-amber-tint)"
+    assert rule(".icon-square-outline")["stroke"] == "var(--color-red)"
+    assert rule(".icon-triangle")["fill"] == "var(--color-amber)"
+    assert rule(".icon-ring")["stroke"] == "var(--color-red)"

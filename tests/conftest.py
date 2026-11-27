@@ -6,10 +6,12 @@ product number but not in name or stock, as two real companies' could.
 """
 
 import json
+from io import StringIO
 from pathlib import Path
 from typing import NamedTuple
 
 import pytest
+from django.core.management import call_command
 
 from web.models import Company, Product, SalesWeek
 
@@ -87,3 +89,10 @@ def two_companies(db):
         (2026, 44),
     )
     return a, b
+
+
+@pytest.fixture
+def seeded(settings, tmp_path, db):
+    """The committed seed files in the database, as load_seed puts them there."""
+    settings.SECRET_KEY_FILE = tmp_path / ".secret_key"
+    call_command("load_seed", stdout=StringIO())

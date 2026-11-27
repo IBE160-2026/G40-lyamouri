@@ -243,6 +243,10 @@ def test_login_ignores_a_next_address(client, two_companies):
     )
 
 
+# A sample address for each route with a parameter (Story 2.7).
+SAMPLE_ADDRESSES = {"produkter/<str:product_number>/": "produkter/10001/"}
+
+
 def exempt_routes():
     return [
         pattern
@@ -270,11 +274,12 @@ def test_every_page_but_the_login_sends_a_visitor_to_the_login_page(
     """FR-1, AD-6, NFR-10: a request without a login, with GET or POST, gets the
     login page. A browser's POST carries no token when the session and the CSRF
     cookie are gone, so it must do so with the CSRF check on too. A route with
-    a parameter needs a sample address added to this test."""
-    assert "<" not in str(pattern.pattern), "Give this route a sample address."
+    a parameter needs a sample address added to SAMPLE_ADDRESSES."""
+    address = SAMPLE_ADDRESSES.get(str(pattern.pattern), str(pattern.pattern))
+    assert "<" not in address, "Give this route a sample address."
     client = Client(enforce_csrf_checks=enforce_csrf)
 
-    response = getattr(client, method)(f"/{pattern.pattern}")
+    response = getattr(client, method)(f"/{address}")
 
     assertRedirects(response, "/")
 

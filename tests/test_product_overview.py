@@ -27,7 +27,10 @@ def rows(response):
     """The (number, name, stock) of each row of the product table."""
     body = response.content.decode().split("<tbody>")[1]
     return [
-        tuple(re.findall(r"<td[^>]*>(.*?)</td>", row))
+        tuple(
+            re.sub(r"<[^>]+>", "", cell)
+            for cell in re.findall(r"<td[^>]*>(.*?)</td>", row)
+        )
         for row in re.findall(r"<tr>(.*?)</tr>", body, re.DOTALL)
     ]
 
