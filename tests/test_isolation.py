@@ -108,8 +108,10 @@ def test_a_shared_product_number_shows_each_companys_own_product(two_companies):
         content = client.get("/produkter/").content.decode()
 
         assert re.search(
-            rf"<td>10001</td>\s*<td><a [^>]*>{name}</a></td>\s*<td class=\"number\">{stock}</td>",
+            rf'<a class="prow" href="/produkter/10001/">\s*<span class="nm">{name}</span>'
+            rf".*?Varenr\. 10001 · Lager {stock} ·",
             content,
+            re.DOTALL,
         )
 
 
@@ -267,7 +269,9 @@ def test_the_seed_companies_see_only_their_own_products(seeded):
         content = page(client, "get", "/produkter/")
 
         assert f"siste registrerte uke: {week}" in content
-        numbers = re.findall(r"<td>(\d{5})</td>", content)
+        numbers = re.findall(
+            r'<a class="p(?:card|row)[^"]*" href="/produkter/(\d{5})/"', content
+        )
         assert len(numbers) == count
         assert all(n.startswith(mine) for n in numbers)
         assert not any(n.startswith(theirs) for n in numbers)

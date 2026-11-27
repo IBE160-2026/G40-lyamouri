@@ -209,7 +209,8 @@ def mockup_recent_weeks():
 def mockup_products():
     """Return the products of the approved mockup's overview by name: the
     product number, the stock on hand, the week-1 forecast as shown («8,0»,
-    or None where there is no forecast) and the suggested quantity as shown."""
+    or None where there is no forecast), the suggested quantity as shown and the
+    trust label («høy», «middels» or «lav»)."""
     html = MOCKUP.read_text(encoding="utf-8")
     products = {}
     for chunk in re.split(r'<span class="nm">', html)[1:]:
@@ -223,11 +224,15 @@ def mockup_products():
             continue
         forecast = re.search(r"Ukeprognose uke 1:? ([\d,]+)", text)
         quantity = re.search(r"Foreslått (\d+|–)", text)
+        label = re.search(
+            r'class="pill (hoy|mid|lav)"', chunk.split('class="trust"')[1]
+        )
         products[name] = {
             "number": number[1],
             "stock": int(stock[1]),
             "forecast": forecast[1] if forecast else None,
             "quantity": quantity[1],
+            "label": {"hoy": "høy", "mid": "middels", "lav": "lav"}[label[1]],
         }
     return products
 

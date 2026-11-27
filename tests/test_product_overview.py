@@ -24,22 +24,27 @@ from web.models import Company, Product, SalesWeek
 
 
 def rows(response):
-    """The (number, name, stock) of each row of the product table."""
-    body = response.content.decode().split("<tbody>")[1]
+    """The (number, name, stock) of each card and row of the product list, in page order."""
     return [
-        tuple(
-            re.sub(r"<[^>]+>", "", cell)
-            for cell in re.findall(r"<td[^>]*>(.*?)</td>", row)
+        (
+            re.search(r"Varenr\. (\d{5})", item)[1],
+            re.search(r'<span class="nm">(.*?)</span>', item)[1],
+            re.search(r"Lager (?:<b>)?(\d+)", item)[1],
         )
-        for row in re.findall(r"<tr>(.*?)</tr>", body, re.DOTALL)
+        for item in re.findall(
+            r'<a class="p(?:card|row)[^>]*>(.*?)</a>',
+            response.content.decode(),
+            re.DOTALL,
+        )
     ]
 
 
 def test_overview_lists_only_the_companys_products_by_product_number(
     client, two_companies
 ):
-    """FR-2: the list holds the logged-in company's products with the product
-    number, the name and the stock on hand, by product number."""
+    """FR-2, FR-24: the list holds the logged-in company's products with the product
+    number, the name and the stock on hand, in the order of R-12: the product without
+    sales weeks has no forecast and comes first, and the others follow by product number."""
     a, _ = two_companies
     Product.objects.create(
         company=a.company, product_number="09999", name="Først", stock_on_hand=1

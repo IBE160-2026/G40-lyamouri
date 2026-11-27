@@ -1,9 +1,11 @@
 {% extends "web/base.html" %}
-{# The product overview (FR-2). It lists the company's products only, until Epic 2 replaces it. #}
+{# The product overview (FR-2, FR-24): a tidy column with the grouped product list, until Story 2.11 adds «Denne uken» (the user's decision 1 of Story 2.8, 2026-11-27; see its specification). #}
 {% block title %}Produktoversikt – Prognose{% endblock %}
 {% block main %}
   <main class="page">
-    <h1>Produktoversikt</h1>
-    {% include "web/_product_list.html" %}
+    <h1 class="list-title">Produktoversikt <span>{{ product_count }}</span></h1>
+    <nav class="list-column" aria-label="Produkter">
+      {% include "web/_product_list.html" with level=2 %}
+    </nav>
   </main>
 {% endblock %}

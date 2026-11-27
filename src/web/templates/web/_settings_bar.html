@@ -1,0 +1,7 @@
+{# The settings bar of every page after login (UX-DR15): the settings in use and the scope note, without the button «Endre innstillinger», which comes in Epic 3. The texts come from explanation/settings_bar.py (AD-4). #}
+<div class="settings-bar">
+  <span class="settings-label">{{ app_header.settings_bar.label }}</span>
+  {% for value in app_header.settings_bar.values %}<b>{{ value }}</b>
+  {% endfor %}
+  <span class="settings-note">{{ app_header.settings_bar.note }}</span>
+</div>

@@ -232,7 +232,7 @@ def test_touch_screens_get_44_pixel_targets_and_16_pixel_fields():
     44 × 44 px, and fields use 16 px text."""
     targets = (
         'button, input:not([type="radio"], [type="checkbox"]), select, textarea, '
-        ".standalone-link, .product-table a, .header-nav a"
+        ".standalone-link, .pcard, .prow, .header-nav a"
     )
 
     assert rule(targets, TOUCH) == {"min-width": "44px", "min-height": "44px"}
@@ -364,3 +364,26 @@ def test_the_decision_and_the_trust_panel_use_the_colors_of_the_design():
     assert rule(".icon-square-outline")["stroke"] == "var(--color-red)"
     assert rule(".icon-triangle")["fill"] == "var(--color-amber)"
     assert rule(".icon-ring")["stroke"] == "var(--color-red)"
+
+
+def test_the_product_list_and_the_settings_bar_have_the_styles_of_the_design():
+    """UX-DR7, UX-DR15 to UX-DR18, UX-DR44: a card without a forecast has the dashed red
+    border and the red reason, the selected one the blue-tint fill and the solid blue border,
+    which win over the dashed one, a quantity is blue and «–» or 0 is ink in a card, and the
+    settings bar wraps with the note pushed to the right. The old table has no rules."""
+    assert rule(".pcard.nofc")["border"] == "2px dashed var(--color-red)"
+    assert rule('.pcard.nofc[aria-current="page"]')["border"] == (
+        "2px solid var(--color-blue)"
+    )
+    selected = rule('.pcard[aria-current="page"]')
+    assert selected["background"] == "var(--color-blue-tint)"
+    assert selected["border"] == "2px solid var(--color-blue)"
+    assert rule(".pcard .reason")["color"] == "var(--color-red)"
+    assert rule(".pcard .qty b")["color"] == "var(--color-blue)"
+    assert rule(".pcard .qty .qty-ink")["color"] == "var(--color-ink)"
+    assert rule('.prow[aria-current="page"]')["background"] == "var(--color-blue-tint)"
+    assert rule(".settings-bar")["flex-wrap"] == "wrap"
+    assert rule(".settings-bar")["background"] == "var(--color-surface)"
+    assert rule(".settings-note")["margin-left"] == "auto"
+    assert ".product-table" not in STYLESHEET.read_text(encoding="utf-8")
+    assert "overflow" not in rule(".list-column")

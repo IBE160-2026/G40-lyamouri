@@ -9,12 +9,14 @@ import json
 from datetime import timedelta
 from pathlib import Path
 
+import answer_key
 import generate_seed
 import pytest
 
 from explanation import trust as words
 from forecasting import forecast as core
 from forecasting import trust
+from forecasting.overview import build_overview
 from forecasting.settings import ForecastSettings
 from forecasting.weeks import Week
 
@@ -22,10 +24,10 @@ SEED_DIR = Path(__file__).resolve().parents[1] / "data" / "seed"
 FILES = ("testbedrift-a.json", "testbedrift-b.json")
 
 
-def results():
-    """(product, result, latest ISO year and week) for every product of both companies."""
+def results(files=FILES):
+    """(product, result, latest ISO year and week) for every product of the companies."""
     found = []
-    for name in FILES:
+    for name in files:
         company = json.loads((SEED_DIR / name).read_text(encoding="utf-8"))
         for product in company["products"]:
             out = set(product["stockout_positions"])
@@ -107,3 +109,43 @@ def test_every_product_has_its_texts_and_they_match_its_result(found):
     assert warning_codes == [w for w in result.warnings if w != trust.LEVEL_SHIFT]
     assert bool(words.note_texts(result)) == (result.base_forecast is not None)
     assert (words.list_text(result) is None) == (result.base_forecast is not None)
+
+
+def test_denne_uken_for_testbedrift_a_matches_the_mockup_and_the_ux_flow():
+    """UX-DR46, FR-24, E13, E24: the core gives Testbedrift A the week figures of the mockup
+    and Flow 1 (4 products to order soon, 31 units, 1 without a forecast, 4 with a
+    warning), each product of the mockup its quantity and its trust label, and the other 26
+    products no warning, no stockout week and no unusual week. This replaces
+    the stand-in R-8 of `test_seed_data.py` (Story 1.6, VG-2, AA-2)."""
+    found = results(FILES[:1])
+    by_number = {product["product_number"]: result for product, result, _ in found}
+    mockup = answer_key.mockup_products()
+    shown = answer_key.mockup_overview()
+    e8 = generate_seed.COMPANIES[0]["from_workbook"]["E8"][0]
+    with_warning = {
+        mockup["Strøsand 25 kg"]["number"],
+        mockup["Skruer 4×40 mm, 200 stk."]["number"],
+        mockup["Snøskuffe aluminium"]["number"],
+        e8,
+    }
+
+    figures = build_overview(by_number, {}).figures
+
+    assert len(by_number) == shown["products"]
+    assert (figures.order_soon, figures.units_suggested, figures.without_forecast) == (
+        shown["order_soon"],
+        shown["units"],
+        shown["without_forecast"],
+    )
+    assert figures.with_warning == 4
+    assert {n for n, r in by_number.items() if r.warnings} == with_warning
+    for name, product in mockup.items():
+        result = by_number[product["number"]]
+        quantity = result.suggested_order_quantity
+        assert ("–" if quantity is None else str(quantity)) == product["quantity"], name
+        assert result.confidence_label == product["label"], name
+    for number in set(by_number) - with_warning:
+        result = by_number[number]
+        assert not result.warnings, number
+        assert len(result.valid_weeks) == result.history_length, number
+        assert not result.unusual_weeks, number

@@ -1,20 +1,36 @@
-{# The list of the company's products (Story 1.8), each name a link to its product screen (FR-2). The stock goes through the whole-number filter of forecasting/display.py (AD-3). selected is the product number of the open product screen, which gets aria-current. #}
+{# The product list (FR-24; UX-DR16 to UX-DR18): the groups of R-12 in the order of build_overview, each product a card (Bestill snart, Uten prognose) or a row (Øvrige produkter) that is one link to its product screen. Every number goes through the filters of forecasting/display.py (AD-3) and every text of a result or a count comes from explanation/ (AD-4). level is the heading level of the groups; the selected product has aria-current. #}
 {% load prognose %}
-<table class="product-table">
-  <thead>
-    <tr>
-      <th scope="col">Varenr.</th>
-      <th scope="col">Produkt</th>
-      <th scope="col" class="number">Lager</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for product in products %}
-    <tr{% if product.product_number == selected %} class="selected"{% endif %}>
-      <td>{{ product.product_number }}</td>
-      <td><a href="{% url 'product' product.product_number %}"{% if product.product_number == selected %} aria-current="page"{% endif %}>{{ product.name }}</a></td>
-      <td class="number">{{ product.stock_on_hand|whole_number }}</td>
-    </tr>
+{% if not has_products %}
+<p class="empty">{{ no_data }}</p>
+{% endif %}
+{% for group in groups %}
+<section class="group" aria-labelledby="g-{{ group.key }}">
+  <h{{ level }} class="grp" id="g-{{ group.key }}">{{ group.heading }} <span>{{ group.summary }}</span></h{{ level }}>
+  {% if group.cards %}
+  {% for item in group.items %}
+  <a class="pcard{% if item.no_forecast_text %} nofc{% endif %}" href="{% url 'product' item.product.product_number %}"{% if item.selected %} aria-current="page"{% endif %}>
+    <span class="nm">{{ item.product.name }}</span>
+    <span class="qty"><small>Foreslått</small> <b{% if not item.result.suggested_order_quantity %} class="qty-ink"{% endif %}>{{ item.result.suggested_order_quantity|suggested_quantity }}</b></span>
+    <span class="no">Varenr. {{ item.product.product_number }}</span>
+    <span class="facts">
+      <span>Lager <b>{{ item.product.stock_on_hand|whole_number }}</b></span>
+      {% if item.no_forecast_text %}<span class="reason">{{ item.no_forecast_text }}</span>{% else %}<span>Ukeprognose uke 1 <b>{{ item.result.week_forecasts.0|one_decimal }}</b></span>{% endif %}
+      <span>Uker dekning <b>{{ item.result.weeks_of_cover|weeks_of_cover }}</b></span>
+    </span>
+    <span class="trust">{% include "web/_trust_label.html" with label=item.label %}{% if item.reason %}<span class="why">{{ item.reason }}</span>{% endif %}</span>
+  </a>
+  {% endfor %}
+  {% else %}
+  <div class="rows">
+    {% for item in group.items %}
+    <a class="prow" href="{% url 'product' item.product.product_number %}"{% if item.selected %} aria-current="page"{% endif %}>
+      <span class="nm">{{ item.product.name }}</span>
+      <span class="qty"><small>Foreslått</small> <b>{{ item.result.suggested_order_quantity|suggested_quantity }}</b></span>
+      <span class="facts">Varenr. {{ item.product.product_number }} · Lager {{ item.product.stock_on_hand|whole_number }} · Ukeprognose uke 1: {{ item.result.week_forecasts.0|one_decimal }} · Uker dekning {{ item.result.weeks_of_cover|weeks_of_cover }}</span>
+      <span class="trust">{% include "web/_trust_label.html" with label=item.label %}{% if item.reason %}<span class="why">{{ item.reason }}</span>{% endif %}</span>
+    </a>
     {% endfor %}
-  </tbody>
-</table>
+  </div>
+  {% endif %}
+</section>
+{% endfor %}

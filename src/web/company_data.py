@@ -19,13 +19,14 @@ from web import queries
 
 @dataclass(frozen=True)
 class CompanyData:
-    """What a page needs of a company: its products by product number, the result and
-    the overview of each, and the latest data week as an ISO year and week, or None
-    when the company has no sales week (AD-8). `results` is keyed by product number."""
+    """What a page needs of a company: its products, the result of each by product number,
+    the overview of the results, the settings in use and the latest data week as an ISO
+    year and week, or None when the company has no sales week (AD-8)."""
 
     product_list: tuple
     results: dict
     overview: object
+    settings: ForecastSettings
     latest_week: tuple[int, int] | None
 
 
@@ -65,5 +66,6 @@ def load_company_data(company):
         product_list=products,
         results=results,
         overview=build_overview(results, {}),
+        settings=settings,
         latest_week=queries.latest_data_week(company),
     )
