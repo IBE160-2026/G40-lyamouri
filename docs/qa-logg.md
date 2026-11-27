@@ -1091,3 +1091,42 @@ Begge står i `deferred-work.md`.
 **Avvist.** 10 grupper, blant dem: at bestillingstesten i `test_rounding.py` bruker kjernens egen formel (story 2.3 overlot det til denne storyen), at prosentene gir `ValueError` og lageret `TypeError` (hver følger sin egen konvensjon, og begge navngir verdien), at `Decimal` avvises (modellen har heltallskolonner), at negative salg, et lager over 2**53 og uendelig bestilling er utenfor rekkevidde, og at `week_forecasts` ikke sammenlignes (regnearket oppgir den bare for de sesongjusterte tilfellene, som er Epic 5).
 
 **Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle filer i `src`, `tests`, `reference`, `docs`, `.logs` og implementasjonsfilene før og etter reviewen, og de var identiske. Mutasjonene på rettingene (36 i alt etter reviewen) ble kjørt av byggeøkta, ikke av granskerne, og alle ble fanget. Før reviewen oppdaget Claude selv at en av fire rapporter hadde en skrivefeil i stien til diff-filen, og rettet den med en melding til granskeren før den hadde rapportert.
+
+
+## 2026-11-27 – Feil i KI-generert kode og tekst fra byggingen av story 2.5 (DR-9)
+
+**Hvordan det ble funnet.** Av testene og mutasjonstestene under byggingen av story 2.5 på grenen `story/2-5-give-each-product-its-warnings-notes-and-confidence-label` (baseline `b27a277`). Claude bygde varslene, notatene, tillitsmerket, begrunnelsene og `week_at_position` inline, uten subagent. E11 a og b, E12 (9 og 8 uker), E28, E29 a til g og de 11 regeltestproduktene ga riktig svar ved første kjøring av kjernen.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Testen av `week_at_position` forventet uke 52 i 2025 for posisjon 1 av 3 som ender i uke 1 i 2026, men det er uke 51 | `uv run pytest` | Forventningen er uke 51, og posisjon 2 er uke 52 | `e74a814` |
+| Testen av E29 e forventet ukene 36 og 40 for de uvanlige ukene, men posisjon 4 og 8 av 12 som ender i uke 45 er uke 37 og 41 | Claude, ved å regne ukene tilbake før kjøringen | Forventningen er uke 37 og 41 | `e74a814` |
+| En test av en kort historikk forventet varselet om for lite data, men 4 gyldige uker gir en prognose | `uv run pytest` | Forventningen er bare varselet om utsolgte uker | `e74a814` |
+| Ruff ISC004 på tre strenger som ble satt sammen uten parenteser i testene og i `explanation/trust.py` | `ruff check` | Konstanter og en lokal variabel | `e74a814` |
+| Frasen «Middels: gamle data, 9 uker siden siste gyldige uke.» kan aldri forekomme alene, og entallet «Produktet har 1 gyldig uke.» manglet i meldingskatalogen | BH-1 og AA-5 | Brukeren bestemte 27. november: katalogen merker frasen som vakttilfelle og har entallet og nullfallet, og en test leser katalogen | `e74a814` |
+| Mutasjonsskriptet ga foreldet bytekode: mutasjonen som byttet to varselnavn (samme lengde) og tilbakestillingen kom i samme sekund, så Python brukte den muterte `.pyc`, og en vanlig testkjøring etterpå feilet. Mutasjonene etter den kunne ha gått mot feil kode | `uv run pytest` etter loggføringen | `PYTHONDONTWRITEBYTECODE=1` og tømt `__pycache__` før hver mutasjon; alle 45 mutasjoner ble kjørt på nytt og fanget, og suiten består | `e74a814` |
+
+**Mutasjoner.** Koden ble brutt på 42 steder og satt tilbake, og filene ble sammenlignet byte for byte med kopiene: perioden på 11 og 13 uker, gamle data ved 7, 8 og 10, grensene 12, 104 og 100 med `<` byttet med `<=` og med ±1, rekkefølgen av betingelsene i R-16 byttet to ganger og den uten prognose fjernet, perioden forskjøvet, uker siden siste gyldige uke forskjøvet, de fem varslene snudd, byttet eller fjernet, varselet om uvanlige uker som leser innstillingen, enhetene fra feil posisjon, notatet alltid eller aldri, `week_at_position` forskjøvet og med feil grense, og i tekstene flertall, «og», «tatt med», rekkefølgen av setninger og tallet 12. Én overlevde: R-16 telte kalkulasjonsuker og ikke gyldige uker. Testen `test_excluded_unusual_weeks_still_count_as_valid_weeks_for_the_label` fanger den nå.
+
+## 2026-11-27 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 2.5 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige, skrivebeskyttede KI-granskere i `bmad-code-review` gikk gjennom arbeidstreet til story 2.5 mot `b27a277`, før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Spesifikasjonen gikk bare til Edge Case Hunter og Acceptance Auditor. De ga 26 funn (Verification Gap fant ingen hull).
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| `warning_texts` og `note_texts` hoppet over en kode uten tekst, så et nytt varsel eller notat ville blitt utelatt uten feil | BH-3 og EC-4 | Bare nytt nivå hoppes over (FR-17b), alt annet gir `KeyError`, med tester | `e74a814` |
+| `_condition_phrase` falt gjennom til teksten for «høy» for en ukjent betingelse, og `_insufficient_data_text` til teksten for glidende gjennomsnitt for en ukjent årsak | BH-4, BH-6, EC-1 og EC-3 | Eksplisitte grener og `ValueError`, med tester | `e74a814` |
+| Seedtesten sa at hver betingelse i R-16 er dekket, men sjekket fem av sju | BH-7 og AA-8 | Beskrivelsen sier hvilke to regnearket dekker (E11 b og E29 g) | `e74a814` |
+| E7 ble lest som «E29 a» med 22,0 og 25 skrevet i testen, og ukene i E8 var skrevet inn | BH-8 og AA-4 | Testene leser E7 og E8 fra regnearket og sammenligner bestillingen med samme historikk uten de utsolgte ukene | `e74a814` |
+| Testen av en kort historikk viste ikke et varsel i en historikk på under 12 uker, og to hull (0 uker siden siste gyldige uke, setningen «Nytt nivå …» etter en annen betingelse) var utestet | BH-9 og BH-10 | Tre tester | `e74a814` |
+| To lange docstring-linjer og et avsnitt med feil linjebryting | BH-12 | Omskrevet | `e74a814` |
+
+**Utsatt.** Ingen funn ble utsatt.
+
+**Avvist.** 10 grupper, blant dem: plassholderen for hashen i endringsloggen (fylles ut etter commiten), konstantnavnene i Code Map og at dokumentene ikke var oppdatert før reviewen.
+
+**Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle sporede og usporede filer før og etter reviewen, og de var identiske. Mutasjonene på rettingene (45 i alt etter reviewen) ble kjørt av byggeøkta, ikke av granskerne, og alle ble fanget. Claude skrev en feil sti til diff-filen i prompten til Acceptance Auditor og rettet den med en melding før granskeren hadde rapportert.
