@@ -1,0 +1,940 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   <project-root>
+
+⚠ Your login expires in 3 days · run /login to renew
+
+❯ /clear                                                                        
+
+❯ Start BMAD-arbeidet med story 2.5. Bruk Sonnet 5.5 High og følg prosjektets   
+  krav, arkitektur og sensorveiledning. Arbeid selvstendig og effektivt, med    
+  kvalitet først. Bruk alle fire uavhengige, skrivebeskyttede granskere ved     
+  BMAD Code Review. Presenter nødvendige beslutninger før implementering. Ikke  
+  commit eller push uten godkjenning.                                           
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+  Read 2 files, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg er i gang med BMAD-steg 1 for story 2.5. Treet er rent på main. Nå leser
+  jeg epic-konteksten, story 2.5 i epics.md og forrige ferdige spec (2.4).
+
+  Read 2 files, ran 1 shell command (ctrl+o to expand)
+
+⏺ Epic-konteksten og forrige story (2.4) er gyldige, så story 2.5 blir ikke
+  delt. Neste er planlegging. · summary
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Jeg undersøker koden og kravene selv, uten underagenter (de er forbeholdt
+  kodegranskingen). Først kjernen i forecasting/ og explanation/.
+
+  Read 4 files, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Neste: reglene i PRD-en (R-15, R-16, FR-7, FR-8, FR-15 til FR-19), Message
+  Catalogue i EXPERIENCE.md og AD-4 i arkitekturen.
+
+  Ran 5 shell commands (ctrl+o to expand)
+
+⏺ Nå svarnøkkelen: hva regnearket oppgir for E11, E12 og E29, og hvordan testene
+  leser det.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Regnearket har kolonnene warnings, confidence_label og
+  weeks_since_latest_valid. Jeg sjekker hvilke tilfeller som oppgir dem, og hva
+  arkitekturen sier om hvor reglene og tekstene skal ligge.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Seed-dataene må dekke hver advarsel og hvert tillitsmerke (SM-7). Jeg sjekker
+  hva de inneholder i dag, og hvordan testene leser dem.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Seed-testene bruker stand-ins for kjernen, så kriteriet i 2.5 krever en ny
+  test over seed-filene. Deretter ser jeg på stilen i de eksisterende
+  kjernetestene. · summary
+
+  Listed 1 directory, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Reglene og kodebasen er klare. Før jeg skriver spec-en sjekker jeg raskt om
+  seed-dataene allerede utløser hvert varsel og hvert tillitsmerke. Det avgjør
+  om story 2.5 må røre seed-filene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Seed-dataene dekker alle fem varsler og alle tre merker, så ingen seed-endring
+  trengs. Jeg leser resten av spec-malen og skriver spec-en.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-2-5-give-each-product-its-war
+       nings-notes-and-confidence-label.md)
+  ⎿  Wrote 94 lines to _bmad-output/implementation-artifacts/spec-2-5-give-
+     each-product-its-warnings-notes-and-confidence-label.md
+      1 ---
+      2 title: 'Story 2.5: Give each product its warnings, notes and conf
+        idence label'
+      3 type: 'feature'
+      4 created: '2026-11-27'
+      5 status: 'draft'
+      6 route: 'dispatch'
+      7 review_loop_iteration: 0
+      8 context: ['{project-root}/_bmad-output/implementation-artifacts/e
+        pic-2-context.md']
+     … +86 lines (ctrl+o to expand)
+
+⏺ Spec-utkastet for story 2.5 er skrevet, men jeg har ikke implementert noe
+  ennå. Det er to beslutninger jeg trenger svar på først.
+
+  Spec-fila er _bmad-output/implementation-artifacts/spec-2-5-give-each-product-
+  its-warnings-notes-and-confidence-label.md, med status draft.
+
+  Hva story 2.5 blir
+
+  - Regler: en ny ren modul forecasting/trust.py finner de aktive varslene
+    (R-15), notatene og tillitsmerket med avgjørende betingelse (R-16).
+    forecast_product legger dem på ProductResult som koder og tall. Flagget
+    weeks_repeat_week_1 blir erstattet av notes.
+  - Tekster: en ny modul explanation/trust.py skriver varseltekstene,
+    listetekstene, FR-7-notatet og begrunnelsen. Ordlyden følger
+    meldingskatalogen ordrett.
+  - Ukenummer: horizon.py får én ren funksjon som gjør en posisjon om til
+    ISO-uke. Den er den eneste kalenderregningen i kjernen.
+  - Tester: de leser E11, E12, E28 og E29 a–g og regeltestproduktene fra
+    regnearket. SM-7 og SM-10 kjøres over seed-produktene.
+  - Seed: seed-dataene dekker allerede alle fem varsler og alle tre merker (høy,
+    middels og lav), så seed-filene røres ikke. Produkt 10040 (Snøskuffe
+    aluminium, 2 gyldige uker) dekker SM-10.
+  - Ikke med: skjermer, lasting, sortering, FR-17b, sesongvarsel og de andre
+    notatene.
+
+  Beslutninger jeg trenger fra deg
+
+  1. Frase for gamle data i begrunnelsen. Katalogen har ingen frase for det,
+     bare for nytt nivå.
+     - A (anbefalt): «Middels: gamle data, 9 uker siden siste gyldige uke.»
+       Etter et annet varsel blir det setningen «Gamle data, 9 uker siden siste
+       gyldige uke.»
+     - B: bare «gamle data», uten tall. Tallet står da bare i selve varselet.
+  2. Meldingskatalogen som kilde.
+     - A (anbefalt): legge fraseformen inn i begrunnelsesraden i EXPERIENCE.md
+       med en rad i endringsloggen, så katalogen og koden stemmer. Det krever
+       din godkjenning, og epic-konteksten må kompileres på nytt.
+     - B: la frasen bare stå i explanation/ og i QA-loggen.
+
+  Valg jeg har tatt selv, som du kan endre
+
+  - Reglene kjører inne i forecast_product, siden AD-2 har én beregningsvei og
+    ingenting lagres.
+  - Resultatet bærer de siste 12 ukenes posisjoner og salget i de uvanlige
+    ukene, så ingen tekst trenger salgshistorikken.
+  - Lister med tre uker eller flere skrives «38, 39 og 40».
+  - Uten prognose avgjør «ingen prognose»-årsaken (for få uker eller vinduet)
+    begrunnelsen. Den slår «færre enn 12 gyldige uker».
+  - Ved nyttår vises ukelista som «52 og 1/2027».
+
+  Gjenstår og praktisk
+
+  - Jeg lager en egen branch story/2-5-… fra main når du har godkjent spec-en.
+    Ingenting committes eller pushes uten din godkjenning.
+  - Bygget kjører jeg selv. De fire skrivebeskyttede granskerne brukes bare ved
+    BMAD Code Review.
+
+  Svar på 1 og 2, så oppdaterer jeg spec-en. Deretter kan du velge: godkjenn og 
+  fortsett, godkjenn og stopp, eller gjennomgå spec-en.
+
+✻ Brewed for 3m 20s · done 10:06 AM
+
+※ recap: Målet er å bygge story 2.5, advarsler, notater og tillitsmerke per produkt, i BMAD-flyten. Spec-utkastet ligger klart. Neste steg er at du svarer på de to spørsmålene om frasen for gamle data og meldingskatalogen, før jeg implementerer.
+
+❯ Jeg velger A på begge spørsmålene. Oppdater EXPERIENCE.md og endringsloggen,  
+  og kompiler Epic 2-konteksten på nytt. Oppdater spesifikasjonen i samsvar med 
+  beslutningene. Deretter godkjenner jeg at du fortsetter med implementeringen  
+  av story 2.5. Følg de avtalte test- og BMAD-rutinene. Ingen commit eller      
+  push uten godkjenning.                                                        
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/epic-2-context.md)
+  ⎿  Added 1 line, removed 1 line
+      26  - **Weeks used:** stockout weeks are never used in any calculat
+          ion and never count as valid weeks. Unusual weeks are found by 
+          one forward pass over the valid weeks (baseline: median of the 
+          3 most recent earlier valid weeks that are not unusual; unusual
+           only above 2 × a non-zero baseline). Three unusual valid weeks
+           in a row become level-shift weeks, which always stay in the ca
+          lculation. The setting only decides whether unusual weeks are i
+          ncluded.
+      27  - **Forecast:** moving average (window 2 to 12) or exponential 
+          smoothing (factor 0.1 to 0.9) over the calculation weeks; a pro
+          duct with too little data gets no forecast, no order quantity a
+          nd a warning. Weeks 2 and 3 repeat week 1 without seasonal adju
+          stment, and only week 1 feeds the order quantity.
+      28  - **Order quantity:** the larger of 0 and (week-1 forecast × (1
+           + safety margin) − stock on hand), rounded to 6 decimals and t
+          hen up to a whole unit once, at the end.
+      29 -- **Trust:** each product gets its active warnings, notes and o
+         -ne confidence label by fixed rules; stockout weeks, unusual wee
+         -ks and level shifts count only in the recent period (the last 1
+         -2 weeks).                                                      
+      29 +- **Trust:** each product gets its active warnings, notes and o
+         +ne confidence label by fixed rules; stockout weeks, unusual wee
+         +ks and level shifts count only in the recent period (the last 1
+         +2 weeks). The label's reason names the deciding condition (firs
+         +t in rule order), then the other active warnings; its phrases, 
+         +including «gamle data, N uker siden siste gyldige uke», are fix
+         +ed in the Message Catalogue.                                   
+      30  - **Answer key:** every reference example is read from `referen
+          ce/reference-examples.xlsx` with openpyxl; no expected value is
+           copied into code. Each test names its E-n and FR-n. A disagree
+          ment is recalculated by hand and logged in the QA log.
+      31  - **Every story:** own branch; tests, Ruff and `makemigrations 
+          --check` pass locally and in CI; the status table, QA log, AI s
+          teering log (at least one case per epic) and work log are updat
+          ed; the pull request names the story, its FRs and what was test
+          ed, and records every BMAD Code Review finding with its decisio
+          n and fix commit. Changed pages are checked at 320 px, 390 × 84
+          4 and 820 × 1180.
+      32  
+
+⏺ Epic-konteksten er oppdatert og nyere enn planleggingsdokumentene. Nå legger
+  jeg beslutningene inn i spec-en, fjerner de åpne spørsmålene og setter status
+  til ready-for-dev.
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+⏺ Spec-en er slik jeg skrev den. Du har godkjent at jeg fortsetter, så jeg går
+  til steg 3: baseline, branch og sprint-status.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Grenen er klar og baseline er satt. Jeg implementerer selv, uten underagenter.
+  Først: bruker noen testene ProductResult( direkte, og hvordan er
+  flagg-assertionene i test_week_forecasts.py?
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå horizon.py: en ren funksjon fra posisjon til ISO-uke.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå selve reglene i forecasting/trust.py.
+
+⏺ Write(src/forecasting/trust.py)
+  ⎿  Wrote 109 lines to src/forecasting/trust.py
+       1 """The active warnings, the notes and the confidence label (R-15
+         , R-16; FR-7, FR-8, FR-15 to FR-19).
+       2 
+       3 The rules work on positions in the sales history, from 1 for the
+          oldest week (AD-8), and
+       4 return codes and numbers only: the wording of every warning, not
+         e and reason is written by
+       5 `explanation/` (AD-4). The recent period is the last 12 position
+         s of the history, stockout
+       6 weeks included. Only the standard library is imported (AD-1).
+     … +103 lines (ctrl+o to expand)
+
+⏺ Nå kobler jeg reglene inn i forecast.py.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Oppdaterer de fire flagg-assertionene i test_week_forecasts.py til notes, og
+  kjører så eksisterende tester.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå ordlyden i explanation/trust.py, med meldingskatalogen som kilde.
+
+⏺ Write(src/explanation/trust.py)
+  ⎿  Wrote 208 lines to src/explanation/trust.py
+      1 """The wording of the warnings, the notes and the confidence labe
+        l (AD-4; FR-7, FR-8, FR-15 to FR-19, UX-DR40).
+      2 
+      3 Every text follows its row of the EXPERIENCE.md Message Catalogue
+         word for word. The
+      4 numbers and the week numbers come from the `ProductResult` and ar
+        e written through
+      5 `forecasting/display.py` (AD-3, AD-5); a week's ISO week comes fr
+        om the latest data week
+      6 through `forecasting/horizon.py`. A level shift has its place in 
+     … +203 lines (~7 KB) (ctrl+o to expand)
+
+⏺ Før testene sjekker jeg kolonnene i products-arket og raden for E12.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(tests/test_trust.py)
+  ⎿  Wrote 327 lines to tests/test_trust.py
+      1 """The active warnings, the notes and the confidence label (Story
+         2.5).
+      2 
+      3 FR-7, FR-8, FR-15 to FR-19, R-15, R-16. The expected warnings, la
+        bels and weeks since the
+      4 latest valid week are read from the reference spreadsheet for eve
+        ry case and rule test
+      5 product that states them, so no expected value is copied into the
+         tests (AD-17). They use
+      6 no database.
+     … +321 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Det er formateringen jeg selv kjørte som endret test-fila. Jeg retter
+  lint-feilen i explanation/trust.py.
+
+⏺ Update(src/explanation/trust.py)
+  ⎿  Added 2 lines, removed 4 lines
+      195          for phrase in (_recent_phrase(result), _old_data_phras
+           e(result))
+      196          if phrase is not None
+      197      ]
+      198 -    sentences = [                                             
+      199 -        f"{LABEL_WORDS[result.confidence_label]}: "           
+      200 -        f"{_condition_phrase(result, warning_phrases)}."      
+      201 -    ]                                                         
+      198 +    label = LABEL_WORDS[result.confidence_label]              
+      199 +    sentences = [f"{label}: {_condition_phrase(result, warning
+          +_phrases)}."]                                                 
+      200      others = (
+      201          warning_phrases[1:]
+      202          if result.confidence_condition == trust.ACTIVE_WARNING
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Kjernereglene består. Nå testene for ordlyden, med eksakte tekster fra
+  meldingskatalogen.
+
+⏺ Write(tests/test_trust_texts.py)
+  ⎿  Wrote 310 lines to tests/test_trust_texts.py
+       1 """The texts of the warnings, the notes and the confidence reaso
+         ns (Story 2.5).
+       2 
+       3 AD-4, UX-DR40, FR-7, FR-8, FR-15 to FR-19. Each expected text is
+          the row of the EXPERIENCE.md
+       4 Message Catalogue filled from the result, and each result comes 
+         from the reference
+       5 spreadsheet or from a history built here. They use no database.
+       6 """
+       7 
+     … +303 lines (ctrl+o to expand)
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå SM-7/SM-10-testen over seed-produktene, og week_at_position i
+  horisont-testene.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Testen min hadde feil forventning (posisjon 1 av 3 som ender i uke 1/2026 er
+  uke 51/2025, ikke 52), så jeg retter testen. Koden er riktig.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Hele testsuiten er grønn med 872 tester og 1 hoppet over. Jeg sjekker
+  formatering og migrasjoner, og kjører mutasjonene fra akseptkriteriet neste. 
+  · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ 41 av 42 mutasjoner ble oppdaget og filene er identiske igjen, men mutasjon 30
+  slapp gjennom fordi R-16 talte beregningsuker i stedet for gyldige uker. Jeg
+  legger til en test som dekker dette hullet. · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Skriptet mitt ble ødelagt av sed-kommandoen. Jeg kjører bare mutasjon 30 på
+  nytt, direkte.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle 42 mutasjoner er nå felt. Matrise-revisjonen: hver rad i I/O-matrisen har
+  en test som kjørte og bestod. Nå skriver jeg diffen mot baseline og går til
+  steg 4, kodegranskingen.
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Granskingen krever fire uavhengige, skrivebeskyttede lag. Byggeflyten har bare
+  tre, så jeg ser hvordan Acceptance Auditor er definert i code-review-skillen,
+  slik forrige story gjorde.
+
+  Searched for 1 pattern, listed 3 directories (ctrl+o to expand)
+
+⏺ Jeg setter spec-en til in-review, tar en hash av hele prosjektet før
+  granskingen og skriver diffen. Så starter jeg alle fire granskerne samtidig.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Fire granskere startes nå samtidig, alle skrivebeskyttet. Spec-en går bare til
+  Edge Case Hunter (som kravfil) og Acceptance Auditor.
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   ├ Verification Gap review
+   └ Acceptance Auditor review
+
+⏺ Jeg skrev feil diff-sti i prompten til Acceptance Auditor (en skråstrek i
+  stedet for bindestrek). Jeg laster SendMessage og gir den riktig sti, uten å
+  vente på resultatet.
+  ⎿  Message queued for delivery to a44c9f1d39ea62c3d at its next tool 
+     round. If it finishes first, it is resumed with the message and 
+     notifies again, so wait for that notification before resending.
+
+⏺ Korrigert sti er sendt til Acceptance Auditor. Alle fire granskerne kjører nå
+  i bakgrunnen, og jeg venter på at de blir ferdige før jeg leser noen
+  resultater.
+
+✻ Baked for 7m 20s · done 10:22 AM
+
+› Message from general-purpose
+  No verification gaps found.
+
+  The diff file is 1467 lines. I read lines 1–1475 in two reads, which covers
+  the whole diff. I did not run the tests, because you asked for read-only.
+
+  - **Core rules** (`src/forecasting/trust.py`): the 12-week recent period, the
+  old-data limit (9 weeks gives the warning, 8 does not), the 12, 104 and 100
+  label thresholds and the order the conditions are checked in each have a
+  boundary test in `tests/test_trust.py`. Most of these read their expected
+  values from the reference spreadsheet.
+  - **Texts** (`src/explanation/trust.py`): `tests/test_trust_texts.py` asserts
+  the exact strings, including singular and plural, joining three or more weeks,
+  the New Year week label, both unusual-week settings, the combined
+  recent-period phrase, and the old-data sentence.
+  - **`week_at_position`**: parametrized boundary tests cover the calendar
+  start, bad types and a full 200-week sequence (`tests/test_horizon.py`).
+  - **`weeks_repeat_week_1` removal**: a search of `src`, `tests`, `reference`,
+  `data` and `docs` finds no remaining consumer. The old assertions in
+  `tests/test_week_forecasts.py` were moved to `notes`.
+  - **Import boundary:** `tests/test_core_imports.py` allows `explanation/` to
+  import `forecasting/` and walks every file in `src/`. That includes the new
+  `explanation/trust.py`.
+  - **Seed products:** `tests/test_trust_seed.py` runs every seed product and
+  asserts that all five warnings and all three labels occur. It also asserts
+  that the texts match each result.
+
+⏺ Verification Gap-granskeren er ferdig og fant ingen hull. Jeg venter på de tre
+  andre før jeg sorterer funnene.
+
+✻ Churned for 1s · done 10:23 AM
+
+⏺ Agent "Verification Gap review" finished · 50s
+
+› Message from general-purpose
+  Finding floor: the diff file is 65,565 bytes, which is about 64.0 kB. N =
+  min(floor(sqrt(64.0) + 1), 10) = min(9, 10) = 9. I found 12 issues.
+
+  - **Unreachable catalogue example.** The new EXPERIENCE.md example «Middels:
+  gamle data, 9 uker siden siste gyldige uke.» cannot occur. Old data means more
+  than 8 weeks since the last valid week, and valid means not sold out. So at
+  least 9 of the last 12 weeks are stockouts, and the stockout phrase always
+  comes first. The only test of the stand-alone phrase
+  (`test_old_data_alone_is_a_phrase_of_its_own_in_the_reason`) builds an
+  impossible result with `dataclasses.replace`. Either remove the example and
+  the `_old_data_phrase` stand-alone branch, or say in the catalogue that the
+  example is unreachable.
+
+  - **Placeholder in the change log.** The new EXPERIENCE.md row has the commit
+  column «hash følger (Story 2.5)». Every other row has a real hash. The row
+  needs a follow-up, or it will stay a dangling placeholder.
+
+  - **Silent drop of warnings and notes without text.** `warning_texts` skips
+  any warning not in its dict (`if warning in texts`). `note_texts` skips any
+  note code except `WEEKS_REPEAT_WEEK_1`. A new warning added later, for example
+  the seasonal pattern (FR-36), would produce no text and no error. Only the
+  level shift is meant to be silent. Make that an explicit allow-list, or make
+  unknown codes raise.
+
+  - **`_condition_phrase` falls through to the «Høy» text.** Any condition it
+  does not recognise returns «minst 104 uker … ingen varsler» instead of
+  failing. `ALL_CLEAR` is never checked explicitly, so a wrong or new condition
+  code would print «Høy»-style text under a «Lav» or «Middels» label.
+
+  - **`warning_phrases[0]` can raise IndexError.** If `confidence_condition ==
+  ACTIVE_WARNING` and the only active warning is `INSUFFICIENT_DATA`, or
+  `warnings` is empty, `warning_phrases` is empty. The code relies on
+  `confidence()` never producing that state. Add a guard, or a test that proves
+  the invariant.
+
+  - **Hard-coded «Glidende gjennomsnitt».** `_insufficient_data_text` names
+  «Glidende gjennomsnitt over N uker» in its fall-through branch without
+  checking `settings.method`. Its first branch tests `TOO_FEW_VALID_WEEKS` and
+  the second does not test `TOO_FEW_CALCULATION_WEEKS`. A future method, or an
+  exponential-smoothing result that reaches it, gets the wrong wording.
+
+  - **The seed test claims more than it checks.**
+  `test_every_confidence_label_including_high_is_given_to_a_test_product` says
+  every deciding R-16 condition belongs to a seed product. Its assertion leaves
+  out `TOO_FEW_CALCULATION_WEEKS` and `FEWER_THAN_100_VALID_WEEKS`. Either
+  assert them, or fix the docstring and say that no seed product covers them
+  (SM-7 gap).
+
+  - **Expected values copied into tests, against AD-17.** The module docstring
+  of `tests/test_trust.py` says no expected value is copied. Yet
+  `LISTED_EXAMPLES` is a hand-written case list.
+  `test_the_warnings_do_not_change_the_forecast_or_the_order` hard-codes 22.0
+  and 25 and names the case «E7» while loading «E29 a». The E8 test hard-codes
+  (4, 5) and (50, 52). `assert trust.OLD_DATA_WEEKS == 8` and similar threshold
+  asserts only re-state the constants.
+
+  - **Short-history test checks nothing about a short history.**
+  `test_the_recent_period_of_a_short_history_is_the_whole_history` calls
+  `forecast(history(...))` but only asserts `recent_positions` and
+  `history_length`. No test shows that a stockout or unusual week inside a
+  history of fewer than 12 weeks becomes an active warning. No test covers
+  `recent_positions(0)` or an empty history in the recent-only filters either.
+
+  - **Missing test gaps.**
+    - No test where the latest valid week is the latest data week
+  (`weeks_since_latest_valid == 0`).
+    - No test that `warning_texts` or `_week_numbers` pass on the `ValueError`
+  from `week_at_position` (non-existent latest week) or reject a wrong
+  `iso_year`/`iso_week` type.
+    - No test of the text for a week list that crosses a year in
+  `_unusual_text`, only in the stockout text.
+    - No test that combines old data, an unusual week and a level shift in the
+  reason.
+    - No test of the `_sentence` capitalisation for «Nytt nivå …» as a secondary
+  sentence.
+    - No test of how unusual weeks are worded (included versus excluded) when no
+  forecast exists.
+
+  - **Removed public field with no migration note.**
+  `ProductResult.weeks_repeat_week_1` (a bool) is replaced by `notes`, a tuple
+  of string codes. A grep of `src` and `tests` found no remaining users, so the
+  rename looks safe for now. The diff has no note or deprecation, and the
+  field-order change of the dataclass (new required fields, no defaults) breaks
+  any positional construction elsewhere.
+
+  - **Style and docs drift.** The first docstring lines of `forecast.py` and
+  `forecasting/trust.py` are now well over 100 characters. The reflowed
+  `ProductResult` docstring leaves the line «`notes` has the code of the FR-7
+  note. The order is calculated» too short and the next line too long.
+  `tests/test_trust_seed.py` runs the whole core over both seed files at import
+  time (`RESULTS = results()`). A seed or core error then breaks collection of
+  the whole module and not a single test. Its test ids use `product_number`,
+  which may repeat across the two companies. It also reaches into
+  `generate_seed.monday_of` and `parse_week`, which look like script-internal
+  helpers.
+
+⏺ Blind Hunter har levert 12 funn, og Verification Gap leverte ingen. Jeg venter
+  på Edge Case Hunter og Acceptance Auditor før jeg sorterer.
+
+✻ Brewed for 1s · done 10:23 AM
+
+⏺ Agent "Blind Hunter review" finished · 53s
+
+› Message from general-purpose
+  Acceptance audit of Story 2.5. I read the full diff (1467 lines), the spec,
+  epics.md Story 2.5 and the Message Catalogue. I did not run the tests. The
+  core behaviour matches the spec and ACs, and I found no blocking violation.
+  The R-15 warnings, R-16 label order and thresholds, the FR-16 setting
+  independence, the `notes` replacement, the Catalogue texts word for word, and
+  the `week_at_position` helper all follow the spec. The findings below are spec
+  or process gaps.
+
+  - **Documents task not done: no document edits in the diff.**
+    - Violates: Tasks, "documents above, `sprint-status.yaml` to `review` --
+  DR-7", and the Code Map "Documents" line.
+    - Evidence: the diff has no `docs/statustabell.md`, `docs/qa-logg.md`,
+  `docs/ki-styringslogg.md`, `docs/arbeidslogg.md` or
+  `.logs/mounia-03/issues.md` changes. `git status --short docs .logs` shows
+  nothing.
+    - The `sprint-status.yaml` hunk sets story 2-5 to `in-progress`, not
+  `review`.
+    - The spec's own `status: 'in-review'` and the unchecked `[ ]` tasks
+  disagree with that yaml state.
+
+  - **Change-log hash is a placeholder.**
+    - Violates: Code Map, "Fill in the commit hash of the change-log row after
+  the commit."
+    - Evidence: the new EXPERIENCE.md change-log row ends with `hash følger
+  (Story 2.5)`. This is expected before the commit but still open.
+
+  - **Constant names in `forecasting/trust.py` differ from the Code Map.**
+    - Violates: Code Map for `trust.py`, which names `HISTORY_WEEKS`,
+  `VALID_WEEKS_HIGH` and `VALID_WEEKS_MIDDELS`.
+    - Evidence: the code defines `HIGH_HISTORY_WEEKS`, `HIGH_VALID_WEEKS` and
+  `LOW_VALID_WEEKS`. It also adds `recent_only` and `weeks_since_latest_valid`,
+  which the Code Map does not list.
+    - The values are right (104, 100, 12). This only matters if later stories or
+  the checkpoint rely on the Code Map names. The Code Map is outside the frozen
+  block.
+
+  - **Expected values are hard-coded in places the spec says come from the
+  spreadsheet.**
+    - Violates: the Always rule that every stated value (`warnings`,
+  `confidence_label`, `weeks_since_latest_valid`) is read through
+  `answer_key_reader` (AD-17).
+    - Evidence in `tests/test_trust.py`:
+      - `test_the_unusual_weeks_setting_neither_adds_nor_removes_the_warning`
+  hard-codes `(4, 5)`, `(50, 52)` and `trust.LAV` for E8.
+      -
+  `test_the_label_thresholds_are_12_valid_weeks_104_weeks_and_100_valid_weeks`
+  hard-codes labels and conditions for constructed histories, while its
+  docstring cites E29 b, c, f and g.
+      - `test_the_warnings_do_not_change_the_forecast_or_the_order` calls the
+  case "E7" in its docstring but reads `E29 a`, and hard-codes `22.0` and `25`.
+    - These are boundary cases beyond the spreadsheet, so this is a minor
+  deviation, plus a mislabeled E-number in a docstring.
+
+  - **Singular wording for valid weeks is not in the Catalogue.**
+    - Violates: the Always rule that texts follow the Message Catalogue "word
+  for word".
+    - Evidence: `_insufficient_data_text` builds «Produktet har 1 gyldig uke.»
+  through `_count`, but the Catalogue only has «Produktet har [2] gyldige
+  uker.». The test `test_the_number_of_valid_weeks_has_its_singular_and_plural`
+  asserts the invented singular.
+    - Grammatically correct, but it is a decision beyond the Catalogue and
+  Design Notes. It should be listed with the other decisions to confirm at the
+  checkpoint, or added to the Catalogue.
+
+  - **AC "snapshots" are plain string assertions.**
+    - Violates: epics.md, "snapshots cover the window case and a product with
+  both an active warning and a short sales history", and the spec task "the
+  snapshots for the window case and for a warning with a short history".
+    - Evidence: `test_the_window_case_names_the_window_...` and
+  `test_an_active_warning_with_a_short_history_names_only_the_warning` assert
+  exact strings. The content is right, so the AC is met in substance. The point
+  is only whether "snapshot" implies a separate snapshot mechanism.
+
+  - **Mutation-resistance acceptance criterion is not demonstrated in the
+  diff.**
+    - Violates: spec AC 2 (mutations of 11/13 weeks, old data at 8/10, swapped
+  condition order, 104/100 off by one, unusual weeks reading the setting must
+  each fail a test).
+    - Evidence: the tests cover each mutation by reading, with boundary tests at
+  positions 92/93, E12 at 9/8, the 103/104 and 100/99 thresholds, the order
+  test and E8 included/excluded. The diff has no record that the mutations were
+  actually run (`Implementation Notes` is empty).
+
+  - **SM-7 seed coverage depends on seed data I could not verify.**
+    - Evidence: `test_every_warning_is_triggered_by_at_least_one_test_product`
+  asserts `triggered == set(trust.WARNINGS)`, including `level_shift`. The spec
+  relies on products 10040, 20015 and 10001. I did not confirm that a seed
+  product has a recent level shift.
+    - `test_every_confidence_label_...` also does not require the
+  `FEWER_THAN_100_VALID_WEEKS` or `TOO_FEW_CALCULATION_WEEKS` conditions. That
+  is not required by the spec.
+
+⏺ Tre av fire granskere har levert (Blind Hunter, Verification Gap og Acceptance
+  Auditor). Edge Case Hunter kjører fortsatt, så jeg venter på den før jeg
+  sorterer funnene.
+
+✻ Crunched for 1s · done 10:23 AM
+
+⏺ Agent "Acceptance Auditor review" finished · 1m 10s
+
+› Message from general-purpose
+  [{"location":"src/explanation/trust.py:188-206","trigger_condition":"confidenc
+  e_condition is a code not listed (new no-forecast reason or unknown); function
+  falls through","guard_snippet":"if condition == trust.ALL_CLEAR: return
+  high_text  # then: raise ValueError(f'unknown condition
+  {condition!r}')","potential_consequence":"Unknown condition prints the «Høy:
+  minst 104 uker …» text under a Lav or Middels label."},{"location":"src/explan
+  ation/trust.py:198","trigger_condition":"condition is ACTIVE_WARNING but
+  warning_phrases is empty (e.g. warnings holds only a code without a
+  phrase)","guard_snippet":"if condition == trust.ACTIVE_WARNING and
+  warning_phrases: return
+  warning_phrases[0]","potential_consequence":"IndexError raised while building
+  a product's confidence reason."},{"location":"src/explanation/trust.py:114-125
+  ","trigger_condition":"no_forecast_reason is None or another value; function
+  falls through to the window text","guard_snippet":"if
+  result.no_forecast_reason != TOO_FEW_CALCULATION_WEEKS: raise ValueError('no
+  insufficient-data text without a reason')","potential_consequence":"Wrong
+  «Glidende gjennomsnitt over N uker» text shown for any other reason or
+  method."},{"location":"src/explanation/trust.py:128-141","trigger_condition":"
+  result.warnings has a code with no text, other than level
+  shift","guard_snippet":"missing = [w for w in result.warnings if w not in
+  texts and w != trust.LEVEL_SHIFT]; assert not
+  missing","potential_consequence":"A newly added warning is silently left out
+  of the product screen's list."},{"location":"src/explanation/trust.py:144-150"
+  ,"trigger_condition":"base_forecast is None but no_forecast_reason is neither
+  known value","guard_snippet":"if result.base_forecast is None: raise
+  ValueError('no list text for reason ' +
+  repr(result.no_forecast_reason))","potential_consequence":"List shows no
+  «Ingen prognose» text for a product that has no forecast."},{"location":"src/e
+  xplanation/trust.py:160-176","trigger_condition":"history shorter than 12
+  weeks has recent warnings; phrase still says «de siste 12
+  ukene»","guard_snippet":"period = min(trust.RECENT_WEEKS,
+  result.history_length); f\"{_list(parts)} de siste {_number(period)}
+  ukene\"","potential_consequence":"Reason for a 5-week history claims twelve
+  weeks were looked at."}]
+
+⏺ Alle fire granskere har levert. Først kontrollerer jeg at de ikke har endret
+  noen filer, og ser om seed-produktene dekker de to betingelsene som Blind
+  Hunter nevner.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Edge Case Hunter review" finished · 1m 26s
+
+⏺ Hashene er uendret, så granskerne gjorde ingen endringer. Seed-testens
+  docstring lover mer enn den dekker, siden TOO_FEW_CALCULATION_WEEKS og
+  FEWER_THAN_100_VALID_WEEKS mangler; jeg sorterer funnene og retter selv. 
+  · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Det er feil i min nye test: 4 gyldige uker gir en prognose, så
+  insufficient_data skal ikke være aktivt. Jeg retter forventningen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle sjekker består: 876 tester, Ruff og makemigrations --check. Koden i
+  explanation/trust.py er endret, så jeg kjører mutasjonene på nytt mot den
+  ferdige koden.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle 45 mutasjoner felles, og filene er gjenopprettet identisk. Nå skriver jeg
+  trialogen og implementeringsnotatene i spec-en og leser steg 5.
+  Read 1 file (ctrl+o to expand)
+
+⏺ Steg 5 blir en lokal commit, men du har bedt om at ingen commit gjøres uten
+  godkjenning, så den hoppes over. Jeg dokumenterer nå oppgavene først og
+  sjekker hvordan story 2.4 ble ført. · summary
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Statustabellen er oppdatert. Nå fører jeg trialogen og implementeringsnotatene
+  i spec-en.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå QA-loggen, KI-styringsloggen (tilfelle 42) og arbeidsloggen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Dokumentene er ført, spec-en står som done, og sprint-status.yaml har story
+  2.5 som review. CLAUDE.md krever sesjonslogg før oppsummeringen, så jeg laster
+  sesjonslogg-skillen.
+
+⏺ Skill(sesjonslogg)
+  ⎿  Successfully loaded skill
+
+⏺ Skillen vil committe loggen, men du har sagt at ingenting skal committes uten
+  godkjenning, så jeg skriver loggen og issues.md uten å committe. · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Til slutt en rask personvernskanning av det jeg har skrevet, siden
+  commit-regelen din krever det senere.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Skanningen fant ingenting, men én test feiler nå. Jeg finner hvilken.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Testfeilen skyldtes en utdatert .pyc: mutasjon 24 ble skrevet over og
+  tilbakestilt innen samme sekund, så Python brukte den muterte bytekoden, og
+  resultatene etter den kan være upålitelige. Jeg tømmer cachen og kjører
+  mutasjonene på nytt uten bytekode-skriving. · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle 45 mutasjoner er felt uten foreldet bytekode, og hele suiten (876)
+  består, så jeg fører dette som en reell feil i mutasjonsmetoden i QA-loggen og
+  spec-en. · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Story 2.5 er bygd og gransket, men ingenting er committet eller pushet. Alt
+  ligger uncommittet på grenen
+  story/2-5-give-each-product-its-warnings-notes-and-confidence-label, som jeg
+  laget fra main.
+
+  Det jeg bygde
+
+  - Regler: src/forecasting/trust.py gir de aktive varslene (R-15), notatene og
+    tillitsmerket (R-16). Resultatet inneholder også betingelsen som avgjorde
+    merket. Flagget weeks_repeat_week_1 er erstattet av notes.
+  - Tekster: src/explanation/trust.py skriver varsler, listetekster,
+    FR-7-notatet og begrunnelsen. Ordlyden følger meldingskatalogen.
+  - Ukenummer: week_at_position i horizon.py gjør en posisjon om til ISO-uke.
+  - Katalog og kontekst: EXPERIENCE.md har frasen «gamle data, N uker siden
+    siste gyldige uke» og en rad i endringsloggen (valg A). Epic 2-konteksten er
+    kompilert på nytt.
+
+  Kontroll
+
+  - Tester: 876 består og 1 hoppes over (Docker). Ruff og makemigrations --check
+    er rene.
+  - Regneark og seed: testene leser E11, E12, E28, E29 a–g og de 11
+    regeltestproduktene fra regnearket. Seed-produktene utløser alle fem varsler
+    og alle tre merker (SM-7), og Snøskuffe aluminium er «lav» med for få
+    gyldige uker (SM-10). Seed-filene er uendret.
+  - Mutasjoner: alle 45 er felt.
+  - Feil i mutasjonsmetoden: skriptet ga først foreldet bytekode. Jeg kjørte
+    alle 45 på nytt med bytekode av, og feilen er ført i QA-loggen.
+
+  BMAD Code Review
+
+  - Granskere: alle fire kjørte (Blind Hunter, Edge Case Hunter, Verification
+    Gap og Acceptance Auditor). De var skrivebeskyttede, og hashene av alle
+    filer var identiske før og etter.
+  - Funn: 26 funn i 20 grupper. 8 er rettet, 12 avvist og ingen utsatt.
+  - Rettinger: de viktigste er at et varsel eller notat uten tekst nå gir feil i
+    stedet for å bli utelatt stille, og at ukjente betingelser ikke lenger
+    faller gjennom til «høy»-teksten.
+
+  Beslutninger til deg
+
+  1. Den frittstående frasen «Middels: gamle data, 9 uker siden siste gyldige
+     uke.» kan aldri forekomme. Gamle data betyr minst 9 utsolgte uker blant de
+     siste 12, så den frasen kommer alltid først. Jeg beholdt den som vakt.
+     Eksempelet i EXPERIENCE.md kan tas bort eller merkes.
+  2. «Produktet har 1 gyldig uke.» står ikke i katalogen. Skal entallet inn?
+
+  Dokumenter og logg
+
+  Spec-en står som done, og sprint-status.yaml har story 2.5 som review.
+  Statustabell, QA-logg, KI-styringslogg (tilfelle 42) og arbeidslogg er
+  oppdatert. Sesjonsloggen ligger i .logs/mounia-03/971-…, og issues.md er
+  oppdatert.
+
+  Skillen ville committe loggen. Det har jeg ikke gjort, siden du ba om å
+  godkjenne først.
+
+  Neste steg er din godkjenning til å committe (jeg foreslår tre deler som i
+  2.4), pushe over SSH og lage PR. Etter commiten fyller jeg inn hashene der det
+  står «commit følger» og «hash følger». Eksporten av økta med /export gjenstår
+  også.
+
+✻ Churned for 16m 20s · done 10:31 AM
+
+❯ Merk den uoppnåelige frasen i EXPERIENCE.md som et vakttilfelle og legg inn   
+  korrekt entallsform Produktet har 1 gyldig uke i meldingskatalogen. Oppdater  
+  relevante tester og dokumentasjon. Jeg godkjenner deretter tre commits,       
+  SSH-push og PR for stroy 2.5. Kjør sluttkontroller og personvernskanning      
+  først. Dokumenter alle BMAD- reviewfunn og beslutninger. Flett kun når CI og  
+  Windows kontrollene er grønne på siste commit. Fullfør flettelog, arbeidslogg 
+  og sesjonslogg. Husk sesjonseksport, maskering og siste                       
+  dokumentasjonsoppdatering før avslutning. Kontroller at main er ren og        
+  synkronisert. Ikke start story 2.6.                                           
+
+⏺ Jeg starter med katalogen: markerer den uoppnåelige frasen som vakttilfelle og
+  legger inn entallsformen. Først ser jeg på radene og på hvordan forrige story
+  ble levert (remote, forfatter, PR-rutine).
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Katalogen og testen er oppdatert. Nå fører jeg beslutningene gjennom spec,
+  dokumenter, issues og epic-konteksten. Først ser jeg hvilke steder som nevner
+  de to punktene og tallene.
+
+  Searched for 1 pattern, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Sluttkontrollene består: 877 tester, Ruff og makemigrations er rene. Nå
+  personvernskanningen av alle tilføyde linjer og nye filer, og en titt på
+  commit-stilen fra forrige story.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Skanningen fant ingenting (1583 tilføyde linjer, ingen stier, e-poster,
+  nøkler, passord eller telefonnumre). Commit 1: koden, testene og
+  katalogendringen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Commit 1 er e74a814. Nå fyller jeg inn hashen der det sto «hash følger» og
+  «commit følger», og commit 2 tar spec-en og dokumentene.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Før push retter jeg den utdaterte statusen i arbeidsloggen («ingenting er
+  committet») og amender commit 2, som ikke er pushet ennå.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå sesjonsloggen: oppdaterer den med commit-hashene og commit 3 med loggen og
+  issues.md.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Tre commiter er på plass. Pusher grenen over SSH.
+
+  Pushed to story/2-5-give-each-product-its-warnings-notes-and-confidence-label, ran 1 shell command (ctrl+o to expand)
+⏺ Jeg lager PR-en med samme oppbygning som for story 2.4, og legger alle funnene
+  fra BMAD Code Review i en egen kommentar.
+
+  Created PR #37, commented on PR #37 (ctrl+o to expand)
+
+⏺ CI-jobben «Tests and Ruff» er grønn, og Windows-jobben kjører. Jeg venter på
+  den.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Begge kontrollene er grønne på siste commit c50e400. Jeg henter kjørenumrene
+  og fletter lokalt med --no-ff som før, og pusher main over SSH.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Flettingen er 747244a (foreldre b27a277 og c50e400), og innholdet er identisk
+  med PR-hodet. Pusher main over SSH.
+
+  Pushed to main (ctrl+o to expand)
+
+⏺ PR #37 er flettet, og CI kjører på main. Jeg venter på resultatet før
+  fletteloggen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Det jeg kalte «run 69» er løpenummeret, ikke ID-en. Jeg slår opp via listen i
+  stedet.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ CI-kjøring nr. 69 på main (747244a) passerte. Nå fletteloggen i en egen PR,
+  som for story 2.4: arbeidslogg, sesjonslogg og sprint-status.yaml (story 2.5
+  done).
+
+  Created PR #38, ran 3 shell commands (ctrl+o to expand)
+
+⏺ CI-kjøring nr. 70 er grønn på daa3ecf. Windows-jobben kjører ikke på ren
+  loggendring (stifilteret i windows-setup.yml), som i PR #35. Jeg fletter på
+  samme måte.
+
+  Pushed to main, ran 1 shell command (ctrl+o to expand)
+
+⏺ Story 2.5 er flettet og main er verifisert grønn. Det som gjenstår er
+  sesjonseksporten, som bare du kan kjøre.
+
+  Status
+
+  - PR #37 (story 2.5) er flettet som 747244a med --no-ff. CI-kjøring nr. 68 og
+    Windows-kjøring nr. 20 var grønne på siste commit c50e400. CI-kjøring nr. 69
+    på main passerte.
+  - PR #38 (fletteloggen, med sprint-status.yaml satt til story 2.5 done) er
+    flettet som 4e602c0. CI-kjøring nr. 70 på PR-en og nr. 71 på main passerte.
+    Windows-jobben kjører ikke på ren loggendring, som i PR #35.
+  - Commiter og push: de tre commitene ble e74a814 (kode, tester, katalog),
+    0dac0f7 (spec og dokumenter) og c50e400 (sesjonslogg). Pushene gikk over
+    SSH, og personvernskanningen av alle tilføyde linjer fant ingenting.
+  - Katalogen: den uoppnåelige frasen er merket som vakttilfelle i
+    EXPERIENCE.md, og entallet «Produktet har [1] gyldig uke.» (pluss
+    nullfallet) er lagt inn. Testen test_the_catalogue_has_the_singular_and_mark
+    s_the_old_data_phrase_as_a_guard_case leser katalogen, og 877 tester består.
+  - Review: alle 26 funn fra BMAD Code Review ligger i spec-en (Review Triage 
+    Log), QA-loggen, KI-styringsloggen (tilfelle 42) og en kommentar på PR #37.
+    De to funnene du avgjorde er ført som avgjort av deg.
+
+  Det som gjenstår
+
+  1. Du: kjør /export for økta, og si hvor fila havner. Forrige gang lå den som
+     .logs/mounia-03/sessions/2-4-2026-11-27.txt, så
+     …/sessions/2-5-2026-11-27.txt passer. Jeg kan ikke kjøre /export selv.
+  2. Jeg, etterpå:
+     - maskere eksporten og kontrollere før og etter;
+     - gjøre siste dokumentasjonsoppdatering (arbeidslogg med PR #38 og
+       eksporten, issues.md, sesjonslogg);
+     - samle det i én siste PR, som for story 2.4;
+     - kontrollere at main er ren og synkronisert med origin/main.
+
+  Story 2.6 er ikke startet og blir det ikke.
+
+✻ Brewed for 10m 52s · done 10:51 AM
+
+※ recap: Story 2.5 er ferdig bygd, gransket, flettet og grønt på `main`; nå mangler bare sesjonseksporten. Neste steg er at du kjører `/export` og forteller hvor fila havner, så maskerer jeg den og fullfører siste logg-PR.
