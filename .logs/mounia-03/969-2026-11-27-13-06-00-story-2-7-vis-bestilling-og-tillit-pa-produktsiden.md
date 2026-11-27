@@ -11,9 +11,9 @@ Starte BMAD story 2.7 («Show what to order and whether to trust it on the produ
 - Mutasjonstest før og etter review, skjermmålinger i hodeløs Chrome, BMAD Code Review med fire granskere, triage, dokumentasjon.
 
 ### Resultat
-- Gren `story/2-7-show-what-to-order-and-whether-to-trust-it-on-the-product-screen` fra `0116aaf`. Etter brukerens godkjenning av personvernskanning og tre commits: koden og testene i `a6a69e6`, spesifikasjonen og dokumentene (med README om `PROGNOSE_LAN_HOST`) i `9297674`, og denne loggen med `issues.md` i en egen commit. **Ingenting er pushet** (brukerens regel gjelder til brukeren godkjenner det).
+- Gren `story/2-7-show-what-to-order-and-whether-to-trust-it-on-the-product-screen` fra `0116aaf`. Etter brukerens godkjenning av personvernskanning og tre commits: koden og testene i `a6a69e6`, spesifikasjonen og dokumentene (med README om `PROGNOSE_LAN_HOST`) i `9297674`, og denne loggen med `issues.md` i en egen commit. Brukeren godkjente deretter push og PR: grenen er pushet over SSH, PR #44 har en kommentar med alle 29 funnene (6 rettet i `a6a69e6`, 1 utsatt, 14 avvist), CI-kjøring nr. 82 (1059 tester og Ruff) og Windows-kjøring nr. 22 passerte på `ded99bb`, og PR #44 er flettet som `5844e51` (kl. 14.38, foreldre `0116aaf` og `ded99bb`). CI-kjøring nr. 83 på `main` passerte (1059 tester). Sprint-status har story 2.7 som `done`.
 - Nytt: `web/company_data.py` (laster, fire spørringer), `explanation/decision.py`, `/produkter/<varenummer>/` med `product.html`, `_product_list.html` og `_trust_label.html`, «–» i `display.py`, to funksjoner i `web/queries.py`, stilark for to/én kolonne og panelene, tre nye testfiler og utvidede eksisterende tester.
-- Tester lokalt: 1058 består og 1 hoppes over (Docker), opp fra 960. `ruff check`, `ruff format --check` og `makemigrations --check` er rene. CI vil ha én test mer (Docker-sjekken).
+- Tester lokalt: 1058 består og 1 hoppes over (Docker), opp fra 960. `ruff check`, `ruff format --check` og `makemigrations --check` er rene. CI-kjøringene har 1059 tester (Docker-sjekken kjører i CI).
 - Mutasjoner: 50 før review (fire overlevde, én traff ikke, én ekvivalent mutant) og 54 etter; alle fanget unntatt den ekvivalente.
 - BMAD Code Review (4 granskere, skrivebeskyttet, filhash identisk før og etter): 29 funn i 21 grupper, 6 rettet, 1 utsatt (innstillingsrad utenfor FR-20-områdene, `deferred-work.md`), 14 avvist.
 - Skjermmåling i hodeløs Chrome 120 (gammel modus): 8 størrelser × 6 produkter, ingen sidelengs rulling; ved 1366 × 640 er mengden, merket og radene synlige uten rulling (høyest 431 px av 640). Ikke Safari og ikke ekte telefon.
@@ -24,7 +24,8 @@ Starte BMAD story 2.7 («Show what to order and whether to trust it on the produ
 
 ### Åpne punkter
 - Safari-versjon, macOS- og iOS-versjon, Safari ved 1366 × 768 og Testbedrift B på iPhonen er ikke meldt av brukeren og står ikke som bestått i QA-loggen.
-- CI-testtallet føres etter CI-kjøringen (lokalt 1058 + 1 hoppet over; CI har ett mer). Commit-hashen til koden (`a6a69e6`) er ført i QA-loggen og KI-styringsloggen.
+- Sesjonseksporten (`/export`, kjøres av brukeren) og den siste dokumentasjons-PR-en gjenstår før story 2.7 avsluttes.
+- Story 2.8 er ikke startet.
 - Story 2.8: bruke lasteren og `build_overview` i listen og koble produktnumrene med resultatene; «–» i listen.
 - Story 2.9: kolonneetiketten «Uke 1 · uke 46» i `display.py` (flyttet fra 2.7).
 - Story 2.11: fremdriftslinjen og forrige/neste-lenkene på produktsiden.
