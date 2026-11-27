@@ -15,6 +15,7 @@ from forecasting import forecast as core
 from forecasting import settings as defaults
 from forecasting.horizon import HORIZON_WEEKS
 from forecasting.settings import ForecastSettings
+from forecasting.trust import WEEKS_REPEAT_WEEK_1
 from forecasting.weeks import Week
 
 # The examples that state a scenario, an unrounded order or a suggested order quantity
@@ -131,7 +132,7 @@ def test_without_seasonal_adjustment_weeks_1_2_and_3_equal_the_base_forecast(met
     assert len(result.week_forecasts) == len(result.scenarios) == HORIZON_WEEKS == 3
     assert set(result.week_forecasts) == {result.base_forecast}
     assert all(week.normal == result.base_forecast for week in result.scenarios)
-    assert result.weeks_repeat_week_1 is True
+    assert result.notes == (WEEKS_REPEAT_WEEK_1,)
     if method == defaults.MOVING_AVERAGE:
         assert all(close(f, e1["base_forecast"]) for f in result.week_forecasts)
 
@@ -162,7 +163,7 @@ def test_a_product_without_a_forecast_has_nothing_to_show_or_order():
     assert result.safety_margin_amount is None
     assert result.order_unrounded is None
     assert result.suggested_order_quantity is None
-    assert result.weeks_repeat_week_1 is False
+    assert result.notes == ()
     assert result.stock_on_hand == 7
 
 
@@ -175,7 +176,7 @@ def test_too_few_calculation_weeks_also_leave_nothing_to_show_or_order():
     assert result.week_forecasts is result.scenarios is None
     assert result.safety_margin_amount is result.order_unrounded is None
     assert result.suggested_order_quantity is None
-    assert result.weeks_repeat_week_1 is False
+    assert result.notes == ()
     assert result.stock_on_hand == 3
 
 
@@ -239,7 +240,7 @@ def test_a_zero_forecast_has_scenarios_of_0_and_orders_nothing():
     assert set(result.week_forecasts) == {0.0}
     assert result.scenarios[0] == core.WeekScenarios(0.0, 0.0, 0.0)
     assert result.suggested_order_quantity == 0
-    assert result.weeks_repeat_week_1 is True
+    assert result.notes == (WEEKS_REPEAT_WEEK_1,)
 
 
 @pytest.mark.parametrize("percentage", [0, 10, 50])

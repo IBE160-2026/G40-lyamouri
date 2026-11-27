@@ -1,4 +1,4 @@
-"""The weeks of the forecast horizon (Story 2.4; R-5, FR-7, AD-8).
+"""The weeks of the forecast horizon and of the history (Stories 2.4 and 2.5; R-5, FR-7, AD-8).
 
 Only these labels use calendar arithmetic. The tests read no clock and use no database.
 """
@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 from forecasting import display
-from forecasting.horizon import HORIZON_WEEKS, horizon_weeks
+from forecasting.horizon import HORIZON_WEEKS, horizon_weeks, week_at_position
 
 SOURCE = Path(__file__).resolve().parents[1] / "src" / "forecasting" / "horizon.py"
 
@@ -86,3 +86,65 @@ def test_the_horizon_reads_no_clock():
     names = {node.attr for node in ast.walk(tree) if isinstance(node, ast.Attribute)}
     names |= {node.id for node in ast.walk(tree) if isinstance(node, ast.Name)}
     assert not names & {"today", "now", "utcnow", "time", "monotonic", "localtime"}
+
+
+@pytest.mark.parametrize(
+    ("position", "length", "latest", "expected"),
+    [
+        (104, 104, (2026, 45), (2026, 45)),
+        (97, 104, (2026, 45), (2026, 38)),
+        (101, 104, (2026, 45), (2026, 42)),
+        (1, 104, (2026, 45), (2024, 46)),
+        (102, 104, (2027, 2), (2026, 53)),
+        (103, 104, (2027, 2), (2027, 1)),
+        (3, 3, (2026, 1), (2026, 1)),
+        (1, 3, (2026, 1), (2025, 51)),
+        (2, 3, (2026, 1), (2025, 52)),
+        (1, 1, (2027, 1), (2027, 1)),
+    ],
+)
+def test_a_position_has_the_iso_week_counted_back_from_the_latest_data_week(
+    position, length, latest, expected
+):
+    """AD-8, FR-15, FR-16: the last position is the latest data week, and each position
+    before it is one ISO week earlier, over 2026's week 53 and over a year with 52 weeks
+    (Strøsand 25 kg: positions 97 and 101 are weeks 38 and 42)."""
+    assert week_at_position(position, length, *latest) == expected
+
+
+def test_every_position_of_a_history_follows_the_iso_weeks_in_order():
+    """AD-8: a 200-week history ending in 2027 week 20 reads the sequence of ISO weeks."""
+    weeks = iso_weeks(2023, 2027)
+    end = weeks.index((2027, 20))
+    for position in range(1, 201):
+        assert week_at_position(position, 200, 2027, 20) == weeks[end - 200 + position]
+
+
+@pytest.mark.parametrize(("position", "length"), [(0, 5), (6, 5), (-1, 5), (1, 0)])
+def test_a_position_outside_the_history_is_a_value_error_naming_it(position, length):
+    """AD-8: position 0, one past the end or in an empty history is refused."""
+    with pytest.raises(ValueError, match=rf"position {position}"):
+        week_at_position(position, length, 2026, 45)
+
+
+@pytest.mark.parametrize(("year", "week"), [(2025, 53), (2026, 54), (0, 1)])
+def test_a_week_that_does_not_exist_is_a_value_error_for_a_position_too(year, week):
+    """AD-8: the latest data week must exist, or the labels cannot be counted back."""
+    with pytest.raises(ValueError, match=rf"year {year}, week {week}"):
+        week_at_position(1, 1, year, week)
+
+
+def test_the_start_of_the_calendar_is_a_value_error_and_not_an_overflow():
+    """AD-8: counting back from year 1 past the first week is a ValueError."""
+    with pytest.raises(ValueError, match="year 1, week 1"):
+        week_at_position(1, 5, 1, 1)
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [(True, 5, 2026, 45), (1, 5.0, 2026, 45), (1, 5, "2026", 45), (1, 5, 2026, None)],
+)
+def test_a_position_or_week_that_is_not_a_whole_number_is_a_type_error(bad):
+    """AD-8: a bool, a float, a string or nothing is not a position, a length or a week."""
+    with pytest.raises(TypeError):
+        week_at_position(*bad)
