@@ -827,6 +827,18 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 
 **Status:** Story 2.3 er flettet inn i `main` (`df04f10`), og fletteloggen er flettet (`3df7682`). Eksporten og denne loggoppdateringen kommer i PR #33. Story 2.4 er ikke startet.
 
+### 24. november 2026 – Story 2.4: ukeprognoser, scenarioer og foreslått bestillingsmengde
+
+* Startet story 2.4 med `bmad-build` etter sprintplanen, BMAD og prosjektreglene. `main` var ren (`f30fc3c`). Epic 2-konteksten var gyldig, og Claude skrev spesifikasjonen uten å spørre om noe underveis. Beslutningene (ukeetikettene som egen funksjon i stedet for en ny parameter i `forecast_product`, «–» og kolonneetiketten flyttet fra story 2.4 til story 2.7, ett flagg for notatet i FR-7, det uavrundede resultatet med fortegn, og `None` uten prognose) ble lagt fram, og brukeren godkjente spesifikasjonen og ba om at den ble holdt samlet og at flyttingen av skjermpunktene ble dokumentert.
+* Claude laget grenen `story/2-4-calculate-the-week-forecasts-the-scenarios-and-the-suggested-order-quantity` og bygde utvidelsen av `ProductResult` i `src/forecasting/forecast.py`, de to prosentinnstillingene i `settings.py` og `src/forecasting/horizon.py`. Testene leser verdiene fra regnearket: E3, E4, E5, E6, E21, E23, E24 A og B, FR-21 c og d, og E1 og E28 for horisonten, grensene og trendetterslepet. E5 gir 70 og ikke 71, og E6 gir 0 med resultatet −40.
+* Mutasjonstest: 33 mutasjoner før reviewen og 36 etter den, alle fanget, og filene ble sammenlignet byte for byte med kopiene. Mutasjonen «marginen på feil uke» er en ekvivalent mutant til Epic 5.
+* BMAD Code Review med fire uavhengige, skrivebeskyttede granskere (Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor). 36 funn: 8 grupper rettet og 10 avvist, ingen utsatt. De fant at et skript hadde slettet en vakttest i `test_rounding.py`. Hashene av filene var identiske før og etter.
+* Dokumentene er oppdatert: spesifikasjonen, statustabellen (FR-7, FR-10, FR-11 og FR-12 er delvis bygd), QA-loggen, KI-styringsloggen (tilfelle 41) og `sprint-status.yaml` (story 2.4 `review`). Flyttingen av «–» og kolonneetiketten «Uke 1 · uke 46» til story 2.7 står i `issues.md`.
+* Kontroll: 714 tester består og 1 hoppes over (Docker), `ruff check` og `ruff format --check` er rene, og `makemigrations --check` finner ingen endring. Brukeren ba om å få godkjenne før noe ble committet eller pushet.
+* Brukeren godkjente tre commiter, SSH-push og pull request. Privatlivsskanningen av alle tilføyde linjer og nye filer (lokale stier, e-postadresser, nøkler, passord og telefonnumre) fant ingenting, og den gjenopprettede vakttesten `test_the_spreadsheet_examples_for_rounding_are_all_checked` var med i den siste kjøringen (714 bestått, 1 hoppet over). Claude committet i tre deler, som i story 2.3: koden og testene i `05b0844`, spesifikasjonen og dokumentene i neste commit og sesjonsloggen i den siste. Commit-hashene er ført inn i QA-loggen og KI-styringsloggen (tilfelle 41).
+
+**Status:** Story 2.4 er committet på grenen og venter på PR, CI og Windows-kontrollen. Story 2.5 er ikke startet.
+
 ## 4. Videre dokumentasjon
 
 Nye arbeidsøkter skal føres inn med dato. Hver oppføring skal beskrive hva som faktisk ble gjort, hvilke beslutninger som ble tatt, og hva som gjenstår. Arbeid skal ikke føres som fullført før det er kontrollert.
