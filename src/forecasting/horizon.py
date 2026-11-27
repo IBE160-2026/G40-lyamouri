@@ -1,15 +1,22 @@
-"""The weeks of the forecast horizon (R-5, FR-7; AD-8).
+"""The weeks of the forecast horizon and of the sales history (R-5, FR-7; AD-8).
 
-Week 1 is the ISO week after the latest data week, and weeks 2 and 3 follow it. This is
-the only calendar arithmetic in the core: every other order and distance uses positions
-in the sales history. The function reads no clock, so the same latest data week always
-gives the same labels. Only the standard library is imported (AD-1).
+Week 1 is the ISO week after the latest data week, and weeks 2 and 3 follow it. A position
+in the sales history, where the last position is the latest data week, has its ISO week
+from the same latest data week. This is the only calendar arithmetic in the core: every
+other order and distance uses positions. The functions read no clock, so the same latest
+data week always gives the same labels. Only the standard library is imported (AD-1).
 """
 
 from datetime import date, timedelta
 
 # R-5: the number of weeks that the forecast shows.
 HORIZON_WEEKS = 3
+
+
+def _check_iso_week(iso_year, iso_week):
+    for value in (iso_year, iso_week):
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise TypeError(f"not an ISO year and week: {iso_year!r}, {iso_week!r}")
 
 
 def horizon_weeks(iso_year, iso_week):
@@ -21,9 +28,7 @@ def horizon_weeks(iso_year, iso_week):
     week that does not exist, such as week 53 of 2025, or one so late that the calendar ends
     before the horizon does, is a ValueError that names the year and week.
     """
-    for value in (iso_year, iso_week):
-        if isinstance(value, bool) or not isinstance(value, int):
-            raise TypeError(f"not an ISO year and week: {iso_year!r}, {iso_week!r}")
+    _check_iso_week(iso_year, iso_week)
     try:
         monday = date.fromisocalendar(iso_year, iso_week, 1)
         weeks = []
@@ -35,3 +40,31 @@ def horizon_weeks(iso_year, iso_week):
             f"no horizon after ISO year {iso_year!r}, week {iso_week!r}"
         ) from None
     return tuple(weeks)
+
+
+def week_at_position(position, history_length, iso_year, iso_week):
+    """The ISO year and week of a position in a sales history of `history_length` weeks.
+
+    Position 1 is the oldest week and `history_length` the latest data week, which is the
+    given ISO year and week (AD-8). A position outside the history, or a week that does not
+    exist or lies before the start of the calendar, is a ValueError that names it.
+    """
+    _check_iso_week(iso_year, iso_week)
+    for value in (position, history_length):
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise TypeError(
+                f"not a position and a history length: {position!r}, {history_length!r}"
+            )
+    if not 1 <= position <= history_length:
+        raise ValueError(
+            f"position {position!r} is not in a history of {history_length!r} weeks"
+        )
+    try:
+        monday = date.fromisocalendar(iso_year, iso_week, 1)
+        week = (monday - timedelta(weeks=history_length - position)).isocalendar()
+    except (ValueError, OverflowError):
+        raise ValueError(
+            f"no week at position {position!r} before ISO year {iso_year!r}, "
+            f"week {iso_week!r}"
+        ) from None
+    return (week.year, week.week)

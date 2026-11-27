@@ -445,4 +445,17 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.4](../_bmad-output/implementation-artifacts/spec-2-4-calculate-the-week-forecasts-the-scenarios-and-the-suggested-order-quantity.md).
 - **QA-loggen:** [feilene fra byggingen av story 2.4](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-24-dr-9) og [fra BMAD Code Review av story 2.4](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-24-dr-9).
 
+### 42. En frase som ikke kan forekomme, og en mutasjon som overlevde i story 2.5 (27. november 2026)
+
+- **Hva KI foreslo:** Claude bygde varslene, notatene, tillitsmerket og tekstene for story 2.5 inline. Claude la fram to beslutninger der meldingskatalogen manglet en frase (gamle data i begrunnelsen) og anbefalte «gamle data, 9 uker siden siste gyldige uke», også alene: «Middels: gamle data, 9 uker siden siste gyldige uke.»
+- **Hva som var feil:**
+  - Den frittstående frasen kan aldri forekomme. Gamle data betyr mer enn 8 uker siden siste gyldige uke, altså minst 9 utsolgte uker blant de siste 12, så varselet om utsolgte uker kommer alltid først. Claude så det ikke da forslaget ble lagt fram. Blind Hunter fant det, og brukeren hadde allerede godkjent frasen og endringen i `EXPERIENCE.md`.
+  - Mutasjonen der R-16 telte kalkulasjonsuker og ikke gyldige uker overlevde de første testene. De to tallene er like for alle produkter uten utelatte uvanlige uker, så ingen test viste forskjellen.
+  - Testene hadde tre egne feil: en uke i `week_at_position` regnet feil (51 og ikke 52), to uker i E29 e (37 og 41, ikke 36 og 40), og en forventning om varselet om for lite data for et produkt med prognose.
+  - Varselteksten hoppet over alle koder uten tekst, ikke bare nytt nivå, så et nytt varsel ville forsvunnet uten feil.
+- **Hva gruppen bestemte:** Brukeren valgte alternativ A på begge spørsmålene (frasen og katalogen), godkjente spesifikasjonen og ba om alle fire uavhengige, skrivebeskyttede granskere og mutasjonstester. Claude rettet åtte grupper og avviste ti. De to siste (den frittstående frasen og «1 gyldig uke») la Claude fram for brukeren, som bestemte at katalogen merker frasen som vakttilfelle og får entallet og nullfallet, og at en test leser katalogen. Ingen funn ble utsatt.
+- **Commit eller pull request:** `e74a814`.
+- **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.5](../_bmad-output/implementation-artifacts/spec-2-5-give-each-product-its-warnings-notes-and-confidence-label.md).
+- **QA-loggen:** [feilene fra byggingen av story 2.5](qa-logg.md#2026-11-27--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-25-dr-9) og [fra BMAD Code Review av story 2.5](qa-logg.md#2026-11-27--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-25-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).
