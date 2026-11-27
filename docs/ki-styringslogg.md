@@ -458,4 +458,17 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.5](../_bmad-output/implementation-artifacts/spec-2-5-give-each-product-its-warnings-notes-and-confidence-label.md).
 - **QA-loggen:** [feilene fra byggingen av story 2.5](qa-logg.md#2026-11-27--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-25-dr-9) og [fra BMAD Code Review av story 2.5](qa-logg.md#2026-11-27--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-25-dr-9).
 
+### 43. Mutasjoner som overlevde fordi testene var for snille i story 2.6 (27. november 2026)
+
+- **Hva KI foreslo:** Claude bygde uker dekning, «bestill snart» og `build_overview` for story 2.6 inline, med sorteringen på den uavrundede dekningen og varenumre som tekst, og testene leste E13, E23 og E24 fra regnearket.
+- **Hva som var feil:**
+  - Fire av de første 23 mutasjonene overlevde. Likhetsbryteren kunne sortere på det snudde varenummeret, fordi testene bare brukte «A» og «B». Mutasjonen der «bestill snart» leses fra det uavrundede resultatet overlevde fordi testen brukte 10 × 1,1, som er nøyaktig 11, og 50 × 1,1 er 55,00000000000001. To mutasjoner traff ikke fordi Ruff hadde brutt linjene, og en var lik koden.
+  - Svepet over må-ha-tilfellene antok at `valid_weeks` er en liste, men regnearket oppgir antallet, så 9 tilfeller feilet.
+  - Seedtesten og docstringene lovet mer enn de sjekket (BH-5, BH-3), og svepet navnga hullene for scenarioenes bestillingsmengder uten å si at bare E22 (bør-ha) oppgir dem.
+- **KI-bruk:** Byggeøkta og de fire granskerne brukte Sonnet 5.5 (High). Claude bygde inline, og underagenter ble bare brukt til BMAD Code Review, som brukeren ba om. Granskerne fikk en regel om å bare lese og rapportere, og hashen av alle filer var identisk før og etter.
+- **Hva gruppen bestemte:** Brukeren godkjente spesifikasjonen med beslutning 1 til 6 (egen modul, sortering på uavrundet dekning, varenumre som tekst, produkter uten prognose med i «produkter med varsel», justeringer gir `ValueError`, og at spørsmål 4 i PRD §10 lukkes for regeltestproduktene) og ba om alle fire uavhengige, skrivebeskyttede granskere og mutasjonstester. Claude rettet seks grupper og avviste sju, og ingen funn ble utsatt.
+- **Commit eller pull request:** `94e8b61`.
+- **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.6](../_bmad-output/implementation-artifacts/spec-2-6-sort-the-products-by-what-needs-ordering-first.md).
+- **QA-loggen:** [feilene fra byggingen av story 2.6](qa-logg.md#2026-11-27--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-26-dr-9) og [fra BMAD Code Review av story 2.6](qa-logg.md#2026-11-27--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-26-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).
