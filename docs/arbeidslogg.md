@@ -882,6 +882,16 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * BMAD Code Review med fire uavhengige, skrivebeskyttede granskere (Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor, alle som underagenter på samme modell). Byggearbeidsflyten har bare tre granskerlag, så Claude startet Acceptance Auditor fra laget i `bmad-code-review`, som i story 2.5. 19 funn i 13 grupper: 6 rettet og 7 avvist, ingen utsatt, og ingen trengte en avgjørelse fra brukeren. Hashene av alle filer var identiske før og etter.
 * Dokumentene er oppdatert: spesifikasjonen, statustabellen (FR-24 delvis bygd, og FR-3), QA-loggen, KI-styringsloggen (tilfelle 43) og `sprint-status.yaml` (story 2.6 `review`).
 * Kontroll: 960 tester består og 1 hoppes over (Docker), `ruff check` og `ruff format --check` er rene, og `makemigrations --check` finner ingen endring. Brukeren har bedt om å få godkjenne før noe committes eller pushes.
+* Brukeren godkjente personvernskanning (alle tilføyde linjer og nye filer, ingen treff på lokale stier, e-postadresser, nøkler, passord eller telefonnumre) og tre commits: koden og testene i `94e8b61`, spesifikasjonen og dokumentene i `5c12ccd` og sesjonsloggen i `6e835e8`. Hashene er fylt inn i QA-loggen og KI-styringsloggen. Brukeren godkjente deretter SSH-push og pull request, med fletting først når CI og Windows-testene var grønne på siste kodecommit.
+* Pushet grenen over SSH og opprettet PR #40 med en kommentar med alle 19 funnene fra BMAD Code Review, gruppert i 13, med beslutningene og rettings-commiten (`94e8b61`). CI-kjøring nr. 74 (960 tester og Ruff) og Windows-kjøring nr. 21 passerte på `6e835e8`.
+* Flettet PR #40 etter at begge kontrollene var grønne. Claude flettet lokalt med `git merge --no-ff`, uten squash eller rebase, og med noreply-adressen som forfatter:
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * `main` ble pushet over SSH, og GitHub viser PR #40 som flettet 27. november kl. 11.39, med `93bd2d1` som merge-commit (foreldre `3671eba` og `6e835e8`);
+  * CI-kjøring nr. 75 på `main` passerte;
+  * grenen `story/2-6-sort-the-products-by-what-needs-ordering-first` er beholdt.
+* Avslutningen er kontrollert: spesifikasjonen står som `done`, `sprint-status.yaml` har story 2.6 som `done` og epic 2 som `in-progress`, statustabellen har et avsnitt for story 2.6 med FR-24 som delvis bygd, QA-loggen og KI-styringsloggen har commit-hashen (`94e8b61`), og åpne punkter står i `issues.md`.
+
+**Status:** Story 2.6 er flettet inn i `main` (`93bd2d1`). Fletteloggen kommer i PR #41, og eksporten og den siste dokumentasjons-PR-en tas før avslutning. Story 2.7 er ikke startet.
 
 ## 4. Videre dokumentasjon
 
