@@ -1,0 +1,1250 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   <project-root>
+
+⚠ Your login expires in 3 days · run /login to renew
+
+❯ /clear                                                                        
+
+❯ Start BMAD story 2.8 med Sonnet 5.5 High. Følg prosjektkrav, arkitektur,      
+  sensorveiledning og etablerte rutiner fra Opus.                               
+                                                                                
+  Arbeid selvstendig og effektivt, med kvalitet først. Dokumenter viktige       
+  prompter, beslutninger, faktisk modellbruk, KI-arbeid, tester og              
+  godkjenninger fortløpende.                                                    
+                                                                                
+  Bruk alle fire uavhengige, skrivebeskyttede granskere ved BMAD Code Review og 
+  gjennomfør mutasjonstesting. Kontroller akseptkriterier og hvilke manuelle    
+  tester som er obligatoriske, slik at vi får dem gjort før avslutning.         
+                                                                                
+  Kontroller dokumentasjon og testtall mot faktiske resultater før commit.      
+  Unngå gjentesting, unødvendige endringer og dobbeltarbeid.                    
+                                                                                
+  Presenter nødvendige beslutninger før implementering. Ingen commit eller push 
+  uten min godkjenning.                                                         
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+  Read 2 files, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg har rendret skillen og trinn 1 er lest. Nå laster jeg kontekst for story
+  2.8: epic-2-konteksten, selve storyen i epics.md og den forrige ferdige
+  spesifikasjonen (2.7).
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Epic-konteksten er gyldig: den og planleggingsfilene ble committet sammen, og
+  tidsstemplene er kun utsjekkingstid. Nå leser jeg forrige spec (2.7) for
+  kontinuitet og ser på dagens kode for listen.
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Spec 2.7 gir meg mønsteret: egen branch, loader, mutasjonstesting og
+  dokumentoppdateringer. Så leser jeg trinn 2 (planlegging).
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Subagentene er forbeholdt reviewene, så jeg undersøker koden selv. Først
+  kjernefilene for listen og loaderen.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå leser jeg UX-kravene (UX-DR7, 15–18, 44) og meldingskatalogen i
+  EXPERIENCE.md, og CSS-en som finnes.
+
+  Read 1 file, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Nå ser jeg på mockupene, lastekommandoen i README, og hvilke tester som dekker
+  dagens liste.
+
+  Listed 1 directory, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Kort status: jeg kartlegger siste detaljer (seed-størrelse for NFR-8-sjekken,
+  stand-in-testen i test_seed_data.py som 2.8 skal fjerne). Deretter skriver jeg
+  spec og legger fram beslutningene.
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Jeg har nok til å skrive spec. Jeg skriver den nå, med de tre avgjørelsene som
+  bare du kan ta som åpne spørsmål.
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-2-8-list-the-products-in-r-12
+       -order.md)
+  ⎿  Wrote 94 lines to _bmad-output/implementation-artifacts/spec-2-8-list-
+     the-products-in-r-12-order.md
+       1 ---
+       2 title: 'Story 2.8: List the products in R-12 order'
+       3 type: 'feature'
+       4 created: '2026-11-27'
+       5 baseline_commit: 'aa9a90029d91fbf1934b0c0b3ee8e48eb6a5f9dd'
+       6 status: 'draft'
+       7 route: 'dispatch'
+       8 review_loop_iteration: 0
+       9 context: ['{project-root}/_bmad-output/implementation-artifacts/
+         epic-2-context.md']
+     … +85 lines (ctrl+o to expand)
+
+⏺ Spec for story 2.8 er skrevet, men den kan ikke godkjennes før du har svart på
+  tre spørsmål. Jeg har ikke skrevet noen kode, laget noen branch eller
+  committet noe.
+
+  _bmad-output/implementation-artifacts/spec-2-8-list-the-products-in-r-12-order
+  .md
+
+  Spørsmål som bare du kan avgjøre
+
+  1. Hvordan ser /produkter/ ut til story 2.11 kommer? Høyresiden «Denne uken»
+  kommer først i 2.11.
+  - (a) Anbefalt: siden fra 1.8 med én kolonne som bare inneholder den grupperte
+    listen. Ingen tomt område. 2.11 flytter listen inn i tokolonneskallet
+    senere.
+  - (b) samme tokolonneskall som produktsiden, med bare overskriften
+    «Produktoversikt» til høyre. Skallet bygges ikke om i 2.11, men skjermen ser
+    halvferdig ut en stund.
+
+  2. Hvordan gjør vi 2-sekundersjekken (NFR-8)? Kriteriet krever 50 produkter ×
+  104 uker, men seed har bare 30 og 32 produkter.
+  - (a) Anbefalt: jeg måler 50 × 104 med testklienten og logger det som mitt. Du
+    tar tiden på den ekte siden på laptopen din med en engangsbedrift. Jeg gir
+    deg en shell-snutt som lager den og sletter den igjen, og ingenting
+    committes.
+  - (b) du tar bare tiden på seed-bedriftene. Det er ikke kriteriets størrelse.
+  - (c) jeg lager en kommando som oppretter 50-produktsbedriften. Det er en ny
+    fil og utenfor storyens omfang.
+
+  3. Størrelse. Spesifikasjonen er på ca. 2 000 tokens (veiledning: 1 600).
+  - Anbefalt: behold den hel, med ett mål (listen og innstillingslinja), slik du
+    gjorde i 2.7.
+  - Alternativet er å skille ut innstillingslinja som egen story.
+
+  Avgjørelser jeg har tatt selv
+
+  De står i spec-en, så si fra hvis noe av dette ikke passer.
+  - Kortets årsak er hele tillitsårsaken uten «Middels: » foran og uten siste
+    punktum, med stor forbokstav.
+  - Gruppesammendragene bruker entall og flertall: «1 produkt · 4 enheter
+    foreslått» og «1 · etter varenummer».
+  - Overskriften «Produktoversikt» får antallet («30 produkter»).
+  - Innstillingslinja viser «Uvanlige uker: holdes utenfor» når de er slått av,
+    og «Eksponentiell glatting, faktor 0,3» for den metoden.
+  - Tom tilstand: «Ingen data er lastet inn. Kjør uv run python src/manage.py
+    load_seed som står i README.»
+  - Søk, tastaturhint, pilknapper og «Denne uken» hører til 2.11 og er ikke med
+    her.
+  - Stand-in-regningen i tests/test_seed_data.py (suggested_quantity,
+    warning_shapes) fjernes. Dette er restpunktet fra Story 1.6. En test mot
+    kjernen sjekker i stedet Testbedrift As tall: 4 produkter, 31 enheter, 1
+    uten prognose, 4 med varsel.
+
+  Obligatoriske manuelle tester (slik jeg leser kriteriene)
+
+  1. Safari på 1366 × 768, 820 × 1180, 390 × 844 og 320 px for /produkter/ og en
+     produktside, som Testbedrift A og B. Sjekk at listen følger produktet opp
+     til 900 px og at innstillingslinja brytes.
+  2. Ekte iPhone 13.
+  3. 2-sekundersjekken for NFR-8 (spørsmål 2).
+
+  Du rapporterer Safari-sjekkene i chatten, som før. Jeg måler i hodeløs Chrome
+  og logger det som mitt eget.
+
+  Modell og nivå: byggingen kjører på claude-sonnet-5-5. Nivået «High» vises
+  ikke i økta, og jeg logger det slik. Subagenter bruker jeg bare til de fire
+  skrivebeskyttede reviewerne og mutasjonstestingen.
+
+  Svar på 1–3, så oppdaterer jeg spec-en og legger den fram for godkjenning.
+
+✻ Sautéed for 2m 53s · done 6:27 PM
+
+※ recap: Jeg skal bygge story 2.8, den grupperte produktlisten i R-12-rekkefølge med innstillingslinje. Spec-en er skrevet, men venter på dine svar på tre spørsmål (oversiktssidens layout, NFR-8-sjekken, spec-størrelse) før jeg godkjenner og implementerer.
+
+❯ Mine valg for story 2.8. 1.A-en ryddig kolonne på /produkter/frem til         
+  story2.11. 2.A-mål NFR-8 med 50 pr0dukter x104 uker. Bruk helst en isolert    
+  testdatabase fremfor å opprette og slette en bedrift i den den vanlige        
+  databasen. Ikke endre eksisterende data. 3. Behold spesifikasjonen samlet.    
+  Jeg godkjenner også de øvrige designvalgene. Oppdater sepc en og fortsett med 
+  implementering når den er klar. Avklar obligatoriske manuelle tester før      
+  avslutning. Dokumenter prompter, beslutninger, faktisk modellbruk, tester og  
+  KI arbeid fotløpende etter rutinenefra opus. Bruk alle fire skrivebeskyttede  
+  BMAD granskere og mutasjonstesting. Kontroller dokumentasjonen før commit,    
+  slik at vi unngår dobbeltarbeid. Ingen commit eller push uten min             
+  godkjenning.                                                                  
+
+⏺ Valgene er notert. Jeg oppdaterer spec-en, og så sjekker jeg hvordan databasen
+  er satt opp for en isolert NFR-8-måling.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ PostgreSQL kjører allerede (port 15432). pytest-django bruker en egen
+  testdatabase, så jeg kan måle der uten å røre den vanlige databasen. Nå
+  oppdaterer jeg spec-en med dine valg.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg implementerer selv (subagenter er bare for reviewene). Først synkroniserer
+  jeg sprint-status til in-progress.
+
+  Searched for 1 pattern, ran 1 shell command (ctrl+o to expand)
+
+⏺ Baseline: 1058 bestått, 1 hoppet over. Så retter jeg status-filen (BSD-sed
+  feilet).
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Starter implementeringen med explanation/: kortårsaken refaktoreres ut av den
+  eksisterende tillitsårsaken, så de ikke kan gli fra hverandre.
+
+  Ran 1 shell command (ctrl+o to expand)
+⏺ Nå loaderen og viewene: loaderen får settings, og listen bygges av tallene fra
+  build_overview.
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Implementeringen er klar, og jeg retter nå CSS-reglene som designtestene
+  avviste, så oppdaterer jeg testene til den nye listen. · summary
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Kort status: de eksisterende testene er tilpasset (én gjenstår), og nå skriver
+  jeg de nye testene for listen, innstillingslinja og kortårsaken.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå skriver jeg testfilene for listen og innstillingslinja.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Alle 22 bestod på første forsøk, så jeg fjerner to svake påstander jeg skrev
+  (en or som gjør testen tom, og en tilfeldig label-sjekk) før jeg går videre.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Python-redigeringen traff ikke fordi ruff format hadde omformatert filen. Jeg
+  ser på den faktiske teksten og retter manuelt, sammen med lint-feilene.
+
+  Searched for 1 pattern, ran 5 shell commands (ctrl+o to expand)
+
+⏺ Kort status: stilsjekkene refererer til en variabel som ikke finnes. Jeg
+  retter den, kjører hele suiten og tar deretter i bruk selve siden i
+  nettleseren.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Suiten er grønn: 1096 bestått, 1 hoppet over (var 1058). Nå sjekker jeg selve
+  siden visuelt i hodeløs Chrome, slik jeg gjorde i 2.7. Jeg ser først hvordan
+  den sjekken ble loggført.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg måler sidene med samme skript som i 2.7, mot testdatabasen i stedet for
+  dev, og måler også NFR-8 med 50 × 104 der. · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ NFR-8 på testdatabasen: 6 spørringer og ca. 26 ms median server-side for 50 ×
+  104. Nå måler jeg layouten i Chrome på alle størrelser.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Ingen probe-utdata. Jeg feilsøker én kjøring og ser på feilutskriften.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ timeout finnes ikke på macOS. Jeg kjører uten og lar Chrome avslutte selv.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Ingen sidelengs rulling noe sted, og innstillingslinja brytes (38 → 62 → 112 →
+  162 px). Jeg måler også panelhøyden ved 1366 × 640 etter at linja kom til, og
+  ser på skjermbilder.
+
+  Read 2 files, ran 1 shell command (ctrl+o to expand)
+
+⏺ Layoutet ser riktig ut, med kortene, gruppene, den røde «Uten prognose»-ramma
+  og innstillingslinja som brytes pent; panelene slutter ved 405 av 640 px i
+  1366 × 640. Neste steg er mutasjonstesting, og jeg starter med
+  mutasjonsskriptet fra tidligere stories. · summary
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg skriver et nytt mutasjonsskript for 2.8. Det kjører de relevante
+  testfilene per mutasjon, gjenoppretter filene etterpå og sjekker hash. Det går
+  i bakgrunnen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Mutasjonskjøringen pågår, og den eier testdatabasen og kildefilene, så jeg
+  endrer ingenting og kjører ingen tester nå. Jeg leser dokumentasjonsrutinene
+  fra 2.7 i mellomtiden.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg venter på at mutasjonskjøringen blir ferdig.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Mutasjonskjøringen pågår (8 av 42 var fanget ved forrige sjekk). Jeg får
+  beskjed når den er ferdig, og endrer ingenting før da.
+
+✻ Cooked for 11m 45s · done 6:55 PM
+
+⏺ Background command "Wait for the mutation run to finish" completed (exit code
+0)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle 41 mutasjoner ble fanget, og filene er gjenopprettet identisk. Nå trinn
+  4, BMAD Code Review.
+  Listed 1 directory (ctrl+o to expand)
+
+⏺ Først setter jeg spec-status til in-review, lager diff-filen med ikke-sporede
+  filer, og tar en hash av alle filer for å bevise at granskerne er
+  skrivebeskyttet.
+
+  Listed 1 directory, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg starter alle fire granskere samtidig som blokkerende kall: Blind Hunter,
+  Edge Case Hunter, Verification Gap og Acceptance Auditor, alle
+  skrivebeskyttede.
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   ├ Verification Gap review
+   └ Acceptance Auditor review
+
+⏺ Jeg skrev en feil diff-sti i prompten til Acceptance Auditor (en plassholder).
+  Jeg rettar det med en melding til den samme agenten.
+  ⎿  Message queued for delivery to a308044bb5f2f2cbd at its next tool 
+     round. If it finishes first, it is resumed with the message and 
+     notifies again, so wait for that notification before resending.
+
+⏺ Alle fire granskere kjører, og Acceptance Auditor har fått riktig diff-sti og
+  skrivebeskyttet-regelen. Jeg endrer ingenting i prosjektet før alle har
+  rapportert, så hash-kontrollen blir gyldig.
+
+✻ Brewed for 47s · done 6:58 PM
+
+› Message from general-purpose
+  Finding floor: the diff is 69,067 bytes, about 67.4 kB. N =
+  min(floor(sqrt(67.4) + 1), 10) = min(floor(8.21 + 1), 10) = 9. I found 12
+  items.
+
+  - **Empty-state text can send the user to a failing command.** `NO_DATA`
+  ("Ingen data er lastet inn. Kjør `uv run python src/manage.py load_seed`…") is
+  shown to any logged-in company with zero products. README line 61 says
+  `load_seed` stops on a non-empty database and changes nothing, and `--reset`
+  deletes everything. A company that exists but has no products therefore gets
+  an instruction that cannot work. The test only checks that the command string
+  appears in the README, not that the advice fits the situation.
+
+  - **The independent seed oracle was removed, and the replacement is
+  circular.** The deleted `test_denne_uken…` in `tests/test_seed_data.py`
+  derived week-1 forecast, R-8 quantity and warning shapes from the raw seed
+  data. It also asserted that the 21 "other" products have no stockouts and no
+  baseline spikes. The new `tests/test_trust_seed.py` version asserts the core's
+  `result.warnings`, `result.valid_weeks` and `result.unusual_weeks` against
+  the core's own output, so a core bug and the seed can no longer disagree
+  visibly. The `valid_units`, `baseline_spike`, `has_level_shift` and
+  `recent_positions` helpers in `tests/test_seed_data.py` are still defined. The
+  diff does not show whether anything still uses them.
+
+  - **A test assertion is vacuous.** In `test_a_row_has_the_meta_line…`, `assert
+  "quantity" not in inner` can never fail, because the markup uses the class
+  `qty` and the word "quantity" never appears. It was probably meant to check
+  that the quantity is not blue (no `qty-ink`/blue class on rows), which is not
+  checked.
+
+  - **The heading level has no default.** `_product_list.html` renders `<h{{
+  level }}>` and requires every includer to pass `level`. If one forgets, the
+  output is `<h class="grp">`, which is invalid HTML and drops the heading from
+  the outline. Add `|default:2` or an explicit check.
+
+  - **The first-group margin reset works on one page only.** `.group:first-child
+  .grp { margin-top: 0 }` applies on the overview, where the `<nav>` holds only
+  sections. On the product screen the `<h2 class="list-title">` precedes the
+  sections, so the first group keeps its 24px top margin (`var(--space-6)`). The
+  empty-state `<p>` also breaks `:first-child`. The CSS and the markup disagree
+  between the two pages, and nothing tests it.
+
+  - **Hard-coded paddings duplicate a design token.** `.pcard[aria-current]`,
+  `.pcard.nofc` (`11px 13px`), `.prow` (`10px 14px`) and `.prow[aria-current]`
+  (`9px 13px`) are magic numbers, while `.pcard` uses
+  `var(--space-card-padding)` (`12px 14px`). If the token changes, the "card
+  must not grow" compensation silently breaks. Derive it with `calc()` or add a
+  token. The new CSS test checks only border and background, not that the box
+  size stays constant.
+
+  - **Link accessible names are unwieldy and the new markup is untested for
+  accessibility.** Each `<a class="pcard/prow">` wraps name, "Foreslått",
+  quantity, "Varenr.", stock, forecast, cover, label and reason. A screen reader
+  reads all of it as the link name, 30 times in a row. There is no
+  `aria-describedby` or other structure to shorten it. Selection is
+  `aria-current` plus colour and border only. On a selected card the blue 3px
+  `:focus-visible` outline sits on a blue 2px border, so the focus indicator is
+  hard to see. The only accessibility tests are `aria-current` counts and
+  heading levels.
+
+  - **The settings bar has no semantics.** It is a bare `<div>` with `<b>`
+  elements. It has no landmark or `aria-label`, and the values are not in a list
+  or `dl`. `<b>` carries no meaning. The values are concatenated with no text
+  separator, so non-CSS or text extraction reads them as one run. Placement is
+  tested, but accessibility is not.
+
+  - **Phone-width behaviour of the new list is not checked.** `.list-column` has
+  `max-width: 640px` and `.page .list-title` is also 640px, with no
+  narrow-screen rules for `.pcard`/`.prow` grids. A long product name and a
+  large `.qty` number share a two-column grid. The facts and trust rows use
+  `flex-wrap`, but nothing verifies narrow rendering. The only 44px target
+  change is a rename of the selector list.
+
+  - **Dead or stale context and unused computation.** `product_screen` still
+  passes `"selected": product_number`, but `_product_list.html` now uses
+  `item.selected`. The diff shows no other consumer; it may now be unused.
+  `list_context` calls `trust_texts.list_text` and `card_reason` for every item,
+  including `Øvrige produkter` rows that never show `no_forecast_text`. The
+  cost is minor, but the dataclass is built for nothing.
+
+  - **`card_reason` is fragile.** It strips the last "." with
+  `removesuffix(".")` after building sentences. A reason that ends in an
+  abbreviation or a number with a full stop would lose a character that belongs
+  to the text. The test covers three reasons by exact string, plus a round trip
+  against `confidence_reason`. Nothing guards the invariant over all reason
+  shapes.
+
+  - **Stale or incomplete comments and docstrings.** The `.pcard .qty b` and
+  `qty-ink` rule exists for "0 or –", but it is applied only on cards, so rows
+  with quantity 0 or "–" use the default ink by omission. The template comment
+  says "selected products have aria-current" (plural), although only one product
+  is ever selected. `products.html` records an undocumented decision ("the
+  user's decision, 2026-11-27") with no pointer to where it was recorded.
+
+⏺ Blind Hunter har rapportert 12 funn. Jeg venter på de tre andre før jeg
+  trierer.
+
+✻ Cooked for 1s · done 6:58 PM
+
+⏺ Agent "Blind Hunter review" finished · 49s
+
+› Message from general-purpose
+  No verification gaps found.
+
+  I traced the changed behaviours to where they are observed. Each one has a
+  test that runs on the normal path and asserts the changed output.
+
+  - **Group order and summaries (`list_context`, `product_list.py`):**
+  `test_product_list.py` asserts the group keys, the headings with their
+  summaries (4 produkter · 31 enheter, 1 produkt, 25 · etter varenummer) and the
+  item order against `build_overview`. Singular, plural and empty-group cases
+  are covered, and `group_summary` has a direct unit test, including the
+  `ValueError`.
+  - **Cards and rows:** tests assert the full plain text of cards and rows.
+  These cover a product with the label "Middels" (10012), one with no forecast
+  (10040), one with "Høy" and no reason (10001), and the new-level and
+  shorter-history reasons. `qty-ink`, `nofc` and `class="why"` are checked
+  against the HTML.
+  - **`card_reason`:** a parametrized test covers Høy, a Lav with an inner full
+  stop, and a Lav without a forecast. It also checks the result against
+  `confidence_reason`, which was refactored onto `_reason_parts`.
+  - **Settings bar:** the defaults, window, factor, and percentages with a
+  no-break space are asserted. An unknown method raises. The bar on both pages
+  is asserted for text, order and absence of a button. A company's own settings
+  row is shown and another company's row is not. The bar sits before the list in
+  page order, and the login and error pages have none. The `settings` field on
+  `CompanyData` is covered through these page tests.
+  - **Empty company:** the exact sentence is asserted, and a test checks that
+  the load command is in the README.
+  - **Isolation and queries:** the isolation tests and the seed-company test
+  were rewritten for the new markup. The query-count test covers 3 versus 50
+  products with `<= 6`.
+  - **Selected item:** exactly one item has `aria-current` on a product screen,
+  and none on the overview.
+  - **Removed `test_denne_uken…` in `test_seed_data.py`:** its replacement in
+  `test_trust_seed.py` asserts the same figures, the same warning set, the
+  quantity, and now the label for every mockup product. The raw seed-shape
+  checks it dropped are still covered by `test_seed_data.py` lines ~468–507,
+  which I read. `math` and `Fraction` are not used by any other test that
+  imports them from this file.
+  - **`header_context(company, current, data)`:** `grep -rnE
+  "header_context|products_for_company"` over `src` and `tests` finds only the
+  two views, both updated. The now-unused `queries` import in `views.py` was
+  removed.
+
+  ## Other findings
+
+  - `app.css` has `.group:first-child .grp { margin-top: 0 }`. On
+  `products.html` the `<nav class="list-column">` holds only the sections, so
+  the first group heading has no top margin. On `product.html` the `<nav
+  class="list">` starts with the `<h2 class="list-title">`, so no group is ever
+  `:first-child`. The first group heading there keeps its `var(--space-6)` top
+  margin below the list title. The same applies to `.empty` after the h2. It may
+  be intentional, but the two pages space the first group differently, and no
+  test checks it.
+  - `test_the_trust_label_draws_its_shape_beside_the_word` now looks only at
+  pills after `<main`. The pills in the list are therefore not checked for their
+  shape or `aria-hidden`. The list uses the same `_trust_label.html` partial
+  and `label_context`, which the product-area pills do cover. I treated this as
+  covered through the shared code, not as a gap.
+
+⏺ Verification Gap har rapportert ingen gap. Jeg venter på Edge Case Hunter og
+  Acceptance Auditor.
+
+✻ Cogitated for 1s · done 6:59 PM
+
+⏺ Agent "Verification Gap review" finished · 1m 2s
+
+› Message from general-purpose
+  Acceptance audit of Story 2.8. I read the diff at the corrected path plus the
+  working tree, the spec, Story 2.8 in epics.md and UX-DR7, 15–18 and 44. I
+  changed nothing and ran no tests. The code itself follows the spec closely.
+  The gaps are mostly in the documents and status, plus two small deviations.
+
+  **Findings**
+
+  - **Documents and tracking not done (Task 4, DR-7).**
+    - The spec lists `docs/statustabell.md`, `qa-logg.md`, `ki-styringslogg.md`,
+  `arbeidslogg.md`, `deferred-work.md`, `.logs/mounia-03/issues.md` (the
+  stand-in item) and an extended `tests/test_company_data.py`. None appear in
+  the diff or in `git status`.
+    - `sprint-status.yaml` sets `2-8-list-the-products-in-r-12-order:
+  in-progress`, but the spec's Task 4 and its `status: 'in-review'` call for
+  `review`.
+    - Evidence: `git status` shows only that yaml among the documents, and the
+  diff has no `test_company_data.py` hunk.
+
+  - **Card quantity is ink for 0 as well as for «–» (UX-DR17, spec matrix «Card,
+  forecast»).**
+    - UX-DR17 gives the card quantity in blue and only «–» in ink. The template
+  uses `{% if not item.result.suggested_order_quantity %} class="qty-ink"{%
+  endif %}`, which also fires for 0.
+    - `test_app_shell.py` writes this in as intent («a quantity is blue and «–»
+  or 0 is ink in a card»).
+    - UX-DR18 gives the reason «0 is not an order» for rows only, so this
+  deviation is not in the spec. Decide whether to keep it or restrict ink to
+  None.
+
+  - **No-forecast card states the FR-8 reason twice (spec matrix «Card, no
+  forecast», UX-DR17).**
+    - The test expects `... Ingen prognose: færre enn 3 gyldige uker Uker
+  dekning – Lav Ingen prognose, færre enn 3 gyldige uker`. The red `.reason`
+  sits in the facts line, and `card_reason` repeats it in the trust line.
+    - The matrix row lists only «Lav» after the red reason, and the AC says
+  «unless the label is høy, the reason», so this is arguable. The wording of the
+  second copy also differs (comma against colon). It is a likely reviewer
+  question rather than a clear violation.
+
+  - **Seed test docstring says 21 quiet products, the assertion covers 26 (Code
+  Map, `test_seed_data.py` line).**
+    - The replacement test in `test_trust_seed.py` has the docstring «the 21
+  other products». The code loops over `set(by_number) - with_warning`, which is
+  30 − 4 = 26.
+    - This is stricter than the spec and not a failure, but the docstring and
+  the spec's «21 quiet products» disagree with the code.
+
+  - **Not verifiable from the code (AC 3).**
+    - The checks at 1366 × 768, 320 px, 390 × 844 and 820 × 1180 and the
+  2-second NFR-8 check are hand checks, so I could not confirm them. The CSS
+  supports them: `.settings-bar` wraps, `.list` has `overflow: visible` up to
+  900 px, and `.pcard`/`.prow` get 44 px targets on coarse pointers.
+
+  **Confirmed against the spec (no violation)**
+  - Groups, order, summaries and the empty-group rule come from `build_overview`
+  via `list_context`.
+  - Texts come from `explanation/product_list.py`, `settings_bar.py` and
+  `trust.card_reason`. The card reason drops the label word and the last full
+  stop, and is `None` for «høy».
+  - Numbers go through the `display` filters, with «–» for a missing quantity or
+  cover.
+  - Whole card and row are links, and `aria-current="page"` is set. The CSS has
+  a solid blue border for a selected no-forecast card, and `test_app_shell.py`
+  asserts it.
+  - The loader carries `settings`, and `header_context` uses loader data.
+  - The settings bar has all required texts, no button, and wraps.
+  - The empty text uses the README load command, and a test checks it against
+  the README.
+  - The two-account test covers both pages. The query-count test compares 3 and
+  50 products of 104 weeks.
+  - No model, migration or dependency change, and the `.product-table` rules are
+  removed.
+
+  **Files**
+  - <project-root>/_bmad-output/implementation-artifacts/spec
+  -2-8-list-the-products-in-r-12-order.md
+  - <project-root>/src/web/templates/web/_product_list.html
+  - <project-root>/src/web/views.py
+  - <project-root>/tests/test_trust_seed.py
+  - <project-root>/_bmad-output/implementation-artifacts/spri
+  nt-status.yaml
+
+⏺ Acceptance Auditor har rapportert. Bare Edge Case Hunter gjenstår.
+
+✻ Brewed for 1s · done 6:59 PM
+
+⏺ Agent "Acceptance Auditor review" finished · 1m 16s
+
+› Message from general-purpose
+  [
+  {"location":"src/web/views.py:600-610 (list_context) with
+  src/explanation/trust.py:50-58 (card_reason)","trigger_condition":"One
+  product's confidence_condition has no phrase (ValueError or IndexError in
+  _condition_phrase or _reason_parts) when the whole list is
+  built","guard_snippet":"wrap the per-item card_reason call in try/except
+  (ValueError, IndexError) and render the item without a reason, or log it and
+  keep the page","potential_consequence":"One odd product now returns a 500 for
+  /produkter/ and every product screen, not just its own screen."},
+  {"location":"src/web/templates/web/_product_list.html:18-19","trigger_conditio
+  n":"Card has no_forecast_text None but week_forecasts is None (a
+  no_forecast_reason that list_text does not map)","guard_snippet":"{% if
+  item.result.week_forecasts %}...{{ item.result.week_forecasts.0|one_decimal
+  }}{% else %}<span class=\"reason\">...{% endif
+  %}","potential_consequence":"The failed lookup becomes '' and one_decimal('')
+  raises, or an empty forecast shows without the nofc style."},
+  {"location":"src/explanation/settings_bar.py:12-17 and
+  src/web/views.py:559-563","trigger_condition":"A CompanySettings row holds a
+  method outside MOVING_AVERAGE and
+  EXPONENTIAL_SMOOTHING","guard_snippet":"catch ValueError in header_context and
+  fall back to the method's raw name, or validate the method in
+  forecast_settings","potential_consequence":"The shared header_context now
+  raises, so every logged-in page returns 500, not only the bar."},
+  {"location":"src/web/templates/web/_settings_bar.html:4","trigger_condition":"
+  The four values are adjacent <b> elements with no whitespace or separator
+  between them in the DOM","guard_snippet":"{% for value in
+  app_header.settings_bar.values %}<b>{{ value }}</b> {% endfor
+  %}","potential_consequence":"Copied or textContent text joins the values ('3
+  ukerScenarioprosent 10 %'). Tests pass because they split on tags."},
+  {"location":"src/web/templates/web/_product_list.html:19,34 (the .trust
+  span)","trigger_condition":"Trust label pill and reason <span> sit side by
+  side with no whitespace between them","guard_snippet":"{% include
+  \"web/_trust_label.html\" with label=item.label %} {% if item.reason %}<span
+  class=\"why\">...","potential_consequence":"Link text read as one run
+  ('MiddelsNytt nivå...') by tools that ignore flex blockification."},
+  {"location":"src/web/static/web/app.css:213-215 (.group:first-child
+  .grp)","trigger_condition":"On the product screen the nav's first child is the
+  h2.list-title, so no .group is :first-child","guard_snippet":".list-title +
+  .group .grp, .group:first-child .grp { margin-top: 0;
+  }","potential_consequence":"The first group heading keeps 24px top margin
+  beside the product, so the list sits lower than on the overview."},
+  {"location":"tests/answer_key.py:683-685
+  (mockup_products)","trigger_condition":"A mockup chunk passes the number and
+  stock checks but has no class=\"trust\" or no pill (a product with no
+  label)","guard_snippet":"trust = chunk.split('class=\"trust\"'); if len(trust)
+  < 2 or not (label := re.search(...)):
+  continue","potential_consequence":"IndexError or TypeError breaks every test
+  that reads the mockup, and the failure points at the helper."},
+  {"location":"tests/test_trust_seed.py:1032-1037 and
+  1065-1069","trigger_condition":"The docstring says '21 other products' while
+  the loop checks every product outside with_warning (30 minus 4 =
+  26)","guard_snippet":"assert len(set(by_number) - with_warning) == 26, or
+  correct the docstring","potential_consequence":"The stale count hides which
+  products the test covers. A seed change moves the figures with no test
+  failing."},
+  {"location":"tests/test_seed_data.py:915-988 (removed warning_shapes and the
+  data-shape test)","trigger_condition":"The old test checked the seed data's
+  warning shapes (stockout position, baseline spike, level shift, old data)
+  independently of the core","guard_snippet":"keep a data-shape check beside the
+  core-based test, or assert here that the core's warning set matches the
+  PATTERNS table","potential_consequence":"The 4-product 'with warning' set is
+  now derived only from the core's result.warnings. A core regression that moves
+  it is no longer cross-checked.","kind":"deletion","confidence":"low"},
+  {"location":"src/web/static/web/app.css:313-333, 346-390 (and
+  181-309)","trigger_condition":"Claim: 'tokens only' (Code Map,
+  app.css)","guard_snippet":"The CSS hard-codes padding 11px 13px, 9px 13px,
+  10px 14px, gap 2px 14px, margin-top 6px and max-width 640px, besides the 2px
+  border. The selected padding repeats var(--space-card-padding) minus 1px by
+  hand.","potential_consequence":"If --space-card-padding changes, selected
+  cards and rows grow or shrink and the 'card does not grow' guarantee
+  breaks.","kind":"claim","confidence":"medium"},
+  {"location":"spec Tasks: documents and test_company_data.py
+  (extended)","trigger_condition":"Claim: documents (statustabell, qa-logg,
+  ki-styringslogg, arbeidslogg, deferred-work, issues.md) are updated and
+  test_company_data.py is extended","guard_snippet":"The diff and git status
+  show no change to docs/*, deferred-work or .logs, and none to
+  tests/test_company_data.py, which is only imported from for add_product. Only
+  sprint-status.yaml changed.","potential_consequence":"Someone trusting the
+  spec would believe the stand-in R-8 item and the QA log were closed when they
+  were not.","kind":"claim","confidence":"low"}
+  ]
+
+⏺ Alle fire har rapportert. Først kontrollerer jeg at granskerne ikke endret
+  noe.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Edge Case Hunter review" finished · 2m 8s
+
+⏺ Granskerne endret ingenting (hash identisk). Før jeg trierer, sjekker jeg to
+  påstander mot koden: om selected er ubrukt, og hva README sier om
+  lastekommandoen på en ikke-tom database.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Triagen er ferdig, og jeg retter nå de rene feilene: spøkelseskontekst, to
+  manglende mellomrom, en tom påstand og to feil kommentarer. Ett funn trenger
+  din avgjørelse, og det tar jeg etterpå. · summary
+
+  Searched for 1 pattern, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Reviewen er ferdig, og én ting trenger din avgjørelse før jeg går videre.
+
+  Status
+
+  - Fire granskere (Blind Hunter, Edge Case Hunter, Verification Gap, Acceptance
+    Auditor) rapporterte 30 punkter. De kjørte som underagenter med model: 
+    sonnet. Det er satt, men ikke bekreftet i rapportene.
+  - Hashen av alle endrede og nye filer var identisk før og etter reviewen, så
+    de endret ingenting.
+  - Jeg har rettet seks ting: en ubrukt selected i kontekst, to manglende
+    mellomrom i markupen (innstillingsverdiene og merke + årsak), en tom
+    test-påstand, en feil docstring (26 produkter, ikke 21) og to kommentarer.
+    Etter rettingene: 1096 bestått, 1 hoppet over, og Ruff er ren.
+  - Resten (ca. 20 punkter) avviser jeg med begrunnelse i triage-loggen. Typiske
+    eksempler er hardkodede paddingverdier (samme avvisning som i 2.7), feil
+    som skal være høylytte, og at dokumentene kommer etter reviewen.
+  - Mutasjonene er ikke kjørt på nytt etter rettingene. Jeg gjør det til slutt.
+
+  Avgjørelse (Acceptance Auditor)
+
+  Kortet for «Snøskuffe aluminium» (uten prognose) viser nå årsaken to ganger:
+  - i rødt i stedet for ukeprognosen: «Ingen prognose: færre enn 3 gyldige uker»
+  - etter merket «Lav»: «Ingen prognose, færre enn 3 gyldige uker»
+
+  Akseptkriteriet sier ordrett «merket og, med mindre det er høy, årsaken». Det
+  er derfor jeg bygde den andre. Mockupen og spec-matrisen viser bare merket
+  «Lav» etter den røde årsaken.
+
+  - (a) Anbefalt: følg mockupen. Kort uten prognose viser bare den røde årsaken
+    og merket, uten den andre kopien.
+  - (b) behold begge, slik kriteriet står ordrett.
+
+  Svar a eller b. Jeg retter da koden og testen, og kjører alt på nytt før
+  dokumentene.
+
+  Obligatoriske manuelle tester (fortsatt dine)
+
+  1. Safari på 1366 × 768, 820 × 1180, 390 × 844 og 320 px, for /produkter/ og
+     en produktside, som Testbedrift A og B.
+  2. Ekte iPhone 13.
+  3. NFR-8-sjekken på laptopen din. Jeg gir deg en kommando mot en egen,
+     midlertidig database når koden er endelig.
+
+✻ Cooked for 4m 34s · done 7:02 PM
+
+※ recap: Vi bygger story 2.8, produktlisten i R-12-rekkefølge med innstillingslinje; koden, testene og reviewen er ferdige. Jeg venter nå på ditt svar, a eller b, om kortet uten prognose skal vise årsaken én gang (mockupen) eller to ganger.
+
+❯ Jeg velger A. Følg mockupen: Vis den røde årsaken og tillitsmerket «Lav» uten 
+  å gjenta forklaringen. Dokumenter beslutningen og avviket fra ordlyden i      
+  akseptkriteriet, og oppdater relevante tester.                                
+                                                                                
+  Fortsett med planlagte kontroller og dokumentasjon. Ingen commit eller push   
+  uten min godkjenning.                                                         
+⏺ Valg A er mottatt. Jeg retter regelen i explanation/ (ingen andre kopi av
+  årsaken på kort uten prognose), oppdaterer testene og dokumenterer avviket fra
+  kriteriets ordlyd.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ 1097 tester består. EC-hunteren fant at testene ikke fanger manglende
+  mellomrom, så jeg legger til tester for det og utvider mutasjonssettet. 
+  · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Én ny test feilet, og jeg startet mutasjonskjøringen for tidlig. Jeg stopper
+  den trygt (SIGINT, så filene gjenopprettes) og retter testen først.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ SIGINT stoppet ikke løkka. Jeg stopper den med SIGTERM og gjenoppretter den
+  ene filen som kan ha blitt stående mutert, og verifiserer med hele suiten.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Rent utgangspunkt: 1099 bestått, 1 hoppet over. Jeg starter mutasjonskjøringen
+  på nytt (nå 45 mutasjoner) og skriver dokumentasjonen mens den kjører.
+  Dokumentfilene berøres ikke av mutasjonene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Mutasjonskjøringen går. Jeg leser statustabellen for å planlegge hvilke rader
+  og avsnitt story 2.8 skal endre.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Mutasjonskjøringen pågår (45 mutasjoner, ca. 10 minutter). Jeg får beskjed når
+  den er ferdig, og forbereder dokumentasjonen etterpå, så tallene er endelige.
+
+✻ Sautéed for 3m 17s · done 7:12 PM
+
+⏺ Background command "Wait for the final mutation run and print non-caught
+lines" completed (exit code 0)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Én mutasjon er nå ubrukelig fordi jeg endret koden, og den andre overlevde
+  fordi partialen allerede slutter med linjeskift. Jeg ruller tilbake
+  mellomromsendringen og mutasjonstester det som faktisk gir mellomrommet. 
+  · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle mutasjoner er nå fanget eller forklart. Jeg lager nå oppskriften for
+  NFR-8 i en egen midlertidig database og kjører den selv først, slik at
+  kommandoen er verifisert før du får den. · summary
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Den vanlige databasen er uendret etter begge kjøringene, og den midlertidige
+  er slettet. Jeg lager nå et skript du kan kjøre selv. · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå dokumentasjonen. Først henter jeg de faktiske tallene (testtall per fil) og
+  de radene i statustabellen som skal endres.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg fører dokumentene nå, og begynner med spesifikasjonen: avgjørelsene,
+  avviket fra kriteriets ordlyd, implementasjonsnotater og triage-loggen med
+  alle 30 funn.
+
+  Ran 5 shell commands (ctrl+o to expand)
+
+⏺ Det er en gammel feil fra story 2.6 i en rad jeg uansett oppdaterer
+  (testnavnet har «the» for mye). Jeg retter den og noterer det i QA-loggen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå QA-loggen: skjermmålingene med NFR-8, og feiltabellene fra byggingen og
+  reviewen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Jeg kontrollerer påstandene mot de faktiske kjøringene og retter to
+  unøyaktigheter i mutasjonsbeskrivelsen og én for løs påstand om 320 px.
+
+  Searched for 1 pattern, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Så kontrollerer jeg tallene i dokumentene mot en siste fullstendig kjøring.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alt stemmer med dokumentene: 1099 bestått, 1 hoppet over, Ruff og migreringer
+  rene. Jeg leser siste trinn i arbeidsflyten.
+
+  Read 1 file (ctrl+o to expand)
+
+⏺ Story 2.8 er bygd, testet og gjennomgått, men ikke committet. Spec-en står som
+  in-review og sprint-status som review, fordi de manuelle testene gjenstår.
+
+  Resultat
+
+  - Tester: 1099 bestått, 1 hoppet over (Docker, i CI blir det 1100). Før
+    storyen var tallet 1058 og 1. ruff check, ruff format --check og
+    makemigrations --check er rene.
+  - Mutasjoner: 41 før reviewen, alle fanget. Etter rettingene var 43 av 45
+    fanget i siste kjøring. De to siste ble skrevet om mot den endrede koden og
+    fanget, og én av dem var en ekvivalent mutant.
+  - Review: de fire granskerne ga 30 funn i 23 grupper: 5 rettet, 1 avgjort av
+    deg (A), 1 utsatt og 16 avvist. De endret ingenting; hashen av alle filer
+    var identisk før og etter.
+  - Avvik fra kriteriets ordlyd: kortet uten prognose viser den røde årsaken og
+    «Lav», uten en ny kopi av årsaken. Det er ført i spec-en, statustabellen,
+    QA-loggen og KI-styringsloggen.
+  - Dokumenter oppdatert: spec, statustabell, QA-logg, KI-styringslogg,
+    arbeidslogg, deferred-work.md og sprint-status.yaml.
+  - Ikke gjort ennå: .logs/mounia-03/issues.md og sesjonsloggen
+    (sesjonslogg-skillen), som jeg tar før commit.
+  - Utsatt punkt: teksten for en bedrift uten produkter peker på load_seed, som
+    stopper på en database som ikke er tom. Meldingskatalogen og kriteriet låser
+    setningen, så det står i deferred-work.md.
+  - Gammel feil rettet: et testnavn fra story 2.6 i statustabellen var feil
+    (..._sorted_by_the_product_number). Det er rettet og logget.
+  - NFR-8 (mine målinger): 6 spørringer med 50 produkter på 104 uker, samme som
+    med 3. Testklienten brukte 26 ms median, og ekte HTTP mot en midlertidig
+    database brukte 32–43 ms. Den vanlige databasen var uendret (2 bedrifter, 62
+    produkter, 5016 uker før og etter), og den midlertidige er slettet.
+  - Skjermmålinger (mine): 48 målinger i hodeløs Chrome, ingen sidelengs
+    rulling, og innstillingslinjen brytes.
+
+  Obligatoriske manuelle tester (dine)
+
+  1. Safari på Mac i responsiv visning ved 1366 × 768, 820 × 1180, 390 × 844 og
+     320 px, for /produkter/ og en produktside, som Testbedrift A og B. Start
+     serveren som i 2.7 (uv run python src/manage.py runserver --insecure, A er
+     1001 / testbedrift-a, B er 1002 / testbedrift-b). Sjekk gruppene, kort og
+     rader, innstillingslinjen som brytes, og at listen følger produktet opp til
+     900 px.
+  2. Ekte iPhone 13 over lokalnettet med PROGNOSE_LAN_HOST, som sist, inkludert
+     at kort og rader kan trykkes overalt.
+  3. NFR-8-håndsjekk på laptopen din, mot en egen database ved siden av den
+     vanlige. Kjør i et eget terminalvindu:
+     - bash <scratchpad>
+       /s28/nfr8.sh start oppretter
+       prognose_nfr8, fyller den med 50 produkter på 104 uker og starter appen
+       på http://127.0.0.1:8765/ (kundenummer 9999, passord nfr8-test).
+     - Mål hvor lenge /produkter/ brukes på å åpne (stoppeklokke eller Safaris
+       Nettverk-fane), og meld tallet.
+     - Når du er ferdig: Ctrl+C i det vinduet, så bash <samme sti>/nfr8.sh stop,
+       som sletter prognose_nfr8. Databasen prognose røres ikke.
+
+  Meld resultatene i chatten, med Safari-, macOS- og iOS-versjon hvis du vil ha
+  dem ført. Da fører jeg dem i QA-loggen, setter spec-en til done, tar
+  sesjonsloggen og issues.md, kjører personvernskanning av alle tilføyde linjer
+  og legger fram commit-forslaget til godkjenning. Jeg committer og pusher ikke
+  uten at du sier ja.
+
+✻ Baked for 6m 18s · done 7:22 PM
+※ recap: Mål: levere story 2.8, produktlisten i R-12-rekkefølge med innstillingslinje, uten commit før du godkjenner. Koden, testene, reviewen og dokumentene er ferdige. Neste: du gjør Safari-, iPhone- og NFR-8-testene og melder resultatet i chatten.
+
+❯ Kontroller at NFR-8-testskriptet fortsatt finnes, og at det kun oppretter og  
+  sletter den isolerte testdatabasen. Verifiser at den vanlige databasen ikke   
+  berøres. Gi meg deretter én trygg kommando for å starte den manuelle          
+  ytelsestesten. Ikke endre kode, commit eller push.                            
+
+⏺ Jeg sjekker at skriptene finnes, leser dem på nytt, og verifiserer den vanlige
+  databasen med skrivebeskyttede spørringer.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Skriptet finnes og er trygt. Jeg leste det på nytt og kjørte ingenting nå,
+  bare skrivebeskyttede spørringer mot databasen.
+
+  Kontroll
+
+  - Filene finnes: nfr8.sh og nfr8_fill.py ligger i .../scratchpad/s28/.
+  - Bare den isolerte databasen opprettes og slettes: sql() kjører bare DROP 
+    DATABASE IF EXISTS prognose_nfr8 og CREATE DATABASE prognose_nfr8, med
+    navnet skrevet inn. Den kobler til vedlikeholdsdatabasen postgres, ikke til
+    prognose.
+  - DATABASE_URL settes bare for start: migrate, utfyllingen og serveren går mot
+    prognose_nfr8. Det eneste som lages der er én bedrift, 50 produkter og 5200
+    salgsuker, og skriptet sletter ingen rader.
+  - Ekstra sikring: nfr8_fill.py avbryter med assert før noen skriving hvis
+    databasenavnet ikke inneholder prognose_nfr8, og set -e stopper skriptet da.
+  - stop: den stopper bare runserver på port 8765 og sletter prognose_nfr8.
+  - Den vanlige databasen er uberørt: prognose har 2 bedrifter, 62 produkter,
+    5016 salgsuker og 2 innstillingsrader, akkurat som før og etter forrige
+    kjøring. Det finnes bare to databaser nå, postgres og prognose, så
+    prognose_nfr8 er slettet.
+  - Ellers: port 8765 er ledig og ingen runserver kjører. Ingen kode, commit
+    eller push er gjort siden sist, og arbeidstreet har samme 28 endrede og nye
+    filer.
+
+  Kommando
+
+  Kjør den i et eget terminalvindu, ikke med ! her, fordi serveren kjører i
+  forgrunnen:
+
+  bash <scratchpad>
+  /s28/nfr8.sh start
+
+  Den åpner http://127.0.0.1:8765/ med kundenummer 9999 og passord nfr8-test.
+  Mål hvor lenge /produkter/ brukes på å åpne, og meld tallet i chatten.
+
+  Når du er ferdig, trykk Ctrl+C og kjør samme kommando med stop i stedet for
+  start. Det sletter prognose_nfr8.
+
+  start sletter en eventuell gammel prognose_nfr8 først, så den kan kjøres på
+  nytt uten å rydde.
+
+✻ Sautéed for 27s · done 8:12 PM
+
+※ recap: Vi bygger story 2.8, produktlisten i R-12-rekkefølge med innstillingslinje. Koden, testene, reviewen og dokumentene er ferdige, men uten commit. Neste steg er at du kjører NFR-8-kommandoen i et eget terminalvindu og melder tiden.
+
+❯ De manuelle testene for story 2.8 er gjennomført.                             
+                                                                                
+  Safari responsiv visning: 1366 × 768, 820 × 1180, 390 × 844 og 320 × 844, med 
+  Testbedrift A og B. Gruppering, produktkort, kompakte rader, tillitsmerker,   
+  innstillingslinjens linjebryting og plassering av produktlisten er            
+  kontrollert uten synlig sidelengs rulling.                                    
+                                                                                
+  Ekte iPhone 13: Testbedrift A. Produktkortene for 10012 og 10040 samt den     
+  kompakte raden for Malertape 25 mm åpnet riktig produktside ved trykk på      
+  kortflaten.                                                                   
+                                                                                
+  NFR-8: Isolert testdatabase med 50 produkter × 104 uker. Safari viste 123 ms  
+  for /produkter/ og 142 ms totalt. Testserveren er stoppet, og prognose_nfr8   
+  er slettet. Den vanlige databasen er uendret.                                 
+                                                                                
+  Før resultatene nøyaktig i QA-loggen. Fullfør sesjonsloggen, issues.md og     
+  relevant dokumentasjon. Kontroller reviewfunn, mutasjoner, testtall og        
+  personvern. Presenter samlet status og commit-forslag før videre arbeid.      
+                                                                                
+  Ingen commit eller push uten min godkjenning. Ikke start neste story.         
+
+⏺ Jeg begynner med å bekrefte det jeg kan: at databasene er som du melder, og
+  dagens tilstand på treet. Så leser jeg sesjonslogg-skillen.
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Skillen vil at loggfilen committes straks, men det strider mot regelen om
+  ingen commit uten godkjenning, så jeg lar loggfilene ligge ukommittert som del
+  av commit-forslaget. Deretter ser jeg på formatet i forrige logg og
+  issues-punktene for 2.8. · summary
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå fører jeg dine resultater nøyaktig i QA-loggen, og oppdaterer spec,
+  statustabell og arbeidslogg der de sa «ikke gjennomført ennå».
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Dokumentene er oppdatert. Nå sesjonsloggen og issues.md.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå en siste testkjøring og personvernskanning av alle tilføyde linjer og nye
+  filer.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Alt er klart til godkjenning. Ingenting er committet eller pushet, og jeg har
+  ikke startet story 2.9.
+
+  Samlet status
+
+  - Branch: story/2-8-list-the-products-in-r-12-order fra aa9a900.
+  - Spec: done. sprint-status.yaml har story 2.8 som review, som i 2.7 til etter
+    fletting.
+  - Tester: 1099 bestått, 1 hoppet over (var 1058 og 1). Ruff-sjekk,
+    format-sjekk og makemigrations --check er rene. CI gir én test mer, 1100,
+    fordi Docker-sjekken kjører der.
+  - Mutasjoner: 41 før reviewen, alle fanget. I siste kjøring var 43 av 45
+    fanget. De to siste ble skrevet om mot den endrede koden og fanget, og én av
+    dem var en ekvivalent mutant.
+  - Review: de fire granskerne ga 30 funn i 23 grupper: 5 rettet, 1 avgjort av
+    deg (A, kortet uten prognose følger mockupen), 1 utsatt (deferred-work.md)
+    og 16 avvist. Hashen av alle filer var identisk før og etter.
+  - Dine manuelle tester: ført ordrett i QA-loggen.
+    - Safari ved 1366 × 768, 820 × 1180, 390 × 844 og 320 × 844, for Testbedrift
+      A og B.
+    - iPhone 13 (Testbedrift A): 10012, 10040 og raden for Malertape.
+    - NFR-8: 123 ms for /produkter/ og 142 ms totalt, godt under målet på 2000
+      ms.
+    - Jeg kontrollerte etterpå, bare ved lesing, at prognose fortsatt har 2
+      bedrifter, 62 produkter og 5016 uker, og at ingen server kjører.
+  - Ikke meldt, og ikke ført som bestått: Safari-, macOS- og iOS-versjon,
+    produktnumrene i Safari, Testbedrift B på iPhonen og Tab-rekkefølgen. De
+    står som åpne punkter.
+  - Dokumentasjon: QA-loggen, statustabellen (FR-24 delvis bygd, pluss FR-2,
+    FR-8, FR-19, FR-20), arbeidsloggen og KI-styringsloggen (tilfelle 45) er
+    kontrollert mot faktiske kjøringer. Én gammel feil fra 2.6 er rettet: et
+    testnavn i statustabellen. Sesjonsloggen (968-…story-2-8-…md) og issues.md
+    er skrevet; 3 punkter er lukket og 4 nye er lagt til.
+  - Personvern: jeg skannet alle tilføyde linjer og nye filer (1551 linjer). Det
+    er ingen lokale stier, e-postadresser, IP-adresser, telefonnumre, nøkler
+    eller passord. De eneste treffene er git-brukernavnet «Mounia-03» i
+    sesjonsloggens overskrift (som i tidligere logger) og repo-stien
+    .logs/mounia-03/.
+  - Skillen sesjonslogg: den krever at loggfilen committes straks. Det har jeg
+    ikke gjort, fordi din regel om ingen commit uten godkjenning går foran, og
+    CLAUDE.md sier at gruppens commitregler gjelder først.
+
+  Commit-forslag
+
+  Tre commits, som i 2.7. Hver melding ender med Co-Authored-By: Claude Sonnet 
+  5.5 <noreply@anthropic.com>.
+
+  1. «Bygg story 2.8: produktlisten i R-12-rekkefølge og innstillingslinjen»
+     - Alt under src/ og tests/: 3 nye filer i src/, 2 nye testfiler og 14
+       endrede filer.
+  2. «Før inn spesifikasjonen og dokumentene for story 2.8»
+     - Spec, docs/statustabell.md, docs/qa-logg.md, docs/ki-styringslogg.md,
+       docs/arbeidslogg.md, deferred-work.md og sprint-status.yaml.
+  3. «Logg: story 2.8 produktlisten i R-12-rekkefølge»
+     - Bare .logs/mounia-03/968-2026-11-27-20-25-50-story-2-8-produktlisten-i-r-
+       12-rekkefolge.md og issues.md.
+
+  Commit-hashen til kode-commiten føres i QA-loggen og KI-styringsloggen (de
+  står nå som «ikke committet ennå»). Jeg fører den inn i commit 2, så commit 1
+  må gjøres først.
+
+  Etter commit venter jeg på ditt ja til push og PR. Jeg bruker SSH som sist, og
+  flettingen venter på CI og Windows. Sier du ja til commitene, kjører jeg dem
+  i denne rekkefølgen og viser git show --stat for hver.
+
+✻ Churned for 2m 40s · done 8:27 PM
+
+※ recap: Goal: finish BMAD story 2.8, the product list in R-12 order, with tests, review, mutations and docs all done and manual tests passed. Next action: you approve my three-commit proposal, or say no, since nothing is committed or pushed.
+
+❯ Jeg godkjenner de tre commitene i foreslått rekkefølge for story 2.8.         
+                                                                                
+  Før kodehashen korrekt inn i QA-loggen og KI-styringsloggen. Kontroller at de 
+  endelige mutasjonsresultatene og alle 30 BMAD-funn er dokumentert, inkludert  
+  ekvivalent mutant og utsatt funn.                                             
+                                                                                
+  Gjennomfør commitene og vis kort status med hash og git show --stat for hver. 
+  Ingen push eller PR før min neste godkjenning.                                
+
+⏺ Først kontrollerer jeg at alle 30 funn og mutasjonsresultatene er dokumentert,
+  før jeg committer.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Dokumentasjonen er ferdig: alle 30 funn er ført i triage-loggen, og
+  mutasjonsresultatene er registrert. Neste steg er commit 1 med kode og tester.
+  · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Commit 1 er 371715e. Nå fører jeg hashen inn i QA-loggen, KI-styringsloggen,
+  arbeidsloggen og sesjonsloggen.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Commit 2 er f39da2c. Commit 3: sesjonsloggen med issues.md.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alle tre commitene er gjort på story/2-8-list-the-products-in-r-12-order.
+  Arbeidstreet er rent, og ingenting er pushet. Branchen finnes ikke på origin,
+  og det er ikke laget PR.
+
+  #: 1
+  Hash: 371715e
+  Melding: Bygg story 2.8: produktlisten i R-12-rekkefølge og innstillingslinjen
+  git show --stat: 21 filer, +1257 / −209: 3 nye filer i src/, 2 nye testfiler
+  og
+  16 endrede filer
+  ────────────────────────────────────────
+  #: 2
+  Hash: f39da2c
+  Melding: Før inn spesifikasjonen og dokumentene for story 2.8
+  git show --stat: 7 filer, +259 / −7: spec, deferred-work.md,
+  sprint-status.yaml, statustabell, QA-logg, KI-styringslogg og arbeidslogg
+  ────────────────────────────────────────
+  #: 3
+  Hash: 4c11e8a
+  Melding: Logg: story 2.8 produktlisten i R-12-rekkefølge
+  git show --stat: 2 filer, +36 / −3: sesjonsloggen og issues.md
+
+  Hver commit-melding ender med Co-Authored-By: Claude Sonnet 5.5.
+
+  Kodehashen 371715e er ført 13 steder i QA-loggen (byggings- og
+  reviewtabellene), i KI-styringsloggen (tilfelle 45), i arbeidsloggen og i
+  sesjonsloggen. Ingen «ikke committet ennå» står igjen i dokumentene. Hashene
+  til commit 2 og 3 står bare her, fordi en commit ikke kan inneholde sin egen
+  hash.
+
+  Før commit 1 kjørte jeg dokumentkontrollen:
+  - Funn: alle 30 funn-ID-ene (BH-1–12, EC-1–11, VG-1–2, AA-1–5) står i
+    triage-loggen i 23 grupper: 5 rettet, 1 avgjort av deg, 1 utsatt og 16
+    avvist.
+  - Utsatt funn: BH-1 ligger i deferred-work.md.
+  - Mutasjoner: 41 før reviewen og 45 i siste kjøring, med den ekvivalente
+    mutanten, står i spec, QA-logg, KI-styringslogg og arbeidslogg.
+  - Tester: hele pakken ga 1099 bestått og 1 hoppet over også etter
+    dokumentendringene, rett før commit 2.
+
+  Neste steg er push og PR. Det venter på ditt ja, og jeg starter ikke story
+  2.9.
+
+✻ Cooked for 1m 27s · done 8:32 PM
+
+❯ Jeg godkjenner SSH-push og PR for story 2.8.Kontroller at alle tre commits er 
+  med. Ta med alle 30 BMAD-funn med beslutninger og riktige commit-hasher i     
+  PR-en.Flett først når CI og Windows-testene er grønne på siste commit.        
+  Fullfør deretter flettelogg og oppdater sprintstatus, arbeidslogg og faktiske 
+  CI-testtall.Kontroller grønn CI på main. Sesjonseksporten og siste            
+  dokumentasjons-PR tar vi før avslutning.Ikke start story 2.9.                 
+
+⏺ Jeg starter med å kontrollere at alle tre commitene er med, hvordan 2.7 ble
+  pushet og flettet, og at gh er innlogget.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Mønsteret fra PR #44 er klart. Jeg pusher grenen over SSH, så lager jeg PR-en
+  med alle 30 funn i en kommentar, slik som sist.
+
+  Pushed to story/2-8-list-the-products-in-r-12-order (ctrl+o to expand)
+⏺ Remote-hodet er 4c11e8a, så alle tre commitene er med. Nå PR-teksten og
+  funn-kommentaren.
+
+  Created PR #47 (ctrl+o to expand)
+
+⏺ PR #47 er opprettet. Nå kommentaren med alle funnene, og så følger jeg CI og
+  Windows.
+
+  Commented on PR #47 (ctrl+o to expand)
+
+⏺ Begge kontrollene kjører på 4c11e8a. Jeg venter til de er ferdige.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ PR #47 er åpnet med alle tre commitene (4c11e8a er hodet), og funn-kommentaren
+  er lagt ved. CI og Windows kjører. Jeg fletter ikke før begge er grønne på
+  siste commit, og får beskjed når de er ferdige.
+
+✻ Sautéed for 1m 29s · done 8:35 PM
+
+⏺ Background command "Wait for CI and Windows checks to finish" completed (exit
+code 0)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Begge er grønne på 4c11e8a: CI-kjøring nr. 88 og Windows-kjøring nr. 23. Jeg
+  henter det faktiske testtallet fra CI-loggen før jeg fletter.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ CI viser 1100 bestått. Nå flettingen lokalt med --no-ff over SSH, som i 2.7
+  (ingen squash eller rebase).
+
+  Pushed to main, ran 1 shell command (ctrl+o to expand)
+
+⏺ PR #47 er flettet (9c02d14, foreldre aa9a900 og 4c11e8a). CI på main kjører,
+  og jeg venter på resultatet.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ main er grønn: CI nr. 89 med 1100 bestått. Nå flettelogg-PR-en, som i 2.7. Den
+  endrer bare loggene og sprint-status.yaml.
+
+  Pushed to docs/log-pr-47-merge, created PR #48, ran 2 shell commands (ctrl+o to expand)
+
+⏺ PR #48 er opprettet. Jeg venter på CI.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ CI nr. 90 er grønn på 2174fd5 (Windows kjører ikke for rene dokument-PR-er).
+  Jeg fletter på samme måte som sist.
+
+  Pushed to main, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Story 2.8 er flettet i main, og CI på main er grønn. Lokal main er i sync med
+  origin/main, og jeg har ikke startet story 2.9.
+
+  Gjort
+
+  - Alle tre commits var med: remote-hodet var 4c11e8a.
+  - PR #47 (story 2.8) har en kommentar med alle 30 funn i 23 grupper, med
+    beslutning og commit:
+    - 5 rettet: 371715e
+    - 1 avgjort av deg (AA-3): 371715e og f39da2c
+    - 1 utsatt (BH-1): f39da2c
+    - 16 avvist uten kodeendring
+  - CI og Windows på 4c11e8a: CI-kjøring nr. 88 med 1100 bestått,
+    Windows-kjøring nr. 23. Begge var grønne før flettingen.
+  - Flettingen: git merge --no-ff lokalt og push over SSH, som i 2.7. PR #47 er
+    flettet som 9c02d14 (foreldre aa9a900 og 4c11e8a). Innholdet i main er
+    identisk med PR-hodet.
+  - CI på main: kjøring nr. 89 på 9c02d14 er grønn, 1100 bestått.
+  - Flettelogg-PR #48: den endrer bare loggene og sprint-status.yaml.
+    - Story 2.8 står som done i sprint-status.yaml.
+    - Arbeidsloggen, sesjonsloggen, KI-styringsloggen og issues.md er oppdatert.
+    - Arbeidsloggen har de faktiske CI-tallene, og issues.md har et nytt punkt
+      om sesjonseksporten.
+    - Fletting: PR #48 er flettet som 06a8b3d, etter at CI nr. 90 var grønn på
+      PR-en. CI nr. 91 på main er grønn, 1100 bestått.
+
+  Husk
+
+  - Ikke ført ennå: CI-kjøringene for #48 (nr. 90 og 91) står bare her. Jeg tar
+    dem med i den siste dokumentasjons-PR-en, slik 2.7 gjorde.
+  - Gjenstår før avslutning: sesjonseksporten (/export, som du kjører) og den
+    siste dokumentasjons-PR-en. Brannen på Safari-, macOS- og iOS-versjonene er
+    fortsatt ikke meldt.
+  - Grener: story/2-8-list-the-products-in-r-12-order og docs/log-pr-47-merge er
+    beholdt, som sist.
+
+✻ Crunched for 5m 2s · done 8:41 PM
