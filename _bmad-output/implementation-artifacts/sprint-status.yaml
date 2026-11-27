@@ -29,7 +29,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 11-19-2026 20:56
-last_updated: 11-27-2026 19:20
+last_updated: 11-27-2026 20:40
 project: G40-lyamouri
 project_key: NOKEY
 tracking_system: file-system
@@ -54,7 +54,7 @@ development_status:
   2-5-give-each-product-its-warnings-notes-and-confidence-label: done
   2-6-sort-the-products-by-what-needs-ordering-first: done
   2-7-show-what-to-order-and-whether-to-trust-it-on-the-product-sc: done
-  2-8-list-the-products-in-r-12-order: review
+  2-8-list-the-products-in-r-12-order: done
   2-9-show-how-the-forecast-and-the-order-quantity-were-calculated: backlog
   2-10-show-the-sales-history-and-the-forecast-in-a-chart-also-as-t: backlog
   2-11-go-through-the-week-s-products-and-find-a-product-quickly: backlog
