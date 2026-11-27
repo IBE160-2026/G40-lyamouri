@@ -7,8 +7,8 @@
 {% block main %}
   <div class="shell">
     <nav class="list" aria-label="Produkter">
-      <h2>Produktoversikt</h2>
-      {% include "web/_product_list.html" %}
+      <h2 class="list-title">Produktoversikt <span>{{ product_count }}</span></h2>
+      {% include "web/_product_list.html" with level=3 %}
     </nav>
     <main class="detail" id="valgt-produkt" aria-label="Valgt produkt" tabindex="0">
       <div class="product-head">

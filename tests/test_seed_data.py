@@ -8,14 +8,12 @@ verifies no FR names its NFR, DR or AD (D-10).
 
 import copy
 import json
-import math
 import re
 import shutil
 import subprocess
 import sys
 from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
-from fractions import Fraction
 from pathlib import Path
 from statistics import mean, median
 
@@ -552,81 +550,6 @@ def test_the_demo_products_of_testbedrift_a_follow_the_mockup():
             assert expected == mockup_text
             expected = ours
         assert text == expected, name
-
-
-def week_1_forecast(product):
-    """The moving average of the last three valid weeks (R-3 with the FR-20
-    default window), or None for fewer than 3 valid weeks (R-6)."""
-    units = valid_units(product)
-    return Fraction(sum(units[-3:]), 3) if len(units) >= 3 else None
-
-
-def suggested_quantity(product):
-    """R-8 with the FR-20 default safety margin, read from the PRD. A stand-in
-    for the core, which story 2.8 uses to check the same figures."""
-    margin = answer_key.prd_defaults()["safety_margin"]
-    need = week_1_forecast(product) * Fraction(100 + margin, 100)
-    return max(0, math.ceil(need - product["stock_on_hand"]))
-
-
-def warning_shapes(product):
-    """The R-15 warnings by their shapes in the data: a stockout, an unusual
-    week or a new level in the last 12 weeks, old data, no forecast."""
-    count = len(product["units_sold"])
-    valid_positions = set(range(1, count + 1)) - set(product["stockout_positions"])
-    return {
-        "stockout_weeks": bool(
-            set(product["stockout_positions"]) & set(recent_positions(product))
-        ),
-        "unusual_weeks": any(
-            baseline_spike(product, i) for i in recent_positions(product)
-        ),
-        "level_shift": has_level_shift(product),
-        "old_data": count - max(valid_positions, default=0) > 8,
-        "insufficient_data": week_1_forecast(product) is None,
-    }
-
-
-def test_denne_uken_for_testbedrift_a_matches_the_mockup_and_the_ux_flow():
-    """UX-DR46: the products to order soon, their suggested quantities and the
-    total, the product without a forecast and the four products with warnings
-    follow the mockup and Flow 1, and the other products need no order and
-    show no warning."""
-    products = {p["product_number"]: p for p in committed(FILES[0])["products"]}
-    mockup = answer_key.mockup_products()
-    overview = answer_key.mockup_overview()
-    e8 = generate_seed.COMPANIES[0]["from_workbook"]["E8"][0]
-    with_warning = {
-        mockup["Strøsand 25 kg"]["number"],
-        mockup["Skruer 4×40 mm, 200 stk."]["number"],
-        mockup["Snøskuffe aluminium"]["number"],
-        e8,
-    }
-
-    assert len(products) == overview["products"]
-    quantities = {
-        number: suggested_quantity(p)
-        for number, p in products.items()
-        if week_1_forecast(p) is not None
-    }
-    to_order = {number: q for number, q in quantities.items() if q > 0}
-    assert len(to_order) == overview["order_soon"]
-    assert sum(to_order.values()) == overview["units"]
-    for shown in mockup.values():
-        if shown["quantity"] != "–":
-            assert quantities[shown["number"]] == int(shown["quantity"]), shown
-    assert [n for n in products if week_1_forecast(products[n]) is None] == [
-        mockup["Snøskuffe aluminium"]["number"]
-    ]
-    assert overview["without_forecast"] == 1
-    warned = {n for n, p in products.items() if any(warning_shapes(p).values())}
-    assert warned == with_warning
-    shown_numbers = {shown["number"] for shown in mockup.values()}
-    for number in set(products) - shown_numbers - {e8}:
-        assert not products[number]["stockout_positions"], number
-        assert not any(baseline_spike(products[number], i) for i in range(4, 105)), (
-            number
-        )
 
 
 def test_the_seed_dates_are_iso_weeks_that_exist():

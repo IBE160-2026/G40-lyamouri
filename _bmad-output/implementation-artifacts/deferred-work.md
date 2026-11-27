@@ -44,3 +44,7 @@
 ## Deferred from: code review of spec-2-7-show-what-to-order-and-whether-to-trust-it-on-the-product-screen.md (2026-11-27)
 
 - A `CompanySettings` row with a window, a factor, a percentage or a method outside the FR-20 ranges makes `load_company_data` raise `ValueError` from the core's `check_settings`, so every product screen of that company gives a 500 (EC-1). Nothing in the app writes such a row today (`load_seed` writes the defaults), so it is not reachable yet. Story 3.1's form must stop the value first and keep the previous one, and decide whether the model also validates, as the Story 1.7 entry above says.
+
+## Deferred from: code review of spec-2-8-list-the-products-in-r-12-order.md (2026-11-27)
+
+- The empty state of the product list says «Ingen data er lastet inn. Kjør uv run python src/manage.py load_seed som står i README.» for a company without products (BH-1). Message Catalogue row «No products» and the criterion fix the sentence and name the README's load command, but `load_seed` stops with a message on a database that is not empty, and a company without products is a row in a database that is not empty, so the command cannot help that user (`--reset` deletes all data and asks for a confirmation). Nothing in the app creates such a company today, so it is not reachable yet. Decide with the next change to the catalogue whether the sentence should name `--reset` or the README's section on a database that is not empty.

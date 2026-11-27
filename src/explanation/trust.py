@@ -187,6 +187,22 @@ def _condition_phrase(result, warning_phrases):
     raise ValueError(f"no reason text for the condition {condition!r}")
 
 
+def _reason_parts(result):
+    """The deciding condition as a phrase, then each other active warning as a sentence."""
+    warning_phrases = [
+        phrase
+        for phrase in (_recent_phrase(result), _old_data_phrase(result))
+        if phrase is not None
+    ]
+    condition = _condition_phrase(result, warning_phrases)
+    others = (
+        warning_phrases[1:]
+        if result.confidence_condition == trust.ACTIVE_WARNING
+        else warning_phrases
+    )
+    return condition, [_sentence(phrase) for phrase in others]
+
+
 def confidence_reason(result):
     """The reason for the label: «Middels: 2 utsolgte uker og 1 uvanlig uke de siste 12
     ukene.» It names the deciding condition, then each other active warning as a sentence.
@@ -195,17 +211,20 @@ def confidence_reason(result):
     active warning decides, the first phrase is the condition. Insufficient data is named
     by the condition of a product without a forecast, so it is not repeated.
     """
-    warning_phrases = [
-        phrase
-        for phrase in (_recent_phrase(result), _old_data_phrase(result))
-        if phrase is not None
-    ]
+    condition, others = _reason_parts(result)
     label = LABEL_WORDS[result.confidence_label]
-    sentences = [f"{label}: {_condition_phrase(result, warning_phrases)}."]
-    others = (
-        warning_phrases[1:]
-        if result.confidence_condition == trust.ACTIVE_WARNING
-        else warning_phrases
-    )
-    sentences.extend(_sentence(phrase) for phrase in others)
-    return " ".join(sentences)
+    return " ".join([f"{label}: {condition}.", *others])
+
+
+def card_reason(result):
+    """The reason that a card or a row of the product list shows (UX-DR17, UX-DR18): the
+    reason without the label word and without the last full stop, «Nytt nivå de siste 12
+    ukene». It is None for the label «høy», whose reason the list leaves out, and for a
+    product without a forecast, whose card already shows the FR-8 reason in red in place of
+    the forecast. That follows the mockup, not the wording of the acceptance criterion, which
+    would give the same reason twice (the user's decision, 2026-11-27)."""
+    if result.confidence_label == trust.HOY or result.base_forecast is None:
+        return None
+    condition, others = _reason_parts(result)
+    text = " ".join([_sentence(condition), *others])
+    return text.removesuffix(".")

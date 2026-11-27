@@ -24,6 +24,7 @@
     </nav>
     {% endif %}
   </header>
+  {% if app_header %}{% include "web/_settings_bar.html" %}{% endif %}
   {% block main %}{% endblock %}
 </body>
 </html>

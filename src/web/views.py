@@ -15,10 +15,10 @@ from django.views.decorators.http import (
     require_safe,
 )
 
-from explanation import decision
+from explanation import decision, product_list, settings_bar
 from explanation import trust as trust_texts
 from forecasting import display, trust
-from web import company_data, queries
+from web import company_data
 from web.forms import LoginForm
 
 logger = logging.getLogger("django.security.csrf")
@@ -44,22 +44,79 @@ WARNING_ROWS = {
 LOGIN_ERROR = "Feil kundenummer eller passord."
 
 
-def header_context(company, current, week=False):
-    """What the app header of a logged-in page shows (UX-DR14).
+def header_context(company, current, data):
+    """What the app header and the settings bar of a logged-in page show (UX-DR14,
+    UX-DR15).
 
-    current names the page marked as the current one. The latest data week is
-    derived from the company's sales weeks (AD-8); a page that has already read it
-    through the loader passes it as week (None for a company without a week), and the
-    others leave it out, so that it is read here.
+    current names the page marked as the current one. The latest data week is derived
+    from the company's sales weeks (AD-8) and the settings are the company's; both come
+    from the loader's data.
     """
-    if week is False:
-        week = queries.latest_data_week(company)
+    week = data.latest_week
     return {
         "app_header": {
             "company_name": company.name,
             "latest_week": display.header_week_label(*week) if week else None,
             "current": current,
+            "settings_bar": {
+                "label": settings_bar.LABEL,
+                "values": settings_bar.settings_texts(data.settings),
+                "note": settings_bar.SCOPE_NOTE,
+            },
         }
+    }
+
+
+def label_context(result):
+    """The trust label of a result as the templates place it: its word, style and shape."""
+    return {
+        "word": trust_texts.LABEL_WORDS[result.confidence_label],
+        "kind": LABELS[result.confidence_label][0],
+        "shape": LABELS[result.confidence_label][1],
+    }
+
+
+def list_context(data, selected=None):
+    """The product list of a page (FR-24, UX-DR16 to UX-DR18): the groups of R-12 in
+    their order, each product joined with its result. The order and the groups come from
+    `build_overview` (AD-2); an empty group is not shown. `selected` is the product number
+    of the open product screen."""
+    overview = data.overview
+    products = {product.product_number: product for product in data.product_list}
+    groups = []
+    for key, numbers in (
+        (product_list.ORDER_SOON, overview.order_soon),
+        (product_list.WITHOUT_FORECAST, overview.without_forecast),
+        (product_list.OTHERS, overview.others),
+    ):
+        if not numbers:
+            continue
+        groups.append(
+            {
+                "key": key,
+                "heading": product_list.HEADINGS[key],
+                "summary": product_list.group_summary(
+                    key, len(numbers), overview.figures.units_suggested
+                ),
+                "cards": key != product_list.OTHERS,
+                "items": [
+                    {
+                        "product": products[number],
+                        "result": data.results[number],
+                        "selected": number == selected,
+                        "label": label_context(data.results[number]),
+                        "reason": trust_texts.card_reason(data.results[number]),
+                        "no_forecast_text": trust_texts.list_text(data.results[number]),
+                    }
+                    for number in numbers
+                ],
+            }
+        )
+    return {
+        "groups": groups,
+        "product_count": product_list.product_count(len(products)),
+        "no_data": product_list.NO_DATA,
+        "has_products": bool(products),
     }
 
 
@@ -104,13 +161,12 @@ def logout(request):
 @never_cache
 @require_safe
 def product_overview(request):
-    """The product overview at /produkter/ (FR-2): the company's own products.
-
-    Epic 2 replaces this list with the full overview.
-    """
+    """The product overview at /produkter/ (FR-2, FR-24): the company's own products in
+    the groups of R-12. Story 2.11 adds «Denne uken» to the right of the list."""
     company = request.user
-    context = header_context(company, "products")
-    context["products"] = queries.products_for_company(company)
+    data = company_data.load_company_data(company)
+    context = header_context(company, "products", data)
+    context.update(list_context(data))
     return render(request, "web/products.html", context)
 
 
@@ -130,18 +186,13 @@ def product_screen(request, product_number):
     product = next(p for p in data.product_list if p.product_number == product_number)
     # Without a sales week there is no forecast, and no text then needs the week.
     iso_year, iso_week = data.latest_week or (None, None)
-    context = header_context(company, "products", data.latest_week)
+    context = header_context(company, "products", data)
+    context.update(list_context(data, product_number))
     context.update(
         {
-            "products": data.product_list,
             "product": product,
             "result": result,
-            "selected": product_number,
-            "label": {
-                "word": trust_texts.LABEL_WORDS[result.confidence_label],
-                "kind": LABELS[result.confidence_label][0],
-                "shape": LABELS[result.confidence_label][1],
-            },
+            "label": label_context(result),
             "reason": trust_texts.confidence_reason(result),
             "decision": decision.decision_texts(result, iso_year, iso_week),
             "warnings": [

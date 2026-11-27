@@ -371,48 +371,6 @@ input[type="password"] {
   padding: var(--space-2) var(--space-4) var(--space-8);
 }
 
-.product-table {
-  width: 100%;
-  border: 1px solid var(--color-border);
-  border-collapse: collapse;
-  background: var(--color-surface);
-}
-
-.product-table th,
-.product-table td {
-  padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--color-border);
-  text-align: left;
-}
-
-.product-table th {
-  color: var(--color-muted);
-  font-family: var(--font-label-family);
-  font-size: var(--font-label-size);
-  font-weight: var(--font-label-weight);
-  line-height: var(--font-label-line-height);
-}
-
-.product-table .number {
-  text-align: right;
-}
-
-/* The product list: a name that links, and the selected product in blue-tint (UX-DR6). */
-
-.product-table a {
-  color: var(--color-blue);
-}
-
-.product-table tr.selected td {
-  background: var(--color-blue-tint);
-  color: var(--color-blue-ink);
-}
-
-.product-table a[aria-current="page"] {
-  color: var(--color-blue-ink);
-  font-weight: var(--font-label-weight);
-}
-
 /* The skip link «Gå til produktet» is the first focusable element and shows when it has focus (UX-DR44). */
 
 .skip-link {
@@ -487,6 +445,252 @@ input[type="password"] {
   margin: var(--space-1) 0 0;
   color: var(--color-muted);
   font-size: var(--font-body-sm-size);
+}
+
+/* The settings bar of every page after login (UX-DR15): a white strip with a hairline
+   below. It wraps onto more lines instead of being cut off (UX-DR7). The values are in
+   ink, weight 600, and the scope note is pushed to the right. */
+
+.settings-bar {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-4);
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-body-sm-size);
+}
+
+.settings-bar b {
+  font-weight: var(--font-label-weight);
+}
+
+.settings-label {
+  color: var(--color-muted);
+}
+
+.settings-note {
+  margin-left: auto;
+  color: var(--color-muted);
+  font-size: var(--font-meta-size);
+}
+
+/* The overview page: the list in a tidy column until «Denne uken» comes (Story 2.11). */
+
+.list-column {
+  max-width: 640px;
+}
+
+/* The product list (UX-DR16 to UX-DR18): the heading with the count, a group heading
+   with its summary at the right, cards and rows that are each one link. */
+
+.list-title,
+.grp {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.list-title span,
+.grp span {
+  color: var(--color-muted);
+  font-family: var(--font-meta-family);
+  font-size: var(--font-meta-size);
+  font-weight: var(--font-meta-weight);
+  text-align: right;
+}
+
+.page .list-title {
+  max-width: 640px;
+}
+
+.grp {
+  margin: var(--space-6) var(--space-1) var(--space-2);
+  font-family: var(--font-subsection-title-family);
+  font-size: var(--font-subsection-title-size);
+  font-weight: var(--font-subsection-title-weight);
+  line-height: var(--font-subsection-title-line-height);
+}
+
+.group:first-child .grp {
+  margin-top: 0;
+}
+
+.empty {
+  margin: 0 var(--space-1);
+}
+
+.pcard,
+.prow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-3);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.pcard {
+  margin: 0 0 var(--space-2);
+  padding: var(--space-card-padding);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.nm {
+  font-family: var(--font-card-title-family);
+  font-size: var(--font-card-title-size);
+  font-weight: var(--font-card-title-weight);
+  line-height: var(--font-card-title-line-height);
+}
+
+.no,
+.prow .facts {
+  color: var(--color-muted);
+  font-size: var(--font-meta-size);
+}
+
+.qty {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  text-align: right;
+}
+
+.qty small {
+  display: block;
+  color: var(--color-muted);
+  font-size: var(--font-meta-size);
+  line-height: var(--font-label-line-height);
+}
+
+.qty b {
+  display: block;
+}
+
+.pcard .qty b {
+  color: var(--color-blue);
+  font-family: var(--font-order-number-card-family);
+  font-size: var(--font-order-number-card-size);
+  font-weight: var(--font-order-number-card-weight);
+  line-height: var(--font-order-number-card-line-height);
+}
+
+.pcard .qty .qty-ink {
+  color: var(--color-ink);
+}
+
+.pcard .facts {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  margin-top: var(--space-2);
+  color: var(--color-muted);
+  font-size: var(--font-meta-size);
+}
+
+.pcard .facts b {
+  color: var(--color-ink);
+  font-weight: var(--font-label-weight);
+}
+
+.trust {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  margin-top: var(--space-2);
+  font-size: var(--font-meta-size);
+}
+
+.why {
+  color: var(--color-muted);
+}
+
+/* Selected: blue-tint, a 2 px blue border and blue-ink secondary text. The padding is one
+   pixel less so that the card does not grow. Selection wins over the dashed red border,
+   and the red reason stays (UX-DR17, UX-DR44). */
+
+.pcard[aria-current="page"] {
+  padding: 11px 13px;
+  background: var(--color-blue-tint);
+  border: 2px solid var(--color-blue);
+}
+
+.pcard[aria-current="page"] .no,
+.pcard[aria-current="page"] .facts,
+.pcard[aria-current="page"] .qty small,
+.pcard[aria-current="page"] .why {
+  color: var(--color-blue-ink);
+}
+
+.pcard.nofc {
+  padding: 11px 13px;
+  border: 2px dashed var(--color-red);
+}
+
+.pcard.nofc[aria-current="page"] {
+  border: 2px solid var(--color-blue);
+}
+
+.pcard .reason {
+  color: var(--color-red);
+  font-weight: var(--font-label-weight);
+}
+
+.rows {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.prow {
+  padding: 10px 14px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* The rows follow the rounded corners of the box that holds them. */
+
+.prow:first-child {
+  border-top: 0;
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+}
+
+.prow:last-child {
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+.prow .nm {
+  font-size: var(--font-body-size);
+}
+
+.prow .qty b {
+  font-family: var(--font-order-number-row-family);
+  font-size: var(--font-order-number-row-size);
+  font-weight: var(--font-order-number-row-weight);
+  line-height: var(--font-order-number-row-line-height);
+}
+
+.prow .trust {
+  margin-top: 6px;
+}
+
+.prow[aria-current="page"] {
+  padding: 9px 13px;
+  background: var(--color-blue-tint);
+  border: 2px solid var(--color-blue);
+}
+
+.prow[aria-current="page"] .facts,
+.prow[aria-current="page"] .qty small,
+.prow[aria-current="page"] .why {
+  color: var(--color-blue-ink);
 }
 
 /* Decision panel and trust panel: side by side and equally high, stacked below 1181 px. */
@@ -666,14 +870,14 @@ input[type="password"] {
   select,
   textarea,
   .standalone-link,
-  .product-table a,
+  .pcard,
+  .prow,
   .header-nav a {
     min-width: 44px;
     min-height: 44px;
   }
 
   .standalone-link,
-  .product-table a,
   .header-nav a {
     display: inline-flex;
     align-items: center;

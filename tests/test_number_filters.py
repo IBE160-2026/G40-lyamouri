@@ -61,15 +61,24 @@ def test_a_filter_refuses_what_is_not_a_number(name, value, error):
         render("{{ value|" + name + " }}", value=value)
 
 
-def test_the_product_list_shows_the_stock_through_the_whole_number_filter():
-    """AD-3, FR-2: the stock on hand of the product list is printed by the filter,
-    so Story 2.8 and later lists keep one format. An integer prints the same either
-    way, so the template source is what the test reads."""
+def test_the_product_list_writes_every_number_through_a_filter():
+    """AD-3, FR-2, FR-24: the stock, the week-1 forecast, the quantity and the weeks of
+    cover of the product list are printed by the filters of `forecasting/display.py`, so
+    no list prints a raw number. An integer prints the same either way, so the template
+    source is what the test reads."""
     source = (TEMPLATES / "web" / "_product_list.html").read_text(encoding="utf-8")
 
     assert "{% load prognose %}" in source
-    assert re.search(r"\{\{\s*product\.stock_on_hand\|whole_number\s*\}\}", source)
-    assert not re.search(r"\{\{\s*product\.stock_on_hand\s*\}\}", source)
+    for value, name in [
+        ("item.product.stock_on_hand", "whole_number"),
+        ("item.result.week_forecasts.0", "one_decimal"),
+        ("item.result.suggested_order_quantity", "suggested_quantity"),
+        ("item.result.weeks_of_cover", "weeks_of_cover"),
+    ]:
+        assert re.search(rf"\{{\{{\s*{re.escape(value)}\|{name}\s*\}}\}}", source), (
+            value
+        )
+        assert not re.search(rf"\{{\{{\s*{re.escape(value)}\s*\}}\}}", source), value
 
 
 @pytest.mark.parametrize(

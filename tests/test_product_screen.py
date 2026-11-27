@@ -152,12 +152,13 @@ def test_a_product_with_an_order_shows_the_decision_and_the_trust(seed_pages):
 
 
 def test_the_two_panels_have_their_headings_and_one_page_title(seed_pages):
-    """UX-DR44: one h1, the product name; the panels have h2 and the list has an h2."""
+    """UX-DR44, UX-DR16: one h1, the product name; the panels have h2 and the list has an h2
+    with the product count."""
     screen = Screen(seed_pages("A", "10012"))
 
     assert [h for h in screen.headings if h[0] == "h1"] == [("h1", "Strøsand 25 kg")]
     assert [text for tag, text in screen.headings if tag == "h2"] == [
-        "Produktoversikt",
+        "Produktoversikt 30 produkter",
         "Hva bør du bestille?",
         "Kan du stole på prognosen?",
     ]
@@ -364,7 +365,10 @@ def test_the_trust_label_draws_its_shape_beside_the_word(seed_pages, number, sha
     """UX-DR5, UX-DR20: «Høy» is a circle, «Middels» a triangle and «Lav» a square, in
     the header and in the trust panel, and the shape is hidden from screen readers."""
     html = seed_pages("A", number)
-    pills = re.findall(r'<span class="pill [^"]*">(.*?)</span>', html)
+    # The list has small labels of its own (Story 2.8); this is the product area.
+    pills = re.findall(
+        r'<span class="pill [^"]*">(.*?)</span>', html[html.index("<main") :]
+    )
 
     assert len(pills) == 2
     for pill in pills:
@@ -392,14 +396,20 @@ def test_the_list_links_each_product_and_marks_the_open_one(two_companies):
     a, _ = two_companies
     html = open_product(a.company, "10002")
 
-    links = re.findall(r'<a href="(/produkter/\d+/)"[^>]*>([^<]*)</a>', html)
+    links = re.findall(
+        r'<a class="prow" href="(/produkter/\d+/)"[^>]*>\s*<span class="nm">([^<]*)</span>',
+        html,
+    )
     assert links == [
         ("/produkter/10001/", "Hammer fra A"),
         ("/produkter/10002/", "Sag fra A"),
         ("/produkter/10003/", "Tang fra A"),
     ]
     # The header marks the product overview, and the list the open product.
-    assert Screen(html).current == ["Produktoversikt", "Sag fra A"]
+    current = Screen(html).current
+    assert len(current) == 2
+    assert current[0] == "Produktoversikt"
+    assert " ".join(current[1].split()).startswith("Sag fra A")
 
 
 def test_the_skip_link_is_first_and_the_list_comes_before_the_product(two_companies):
