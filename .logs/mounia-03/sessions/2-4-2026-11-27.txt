@@ -1,0 +1,649 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   <project-root>
+
+⚠ Your login expires in 3 days · run /login to renew
+
+❯ /clear                                                                        
+
+❯ Start BMAD-arbeidet med story 2.4 . Følg prosjektets krav, arkitektur og      
+  sensorveiledning. Arbeid selvstendig og effektivt, med kvalitet først. Bruk   
+  alle fire uavhengige, skrivebeskyttede granskere ved BMAD Code Review.        
+  Presenter nødvendige beslutninger før implementering. Ikke commit eller push  
+  uten godkjenning.                                                             
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+  Read 2 files, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg laster kontekst for story 2.4: epic 2-konteksten, forrige ferdige story
+  (2.3) og selve story-teksten i epics.md.
+
+  Searched for 1 pattern, read 3 files, listed 2 directories, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg har gjennomgått kravene og arkitekturen for story 2.4 og sjekker nå
+  regnearket, modellen og de eksisterende testene før jeg skriver
+  spesifikasjonen. · summary
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-2-4-calculate-the-week-foreca
+       sts-the-scenarios-and-the-suggested-order-quantity.md)
+  ⎿  Wrote 80 lines to
+     _bmad-output/implementation-artifacts/spec-2-4-calculate-the-week-fore
+     casts-the-scenarios-and-the-suggested-order-quantity.md
+      1 ---
+      2 title: 'Story 2.4: Calculate the week forecasts, the scenarios an
+        d the suggested order quantity'
+      3 type: 'feature'
+      4 created: '2026-11-24'
+      5 status: 'draft'
+      6 route: 'dispatch'
+      7 review_loop_iteration: 0
+      8 context: ['{project-root}/_bmad-output/implementation-artifacts/e
+        pic-2-context.md']
+     … +72 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Spesifikasjon for story 2.4 er klar til godkjenning
+
+  Filen er _bmad-output/implementation-artifacts/spec-2-4-calculate-the-week-for
+  ecasts-the-scenarios-and-the-suggested-order-quantity.md. Status er draft, og
+  jeg har ikke endret noe annet. Treet er rent på main, og jeg lager
+  story-grenen når du godkjenner. Spesifikasjonen er på omtrent 1 400 tokens,
+  altså innenfor rammen, og den har ingen åpne spørsmål.
+
+  Hva som bygges
+
+  - ProductResult får tre ukeprognoser (R-5), scenariene normal, optimistisk og
+    pessimistisk per uke (R-7), sikkerhetsmarginbeløpet, det uavrundede
+    bestillingsresultatet, den foreslåtte bestillingsmengden (R-8, R-9) og
+    lageret (R-13). En enkel markering viser at uke 2 og 3 gjentar uke 1 (FR-7).
+  - Bestillingsmengden er F1 × (1 + m/100) − S, med gulv på 0 i koden. Den
+    avrundes én gang gjennom rounding.round_up_to_units, så E5 gir 70 og
+    ikke 71.
+  - Uke 1 til 3 får ISO-etiketter fra en ren funksjon i en ny
+    forecasting/horizon.py. Den bruker date.fromisocalendar og ingen klokke, og
+    er den eneste kalenderregningen i kjernen (AD-8).
+  - Innstillingene scenario_percentage og safety_margin kommer inn i
+    ForecastSettings med grenser fra settings.py (AD-9).
+  - Tester leser E3, E4, E5, E6, E21, E23 og E28 fra regnearket. Den lånte
+    formelen i tests/test_rounding.py byttes ut med kjernens egen.
+  - Ikke med: sesongjustering, bestillingsmengde per scenario (FR-13), ukers
+    dekning (FR-14), varsler og tillitsmerke (2.5), sortering og skjermer.
+
+  Beslutninger jeg har tatt, som du kan endre
+
+  1. Ukeetikettene er en egen funksjon, ikke en ny parameter i forecast_product.
+     AD-2 låser signaturen, og ukene har ingen datoer. Lasteren (fra story 2.6)
+     gir funksjonen siste ISO-år og -uke.
+  2. «–» for manglende verdi og kolonneetiketten «Uke 1 · uke 46» venter til 
+     første skjermstory. Punktet i issues.md sa story 2.4, men ingen skjerm
+     viser dem ennå, og akseptkriteriene krever dem ikke. Jeg flytter punktet
+     til story 2.7.
+  3. FR-7-markeringen er én boolsk verdi. Selve setningen skrives i story 2.5.
+  4. Det uavrundede resultatet beholder fortegnet. E6 gir −40 og vises som
+     «−40,00». Mengden er 0.
+  5. Uten prognose er alle nye felt None, men lageret beholdes.
+  6. Lageret må være et helt tall på minst 0. Ellers gir det TypeError eller
+     ValueError.
+
+  Prosessen videre
+
+  - Etter implementasjonen kjører jeg testene og mutasjoner selv. Jeg bruker
+    ingen subagenter til bygging.
+  - I BMAD Code Review bruker jeg alle fire uavhengige, skrivebeskyttede
+    granskere: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance
+    Auditor.
+  - Jeg committer og pusher ikke uten godkjenning fra deg.
+
+  Før du godkjenner kan du åpne spesifikasjonen i en editor eller stille meg
+  spørsmål. Du kan også bruke bmad-advanced-elicitation eller bmad-party-mode,
+  helst i en annen økt for å spare kontekst.
+
+  Hva velger du?
+  - Godkjenn og fortsett: jeg setter status til ready-for-dev og implementerer i
+    denne økta.
+  - Godkjenn og stopp: spesifikasjonen blir ready-for-dev, og en ny
+    bmad-build-økt tar over.
+  - Gjennomgå spesifikasjonen: vi går gjennom den og justerer før du godkjenner.
+
+✻ Crunched for 2m 2s · done Tuesday 6:00 PM
+
+❯ Godkjenn og fortsett med story 2.4. Behold spesifikasjonen samlet. Følg BMAD, 
+  arkitekturreglene og sensorveiledningen. Implementer og test selvstendig,     
+  med mutasjonstester og alle fire uavhengige, skrivebeskyttede granskere ved   
+  BMAD Code Review. Dokumenter flyttingen av skjermpunktene til story 2.7.      
+  Presenter samlet resultat før commit/push. Ikke start neste story.            
+
+  Read 1 file, ran 5 shell commands (ctrl+o to expand)
+
+⏺ Jeg implementerer nå selv (ikke via subagent): først innstillingene og
+  kjernen, deretter horisont og tester.
+
+  Read 1 file, ran 10 shell commands (ctrl+o to expand)
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   ├ Verification Gap review
+   └ Acceptance Auditor review
+  ⎿  Message queued for delivery to a8d8a5c45fb9571d8 at its next tool 
+     round. If it finishes first, it is resumed with the message and 
+     notifies again, so wait for that notification before resending.
+
+⏺ Alle fire granskere kjører nå (Blind Hunter, Edge Case Hunter, Verification
+  Gap og Acceptance Auditor), og alle er skrivebeskyttede. Jeg måtte rette en
+  skrivefeil i diff-stien til Verification Gap-granskeren. Jeg venter på at alle
+  fire rapporterer før jeg vurderer funnene.
+
+✻ Cogitated for 4m 27s · done Tuesday 6:14 PM
+
+› Message from general-purpose
+  Size arithmetic: the diff is 30,999 bytes, about 30.3 kB. sqrt(30.3) is about
+  5.5, and 5.5 + 1 = 6.5, so N = min(floor(6.5), 10) = 6. I found 10 issues.
+
+  - **Dropped completeness guard in `tests/test_rounding.py`.** The diff deletes
+  `test_the_spreadsheet_examples_for_rounding_are_all_checked`. That test was
+  the only guard that ORDER_CASES and SHOWN_CASES match the spreadsheet's listed
+  examples. `ORDER_EXAMPLES` and `SHOWN_EXAMPLES` are still defined at lines
+  20-21 but now appear to be unused. `test_week_forecasts.py` adds a guard for
+  the order cases (`LISTED_EXAMPLES`), but nothing replaces the guard for the
+  shown-value cases (E1, E2, E13, E20, E27). Restore the test, or delete the
+  dead constants and move the check on purpose.
+  - **`test_rounding.py` no longer checks rounding independently.**
+  `unrounded_order` now calls the core's `order_unrounded` instead of computing
+  it separately. The rounding test and the new core test now run the same
+  calculation, so an error in the core's formula passes both. The spreadsheet's
+  stated `order_unrounded` is compared only when the row has that column.
+  - **Inconsistent exception types for bad numeric settings.**
+    - `check_stock_on_hand` raises `TypeError` for a float, string or bool.
+    - `_check_percentage` raises `ValueError` for the same kinds of wrong type.
+    - `horizon_weeks` raises `TypeError` for bool and gets `TypeError` from
+  `date.fromisocalendar` for other types.
+    - Callers (the Story 3.1 form, the views) must catch both exception types or
+  learn which function raises which. Pick one convention and document it.
+  - **`ProductResult` does not carry the horizon labels.** `horizon_weeks` is
+  added and tested but nothing in `forecast_product` or `ProductResult` calls
+  it. `Week` has no ISO year or week, so the result cannot say which calendar
+  weeks the three forecasts belong to. Until Story 2.7, `horizon_weeks` is dead
+  code outside tests. The diff does not say who joins the labels to the week
+  forecasts, or where the latest data week comes from.
+  - **`weeks_repeat_week_1` is hard-wired.** It is set to `week_forecasts is not
+  None`, so it is redundant with the forecast existing. When seasonal
+  adjustment arrives (Epic 5) the flag must be true only when the adjustment is
+  off, and the forecast can no longer set it alone. There is no seasonal setting
+  in `ForecastSettings` yet. The Epic 5 cases in `test_week_forecasts.py` are
+  filtered out by a spreadsheet column, not by anything in the core. A named
+  field or a TODO tied to a setting would stop this silently misreporting later.
+  - **Percentage settings reject `Decimal`, but the smoothing factor accepts
+  it.** `_check_percentage` rejects `Decimal(10)` and accepts only `int`. The
+  `ForecastSettings` docstring says the smoothing factor may be a `Decimal` "as
+  the model stores it". If the Django model stores the percentage or margin as
+  `DecimalField`, or another non-`int` type, every product will fail with
+  ValueError at the integration point. The diff does not show the model type or
+  any adapter. The same question applies to a database stock column that may
+  come back as `Decimal`.
+  - **Misleading docstring and awkward message in `check_stock_on_hand`.** The
+  docstring says "The database column is a positive integer", but 0 is accepted
+  and tested. The message `"the stock on hand is not below 0, not -1"` reads
+  badly. Say "at least 0".
+  - **`horizon_weeks` can raise `OverflowError`.** Year 9999 near week 52
+  overflows `date + timedelta` and raises `OverflowError`, not `ValueError`. The
+  docstring says only `ValueError`, and the tests cover only year 10000, which
+  `fromisocalendar` rejects first. This is an extreme edge case, but the
+  contract is stated more strongly than it holds.
+  - **Missing tests.**
+    - No test shows that an invalid `scenario_percentage` or `safety_margin` is
+  refused for a product with too few weeks (no forecast). Only the stock check
+  has that test.
+    - Nothing tests that the order is unchanged by the unusual-weeks setting.
+    - Nothing tests a non-integer or very large float forecast through
+  `round_up_to_units` at the quantity boundary, except E5.
+    - `test_the_horizon_reads_no_clock` also asserts `HORIZON_WEEKS == 3`, which
+  is unrelated to the clock check.
+  - **Test helpers copied between files, and some obscure assertions.**
+    - `history`, `forecast` and `core_weeks` in `test_week_forecasts.py` repeat
+  helpers from `test_forecast.py`. There is no shared conftest.
+    - `CASES + reader.cases()` in the E28 test is a roundabout way to find a
+  row.
+    - `low.suggested_order_quantity > high.suggested_order_quantity == 0` is a
+  chained comparison that is hard to read.
+    - `assert (percentage == 0) == (week.optimistic == week.pessimistic ==
+  base)` is hard to read.
+    - Plain asserts would be clearer.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Blind Hunter review" finished · 37s
+
+⏺ Blind Hunter har rapportert med 10 funn. Ett av dem stemmer: i en
+  slice-redigering slettet jeg ved et uhell
+  test_the_spreadsheet_examples_for_rounding_are_all_checked fra
+  tests/test_rounding.py. Jeg retter det og vurderer alle funnene når de tre
+  andre granskerne (Edge Case Hunter, Verification Gap og Acceptance Auditor)
+  har rapportert. Jeg rører ikke prosjektfilene før da, så granskerne leser en
+  uendret tilstand.
+
+✻ Cooked for 9s · done Tuesday 6:14 PM
+
+› Message from general-purpose
+  The diff was readable at the corrected path. I ran the five relevant test
+  files read-only (`tests/test_week_forecasts.py`, `test_horizon.py`,
+  `test_rounding.py`, `test_forecast.py`, `test_core_imports.py`) and all 231
+  pass.
+
+  ### The completeness check for the spreadsheet's rounding-display cases was
+  deleted and not replaced
+
+  - **Changed surface:** `tests/test_rounding.py` (diff lines 266-272) removes
+  `test_the_spreadsheet_examples_for_rounding_are_all_checked`. It asserted
+  `{row["case"] for row in SHOWN_CASES} == SHOWN_EXAMPLES` and `{row["case"] for
+  row in ORDER_CASES} == ORDER_EXAMPLES`.
+  - **Impacted consumer or site:** `SHOWN_CASES` at
+  `tests/test_rounding.py:36-41`. It is built from the `*_shown` columns of
+  `reader.cases()` and drives the parametrized display-rounding tests
+  (`display.one_decimal`, `display.two_decimals`).
+  - **Existing test evidence (Removed verification):**
+    - `grep -rn "ORDER_EXAMPLES\|SHOWN_EXAMPLES" src tests` now matches only the
+  two definitions at `tests/test_rounding.py:20-21`. Nothing reads either
+  constant.
+    - The order half is partly replaced by
+  `test_the_listed_examples_are_all_checked`
+  (`tests/test_week_forecasts.py:520-534`). It pins the cases that state a
+  scenario, an unrounded order or a suggested order quantity
+  (`LISTED_EXAMPLES`).
+    - No test pins the `SHOWN_EXAMPLES` set (E1, E2, E13 (E4), E13 (E6), E20,
+  E21, E27). I read `test_horizon.py`, `test_week_forecasts.py` and
+  `test_rounding.py`, and the grep above covers `src` and `tests`.
+  - **Missing verification:** an assertion that the set of cases in
+  `SHOWN_CASES` equals `SHOWN_EXAMPLES`. If the order-case check is kept, it
+  should also stay tied to `ORDER_CASES`.
+  - **Demonstration:** a case with a `*_shown` column is dropped or renamed in
+  the answer key. Or the `reader` is changed so it no longer yields a column
+  such as `order_unrounded_shown`. `SHOWN_CASES` just gets smaller, the
+  remaining parametrized tests still pass, and nothing fails. The removed test
+  was the one that caught this.
+  - **Consequence:** the spreadsheet-driven guarantee for display rounding (R-9,
+  E20, E21, E27) could silently shrink. This is not caused by the new Story 2.4
+  behavior, but this diff removes the guard.
+  - **Disposition:** `patch`. Restore the `SHOWN_EXAMPLES` equality assertion in
+  `tests/test_rounding.py` as a small test. Either restore the `ORDER_EXAMPLES`
+  assertion too, or delete the now-dead constant and rely on `LISTED_EXAMPLES`.
+
+  I found no other gaps in the changed behavior, and each item below is
+  verified:
+  - **Week forecasts, scenarios, order:** the case-driven test
+  (`test_week_forecasts.py:503-517`) covers every horizon week against
+  spreadsheet values. E4, E5, E6 and E21 cover the margin amount, the unrounded
+  order, round-up-once and the floor at 0.
+  - **Settings and stock validation:** both ends of the scenario and margin
+  ranges are tested. Bool, float, string and `Decimal` values are refused. A bad
+  stock raises, including for a product with no forecast.
+  - **Absent-forecast branch:** every new field is None, and `stock_on_hand` is
+  still held (E11 a).
+  - **Stock does not change the forecast:** `test_forecast.py:263-272` checks
+  that stock affects only the order quantity.
+  - **Horizon:** `horizon_weeks` is verified over 2015-2035 and at the year
+  ends. It is not yet called outside its own tests, so there is no consumer to
+  check.
+
+  ## Other findings
+
+  - After the diff, `ORDER_EXAMPLES` and `SHOWN_EXAMPLES` at
+  `tests/test_rounding.py:20-21` are dead constants. They are no longer
+  referenced anywhere.
+  - `test_only_week_1_feeds_the_order_and_a_zero_forecast_orders_nothing`
+  (`tests/test_week_forecasts.py:630-637`) cannot tell week 1 from week 2 or 3.
+  It uses an all-zero forecast, and all three weeks equal the base forecast
+  until seasonal adjustment arrives in Epic 5. The name claims more than the
+  test observes. This is inherent to the current design and not a defect.
+  - `test_the_horizon_reads_no_clock` (`tests/test_horizon.py:407-413`) checks
+  source text with `ast`. It is a convention guard and does not exercise
+  behavior.
+
+⏺ Verification Gap har rapportert. Funnet er det samme som jeg allerede har
+  bekreftet: den slettede garantitesten i tests/test_rounding.py. Jeg venter
+  fortsatt på Edge Case Hunter og Acceptance Auditor før jeg vurderer funnene og
+  retter noe.
+
+✻ Cogitated for 1s · done Tuesday 6:14 PM
+
+⏺ Agent "Verification Gap review" finished · 47s
+
+› Message from general-purpose
+  [
+  {"location":"src/forecasting/forecast.py:forecast_product (week_forecasts,
+  scenarios_of)","trigger_condition":"A Week with negative units_sold gives a
+  negative base forecast; nothing in the diff guards it","guard_snippet":"if
+  base_forecast is not None and base_forecast < 0: reject the weeks, or floor
+  normal at 0.0 like pessimistic","potential_consequence":"normal below 0 while
+  pessimistic is 0 and optimistic is below normal, so scenario order is
+  inverted"},
+  {"location":"src/forecasting/forecast.py:forecast_product
+  (order_unrounded)","trigger_condition":"stock_on_hand is a very large int
+  (above 1e308), or above 2**53","guard_snippet":"cap stock_on_hand, or catch
+  OverflowError and raise ValueError naming the
+  stock","potential_consequence":"int-to-float conversion raises a bare
+  OverflowError, or precision is lost in the order"},
+  {"location":"src/forecasting/forecast.py:forecast_product
+  (suggested_order_quantity)","trigger_condition":"Sales so large that
+  week_1*(1+margin) is inf or nan","guard_snippet":"if not
+  math.isfinite(order_unrounded): raise ValueError('order is not
+  finite')","potential_consequence":"round_up_to_units ValueError surfaces
+  without naming the product, and no ProductResult is returned"},
+  {"location":"src/forecasting/forecast.py:_check_percentage","trigger_condition
+  ":"A Decimal(10) or other integral type, as the model may store it, is
+  passed","guard_snippet":"accept Decimal/int-valued input via int(value) ==
+  value, or document that the loader must convert","potential_consequence":"A
+  valid stored percentage is refused with ValueError. The smoothing factor, by
+  contrast, accepts Decimal."},
+  {"location":"src/forecasting/forecast.py:_check_percentage","trigger_condition
+  ":"A wrong-typed percentage (float, string, None, bool) raises ValueError,
+  while a wrong-typed stock raises TypeError","guard_snippet":"raise TypeError
+  when not isinstance(value, int) or is bool, and ValueError only for
+  range","potential_consequence":"Callers catching TypeError for wrong types
+  miss percentage errors, so the error contract is inconsistent"},
+  {"location":"src/forecasting/horizon.py:horizon_weeks","trigger_condition":"La
+  test data week is in year 9999 (for example 9999 week 52); adding weeks
+  overflows","guard_snippet":"try: ... except OverflowError: raise
+  ValueError(f'no horizon after {iso_year}-W{iso_week}') from
+  None","potential_consequence":"A bare OverflowError escapes, although the
+  docstring promises only ValueError for bad weeks"},
+  {"location":"src/forecasting/horizon.py:horizon_weeks","trigger_condition":"is
+  o_year or iso_week is a non-bool int subclass, numpy integer or Decimal-like
+  value","guard_snippet":"if not isinstance(iso_year, int) or not
+  isinstance(iso_week, int): raise TypeError(...)","potential_consequence":"The
+  type check depends on fromisocalendar's own TypeError, so it is not an
+  explicit guard in the diff"},
+  {"location":"src/forecasting/forecast.py:forecast_product
+  (weeks_repeat_week_1)","trigger_condition":"The flag is set as 'a forecast
+  exists', not from the absence of seasonal
+  adjustment","guard_snippet":"weeks_repeat_week_1 = week_forecasts is not None
+  and not seasonal_adjustment_used","potential_consequence":"When Epic 5 adds
+  seasonal weeks the FR-7 note shows on weeks that differ, unless this line is
+  changed"},
+  {"location":"tests/test_rounding.py:hunk @@ -42,26 +42,17 (removed test_the_sp
+  readsheet_examples_for_rounding_are_all_checked)","trigger_condition":"The
+  completeness guard for ORDER_EXAMPLES and SHOWN_EXAMPLES was deleted. Its
+  coverage was not fully re-established.","guard_snippet":"restore assert
+  {r['case'] for r in ORDER_CASES}==ORDER_EXAMPLES and {r['case'] for r,_ in
+  SHOWN_CASES}==SHOWN_EXAMPLES, or delete the dead
+  constants","potential_consequence":"A spreadsheet case with a shown value (E1,
+  E2, E13, E20, E27) can be dropped unnoticed. ORDER_EXAMPLES and
+  SHOWN_EXAMPLES are now unused.","kind":"deletion","confidence":"high"},
+  {"location":"tests/test_week_forecasts.py:STATED / test_every_stated_value_of_
+  a_case_is_the_one_the_core_calculates","trigger_condition":"Claim: every
+  stated value, including week_forecasts, is read from the spreadsheet within
+  TOLERANCE","guard_snippet":"STATED omits the spreadsheet's week_forecasts
+  column (it is in answer_key_reader NUMBER_LIST_COLUMNS), and
+  result.week_forecasts is never compared with it. Only scenarios[*].normal is
+  compared.","potential_consequence":"A wrong week forecast for weeks 2 or 3
+  passes as long as scenarios.normal is derived from the same wrong
+  value.","kind":"claim","confidence":"high"},
+  {"location":"tests/test_week_forecasts.py (whole file) vs spec acceptance
+  criterion 2","trigger_condition":"Claim: a mutation with the margin on the
+  wrong week fails at least one test","guard_snippet":"Without seasonal
+  adjustment, week_forecasts is (base,)*3, so week_forecasts[0], [1] and [2] are
+  equal and the mutation is equivalent. No test can detect
+  it.","potential_consequence":"The mutation criterion is unachievable for this
+  mutation, and the week-1-only rule goes untested until Epic
+  5.","kind":"claim","confidence":"high"},
+  {"location":"tests/test_week_forecasts.py:test_without_seasonal_adjustment_wee
+  ks_1_2_and_3_equal_the_base_forecast;
+  test_the_scenarios_follow_the_scenario_percentage","trigger_condition":"Matrix
+  rows 'Flat horizon' (E1 14.333) and 'Scenario limits' (14.333 at 0 % and 50
+  %) are tested from hand-made sales","guard_snippet":"The tests use
+  history(12,15,11,14,13,16,12,15) and (10,20,30), not the E1 or E3 spreadsheet
+  rows, and the 14.333 case at 0 % and 50 % is not
+  run","potential_consequence":"The matrix rows are not checked against the
+  spreadsheet (AD-17), although the spec says every matrix row
+  is.","kind":"claim","confidence":"medium"},
+  {"location":"_bmad-output/implementation-artifacts/spec-2-4-calculate-the-week
+  -forecasts-the-scenarios-and-the-suggested-order-quantity.md: Tasks &
+  Acceptance last item","trigger_condition":"Claim: the documents and
+  sprint-status to review are part of the change (task left
+  unchecked)","guard_snippet":"The diff has no change to docs/statustabell.md,
+  docs/qa-logg.md, docs/ki-styringslogg.md, docs/arbeidslogg.md or
+  .logs/*/issues.md. Only sprint-status.yaml shows as modified in git
+  status.","potential_consequence":"The 2.4 point in issues.md and the status
+  docs stay open or stale if the change is merged as it
+  stands.","kind":"claim","confidence":"low"}
+  ]
+⏺ Edge Case Hunter har rapportert. Nå gjenstår bare Acceptance Auditor, og jeg
+  venter på den før jeg vurderer funnene.
+
+✻ Crunched for 2s · done Tuesday 6:15 PM
+
+⏺ Agent "Edge Case Hunter review" finished · 56s
+
+› Message from general-purpose
+  I read the spec, the diff, Story 2.4 in `epics.md` and AD-2, AD-3 and AD-8. I
+  also ran the suite: 709 passed, 1 skipped; `ruff check` and `ruff format
+  --check` are clean. I did not run `makemigrations --check`. Every Always and
+  Never rule, Task and Acceptance Criterion is met except the findings below.
+  The same goes for every matrix row and every story AC, except where a finding
+  names one. The core never calls `round()`; the only rounding is
+  `round_up_to_units`, called once (`forecast.py:211`). `display.py` is
+  untouched. There is no new dependency or migration.
+
+  - **Deleted guard test (scope creep).** The diff removes
+  `test_the_spreadsheet_examples_for_rounding_are_all_checked` from
+  `tests/test_rounding.py`. It asserted that the `ORDER_CASES` and `SHOWN_CASES`
+  case sets equal `ORDER_EXAMPLES` and `SHOWN_EXAMPLES`. The spec Task for that
+  file only says the stand-in formula is replaced.
+    - `ORDER_EXAMPLES` and `SHOWN_EXAMPLES` are still defined at
+  `tests/test_rounding.py:20-21` but are no longer used anywhere.
+    - The new `test_the_listed_examples_are_all_checked` in
+  `tests/test_week_forecasts.py` covers only the order and scenario cases.
+    - Nothing now guards `SHOWN_CASES`, the cases that state a shown value, such
+  as E1, E2, E13, E20 and E27. A case dropped from the spreadsheet would go
+  unnoticed.
+
+  - **Acceptance Criterion mutation "the margin on the wrong week" cannot fail
+  any test.** Without seasonal adjustment `week_forecasts` is `(base,) * 3`, so
+  `week_forecasts[1]` or `[2]` in place of `[0]` at `forecast.py:206-208` gives
+  the same numbers. The core has no seam for unequal week forecasts, and no test
+  checks that the order reads week 1. The test named
+  `test_only_week_1_feeds_the_order_and_a_zero_forecast_orders_nothing` only
+  checks a zero forecast, so its name overstates what it proves. The same
+  equal-weeks property hides a wrong week index in `scenarios` and
+  `week_forecasts[0]` in the order-calculation test.
+
+  - **Matrix row "Scenario limits" is not tested at its stated values.** The
+  spec asks for 14.333 at 0 % and at 50 %, with pessimistic 7.167.
+    - `test_the_scenarios_follow_the_scenario_percentage` uses sales `(10, 20,
+  30)` at 0, 10 and 50 %, so the forecast is 20 and 7.167 is never asserted.
+    - 14.333 is tested only at 10 % (E3).
+    - The 0-at-50 % case is covered only through E23 at its sheet percentage (10
+  %) and through `scenarios_of(0.0, 50)`.
+
+  - **Matrix row "Flat horizon" is not read from the spreadsheet.**
+  `test_without_seasonal_adjustment_weeks_1_2_and_3_equal_the_base_forecast`
+  uses a hand-copied E1 history. It never asserts 14.333 and does not load E1,
+  although the spec says every stated value is read from
+  `reference-examples.xlsx` (AD-17). It checks only that the weeks equal
+  `base_forecast`. Several other new tests also name no E-n (for example the
+  margin-end and percentage-range tests), though the spec says each test names
+  its E-n and FR-n.
+
+  - **"Bad inputs ... naming the value" is only partly met for the horizon.**
+  The spec wants a `TypeError` or `ValueError` that names the value.
+  `horizon_weeks` defines its own message only for bools. These cases fall
+  through to the stdlib messages:
+    - `horizon_weeks(2025, 53)` gives `ValueError: Invalid week: 53`, which
+  omits the year.
+    - A string, a float or `None` gives `'str' object cannot be interpreted as
+  an integer`, which names the type but not the value.
+    - `tests/test_horizon.py` asserts only the exception type, with no `match=`.
+    - The stock and percentage checks do name the value.
+
+  - **Not tested: "no forecast" through `too_few_calculation_weeks`.** The
+  matrix row "No forecast" is tested only with E11 a (fewer than 3 valid weeks).
+  The other path to `base_forecast is None` has no assertion that the new
+  fields are `None` and the stock is kept. The code handles it correctly,
+  because everything keys on `base_forecast is not None`.
+
+  - **Extra public surface.** `scenarios_of`, `check_stock_on_hand`,
+  `_check_percentage` and `WeekScenarios` are added in `forecast.py`. The spec
+  names only the new fields on `ProductResult` and the checks. `WeekScenarios`
+  as a dataclass for the scenarios is a reasonable implementation choice. The
+  extra public functions are not requested.
+
+  - **Coupling in `forecast.py`.** `forecast.py` imports `HORIZON_WEEKS` from
+  `horizon.py`. The spec treats the horizon labelling as a separate function
+  that `forecast_product` does not call, and AD-2 fixes the `forecast_product`
+  signature. This does not break either, but it ties the forecast to the label
+  module. `test_core_imports.py` was not checked for this edge.
+
+  - **`sprint-status.yaml` edited before the documents task.**
+  `sprint-status.yaml` already shows as modified, while the documents Task is
+  unchecked. Your brief excludes documents, so I note it only for completeness.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Acceptance Auditor review" finished · 1m 30s
+
+⏺ Alle fire granskere er ferdige, og sjekksummene viser at ingenting er endret.
+  Jeg vurderer nå funnene og retter det som er ekte. · summary
+
+  Searched for 1 pattern, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Jeg leser formatene i loggene (statustabell, KI-styringslogg og arbeidslogg)
+  så jeg kan føre story 2.4 likt som forrige story.
+
+  Read 1 file, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Story 2.4 er bygd og gjennomgått, men ikke committet eller pushet. Alt ligger
+  som endringer på grenen story/2-4-calculate-the-week-forecasts-the-scenarios-a
+  nd-the-suggested-order-quantity fra f30fc3c.
+
+  Hva som er bygd
+  - Resultatet: ProductResult har nå tre ukeprognoser, scenarioer per uke og
+    lageret. Det har også marginbeløpet, det uavrundede resultatet (med fortegn)
+    og den foreslåtte bestillingsmengden.
+  - Bestillingsmengden: den har gulv på 0 og avrundes opp én gang gjennom
+    rounding.py. Uten prognose er alle de nye feltene None, men lageret
+    beholdes.
+  - Innstillinger: scenarioprosent og sikkerhetsmargin ligger i ForecastSettings
+    og kontrolleres mot FR-20-områdene.
+  - Ukeetikettene: den nye src/forecasting/horizon.py gir ISO-ukene for uke 1
+    til 3. Ingen skjerm kaller den ennå.
+  - Regnearkverdier: E3, E4, E5 (70, ikke 71), E6, E21, E23, E24, E28 og FR-21 c
+    og d er testet. tests/test_week_forecasts.py og tests/test_horizon.py er
+    nye.
+
+  Kontroll
+  - 714 tester består og 1 hoppes over (Docker). ruff check, ruff format --check
+    og makemigrations --check er rene.
+  - Jeg kjørte 36 mutasjoner av den nye koden, og testene fanget alle.
+    Mutasjonen «marginen på feil uke» fra akseptkriteriene kan ikke feile før
+    Epic 5, fordi de tre ukeprognosene er like til da. Den er ført som
+    ekvivalent i spesifikasjonen.
+  - BMAD Code Review kjørte med alle fire granskere (Blind Hunter, Edge Case
+    Hunter, Verification Gap og Acceptance Auditor). De ga 36 funn: 8 grupper er
+    rettet, 10 avvist, og ingen er utsatt eller sendt til deg. Filsjekksummene
+    var identiske før og etter, så granskerne endret ingenting.
+  - Et skript av meg hadde slettet vakttesten
+    test_the_spreadsheet_examples_for_rounding_are_all_checked i
+    tests/test_rounding.py. Granskerne fant det, og testen er gjenopprettet.
+  - Skanningen etter lokale stier, e-poster, nøkler og passord i alle endringer
+    fant ingenting.
+
+  Skjermpunktene er flyttet til story 2.7
+  - «–» for manglende verdi (E23) og kolonneetiketten «Uke 1 · uke 46» er
+    flyttet fra story 2.4 til story 2.7, fordi ingen skjerm viser dem ennå.
+  - Flyttingen står i spesifikasjonen, statustabellen, arbeidsloggen,
+    KI-styringsloggen, sesjonsloggen og issues.md.
+  - Der er også punktene om at lasteren må gi horizon_weeks den siste ISO-uka,
+    og at flagget for FR-7-notatet må byttes ut i story 2.5 og endres i Epic 5.
+
+  Dokumenter oppdatert
+  - Spesifikasjonen står som done, og sprint-status.yaml har story 2.4 som
+    review.
+  - Statustabellen har FR-7, FR-10, FR-11 og FR-12 som «delvis bygd».
+  - QA-loggen, KI-styringsloggen (tilfelle 41) og arbeidsloggen er oppdatert.
+  - Sesjonsloggen .logs/mounia-03/972-2026-11-24-18-19-27-story-2-4-ukeprognoser
+    -og-bestilling.md er skrevet.
+  - Commit-hashene i QA-loggen og KI-styringsloggen står som «commit følger».
+
+  Avvik fra rutinen
+  - sesjonslogg ber om at loggfilene committes med en gang. Jeg lot være, fordi
+    du ba om å få godkjenne først.
+  - BMAD-steget «Commit and Complete» er hoppet over av samme grunn.
+
+  Hvis du godkjenner, committer jeg i tre deler som sist (kode og tester,
+  spesifikasjon og dokumenter, sesjonslogg) og fyller inn hashene. Jeg pusher
+  over SSH og lager PR-en med alle funnene først når du sier det. Jeg har ikke
+  startet story 2.5.
+
+✻ Worked for 10m 39s · done Tuesday 6:20 PM
+
+❯ Jeg godkjenner de tre commitene ,SSH-push og PR for story 2.4. Bekreft at     
+  dengjenopprettede vakttesten inngår i siste vellykkede testkjøring. Kjør      
+  nødvendige sluttkontroller og personvernskanning før commit. Oppdater         
+  commit-hashene og dokumenter alle 36 review funmed beslutninger i PR. Flett   
+  kun når CI og Windows kontrollene er grønne på siste commit. Fullfør          
+  fletteloggen, sesjonsloggen og arbeidsloggen etter rutinene. Husk             
+  sesjonseksport, maskering og siste dokumentasjonsoppdaterinnger før           
+  avslutnin. Kontroll at main er ren og synkronisert. Ikke start story 2.5      
+
+  Ran 1 shell command (ctrl+o to expand)
+  ⎿  You've hit your weekly limit · resets Nov 27 at 5am (Europe/Oslo)
+     /upgrade or /usage-credits to finish what you’re working on.
+
+✻ Brewed for 28s · done Tuesday 6:32 PM
+
+❯ a                                                                             
+
+⏺ Meldingen «a» ser ut som et tastetrykk ved en feil, så jeg fortsetter med de
+  godkjente stegene. Først sjekker jeg at treet og main er slik jeg forlot dem,
+  siden datoen har endret seg.
+
+  Pushed to story/2-4-calculate-the-week-forecasts-the-scenarios-and-the-suggested-order-quantity, created PR #34, commented on PR #34, ran 8 shell commands (ctrl+o to expand)
+
+⏺ CI (kjøring 62) og Windows (kjøring 19) er grønne på siste commit 5325444. Nå
+  fletter jeg PR #34 lokalt med --no-ff, som i tidligere stories.
+
+  Pushed to main, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Hovedgrenen er flettet (0a17607), og CI på main (kjøring 63) er grønn. Nå
+  fører jeg fletteloggen i en egen PR, som i story 2.3.
+
+  Created PR #35, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Story 2.4 er flettet inn i main, og main er ren og synkronisert med
+  origin/main (cbfba74). Det som gjenstår er sesjonseksporten, som bare du kan
+  kjøre.
+
+  Gjort
+  - Vakttesten: den gjenopprettede
+    test_the_spreadsheet_examples_for_rounding_are_all_checked bestod alene og
+    var med i den siste kjøringen. Før commit var det 714 bestått, 1 hoppet over
+    (Docker), og Ruff og makemigrations --check var rene.
+  - Personvernskanning: den fant ingenting før noen av de tre commitene eller
+    før fletteloggen.
+  - Commitene: koden og testene er i 05b0844, spesifikasjonen og dokumentene i
+    c52583c, og sesjonsloggen med issues.md i 5325444. Commit-hashene er ført
+    inn i QA-loggen og KI-styringsloggen.
+  - PR #34: den er pushet over SSH, og en kommentar dokumenterer alle 36 funn: 8
+    grupper rettet, 10 avvist, ingen utsatt.
+  - Flettingen: CI-kjøring 62 og Windows-kjøring 19 var grønne på siste commit
+    5325444. Jeg fletteto lokalt med --no-ff (0a17607), og CI-kjøring 63 på main
+    er grønn.
+  - Fletteloggen: den gikk i PR #35 (cbfba74) og oppdaterte sprint-status.yaml
+    (story 2.4 done), arbeidsloggen og sesjonsloggen. CI-kjøring 65 på main er
+    grønn. Windows-jobben kjørte ikke på PR #35, siden den bare endret logger.
+  - Story 2.5 er ikke startet.
+
+  Det som gjenstår
+  1. Kjør /export og lagre eksporten som
+     .logs/mounia-03/sessions/2-4-2026-11-27.txt. Du må kjøre /export selv.
+  2. Jeg maskerer den, sjekker mot lokale stier, brukernavn, e-poster, nøkler,
+     passord, telefonnumre, maskinnavn og midlertidige mapper, og legger den i
+     en siste PR sammen med en siste oppdatering av arbeidsloggen. Det punktet
+     står åpent i issues.md til da.
+
+✻ Baked for 6m 8s · done 9:48 AM
