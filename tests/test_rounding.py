@@ -25,7 +25,7 @@ SHOWN_COLUMNS = {
     "weeks_of_cover_shown": ("weeks_of_cover", display.one_decimal),
     "order_unrounded_shown": ("order_unrounded", display.two_decimals),
 }
-# Case E23 shows «–» for a missing value, which comes with Story 2.4.
+# Case E23 shows «–» for a missing value, which comes with the first screen (Story 2.7).
 DASH = "–"
 
 ORDER_CASES = [
@@ -42,18 +42,17 @@ SHOWN_CASES = [
 
 
 def unrounded_order(row):
-    """The week-1 forecast × (1 + safety margin) − stock on hand, in plain floats, as
-    a computer calculates it (Story 2.4 builds the real one), so that E5 gives
-    70.00000000000001."""
+    """The unrounded order of the core for the case (R-8), as the computer calculates it,
+    so that E5 gives 70.00000000000001."""
     settings = ForecastSettings(
         method=row["method"],
         window=row["window"],
         smoothing_factor=row["smoothing_factor"],
         unusual_weeks_included=row["unusual_weeks_setting"] == "included",
+        safety_margin=row["safety_margin"],
     )
     weeks = [Week(week.units_sold, week.stockout) for week in row["sales"]]
-    base = forecast_product(weeks, row["stock_on_hand"], settings).base_forecast
-    return base * (1 + row["safety_margin"] / 100) - row["stock_on_hand"]
+    return forecast_product(weeks, row["stock_on_hand"], settings).order_unrounded
 
 
 def test_the_spreadsheet_examples_for_rounding_are_all_checked():
@@ -70,7 +69,7 @@ def test_the_order_quantity_is_rounded_up_once_as_the_spreadsheet_states(row):
     decimals and then up, is the suggested order quantity of the spreadsheet."""
     unrounded = unrounded_order(row)
     if "order_unrounded" in row:
-        # The stand-in calculation gives the value the spreadsheet states.
+        # The core's unrounded order is the value the spreadsheet states.
         assert abs(unrounded - row["order_unrounded"]) < reader.TOLERANCE
 
     assert (

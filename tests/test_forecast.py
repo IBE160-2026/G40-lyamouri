@@ -261,9 +261,14 @@ def test_exponential_smoothing_needs_one_calculation_week():
 
 
 def test_the_stock_on_hand_does_not_change_the_base_forecast():
-    """FR-5, AD-2 (E1): the stock on hand is an input from Story 2.4 on and is not used yet."""
+    """FR-5, FR-11, R-13 (E1): the stock on hand changes the order, never the base forecast,
+    the week forecasts or the scenarios."""
     sales = history(12, 15, 11, 14, 13, 16, 12, 15)
-    assert forecast(sales, stock_on_hand=0) == forecast(sales, stock_on_hand=500)
+    low, high = forecast(sales, stock_on_hand=0), forecast(sales, stock_on_hand=500)
+    assert low.base_forecast == high.base_forecast
+    assert low.week_forecasts == high.week_forecasts
+    assert low.scenarios == high.scenarios
+    assert low.suggested_order_quantity > high.suggested_order_quantity == 0
 
 
 def test_the_units_of_a_stockout_week_are_never_used():

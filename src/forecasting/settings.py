@@ -41,9 +41,12 @@ class ForecastSettings:
     """The settings that the base forecast reads (FR-20), with the defaults above.
 
     The smoothing factor may be a `Decimal`, as the model stores it; the core converts it.
+    The scenario percentage and the safety margin are whole percents (R-7, R-8).
     """
 
     method: str = DEFAULT_METHOD
     window: int = WINDOW.default
     smoothing_factor: Decimal | float = SMOOTHING_FACTOR.default
     unusual_weeks_included: bool = DEFAULT_UNUSUAL_WEEKS_INCLUDED
+    scenario_percentage: int = SCENARIO_PERCENTAGE.default
+    safety_margin: int = SAFETY_MARGIN.default
