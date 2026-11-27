@@ -868,7 +868,10 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
   * grenen `story/2-5-give-each-product-its-warnings-notes-and-confidence-label` er beholdt.
 * Avslutningen er kontrollert: spesifikasjonen står som `done`, `sprint-status.yaml` har story 2.5 som `done` og epic 2 som `in-progress`, statustabellen har et avsnitt for story 2.5 med FR-18 og FR-19 som delvis bygd og varslene og notatet ført i FR-7, FR-8 og FR-15 til FR-17, QA-loggen og KI-styringsloggen har commit-hashen (`e74a814`), og åpne punkter står i `issues.md`.
 
-**Status:** Story 2.5 er flettet inn i `main` (`747244a`). Fletteloggen kommer i PR #38, og eksporten og den siste loggoppdateringen i en pull request til. Story 2.6 er ikke startet.
+* Oppdaterte loggene med flettingen i PR #37, som bare endrer loggene og `sprint-status.yaml` (story 2.5 `done`). CI-kjøring nr. 70 passerte på PR-en. Claude flettet den på samme måte (`4e602c0`, flettet 27. november kl. 10.49, foreldre `747244a` og `daa3ecf`), og CI-kjøring nr. 71 på `main` passerte. Windows-jobben kjører ikke på ren loggendring.
+* Brukeren eksporterte økta med `/export` etter flettingen. Claude maskerte eksporten (den eneste lokale stien, `~/G40-lyamouri` i toppteksten, ble `<project-root>`; alt annet er uendret, kontrollert mot kopien med `diff`), og skanningen før og etter maskeringen (stier, brukernavn, e-poster, nøkler, passord, telefonnumre, maskinnavn og midlertidige mapper) fant ingenting mer. Eksporten `sessions/2-5-2026-11-27.txt` er med i PR #39, sammen med denne oppdateringen, som er den eneste pull requesten i tillegg for å unngå en kjede av loggpull requests.
+
+**Status:** Story 2.5 er flettet inn i `main` (`747244a`), og fletteloggen er flettet (`4e602c0`). Eksporten og denne loggoppdateringen kommer i PR #39. Story 2.6 er ikke startet.
 
 ## 4. Videre dokumentasjon
 
