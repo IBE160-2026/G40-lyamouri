@@ -1,0 +1,1202 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   <project-root>
+
+⚠ Your login expires in 3 days · run /login to renew
+
+❯ /clear                                                                        
+
+❯ Start BMAD story 2.7. Følg prosjektkrav, arkitektur, sensorveiledning og      
+  etablerte rutiner fra opus. Arbeid selvstendig og effektivt, med kvalitet     
+  først. Dokumenter viktige prompter, beslutninger, tester og KI-arbeid         
+  fortlppende i riktige logger. Skill mellom bekreftet modellbruk og ønskede    
+  innstillinger. Bruk alle fire uavhengige, skrivebeskyttede granskere ved BMAD 
+  Code Review, samt mutasjonstesting, kontroller dokumentasjon og testtall før  
+  commit, slik at vi unngå senere rettelser. Presenter bare nødvendige          
+  beslutninger før implementering. Igen commit eller push uten min godkjenning. 
+
+⏺ Skill(bmad-build)
+  ⎿  Successfully loaded skill
+
+  Read 2 files, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg har lastet BMAD-arbeidsflyten for story 2.7 og leser nå epic-konteksten,
+  story-teksten og forrige spec (2.6) før planlegging.
+
+  Read 2 files, listed 2 directories, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg undersøker kodebasen for story 2.7 (modeller, kjernen, maler,
+  UX-spesifikasjon). Neste er forecast.py, CSS-en, testene og UX-kravene for
+  produktskjermen.
+
+  Read 1 file, listed 2 directories, ran 7 shell commands (ctrl+o to expand)
+
+⏺ Status: jeg har lest story-teksten, UX-kravene og eksisterende kode, og ser nå
+  på mockupen og DESIGN.md for produktsiden før jeg skriver spec.
+
+  Ran 9 shell commands (ctrl+o to expand)
+
+⏺ Status: undersøkelsen er nesten ferdig. Jeg kjører nå grunnlinjen (uv run 
+  pytest) for å se at databasen og testene virker før jeg skriver spec-en.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-2-7-show-what-to-order-and-wh
+       ether-to-trust-it-on-the-product-screen.md)
+  ⎿  Wrote 92 lines to _bmad-output/implementation-artifacts/spec-2-7-show-
+     what-to-order-and-whether-to-trust-it-on-the-product-screen.md
+      1 ---
+      2 title: 'Story 2.7: Show what to order and whether to trust it on 
+        the product screen'
+      3 type: 'feature'
+      4 created: '2026-11-27'
+      5 status: 'draft'
+      6 route: 'dispatch'
+      7 review_loop_iteration: 0
+      8 context: ['{project-root}/_bmad-output/implementation-artifacts/e
+        pic-2-context.md']
+     … +84 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-2-7-show-what-to-order-and-w
+        hether-to-trust-it-on-the-product-screen.md)
+  ⎿  Added 1 line, removed 1 line
+      34  |----------|--------------|---------------------------|--------
+          --------|
+      35  | Forecast, order above 0 | Strøsand 25 kg (E1, E4), defaults |
+           «11» in blue, the caption with «uke 46», the header «Varenr. 1
+          0012 · Lagerbeholdning 5 · Uker dekning 0,3», «Middels» with it
+          s reason, rows for weeks 38 and 39 (red) then week 42 (amber) |
+           N/A |
+      36  | Order 0 | stock covers the need | «0» in ink, the same captio
+          n | N/A |
+      37 -| No forecast | 2 valid weeks (E5) | «–», «Ingen foreslått best
+         -illingsmengde», the sentence, cover «–», «Lav», one red row | N
+         -/A |                                                           
+      37 +| No forecast | fewer than 3 valid weeks (E11 a) | «–», «Ingen 
+         +foreslått bestillingsmengde», the sentence, cover «–», «Lav», o
+         +ne red row | N/A |                                             
+      38  | Week-1 forecast 0 | E23 | cover «–», «0» in ink, no order-soo
+          n | N/A |
+      39  | Nothing to warn about | label «høy» | the label and reason, n
+          o row | N/A |
+      40  | New year | latest week 52 or 53 | the caption names «uke 1/20
+          27» | N/A |
+
+⏺ Spec-en for story 2.7 er skrevet og klar for din godkjenning. Jeg har ikke
+  endret kode, laget gren eller committet noe.
+
+  Spec: _bmad-output/implementation-artifacts/spec-2-7-show-what-to-order-and-wh
+  ether-to-trust-it-on-the-product-screen.md
+
+  Hva som bygges
+  - Laster: web/company_data.py leser innstillinger, produkter og salgsuker i et
+    fast antall spørringer, uansett antall produkter. Den kaller kjernen og
+    build_overview.
+  - Produktskjerm: /produkter/<varenummer>/ viser produktoverskrift,
+    beslutningspanelet «Hva bør du bestille?» og tillitspanelet «Kan du stole på
+    prognosen?».
+  - Produktliste: listen fra story 1.8 står til venstre, og radene lenker nå til
+    produktet.
+  - Manglende verdi: «–» for manglende uker dekning og bestillingsmengde.
+  - Tekster: teksten til beslutningspanelet kommer fra en ny
+    explanation/decision.py (AD-4).
+  - Andre bedrifter: en annen bedrifts eller ukjent varenummer gir samme
+    404-side som en ukjent adresse. Ruten legges inn i to-konto-testen.
+
+  Beslutninger jeg har tatt selv (se Design Notes)
+  1. Radene i listen lenker via produktnavnet. /produkter/ bruker samme liste.
+  2. Fremdriftslinje, forrige/neste og innstillingslinje venter til story 2.11
+     og Epic 3. Kolonneetiketten «Uke 1 · uke 46» venter til story 2.9, som er
+     den første som viser den.
+  3. Lasteren regner hele oversikten, slik kravet sier, selv om denne siden bare
+     kobler resultatene til produktene.
+  4. En bedrift uten innstillingsrad bruker FR-20-standardene.
+
+  Én ting trenger svar: spec-en er på ca. 2 100 tokens, over rettesnoren på 1
+  600. Jeg anbefaler å beholde den hel, som i story 2.6, fordi målet er ett
+  enkelt og sammenhengende. Å dele laster og skjerm ville gi en laster uten
+  bruker.
+
+  Plan videre ved godkjenning
+  - Jeg lager grenen story/2-7-…, og bygger og tester selv, uten subagenter.
+  - Så følger BMAD Code Review med alle fire uavhengige, skrivebeskyttede
+    granskere, og mutasjonstesting.
+  - Jeg sjekker dokumentasjon og testtall mot faktiske kjøringer før jeg ber om
+    commit.
+  - Jeg kan kjøre sjekkene på 1366 × 768, 320 px, 390 × 844 og 820 × 1180 med
+    hodeløs Chrome. Safari-sjekkene rapporterer du i chat.
+  - Ingen commit eller push uten at du sier ifra.
+
+  Du kan åpne spec-fila og be om endringer før du godkjenner.
+
+  Hva vil du?
+  - Approve and continue: godkjenn og bygg videre i denne økta (anbefalt).
+  - Approve and stop: godkjenn og stopp, slik at en ny bmad-build-økt tar over
+    ved implementeringen.
+  - Review spec: gå gjennom spec-en først.
+
+✻ Brewed for 4m 30s · done 12:24 PM
+
+※ recap: Målet er å bygge BMAD story 2.7, produktskjermen som viser foreslått bestillingsmengde og tillitsmerke med varsler. Spec-en er skrevet og venter på ditt valg: godkjenn og bygg videre (anbefalt), godkjenn og stopp, eller gå gjennom den først.
+
+❯ Approve and continue. Jeg godkjenner beslutning 1-4 og beholder               
+  spesifikasjonen samlet. Bygg og test selvstendig. Gjennomfør alle fire        
+  skrivebeskyttede BMAD granskere, mutasjonstesting og planlagte skjermtester.  
+  Gi meg korte instruksjoner når manuell Safari test er nødvandig. Dokumenter   
+  faktiske prompter, beslutninger, modellbruk, KI arbeid, tester og reviewfunn  
+  fortløpende, etter samme rutiner som  med opus. Kontroller dokumentasjon og   
+  testtall mot faktiske resultater før commit, slik at vi unngå sobbeltarbeid.  
+  Ingen commit eller push uten min godkjenning.                                 
+
+  Read 1 file, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Status: display-funksjonene og filtrene for «–» er på plass. Neste er
+  beslutningstekstene i explanation/decision.py, lasteren og spørringene.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Write(src/explanation/decision.py)
+  ⎿  Wrote 40 lines to src/explanation/decision.py
+      1 """The wording of the decision panel «Hva bør du bestille?» (AD-4
+        ; FR-8, FR-11, UX-DR22).
+      2 
+      3 The texts follow the EXPERIENCE.md Message Catalogue word for wor
+        d. The quantity is
+      4 written through `forecasting/display.py` (AD-3) and the week of t
+        he suggestion comes from
+      5 the latest data week through `forecasting/horizon.py`. Only the s
+        tandard library and
+      6 `forecasting/` are imported (AD-1).
+     … +34 lines (ctrl+o to expand)
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Status: backend (visning, forklaringstekster, lasteren, view og URL) er
+  skrevet. Jeg skriver nå malene og stilarket for produktskjermen.
+
+  Searched for 1 pattern, ran 5 shell commands (ctrl+o to expand)
+
+⏺ Status: jeg retter de eksisterende testene som berøres av den lenkede listen
+  (liste-mal, berøringsmål, eksempeladresse, isolasjon), før jeg skriver de nye
+  testene.
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Status: de eksisterende testene går (973). Nå skriver jeg de nye testfilene
+  for lasteren, beslutningstekstene og produktskjermen, med forventede verdier
+  fra regnearket og mockupen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå testfilene.
+
+  Ran 6 shell commands (ctrl+o to expand)
+⏺ Status: produktskjerm-testene er skrevet. Jeg kjører dem nå og retter feil i
+  testene eller koden.
+
+  Searched for 2 patterns, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Status: to av de nye visningstestene feiler fordi NaN gir ValueError, ikke
+  TypeError. Jeg retter forventningen i testen, ikke koden.
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Status: headless Chrome gir ingen utdata. Jeg ser på feilmeldingen for å
+  avgjøre om skjermsjekken kan kjøres her.
+
+  Read 2 files, ran 5 shell commands (ctrl+o to expand)
+
+⏺ Skjermsjekken i headless Chrome viser at oppsettet holder på alle størrelser
+  uten sidelengs rulling. Jeg justerer bildeteksten under tallet, slik at den
+  står på samme grunnlinje. · summary
+
+  Read 3 files, listed 2 directories, ran 3 shell commands (ctrl+o to expand)
+
+⏺ Status: kode og tester er på plass (1047 grønne). Jeg legger til en CSS-test
+  for fargene (blått, blekk, rød- og ravtone) og kjører så mutasjonstestingen,
+  før granskerne starter.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg skrev feil sti. Retter og kjører på nytt.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Granskerne starter nå: fire uavhengige, skrivebeskyttede subagenter, parallelt
+  (Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor).
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   ├ Verification Gap review
+   └ Acceptance Auditor review
+
+⏺ Alle fire granskerne kjører i bakgrunnen. Jeg venter på at de er ferdige før
+  jeg leser noen av funnene, og avventer meldingene deres.
+
+✻ Sautéed for 17m 40s · done 12:51 PM
+
+› Message from general-purpose
+  Size arithmetic: the diff is 68,469 bytes, about 66.9 kB. sqrt(66.9) is about
+  8.18, plus 1 is 9.18, so N = min(9, 10) = 9. Findings follow, 11 in all.
+
+  - **Wasted work on every product page view.** `load_company_data` runs
+  `forecast_product` for every product in the company and also builds
+  `build_overview(results, {})`. `product_screen` never reads `data.overview`,
+  and it needs the result of only one product. A page for one of 50 products
+  with 104 weeks each computes all 50 and an unused overview. Consider a lazy or
+  single-product path, or drop the overview from this call.
+  - **Unknown product numbers cost a full forecast before the 404.** The 404
+  check is `data.results.get(product_number)`, so a mistyped or foreign number
+  still triggers the whole-company calculation. Check the product's existence
+  against the cheap products query first.
+  - **Latest week is queried twice per request.** `header_context` calls
+  `queries.latest_data_week(company)`, and `load_company_data` calls it again
+  for `latest_week`. The test comment even counts "1 for the header" as a
+  separate query. Pass the already-loaded week into the header context instead
+  of querying twice.
+  - **Linear scan for the product, with a latent bare `StopIteration`.** `next(p
+  for p in data.product_list if p.product_number == product_number)` is O(n)
+  and has no default. A mismatch between `results` and `product_list` would
+  surface as a `StopIteration` inside the view (a 500), not a 404. Build a dict
+  keyed by product number in `CompanyData`, or look the product up once.
+  - **The trust label is rendered twice and the `large` parameter is dead.** The
+  label appears in the page header and again in the "Kan du stole på
+  prognosen?" panel, so screen readers announce "Middels" or "Lav" twice. Both
+  includes pass `large=True`, so the non-large `<svg width="12">` branch and the
+  `{% if large %}` logic in `_trust_label.html` are never used. The test even
+  asserts both pills are 14×14. Either use the small variant somewhere, such as
+  the list, or remove the parameter. Also decide whether the duplicate label is
+  intended for assistive tech.
+  - **Keyboard and landmark problems from `tabindex="0"` on the list and detail
+  regions.** Up to 900 px the CSS removes the scroll frames (`overflow:
+  visible`), but the `<nav>` and `<main>` keep `tabindex="0"`. That leaves two
+  focusable but non-scrollable stops on narrow screens. Neither region has a
+  visible `:focus` or `:focus-visible` style in the CSS. A `nav` that wraps a
+  data table is also a questionable landmark. Tests assert the tab stops exist
+  but never check that they are conditional or visibly focused.
+  - **Colour contrast is asserted only by token name.** The pills (amber on
+  amber-tint, red on red-tint, green on green-tint), the blue link on blue-tint,
+  and the red icon outline on a surface fill are never contrast-checked. The
+  tests only compare strings like `var(--color-amber)`. UX-DR20 and NFR-11 (the
+  accessibility requirement the tests cite) need a computed ratio check against
+  the token values, including the `.selected` row (`blue-ink` on `blue-tint`).
+  - **Business rule in the template.** `{% if not
+  result.suggested_order_quantity %} quantity-ink{% endif %}` decides in the
+  template that 0 and None are ink-coloured. This is the "0 vs missing" rule the
+  tests guard, yet it lives outside `explanation/decision.py` (AD-4 says texts
+  and decisions are placed in the template, not made there). Return an
+  `is_order` flag from `DecisionTexts` and use that.
+  - **Hard-coded literals in the new CSS where tokens are used elsewhere.** The
+  rules use `14px`, `10px`, `6px`, `2px 10px 2px 8px`, `4px 12px 4px 10px` and
+  `margin-top: 3px` beside `var(--space-*)`. The `.big span` selector is a bare
+  element selector. These are fragile and bypass the design tokens that the new
+  tests otherwise verify.
+  - **Brittle and thin tests.**
+  `test_the_page_makes_the_same_number_of_queries...` hard-codes `== 7`, so it
+  breaks on any unrelated middleware or session query. It also compares only 3
+  vs 50 products. No test covers a product number containing characters the
+  `str` converter and `{% url %}` cannot reverse. No test covers a company that
+  has a product with sales weeks but whose `latest_week` is missing, which would
+  make `decision_texts` raise a raw `TypeError` (the test
+  `test_a_forecast_needs_the_latest_data_week` pins that crash as intended
+  behaviour). There is no test of the 404 path with a trailing-slash or case
+  variant. Several tests also parse HTML with fragile regexes, such as `<b
+  class="quantity([^"]*)">`, which break on any attribute added to the element.
+  - **Stale or misleading text.** The `products.html` comment still says "until
+  Epic 2 replaces it", although the page now links to Story 2.7's product
+  screen. The `test_isolation.py` parametrization changes `"from web.models
+  import Product as P"` to `"from web.models import CompanySettings, Product as
+  P"` with no explanation. This quietly alters what that guard test checks. The
+  `ROUTES` comment hard-codes that "both companies have a product 10001".
+  `WARNING_ROWS` documents that a missing warning raises a KeyError, which would
+  be a 500 on the page, not a graceful fallback, and the LEVEL_SHIFT warning is
+  excluded by a test comment only.
+
+⏺ Blind Hunter har levert rapporten sin (11 funn). Jeg venter på de tre andre
+  granskerne før jeg starter triagering.
+
+✻ Cooked for 1s · done 12:52 PM
+
+⏺ Agent "Blind Hunter review" finished · 50s
+
+› Message from general-purpose
+  Acceptance audit of Story 2.7 against the spec and `epic-2-context.md`. I read
+  the spec, the epic context and the full diff. I checked the CSS tokens,
+  `header_context` and `display.week_label` in the working tree. I did not run
+  the tests, Ruff or `makemigrations --check`.
+
+  The code matches the spec's behaviour on the main points:
+  - **Decision panel:** the «–» and «0» cases, the caption week from
+  `horizon_weeks` including «uke 1/2027», the sentence for no decision, and the
+  blue/ink rule on the quantity.
+  - **Trust panel:** the R-15 row order, the row shapes and kinds, and no
+  empty-state text.
+  - **Loader and isolation:** four queries whatever the number of products, the
+  404 for another company's or an unknown number, `never_cache` with
+  `require_safe`, and `ROUTES` extended in the two-account test.
+  - **Page structure:** the skip link as first focusable element, the
+  «Produkter» and «Valgt produkt» regions, one `h1`, and the 901/1181 px
+  breakpoints.
+  - **Tokens:** every `--token` used in the new CSS exists.
+
+  Findings:
+
+  - **Documents task not done (Tasks & Acceptance, last task; Code Map
+  "Documents"; DR-7).**
+    - The spec requires `docs/statustabell.md`, `qa-logg.md`,
+  `ki-styringslogg.md`, `arbeidslogg.md` and `.logs/mounia-03/issues.md` to be
+  updated, and `sprint-status.yaml` set to `review`.
+    - `git status` shows none of those documents changed except
+  `sprint-status.yaml`.
+    - `sprint-status.yaml` line 56 still reads `2-7-…: in-progress`.
+    - The spec's own checkboxes for the tests task and the documents task are
+  still `[ ]`, although the spec frontmatter says `status: 'in-review'`. The
+  epic context's "Every story" rule (status table, QA log, AI steering log, work
+  log) is therefore unmet.
+
+  - **Manual-check acceptance criterion not evidenced (Acceptance Criteria,
+  third bullet).**
+    - The spec requires a hand check at 1366 × 768, 320 px, 390 × 844 and 820 ×
+  1180, recorded in the QA log, and that the quantity, label and rows are
+  visible without scrolling at 1366 × 768.
+    - There is no QA-log entry in the diff.
+    - The tests only assert CSS rule values in `test_app_shell.py`. They do not
+  prove that the quantity, label and rows fit without scrolling at 1366 × 768
+  for the seed product with the most warning rows.
+    - The spec says the user reports this in chat, so it is pending rather than
+  a code defect.
+
+  - **Header latest-week query outside the loader (Always, "The loader is the
+  only reader of company data for the page", AD-2/AD-7).**
+    - `product_screen` calls `company_data.load_company_data`, which already
+  reads `latest_data_week` and returns it as `data.latest_week`.
+    - It then calls `header_context(company, None)`, which runs
+  `queries.latest_data_week(company)` a second time.
+    - The page therefore reads company data outside the loader and makes a
+  redundant query. The query-count test hard-codes this as "1 for the header" (7
+  in total).
+    - The count is constant, so NFR-8 holds, but the spec's single-reader intent
+  is not met.
+
+  - **«Produkter» app-header link not marked current on the product screen
+  (UX-DR14 / UX-DR6 intent, low severity).**
+    - `header_context(company, None)` gives `current=None`, so the header's
+  products link has no current marker on a page under `/produkter/`.
+    - The spec does not say what the product screen should pass here. It is a
+  deviation from the Story 1.8 header behaviour that the spec does not discuss.
+
+  - **Raw pixel values in the new CSS (Code Map, `app.css`: "tokens only").**
+    - New rules use literal pixel values instead of tokens: `gap: var(--space-2)
+  14px`, `.big` `gap … 14px`, `.pill` `gap: 6px` and `padding: 2px 10px 2px
+  8px`, `.pill-large` `4px 12px 4px 10px`, `.warning` `gap: 10px` and `padding …
+  10px`, and `.icon` `margin-top: 3px`.
+    - Colours and font sizes do use tokens.
+
+  - **Tab stops with no scroll frame up to 900 px (UX-DR7, "no scroll frame",
+  low severity).**
+    - `nav.list` and `main.detail` keep `tabindex="0"` at all widths.
+    - Up to 900 px both have `overflow: visible`, so there is nothing to scroll
+  by keyboard, and each adds a pointless tab stop.
+    - `test_the_skip_link_is_first_and_the_list_comes_before_the_product`
+  asserts both tab stops unconditionally.
+
+  - **Trust pill rendered twice, one branch unused (UX-DR20 / Design Note 1,
+  cosmetic).**
+    - The pill appears in the header and again in the trust panel, which the
+  tests require (`len(pills) == 2`).
+    - `_trust_label.html` has a non-large 12 px branch that nothing uses, since
+  both includes pass `large=True`.
+    - The spec's I/O row mentions the label only once, but it does not forbid
+  the repetition.
+
+  Relevant files:
+  - `<project-root>/_bmad-output/implementation-artifacts/spe
+  c-2-7-show-what-to-order-and-whether-to-trust-it-on-the-product-screen.md`
+  - `<project-root>/_bmad-output/implementation-artifacts/spr
+  int-status.yaml`
+  - `<project-root>/src/web/views.py`
+  - `<project-root>/src/web/company_data.py`
+  - `<project-root>/src/web/static/web/app.css`
+  - `<project-root>/src/web/templates/web/product.html`
+
+⏺ Acceptance Auditor har også levert. Jeg venter fortsatt på Edge Case Hunter og
+  Verification Gap før jeg starter triagering.
+
+✻ Baked for 1s · done 12:52 PM
+
+⏺ Agent "Acceptance Auditor review" finished · 1m 1s
+
+› Message from general-purpose
+  [
+  {"location":"src/web/company_data.py:909-921 (forecast_settings) and :924-939
+  (load_company_data)","trigger_condition":"Settings row holds a value outside
+  FR-20 ranges (window 0 or 99, unknown method, factor
+  5.0)","guard_snippet":"try: forecast_product(...) except (ValueError,
+  TypeError): fall back to ForecastSettings() or mark the product as failed, and
+  log it","potential_consequence":"check_settings raises inside the dict
+  comprehension; every product screen of the company returns 500, not just
+  one."},
+  {"location":"src/web/company_data.py:934-939","trigger_condition":"forecast_pr
+  oduct raises for any one product (bad weeks, bad stock) while the page needs
+  only one product","guard_snippet":"compute lazily: results = {n: ...} only for
+  the requested number, or catch per product and keep the
+  rest","potential_consequence":"One corrupt product breaks the screen of all
+  the company's products, and every request recalculates all products."},
+  {"location":"src/web/views.py:479-481 and
+  src/web/company_data.py:928-933","trigger_condition":"Product's last sales
+  week is older than the company's latest data week (shorter or stale
+  history)","guard_snippet":"compare the product's own last (iso_year, iso_week)
+  with data.latest_week, or use the product's own latest week for
+  week_at_position","potential_consequence":"week_at_position assumes the last
+  position is the company's latest week, so warnings name wrong week numbers."},
+  {"location":"src/web/views.py:479-481","trigger_condition":"Latest week has an
+  invalid ISO pair (week 53 of a 52-week year) in the stored sales
+  weeks","guard_snippet":"catch ValueError from horizon_weeks and
+  week_at_position and render without week text, or validate in
+  load_seed","potential_consequence":"decision_texts and warning_texts raise
+  ValueError, so the product page returns 500 for the whole company."},
+  {"location":"src/web/templates/web/_product_list.html:967","trigger_condition"
+  :"A product_number contains '/' or is empty; the str converter cannot match
+  it","guard_snippet":"validate product_number as 5 digits in the model
+  (RegexValidator), or skip the link when the reverse
+  fails","potential_consequence":"{% url 'product' ... %} raises NoReverseMatch,
+  so /produkter/ and every product page return 500."},
+  {"location":"src/web/views.py:482 and
+  src/web/company_data.py:945","trigger_condition":"header_context and
+  load_company_data both call queries.latest_data_week for the same
+  request","guard_snippet":"build header_context from data.latest_week instead
+  of querying again","potential_consequence":"One duplicated query on every
+  product page; the test pins the count at 7 and hides it."},
+  {"location":"src/web/templates/web/product.html:995","trigger_condition":"View
+  port up to 900px, where .list has overflow: visible but nav keeps
+  tabindex=0","guard_snippet":"drop tabindex=0 from the list and detail regions
+  at one column, or set it only when the pane
+  scrolls","potential_consequence":"Keyboard users hit two extra focus stops
+  that scroll nothing; focus order also differs from the visual order (.detail
+  order -1)."},
+  {"location":"tests/test_product_screen.py:1825","trigger_condition":"Query-cou
+  nt test pins the page at exactly 7 queries (2 login, 4 loader, 1
+  header)","guard_snippet":"assert counts[0] == counts[1] and counts[0] <=
+  7","potential_consequence":"Any unrelated session or auth query change fails
+  the NFR-8 test though the count is still independent of product count."},
+  {"location":"tests/test_product_screen.py:1534
+  (test_a_forecast_of_zero_has_no_weeks_of_cover)","trigger_condition":"A zero
+  forecast with stock 0 (0/0), or stock above 0, where weeks of cover is
+  None","guard_snippet":"parametrize the E23 test over stock 0 and stock >
+  0","potential_consequence":"Only the E23 stock is checked, so a stock-0
+  zero-forecast product could show a number or fail unnoticed."},
+  {"location":"src/web/company_data.py:78-83 (CompanyData.overview) and
+  :944","trigger_condition":"build_overview(results, {}) is computed on every
+  product-screen request but the view never reads
+  data.overview","guard_snippet":"build the overview only where a page uses it,
+  for example a cached_property or a separate
+  function","potential_consequence":"Wasted work and an extra failure point (a
+  build_overview error returns 500) on a page that does not use it."},
+  {"location":"src/web/views.py:489-493
+  (label)","trigger_condition":"result.confidence_label is a value outside
+  trust.HOY, MIDDELS and
+  LAV","guard_snippet":"LABELS.get(result.confidence_label) with an explicit
+  failing assertion naming the label","potential_consequence":"Bare KeyError
+  from the view and from LABEL_WORDS gives 500 with no hint of which label is
+  missing."}
+  ]
+
+⏺ Edge Case Hunter har levert. Verification Gap mangler fortsatt; jeg venter på
+  den før jeg triagerer.
+
+✻ Baked for 1s · done 12:52 PM
+
+⏺ Agent "Edge Case Hunter review" finished · 1m 6s
+
+› Message from general-purpose
+  No verification gaps found.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Verification Gap review" finished · 1m 44s
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Alle fire granskerne er ferdige og har kjørt skrivebeskyttet uten endringer i
+  tilstanden. Fire funn er triagert og rettet, og nå kjører jeg hele
+  mutasjonssettet på nytt mot den rettede koden. · summary
+
+  Read 1 file, ran 6 shell commands (ctrl+o to expand)
+
+⏺ Status: triageringen er ferdig (29 funn i 21 grupper). Jeg fører triagelogg,
+  implementeringsnotater og utsatt arbeid i spec-en, og går deretter til
+  dokumentasjonen.
+
+  Ran 6 shell commands (ctrl+o to expand)
+⏺ Status: koden er ferdig og kontrollert. Nå fører jeg dokumentasjonen
+  (statustabell, QA-logg, KI-styringslogg, arbeidslogg og åpne punkter), med
+  tall hentet fra faktiske kjøringer.
+
+  Searched for 2 patterns, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Status: statustabell og QA-logg er ført. Nå KI-styringsloggen, arbeidsloggen
+  og åpne punkter, så en siste kontroll av tall og tilstand.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Skill(sesjonslogg)
+  ⎿  Successfully loaded skill
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Status: loggføring er ferdig (ingen commit). Siste kontroll er
+  personvernskanning av alle endrede og nye filer for lokale stier, e-post og
+  nøkler.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Story 2.7 er bygd, testet og gjennomgått, men ikke committet. Safari- og
+  iPhone-testene dine gjenstår.
+
+  Resultat
+
+  - Bygget:
+    - Laster: /produkter/<varenummer>/ bruker den nye lasteren
+      web/company_data.py, som leser dataene i fire spørringer uansett antall
+      produkter.
+    - Visning: siden viser overskrift, beslutningspanel og tillitspanel ved
+      siden av en produktliste som nå lenker.
+    - 404: en annen bedrifts varenummer gir samme «Siden finnes ikke» som en
+      ukjent adresse.
+  - Tester lokalt: 1058 består og 1 hoppes over (Docker), opp fra 960. ruff 
+    check, ruff format --check og makemigrations --check er rene. CI-tallet blir
+    ett høyere, og jeg fører det etter CI-kjøringen.
+  - Mutasjoner: 50 før reviewen og 54 etter. Alle er fanget unntatt én
+    ekvivalent mutant (hoppelenken først inne i toppfeltet er fortsatt første
+    fokuserbare element).
+  - BMAD Code Review:
+    - Granskere: alle fire kjørte skrivebeskyttet, og filhashene var identiske
+      før og etter.
+    - Funn: 29 funn i 21 grupper. 6 er rettet, 1 er utsatt (en ugyldig
+      innstillingsrad gir 500, hører til story 3.1) og 14 er avvist.
+  - Skjermmåling: jeg målte seks seed-produkter i hodeløs Chrome 120 (gammel
+    modus, fordi den nye krasjet) ved åtte størrelser. Ingen sidelengs rulling.
+    Ved 1366 × 640 er mengden, merket og radene synlige uten rulling (høyest 431
+    px av 640). Dette er ikke Safari og ikke en ekte telefon.
+  - Modellbruk: Sonnet 5.5 er bekreftet for byggingen. Nivået du ba om og
+    modellen granskerne kjørte på er ikke bekreftet, og det står slik i loggene.
+  - Dokumentasjon: spec, statustabell, QA-logg, KI-styringslogg (tilfelle 44),
+    arbeidslogg, deferred-work.md, issues.md, sprint-status (review) og
+    sesjonsloggen 969-… er ført.
+  - Rettet før commit: statustabellen påsto først at varselet om gamle data ikke
+    finnes i seed-dataene. Det stemmer ikke, siden Parasoll 2 m (20015) har
+    det. Det er rettet og testet.
+
+  Sesjonsloggen er ikke committet, fordi din regel går foran skillens
+  commit-krav. Personvernskanningen av alle endrede og nye filer fant ingen
+  lokale stier, e-postadresser eller nøkler.
+
+  Safari-test (kort)
+
+  Start appen som vanlig (README) og logg inn som 1001 / testbedrift-a.
+  1. Åpne /produkter/10012/ (Strøsand), /produkter/10040/ (uten prognose) og,
+     innlogget som 1002 / testbedrift-b, /produkter/20015/.
+  2. I den responsive visningen på Mac: sjekk 1366 × 768, 820 × 1180, 390 × 844
+     og 320 px.
+     - Ved 1366 × 768 skal mengden, merket og radene vises uten rulling.
+     - På smale størrelser skal produktet stå først og listen sist, uten
+       sidelengs rulling.
+  3. Trykk Tab (⌥Tab om nødvendig) fra toppen. «Gå til produktet» skal komme
+     først og være synlig, og fokusringen skal vises.
+  4. Som 1001, åpne /produkter/20001/. Det skal gi «Siden finnes ikke» uten data
+     fra B.
+  5. Gjenta på den ekte iPhone 13 over lokalnettet.
+
+  Skriv resultatet og Safari- og macOS/iOS-versjonene i chatten, så fører jeg
+  det i QA-loggen.
+
+  Godkjenning
+
+  Vil du godkjenne en personvernskanning og commits i samme oppdeling som story
+  2.6? Det er kode og tester, så spec og dokumenter, og så sesjonsloggen. Jeg
+  fyller deretter inn commit-hashene (fylles ut etter commit) i QA-loggen og
+  KI-styringsloggen.
+
+✻ Baked for 33m 9s · done 1:06 PM
+
+※ recap: Story 2.7 (produktsiden med bestillingsforslag og tillitsmerke) er bygd, testet og gjennomgått, men ikke committet. Neste steg er at du tester i Safari og på iPhone og melder resultatet i chatten, og at du godkjenner commits.
+  ⎿  Referenced file tests/test_app_shell.py
+  ⎿  Read src/explanation/decision.py (39 lines)
+  ⎿  Referenced file _bmad-output/implementation-artifacts/spec-2-7-show-what-to
+     -order-and-whether-to-trust-it-on-the-product-screen.md
+  ⎿  Referenced file docs/ki-styringslogg.md
+  ⎿  Referenced file src/forecasting/forecast.py
+  ⎿  Skills restored (sesjonslogg, bmad-build)
+
+⏺ Compacted while idle, before the prompt cache expired · turn off with 
+  "idleCompaction": false in settings.json
+
+❯ Under manuell iPhone 13-test får vi DisallowedHost for 172.20.10.x:8000.      
+  Undersøk hvordan prosjektet setter ALLOWED_HOSTS. Finn en trygg, midlertidig  
+  løsning for lokal testing uten permanente kodeendringer. Gi meg én kort       
+  kommando og dokumenter testhindringen i QA-loggen. Ikke commit eller push.    
+
+  Searched for 1 pattern, listed 1 directory (ctrl+o to expand)
+
+⏺ The project already has a mechanism for this. I'll check how it validates the
+  value.
+
+  Searched for 1 pattern, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Update(docs/qa-logg.md)
+  ⎿  Added 13 lines
+      1195  - Tab fra toppen: hoppelenken «Gå til produktet» først og syn
+            lig, og fokusringen på produktområdet.
+      1196  - Den ekte iPhone 13 i Safari over lokalnettet.
+      1197  
+      1198 +**Testhindring under iPhone-testen: DisallowedHost.** Brukere
+           +n meldte i chatten at iPhonen fikk Djangos feil `DisallowedHo
+           +st` for `172.20.10.x:8000`. Feilen betyr at serveren nådde Ma
+           +cen over lokalnettet, men at adressen ikke sto i `ALLOWED_HOS
+           +TS`. Claude undersøkte oppsettet og fant dette:              
+      1199 +- `src/prognose/settings.py` setter `ALLOWED_HOSTS` med `env.
+           +allowed_hosts(PROGNOSE_LAN_HOST)` (AD-13, NFR-6). Uten variab
+           +elen er listen bare `127.0.0.1` og `localhost`. Variabelen ka
+           +n stå i terminalen eller i `.env`, og den må være satt når se
+           +rveren starter.                                              
+      1200 +- Med variabelen godtar `src/prognose/env.py` bare én IPv4-ad
+           +resse i et privat nettverk (10.0.0.0/8, 172.16.0.0/12 eller 1
+           +92.168.0.0/16) og legger den til listen. Alt annet, for eksem
+           +pel `*` eller en offentlig adresse, avvises med en feilmeldin
+           +g. `172.20.10.x` ligger i 172.16.0.0/12, så den godtas. Dette
+           + er samme mekanisme som README beskriver under «Test på en ek
+           +te telefon over lokalnettet».                                
+      1201 +- Claude kontrollerte at innstillingene lastes med `PROGNOSE_
+           +LAN_HOST=172.20.10.x` og gir `['127.0.0.1', 'localhost', '172
+           +.20.10.3']` med `DEBUG` av. Claude startet ikke serveren og t
+           +estet ikke på telefonen.                                     
+      1202 +                                                             
+      1203 +**Midlertidig løsning uten kodeendring.** Stopp serveren som 
+           +kjører, og start den på nytt med variabelen satt for den ene 
+           +kommandoen:                                                  
+      1204 +                                                             
+      1205 +`PROGNOSE_LAN_HOST=172.20.10.x uv run python src/manage.py ru
+           +nserver --insecure 0.0.0.0:8000`                             
+      1206 +                                                             
+      1207 +Deretter åpner iPhonen `http://172.20.10.x:8000/`. Variabelen
+           + gjelder bare for denne kommandoen og blir ikke lagret i noen
+           + fil. Adressen kan endre seg når Macen kobler til nettverket 
+           +på nytt, og da må kommandoen bruke den nye adressen (`ifconfi
+           +g | grep "inet "` viser den). Stopp serveren med Ctrl+C etter
+           + testen. Appen bruker vanlig HTTP, så testen bør gjøres på et
+           + nettverk brukeren stoler på, med bare de offentlige testpass
+           +ordene. Ingen kode, innstilling eller `.env`-fil er endret, o
+           +g `ALLOWED_HOSTS` er ikke utvidet.                           
+      1208 +                                                             
+      1209 +**Konsekvens for loggen.** Resultatet fra iPhonen kan først f
+           +øres når brukeren har meldt det. README beskriver allerede st
+           +egene, men nevner ikke `DisallowedHost`-feilen, så en som sta
+           +rter uten variabelen får den uten å se hvorfor. Claude har ik
+           +ke endret README, siden det ville være en dokumentasjonsendri
+           +ng som ikke er bestilt.                                      
+      1210 +                                                             
+      1211  ## 2026-11-27 – Feil i KI-generert kode og tekst fra bygginge
+            n av story 2.7 (DR-9)
+      1212  
+      1213  **Hvordan det ble funnet.** Av testene, Ruff, mutasjonstesten
+            e og målingene i Chrome under byggingen av story 2.7 på grene
+            n `story/2-7-show-what-to-order-and-whether-to-trust-it-on-th
+            e-product-screen` (baseline `0116aaf`). Claude bygde lasteren
+            , produktsiden, tekstene og testene inline, uten subagent.
+
+⏺ Prosjektet setter ALLOWED_HOSTS fra variabelen PROGNOSE_LAN_HOST. Uten den er
+  listen bare 127.0.0.1 og localhost, så serveren avviser 172.20.10.x.
+  Variabelen må være satt når serveren starter.
+
+  Adressen din ligger i det private området 172.16.0.0/12, som prosjektet
+  godtar. Alt annet, for eksempel * eller en offentlig adresse, avvises med en
+  feilmelding. Jeg kontrollerte at innstillingene lastes og gir ['127.0.0.1', 
+  'localhost', '172.20.10.x'] med DEBUG av. Jeg startet ikke serveren og testet
+  ikke på telefonen.
+
+  Stopp serveren som kjører, og kjør denne i prosjektmappa:
+
+  PROGNOSE_LAN_HOST=172.20.10.x uv run python src/manage.py runserver --insecure
+  0.0.0.0:8000
+
+  Åpne deretter http://172.20.10.x:8000/ på iPhonen. Variabelen gjelder bare for
+  den ene kommandoen, og ingen kode eller fil er endret.
+
+  - Adressen kan endre seg: hvis Macen kobler til nettverket på nytt, finner du
+    den nye med ifconfig | grep "inet ".
+  - Ingen kryptering: appen bruker vanlig HTTP, så bruk et nettverk du stoler
+    på. Passordene er de offentlige testpassordene.
+  - Etter testen: stopp serveren med Ctrl+C.
+
+  Jeg har dokumentert hindringen i docs/qa-logg.md, under oppføringen
+  «Produktsiden i hodeløs Chrome og i Safari». Der står feilen, årsaken,
+  kommandoen og at iPhone-resultatet først føres når du melder det. README
+  beskriver stegene, men sier ikke at DisallowedHost kommer når variabelen
+  mangler. Jeg har ikke endret README, siden du ikke har bestilt det.
+
+  Ingenting er committet eller pushet. Skriv resultatet fra iPhonen og Safari-
+  og iOS-versjonen i chatten, så fører jeg det i QA-loggen.
+
+✻ Sautéed for 38s · done 2:03 PM
+
+※ recap: Story 2.7 (produktsiden med bestilling og tillit) er bygd og testet, men ikke committet, og nå venter vi på iPhone-testen. Neste steg: start serveren med PROGNOSE_LAN_HOST=172.20.10.x og meld resultatet i chatten.
+
+❯ Manuelle tester for 2.7 er gjennomført. Safari på Mac: Produktene 10012,10040 
+  og 20015 er kontrollert. Mobilvisning ved 390 og 320 px fungerer. Hppelenken  
+  gå til produktet og fokusringen er bekreftet. Tilgangskontroll mellom         
+  bedriftene gir riktig 404-side. Ekte iphone 13: innlogging som testbedrift    
+  Afungerer. Produkt 10012 viser samme resultat som på Mac. Produkt 10040 viser 
+  Lav, og ingen forslått bestillingsmengde. Tilgang til produkt 20015 gir       
+  riktig 404 side. Testen ble gjennomført via lokal Wi-Fi deling med            
+  PROGNOSE_LAN_HOST.Serveren er stoppet. Før resultatene korrekt i QA-loggen.   
+  Kontroller også dokumentasjonen, prompter, beslutninger, KI bruk og testtall  
+  mot faktiske resultater, slik vi gjorde med opus. Ikke oppgi ubekreftede OA   
+  versjoner eller skjermtester som bestått. Rapporter eventuelle mangler samlet 
+  før commit . Ingen commit eller push ennå                                     
+
+  Searched for 2 patterns, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg fører Safari- og iPhone-resultatene i QA-loggen slik du meldte dem, uten å
+  legge til versjoner eller størrelser du ikke har oppgitt. Så kontrollerer jeg
+  de andre dokumentene mot dem.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå fører jeg resultatene i QA-loggen.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ QA-loggen har nå Safari- og iPhone-resultatene slik du meldte dem, og
+  dokumentene er kontrollert mot de faktiske kjøringene. Ingenting er committet
+  eller pushet.
+
+  Jeg kjørte pytest på nytt: 1058 består og 1 hoppes over (Docker). ruff check
+  og ruff format --check er rene, og testtallet i arbeidsloggen, sesjonsloggen
+  og statustabellen stemmer. Jeg kjørte ikke makemigrations --check på nytt. I
+  denne omgangen er bare dokumenter endret, og kontrollen var ren i forrige
+  kjøring.
+
+  Det som er ført som bekreftet av deg
+
+  - Safari på Mac:
+    - Produktene 10012, 10040 og 20015 er kontrollert.
+    - Mobilvisning ved 390 og 320 px fungerer.
+    - Hoppelenken «Gå til produktet» og fokusringen er bekreftet.
+    - 404 mellom bedriftene gir riktig side.
+  - Ekte iPhone 13 over lokalnettet:
+    - Innlogging som Testbedrift A virker.
+    - 10012 viser det samme som på Mac.
+    - 10040 viser «Lav» uten forslått mengde, som testen for seed-produktet også
+      forventer.
+    - 20015 gir 404 for A.
+    - Serveren er stoppet.
+  - DisallowedHost: er ført som testhindring, med årsak (PROGNOSE_LAN_HOST
+    mangler som standard), kommandoen og utfallet.
+
+  Det er ført i docs/qa-logg.md, docs/statustabell.md, docs/arbeidslogg.md,
+  spesifikasjonens manuelle sjekker, sesjonsloggen 969-… og issues.md.
+
+  Mangler før commit
+
+  1. Versjoner: du har ikke oppgitt Safari-, macOS- eller iOS-versjon. Jeg har
+     ikke skrevet noen, og de står som «ikke meldt». Send dem hvis du vil ha dem
+     i loggen.
+  2. Safari ved 1366 × 768 og 820 × 1180: du meldte bare 390 og 320 px. At
+     mengden, merket og radene er synlige uten rulling ved 1366 × 768, er derfor
+     bare målt i hodeløs Chrome, og står ikke som bestått i Safari.
+  3. Uspesifiserte punkter: du oppga ikke hvilke nummer og hvilken innlogging
+     som ga 404 på Mac, eller om Testbedrift B ble prøvd på iPhonen.
+     Berøringsmålene på telefonen er heller ikke meldt, så de er bare testet i
+     koden.
+  4. README: den nevner ikke DisallowedHost når PROGNOSE_LAN_HOST mangler. Jeg
+     har ikke endret den, og punktet står i issues.md.
+  5. Etter commit: commit-hashene (fylles ut etter commit) i QA-loggen og
+     KI-styringsloggen må fylles inn, og CI-testtallet føres etter CI-kjøringen.
+     Lokalt er det 1058 + 1 hoppet over, og CI viser ett høyere.
+  6. Modell: Sonnet 5.5 er bekreftet for byggingen. Nivået du ba om og modellen
+     granskerne kjørte på er fortsatt ikke bekreftet, og loggene sier det.
+  7. Din avgjørelse om personvern: QA-loggen inneholder den private
+     Wi-Fi-adressen 172.20.10.x fra feilmeldingen. Den er ikke knyttet til en
+     person. Jeg kan gjøre den generell («172.20.10.x») før commit hvis du vil.
+
+  Si fra hvis du vil ha rettet noe, og godkjenn commit-oppdelingen når du er
+  klar: kode og tester, så spec og dokumenter, og så sesjonsloggen.
+✻ Churned for 1m 46s · done 2:28 PM
+
+❯ Før commit: Før inn de bekreftede Safari-testene ved 820 × 1180 (10012,       
+  10040, 20015) og 404-testen som Testbedrift B (1002) mot A-produkt 10012.     
+  Behold øvrige ikke utførte manuelle tester som ikke verifisert.               
+                                                                                
+  Masker lokal IP til 172.20.10.x i dokumentasjonen, og legg inn en kort        
+  forklaring av PROGNOSE_LAN_HOST og DisallowedHost i README. Kontroller at     
+  prompter, beslutninger, KI-bruk og testresultater er dokumentert korrekt,     
+  uten gjentesting eller unødvendige endringer.                                 
+                                                                                
+  Jeg godkjenner deretter personvernskanning og tre commits: kode/tester,       
+  spec/dokumenter og sesjonslogg. Fyll inn commit-hasher og rapporter           
+  resultatet før push. Ingen push ennå.                                         
+
+  Searched for 1 pattern, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg legger forklaringen inn i README og kjører testene som leser README, før
+  jeg går videre med de andre dokumentene.
+
+⏺ Update(README.md)
+  ⎿  Added 2 lines
+      71  
+      72  Dette er bare for den manuelle testen av telefonvisningen (NFR-
+          6), og trengs ikke for å bruke Prognose. Maskinen og telefonen 
+          må være på samme private nettverk som du stoler på: appen bruke
+          r vanlig HTTP, så passordet og øktinformasjonskapselen går ukry
+          ptert over nettverket. Testpassordene er offentlige og gjelder 
+          bare testdataene. Telefonen og maskinen får hver sin økt, siden
+           adressen er en annen enn 127.0.0.1.
+      73  
+      74 +`PROGNOSE_LAN_HOST` er maskinens egen IPv4-adresse på det priva
+         +te nettverket. Uten den godtar Prognose bare `127.0.0.1` og `lo
+         +calhost` (Djangos `ALLOWED_HOSTS`, AD-13). Variabelen legger ti
+         +l akkurat den ene adressen, og den må være satt når serveren st
+         +arter. En adresse som ikke er privat (10.x.x.x, 172.16.x.x til 
+         +172.31.x.x eller 192.168.x.x), og `*`, avvises med en feilmeldi
+         +ng. Åpner du `http://<adressen>:8000/` på telefonen uten at var
+         +iabelen var satt ved oppstart, viser Django `DisallowedHost`. S
+         +topp da serveren og start den på nytt som i steg 2. Adressen ka
+         +n endre seg når maskinen kobler til nettverket på nytt, så sjek
+         +k den hver gang.                                               
+      75 +                                                               
+      76  1. Finn maskinens IPv4-adresse på det private nettverket, for e
+          ksempel `192.168.1.20`.
+      77  2. Start appen i et nytt terminalvindu: `PROGNOSE_LAN_HOST=192.
+          168.1.20 uv run python src/manage.py runserver --insecure 0.0.0
+          .0:8000` (i PowerShell: `$env:PROGNOSE_LAN_HOST = "192.168.1.20
+          "` og så `uv run python src/manage.py runserver --insecure 0.0.
+          0.0:8000`). Feilsøkingsmodus er av, og databasen svarer fortsat
+          t bare på 127.0.0.1.
+      78  3. Åpne `http://192.168.1.20:8000/` i Safari på telefonen og lo
+          gg inn som hver testbedrift.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ Personvernskanningen er ren: bare maskerte og private adresseområder, ingen
+  lokale stier, e-postadresser eller nøkler. Jeg committer nå kode og tester.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Kode-commiten er a6a69e6. Nå fyller jeg inn hashen i loggene og committer
+  spesifikasjonen og dokumentene.
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Jeg retter ett ord i sesjonsloggen (macOS-sed ga feil), og slår det inn i den
+  lokale loggcommiten.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Safari- og iPhone-resultatene, maskeringen og README-forklaringen er ført, og
+  de tre commitene er laget lokalt. Ingenting er pushet.
+
+  Commits på grenen (fra 0116aaf)
+
+  ┌─────────┬────────────────────────────────────────────────────────────────┐
+  │  Hash   │                            Innhold                             │
+  ├─────────┼────────────────────────────────────────────────────────────────┤
+  │ a6a69e6 │ Kode og tester (23 filer)                                      │
+  ├─────────┼────────────────────────────────────────────────────────────────┤
+  │         │ Spesifikasjon, QA-logg, KI-styringslogg (tilfelle 44),         │
+  │ 9297674 │ arbeidslogg, statustabell, deferred-work.md,                   │
+  │         │ sprint-status.yaml og README                                   │
+  ├─────────┼────────────────────────────────────────────────────────────────┤
+  │ ded99bb │ Sesjonsloggen 969-… og issues.md                               │
+  └─────────┴────────────────────────────────────────────────────────────────┘
+
+  Arbeidstreet er rent. Jeg fikk en feil i loggcommiten fra sed på macOS. Den
+  ble rettet med en lokal --amend før noe ble pushet, så hashen er ded99bb.
+  Rettelsen er at loggen ikke skriver «han» om deg.
+
+  Det jeg gjorde
+
+  - Safari 820 × 1180: 10012, 10040 og 20015 er ført som bekreftet, uten flere
+    detaljer enn du ga.
+  - 404 som Testbedrift B (1002): A-produktet 10012 gir samme 404-side.
+  - Øvrige manuelle tester: står som ikke verifisert.
+  - IP-adressen: er maskert til 172.20.10.x i dokumentasjonen, og kommandoen har
+    en forklaring på at adressen er Macens.
+  - README: forklarer PROGNOSE_LAN_HOST, ALLOWED_HOSTS og DisallowedHost.
+    Teksten er ren prosa, så testene som leser README-kodeblokkene
+    (test_ci_workflow.py) fortsatt passerer.
+  - Hashene: QA-loggen og KI-styringsloggen har kode-commiten a6a69e6. Én rad
+    (AA-1, en avkrysning som ble rettet før noe var committet) står som «rettet
+    før første commit».
+
+  Kontrollert mot faktiske resultater
+
+  - Tester: 1058 består og 1 hoppes over. ruff check, ruff format --check og
+    makemigrations --check er rene. Koden er uendret siden kjøringen, bare
+    dokumenter og README er endret etterpå.
+  - Personvernskanning: den dekket alle tilføyde linjer og nye filer før commit.
+    Den fant ingen lokale stier, e-postadresser, nøkler eller telefonnumre. Det
+    eneste som ble funnet var private adresseområder, 127.0.0.1 og 172.20.10.x.
+  - Testing og dokumentasjon: ingen gjentesting ble gjort. Jeg endret ingen
+    kode, og dokumentene er bare oppdatert der resultatene tilsier det.
+
+  Fortsatt ikke verifisert
+
+  - Safari-, macOS- og iOS-versjonene.
+  - Safari ved 1366 × 768, som bare er målt i hodeløs Chrome.
+  - Høyden 844 ved 390 px. Du meldte «390 og 320 px».
+  - Andre 404-kontroller på Mac enn B mot 10012.
+  - Testbedrift B på iPhonen og berøringsmålene.
+  - Modellen granskerne kjørte på og nivået du ba om. Sonnet 5.5 er bare
+    bekreftet for byggingen.
+  - CI-testtallet. Det føres etter CI-kjøringen, og det blir ett høyere enn
+    lokalt.
+
+  Før push
+
+  Pushen går over HTTPS, fordi ingen workflow-filer er endret. PR-teksten må
+  liste alle 29 funnene fra BMAD Code Review med beslutning og fix-commit
+  (a6a69e6). Si fra når jeg kan pushe og lage PR-en.
+
+✻ Cogitated for 2m 36s · done 2:34 PM
+
+❯ Jeg godkjenner push og PR for story 2.7, forutsatt at alle tre avtalte        
+  commits er fullført og dokumentasjonen er kontrollert. Bruk etablert          
+  SSH-rutine med mindre prosjektreglene krever HTTPS.                           
+                                                                                
+  Ta med alle 29 BMAD-funn, beslutningene og riktig fix-commit i PR-en.         
+  Kontroller CI og Windows på siste commit før fletting. Fullfør deretter       
+  fletteloggen, oppdater faktiske CI-testtall og kontroller grønn CI på main.   
+                                                                                
+  Ikke start story 2.8. Sesjonseksport og siste dokumentasjons-PR skal          
+  fullføres før vi avslutter story 2.7.                                         
+
+  Pushed to story/2-7-show-what-to-order-and-whether-to-trust-it-on-the-product-screen, searched for 1 pattern, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Jeg retter mutasjonssetningen i PR-kommentaren til det QA-loggen sier, og
+  oppretter så PR-en.
+
+  Created PR #44, commented on PR #44, ran 2 shell commands (ctrl+o to expand)
+
+⏺ CI og Windows er grønne på ded99bb, og CI viser 1059 tester. Jeg fletter nå på
+  samme måte som i PR #40.
+
+  Pushed to main, ran 5 shell commands (ctrl+o to expand)
+
+⏺ Jeg fører flettingen, CI-tallene og «done» i dokumentene på en egen gren for
+  dokumentasjons-PR-en.
+
+  Pushed to main, created PR #45, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Story 2.7 er flettet i main, og fletteloggen er flettet. Sesjonseksporten og
+  den siste dokumentasjons-PR-en gjenstår.
+
+  Resultat
+
+  - Push: grenen er pushet over SSH. Det var ingen workflow-filer i endringene,
+    men SSH er den etablerte rutinen.
+  - PR #44: kommentaren har alle 29 funnene i 21 grupper, med beslutning og
+    fix-commit.
+    - 6 er rettet: 5 i koden og testene i a6a69e6, og avkrysningen AA-1 i
+      dokumentcommiten 9297674.
+    - 1 er utsatt (EC-1, til story 3.1 via deferred-work.md).
+    - 14 er avvist.
+  - Kontroller på siste commit ded99bb: CI-kjøring nr. 82 (1059 tester, Ruff
+    rent) og Windows-kjøring nr. 22 passerte.
+  - Fletting: PR #44 er flettet som 5844e51 kl. 14.38 med --no-ff. Innholdet i
+    main er identisk med PR-hodet. CI-kjøring nr. 83 på main passerte med 1059
+    tester.
+  - Fletteloggen (PR #45): den er flettet som 3a3319a, og CI-kjøring nr. 85 på
+    main passerte med 1059 tester. Den har pushen, PR #44, kontrollene,
+    flettingen, CI-testtallet og sprint-status.yaml med story 2.7 som done.
+    Windows-jobben kjørte ikke på PR #45, siden den bare kjører for kode- og
+    avhengighetsendringer.
+  - Testtall: CI har 1059 tester og lokalt er det 1058 pluss 1 hoppet over. Det
+    er Docker-sjekken som bare kjører i CI.
+  - Ikke startet: story 2.8. Grenene story/2-7-… og docs/log-pr-44-merge er
+    beholdt.
+
+  Det som gjenstår før story 2.7 avsluttes
+
+  1. Sesjonseksport: kjør /export selv. Si fra hvor fila ligger, eller lim inn
+     stien. Jeg maskerer den som for story 2.6 (lokale stier blir
+     <project-root>) og skanner den før og etter maskeringen.
+  2. Kontroll mot eksporten: jeg sammenligner prompter, beslutninger, KI-bruk,
+     29-funnstallet, testtallene (1058 lokalt, 1059 i CI, 54 mutasjoner),
+     modellbruk og godkjenninger med eksporten og retter det som ikke stemmer.
+  3. Siste dokumentasjons-PR: den inneholder eksporten og rettelsene, og jeg
+     fører også PR #45 og CI-kjøring nr. 84 og 85 inn i arbeidsloggen. Jeg
+     pusher og fletter den først når du godkjenner det, og så kontrollerer jeg
+     grønn CI på main.
+
+  Fortsatt ikke verifisert
+
+  - Safari-, macOS- og iOS-versjonene.
+  - Safari ved 1366 × 768.
+  - Testbedrift B på iPhonen.
+  - Berøringsmålene på telefonen.
+  - Modellen granskerne kjørte på, og nivået du ba om.
+
+✻ Sautéed for 7m 11s · done 2:43 PM
+
+※ recap: Story 2.7 er bygd, gjennomgått og flettet i main (PR #44 og loggen i #45, CI grønn med 1059 tester); nå gjenstår bare å avslutte storyen. Neste steg er at du kjører /export og gir meg filen, så maskerer jeg den og lager den siste dokumentasjons-PR-en.
+
+❯ Før vi avslutter story 2.7: Kontroller de ikke-verifiserte punktene mot       
+  spesifikasjonen, akseptkriteriene og sensorveiledningen. Skill tydelig mellom 
+  obligatoriske tester som må gjennomføres nå, og valgfrie kontroller.          
+                                                                                
+  Ikke gjenta tester som allerede er bestått. Gi meg bare eventuelle            
+  obligatoriske manuelle tester vi mangler, med korte instruksjoner. Ikke gjør  
+  nye kodeendringer eller commits.                                              
+
+  Searched for 1 pattern, listed 2 directories, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Ett obligatorisk manuelt punkt gjenstår: Safari ved 1366 × 768. Resten er
+  verifisert eller valgfritt. Jeg har ikke endret kode og ikke committet.
+
+  Jeg sjekket punktene mot akseptkriteriene til story 2.7 i epics.md, UX-DR7,
+  NFR-6, DR-9 og «Rules for every story». Sensorveiledningen ligger ikke som
+  egen fil i prosjektet. Jeg har bare brukt det epics.md og kravdokumentene
+  siterer av den.
+
+  Obligatorisk nå: Safari ved 1366 × 768
+
+  Hvorfor: akseptkriteriet «Given a 1366 × 768 screen» krever at mengden, merket
+  og varslene er synlige uten rulling, også for produktet med flest
+  varselrader. FR-25 og UX-DR7 lister 1366 × 768 som testmål i
+  skrivebordsnettleserne. Dette er bare målt i hodeløs Chrome, og NFR-6 og DR-9
+  krever at QA-loggen skiller nettleserens responsive visning fra ekte enheter.
+
+  Test (ca. 2 minutter):
+  1. Safari på Mac: aktiver Develop-menyen og slå på responsiv visning (Develop,
+     Enter Responsive Design Mode), eller bruk et Safari-vindu der
+     innholdsområdet er 1366 × 640. Velg egendefinert størrelse 1366 × 640.
+  2. Logg inn som 1001, åpne /produkter/10012/, og logg inn som 1002 for
+     /produkter/20015/ (Parasoll 2 m, flest varselrader i seed).
+  3. Sjekk at mengden, tillitsmerket og alle varselrader er synlige uten at
+     siden rulles, at panelene er like høye, og at det ikke er sidelengs
+     rulling.
+  4. Meld i chatten «bestått» eller hva som avviker, med Safari-versjonen.
+
+  Mangler bare som opplysning (ingen ny test)
+
+  Dette gjelder QA-loggens krav om dato, operativsystem, nettleser og resultat.
+  Send dem i samme melding:
+  - Safari- og macOS-versjon (Safari, Om Safari).
+  - iOS-versjon på iPhonen (Innstillinger, Generelt, Om).
+  - 390 × 844: bekreft om du brukte iPhone 13-forhåndsvalget (390 × 844) i den
+    responsive visningen. Du meldte «390 px», og regelen for hver story krever
+    390 × 844.
+
+  Verifisert, ikke gjentatt
+
+  - Responsiv visning ved 320 px, 390 og 820 × 1180: bestått (10012, 10040
+    og 20015).
+  - Hoppelenken først og fokusringen: bestått. Rekkefølgen er også dekket av
+    tester.
+  - 404 mellom bedriftene: bestått, også B mot 10012.
+  - Ekte iPhone 13 over lokalnettet: bestått (A, 10012, 10040, 404).
+  - Resten av akseptkriteriene: dekket av tester, mutasjoner og reviewen (fire
+    spørringer, ingen knapper, 44 px blått eller blekk, tekstene, rekkefølgen på
+    varselradene).
+
+  Valgfritt (ikke krav for story 2.7)
+
+  - 1180 × 820, 360 × 800 og 1366 × 768 i andre nettlesere: målt i hodeløs
+    Chrome. De er med i sluttsjekken i story 4.4, ikke i regelen for hver story.
+  - Berøringsmål på 44 × 44 px på telefonen: testet i CSS-regelen. Den ekte
+    telefonsjekken hører til story 4.4.
+  - Testbedrift B på iPhonen: innlogging for begge bedrifter er dekket i story
+    1.8.
+  - Tab-rekkefølgen videre i Safari.
+  - Modellen og nivået granskerne kjørte på: kan ikke testes, og står som ikke
+    bekreftet i loggene.
+
+  Dokumentasjon
+
+  Regelen for hver story sier at PR-en skal nevne kontrollene i responsiv
+  visning. PR #44 nevner størrelsene, men ikke at de var i responsiv visning.
+  Jeg kan rette det i den siste dokumentasjons-PR-en, og i PR-teksten hvis du
+  vil. Når du har meldt Safari-resultatet og versjonene, fører jeg dem inn der,
+  sammen med sesjonseksporten.
+
+✻ Worked for 57s · done 2:49 PM
+
+※ recap: Story 2.7 er flettet i main med grønn CI, og vi avslutter den nå. Neste steg er at du tester Safari ved 1366 × 640 på 10012 og 20015 og sender versjonene, så fører jeg inn resultatene og sesjonseksporten.
+
+❯ Den siste obligatoriske Safari-testen er gjennomført og bestått.              
+                                                                                
+  I Safari responsiv visning ved 1366 × 768:                                    
+  - Testbedrift A, produkt 10012 (Strøsand): 11 enheter, Middels og begge       
+  varselrader synlige uten rulling.                                             
+  - Testbedrift B, produkt 20015 (Parasoll): 12 enheter, Middels og begge       
+  varselrader synlige uten rulling.                                             
+  - Panelene har samme høyde, og ingen synlig sidelengs rulling.                
+                                                                                
+  Serveren er stoppet.                                                          
+                                                                                
+  Oppdater QA-loggen og relevant dokumentasjon, inkludert at testene ble utført 
+  i Safaris responsive visning. Kontroller at ingen obligatoriske tester        
+  gjenstår. Ikke gjenta beståtte tester.                                        
+                                                                                
+  Rapporter eventuelle reelle mangler samlet. Ingen nye commits eller push uten 
+  godkjenning. Sesjonseksport og siste dokumentasjons-PR skal fullføres før     
+  story 2.7 avsluttes.                                                          
+
+  Ran 5 shell commands (ctrl+o to expand)
+
+⏺ Jeg kontrollerer først at tallene du meldte stemmer med dataene (11 og 12
+  stemmer), og så fører jeg resultatet inn i dokumentene.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Safari ved 1366 × 768 er ført som bestått, og ingen obligatoriske manuelle
+  tester gjenstår for story 2.7. Ingenting er committet eller pushet.
+
+  Oppdatert i dokumentene
+
+  Endringene ligger usporet på den lokale grenen docs/session-export-story-2-7
+  og skal inn i den siste dokumentasjons-PR-en. De er ført i docs/qa-logg.md,
+  docs/statustabell.md, docs/arbeidslogg.md, spesifikasjonen, sesjonsloggen
+  969-… og issues.md.
+  - Safari-resultatet står som «1366 × 768 i Safaris responsive visning» med
+    dine tall.
+  - QA-loggens overskrift for brukerens tester er endret til «bestått for alle
+    obligatoriske kontroller, med de manglene under».
+  - Jeg kontrollerte meldingen mot dataene i dev-databasen. 10012 gir 11 enheter
+    og 20015 gir 12, begge «middels». Varslene stemmer også: utsolgte uker og
+    uvanlig uke for 10012, utsolgte uker og gamle data for 20015.
+  - Jeg kjørte ikke de beståtte testene på nytt. pytest ga 1058 bestått og 1
+    hoppet over, bare for å kontrollere tallet.
+
+  Reelle mangler samlet
+
+  Ingen av disse er obligatoriske, og alle står i loggene som ikke verifisert:
+  1. Høyden 640 px: akseptkriteriet gjelder 1366 × 768 med 640 px innhold.
+     Safari-testen ble meldt ved 768 px høyde, så den viser synlighet ved 768
+     px, ikke ved 640 px. 640 px er bare målt i hodeløs Chrome (høyest 431 px).
+     Det er ført som en mindre svakhet.
+  2. Versjoner: Safari-, macOS- og iOS-versjonene er ikke meldt. Story 4.4 kan
+     kreve dem i sluttsjekken, og du kan sende dem når som helst.
+  3. 390 × 844: du meldte «390 px», så høyden 844 er ikke bekreftet.
+  4. Valgfritt, ikke testet: Testbedrift B på iPhonen og berøringsmålene på
+     telefonen.
+  5. Modellen granskerne kjørte på og nivået du ba om: ikke bekreftet i økta, og
+     står slik i loggene.
+  6. PR #44-teksten: den sier ikke uttrykkelig at 320 px, 390 og 820 × 1180 var
+     i responsiv visning. Jeg retter det i den siste dokumentasjons-PR-en hvis
+     du vil, ikke i selve PR-teksten.
+
+  Før story 2.7 avsluttes
+
+  1. Eksport: kjør /export og si fra hvor fila ligger. Jeg maskerer den, skanner
+     den og kontrollerer dokumentene mot den.
+  2. Dokumentasjons-PR: den inneholder eksporten, de oppdaterte loggene og PR
+     #45 og CI-kjøring nr. 84 og 85 i arbeidsloggen. Jeg committer, pusher og
+     fletter den først når du godkjenner det, og kontrollerer deretter grønn CI
+     på main.
+✻ Churned for 1m 43s · done 6:11 PM
+
+※ recap: Vi avslutter story 2.7, som er flettet og har grønn CI på main, og alle obligatoriske Safari-tester er ført i loggene. Neste steg er at du kjører /export og sier hvor fila ligger, så jeg kan maskere den og lage den siste dokumentasjons-PR-en.
