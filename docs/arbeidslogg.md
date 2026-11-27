@@ -837,7 +837,15 @@ Neste steg er arkitekturen (`bmad-architecture`), som ikke er startet.
 * Kontroll: 714 tester består og 1 hoppes over (Docker), `ruff check` og `ruff format --check` er rene, og `makemigrations --check` finner ingen endring. Brukeren ba om å få godkjenne før noe ble committet eller pushet.
 * Brukeren godkjente tre commiter, SSH-push og pull request. Privatlivsskanningen av alle tilføyde linjer og nye filer (lokale stier, e-postadresser, nøkler, passord og telefonnumre) fant ingenting, og den gjenopprettede vakttesten `test_the_spreadsheet_examples_for_rounding_are_all_checked` var med i den siste kjøringen (714 bestått, 1 hoppet over). Claude committet i tre deler, som i story 2.3: koden og testene i `05b0844`, spesifikasjonen og dokumentene i neste commit og sesjonsloggen i den siste. Commit-hashene er ført inn i QA-loggen og KI-styringsloggen (tilfelle 41).
 
-**Status:** Story 2.4 er committet på grenen og venter på PR, CI og Windows-kontrollen. Story 2.5 er ikke startet.
+* Pushet grenen over SSH og opprettet PR #34 med en kommentar med alle 36 funnene fra BMAD Code Review, gruppert i 18, med beslutningene og rettings-commiten (`05b0844`). CI-kjøring nr. 62 (714 tester og Ruff) og Windows-kjøring nr. 19 passerte på `5325444`.
+* Flettet PR #34 etter at begge kontrollene var grønne på siste commit. Claude flettet lokalt med `git merge --no-ff`, uten squash eller rebase, og med noreply-adressen som forfatter:
+  * innholdet i `main` er identisk med PR-hodet, så bare de godkjente endringene ble flettet inn;
+  * `main` ble pushet over SSH, og GitHub viser PR #34 som flettet 27. november kl. 09.45, med `0a17607` som merge-commit (foreldre `f30fc3c` og `5325444`);
+  * CI-kjøring nr. 63 på `main` passerte;
+  * grenen `story/2-4-calculate-the-week-forecasts-the-scenarios-and-the-suggested-order-quantity` er beholdt.
+* Avslutningen er kontrollert: spesifikasjonen står som `done`, `sprint-status.yaml` har story 2.4 som `done` og epic 2 som `in-progress`, statustabellen har et avsnitt for story 2.4 med FR-7, FR-10, FR-11 og FR-12 som delvis bygd, QA-loggen og KI-styringsloggen har commit-hashene, og åpne punkter står i `issues.md`.
+
+**Status:** Story 2.4 er flettet inn i `main` (`0a17607`). Fletteloggen kommer i PR #35, og eksporten og siste loggoppdatering kommer i en PR til. Story 2.5 er ikke startet.
 
 ## 4. Videre dokumentasjon
 
