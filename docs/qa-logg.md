@@ -1056,3 +1056,38 @@ Begge står i `deferred-work.md`.
 **Avvist.** 7 grupper, blant dem: at lageret i `products.html` bare sjekkes mot kildeteksten (et heltall skrives likt med og uten filteret, og en mutasjon som fjerner filteret fanges), at ukeetikettene mangler filtre og kontroll av ukenummeret (valgt i spesifikasjonen, og ukene kommer fra kontrollerte heltallskolonner), at `round_up_to_units` ikke avrunder negative verdier til 0 i koden (gulvet på 0 er bestillingsberegningen i story 2.4), og en vakt mot alle f-strengformater (`models.py` og `seed.py` bruker `:02d` for uke-identifikatorer).
 
 **Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle filer i `src`, `tests`, `reference`, `docs`, `.logs` og implementasjonsfilene før og etter reviewen, og de var identiske. Mutasjonene på rettingene (5 på inndatakontrollen og 6 injiserte brudd på vakten) ble kjørt av byggeøkta, ikke av granskerne, og alle ble fanget.
+
+## 2026-11-24 – Feil i KI-generert kode og tekst fra byggingen av story 2.4 (DR-9)
+
+**Hvordan det ble funnet.** Av testene og mutasjonstestene under byggingen av story 2.4 på grenen `story/2-4-calculate-the-week-forecasts-the-scenarios-and-the-suggested-order-quantity` (baseline `f30fc3c`). Claude bygde ukeprognosene, scenarioene, bestillingsmengden, `horizon.py` og testene inline, uten subagent. E3, E4, E5 (70, ikke 71), E6, E21, E23, E24, E28 og FR-21 c og d ga riktig svar ved første kjøring.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Testen fra story 2.2 `test_the_stock_on_hand_does_not_change_the_base_forecast` sammenlignet hele resultater, og de er nå ulike fordi lageret og bestillingen ligger i resultatet | `uv run pytest`, første kjøring | Testen sammenligner grunnprognosen, ukeprognosene og scenarioene, og viser at bare bestillingsmengden endres | `05b0844` |
+| Testen av ukeetikettene forventet «uke 2/2027» for uke 2, men bare uke 1 har året i en liste (story 2.3) | `uv run pytest` | Forventningen er «uke 2» | `05b0844` |
+
+**Mutasjoner.** Koden ble brutt på 33 steder og satt tilbake, og filene ble sammenlignet byte for byte med kopiene: gulvet på 0 fjernet, `1 − m` i stedet for `1 + m`, plusstegn på lageret, avrunding med `int() + 1`, `1 − s` og `1 + s` byttet, gulvet i det pessimistiske scenarioet fjernet, ukeprognosene med to uker i stedet for tre, flagget for notatet satt til alltid sant og alltid usant, marginbeløpet med feil faktor, scenarioprosenten byttet med marginen, prosent delt på 10, lageret satt til 0 i resultatet, kontrollene av prosentene og lageret fjernet eller løsnet (grensene, bool, type, `< -1`), og i `horizon.py` forskjøvet uke, året fra startåret, ukene fra 0, tre uker byttet med fire, typekontrollen fjernet og kalenderen byttet med en egen regning, og to standardverdier endret. Alle ble fanget.
+
+## 2026-11-24 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 2.4 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige, skrivebeskyttede KI-granskere i `bmad-code-review` gikk gjennom arbeidstreet til story 2.4 mot `f30fc3c`, før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Spesifikasjonen gikk bare til Edge Case Hunter og Acceptance Auditor. De ga 36 funn.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Vakttesten `test_the_spreadsheet_examples_for_rounding_are_all_checked` var slettet av et skript som skulle bytte ut den lånte formelen, og ingenting vaktet lenger de viste verdiene (E1, E2, E13, E20, E27) | BH-1, EC-9, VG-1 og AA-1 | Testen er gjenopprettet | `05b0844` |
+| `horizon_weeks` ga feilmeldinger uten året, stolte på standardbiblioteket for typekontrollen og ga `OverflowError` ved 9999 uke 52 | BH-8, EC-6, EC-7 og AA-5 | Eksplisitt typekontroll og én `ValueError` som navngir året og uka, med tester | `05b0844` |
+| «Flat horizon» og «Scenario limits» ble testet med egne salgstall, ikke med E1 og dens 14,333 og 7,167 | EC-12, AA-3 og AA-4 | Begge testene leser E1 fra regnearket | `05b0844` |
+| Den andre veien til ingen prognose (for få kalkulasjonsuker), en ugyldig prosent for et produkt uten prognose og en urelatert påstand i kontrollen av klokka manglet eller var feil | AA-6 og BH-9 | To nye tester, og påstanden er fjernet | `05b0844` |
+| Teksten om lageret sa «positivt heltall» selv om 0 godtas, og meldingen sa «not below 0» | BH-7 | «At least 0» | `05b0844` |
+| Testen `test_only_week_1_feeds_the_order...` beviste bare en nullprognose, og mutasjonen «marginen på feil uke» kan ikke feile før Epic 5 | EC-11, AA-2 og VG | Testen har fått et navn som viser det den viser, og mutasjonen er ført som ekvivalent i spesifikasjonen | `05b0844` |
+| To kjedede sammenligninger var vanskelige å lese | BH-10 | Vanlige påstander | `05b0844` |
+
+**Utsatt.** Ingen funn ble utsatt.
+
+**Avvist.** 10 grupper, blant dem: at bestillingstesten i `test_rounding.py` bruker kjernens egen formel (story 2.3 overlot det til denne storyen), at prosentene gir `ValueError` og lageret `TypeError` (hver følger sin egen konvensjon, og begge navngir verdien), at `Decimal` avvises (modellen har heltallskolonner), at negative salg, et lager over 2**53 og uendelig bestilling er utenfor rekkevidde, og at `week_forecasts` ikke sammenlignes (regnearket oppgir den bare for de sesongjusterte tilfellene, som er Epic 5).
+
+**Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle filer i `src`, `tests`, `reference`, `docs`, `.logs` og implementasjonsfilene før og etter reviewen, og de var identiske. Mutasjonene på rettingene (36 i alt etter reviewen) ble kjørt av byggeøkta, ikke av granskerne, og alle ble fanget. Før reviewen oppdaget Claude selv at en av fire rapporter hadde en skrivefeil i stien til diff-filen, og rettet den med en melding til granskeren før den hadde rapportert.

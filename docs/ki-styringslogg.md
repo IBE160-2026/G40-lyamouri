@@ -432,4 +432,17 @@ Planleggingsfasen ga 26 tilfeller fra 14. oktober til 18. november 2026, og de s
 - **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.3](../_bmad-output/implementation-artifacts/spec-2-3-round-and-format-every-number-the-same-way.md).
 - **QA-loggen:** [feilene fra byggingen av story 2.3](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-23-dr-9) og [fra BMAD Code Review av story 2.3](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-23-dr-9).
 
+### 41. En testfil som ble slettet av et skript, og en mutasjon som ikke kan feile i story 2.4 (24. november 2026)
+
+- **Hva KI foreslo:** Claude bygde ukeprognosene, scenarioene, bestillingsmengden og ukeetikettene for story 2.4 inline, med tester som leser de oppgitte verdiene fra regnearket, 33 mutasjoner og en erstatning av den lånte formelen i `tests/test_rounding.py`.
+- **Hva som var feil:**
+  - Claude erstattet den lånte formelen med et skript som klippet ut teksten fra `def unrounded_order` til neste `@pytest.mark.parametrize`. Mellom dem lå også vakttesten `test_the_spreadsheet_examples_for_rounding_are_all_checked`, så skriptet slettet den. Alle fire granskere fant det, og testene var grønne uten den.
+  - To av matriseradene i spesifikasjonen («Flat horizon» og «Scenario limits») ble testet med egne salgstall og ikke med E1 fra regnearket, så 14,333 og 7,167 ble aldri sammenlignet. Regelen om at verdiene leses fra regnearket (AD-17) var brutt.
+  - `horizon_weeks` ga feilmeldinger uten året, stolte på standardbiblioteket for typekontrollen og ga `OverflowError` ved 9999 uke 52, selv om spesifikasjonen ba om en feil som navngir verdien.
+  - Mutasjonskravet «marginen på feil uke» i akseptkriteriene kan ikke feile før sesongjusteringen kommer i Epic 5, fordi de tre ukeprognosene er like. Testen som skulle bevise det, het mer enn den viste.
+- **Hva gruppen bestemte:** Brukeren godkjente spesifikasjonen med beslutningene (egen funksjon for ukeetikettene, «–» og kolonneetiketten til story 2.7, ett flagg for notatet, uavrundet resultat med fortegn) og ba om alle fire uavhengige, skrivebeskyttede granskere og mutasjonstester. Claude rettet de åtte gruppene, avviste ti og skrev at mutasjonen om uke 1 er en ekvivalent mutant til Epic 5. Ingen funn ble utsatt.
+- **Commit eller pull request:** `05b0844`.
+- **Kilde:** «Review Triage Log» i [spesifikasjonen for story 2.4](../_bmad-output/implementation-artifacts/spec-2-4-calculate-the-week-forecasts-the-scenarios-and-the-suggested-order-quantity.md).
+- **QA-loggen:** [feilene fra byggingen av story 2.4](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-byggingen-av-story-24-dr-9) og [fra BMAD Code Review av story 2.4](qa-logg.md#2026-11-24--feil-i-ki-generert-kode-og-tekst-fra-bmad-code-review-av-story-24-dr-9).
+
 Hver epic som bygges, skal gi minst ett tilfelle (D-2 i `epics.md`, linje 45–47).
