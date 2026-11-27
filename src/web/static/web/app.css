@@ -397,6 +397,265 @@ input[type="password"] {
   text-align: right;
 }
 
+/* The product list: a name that links, and the selected product in blue-tint (UX-DR6). */
+
+.product-table a {
+  color: var(--color-blue);
+}
+
+.product-table tr.selected td {
+  background: var(--color-blue-tint);
+  color: var(--color-blue-ink);
+}
+
+.product-table a[aria-current="page"] {
+  color: var(--color-blue-ink);
+  font-weight: var(--font-label-weight);
+}
+
+/* The skip link «Gå til produktet» is the first focusable element and shows when it has focus (UX-DR44). */
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface);
+  color: var(--color-blue);
+  transform: translateY(-100%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* The product screen (UX-DR6, UX-DR7): the list and the product side by side from 901 px,
+   each scrolling on its own inside the height of the window. The list comes first in the
+   HTML; up to 900 px the product is shown first and nothing has a scroll frame. */
+
+.has-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+}
+
+.has-shell .app-header {
+  flex: none;
+}
+
+.shell {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: var(--space-list-width) minmax(0, 1fr);
+}
+
+.list {
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-3) var(--space-6);
+  background: var(--color-pane);
+  border-right: 1px solid var(--color-border);
+}
+
+.list h2 {
+  margin: 0 var(--space-1) var(--space-3);
+}
+
+.detail {
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-6) var(--space-7);
+}
+
+.product-head {
+  margin-bottom: var(--space-4);
+}
+
+.product-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) 14px;
+}
+
+.product-title h1 {
+  margin: 0;
+}
+
+.product-meta {
+  margin: var(--space-1) 0 0;
+  color: var(--color-muted);
+  font-size: var(--font-body-sm-size);
+}
+
+/* Decision panel and trust panel: side by side and equally high, stacked below 1181 px. */
+
+.decide {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.decide .panel,
+.decide .panel + .panel {
+  margin: 0;
+}
+
+.big {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) 14px;
+  max-width: none;
+  margin: 0 0 var(--space-3);
+}
+
+.big .quantity {
+  color: var(--color-blue);
+  font-family: var(--font-order-number-family);
+  font-size: var(--font-order-number-size);
+  font-weight: var(--font-order-number-weight);
+  line-height: var(--font-order-number-line-height);
+}
+
+.big .quantity-ink {
+  color: var(--color-ink);
+}
+
+.big span {
+  flex: 1 1 14rem;
+  font-size: var(--font-card-title-size);
+  font-weight: var(--font-card-title-weight);
+}
+
+/* Trust label: a pill with a shape and the word (UX-DR20). */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px 2px 8px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-label-family);
+  font-size: var(--font-label-size);
+  font-weight: var(--font-label-weight);
+  line-height: var(--font-label-line-height);
+  white-space: nowrap;
+}
+
+.pill svg {
+  flex: none;
+}
+
+.pill-large {
+  padding: 4px 12px 4px 10px;
+  font-size: var(--font-label-lg-size);
+}
+
+.pill-hoy {
+  background: var(--color-green-tint);
+  color: var(--color-green);
+}
+
+.pill-middels {
+  background: var(--color-amber-tint);
+  color: var(--color-amber);
+}
+
+.pill-lav {
+  background: var(--color-red-tint);
+  color: var(--color-red);
+}
+
+.trust-label {
+  margin: 0 0 var(--space-3);
+}
+
+/* Warning rows: data problems on red-tint, demand patterns on amber-tint (UX-DR24). */
+
+.warnings {
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: var(--space-2) 10px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-body-sm-size);
+}
+
+.warning + .warning {
+  margin-top: var(--space-2);
+}
+
+.warning-data {
+  background: var(--color-red-tint);
+}
+
+.warning-pattern {
+  background: var(--color-amber-tint);
+}
+
+.icon {
+  flex: none;
+  margin-top: 3px;
+}
+
+.icon-square-outline {
+  fill: var(--color-surface);
+  stroke: var(--color-red);
+  stroke-width: 2;
+}
+
+.icon-triangle {
+  fill: var(--color-amber);
+}
+
+.icon-ring {
+  fill: none;
+  stroke: var(--color-red);
+  stroke-width: 2;
+}
+
+@media (max-width: 1180px) {
+  .shell {
+    grid-template-columns: var(--space-list-width-narrow) minmax(0, 1fr);
+  }
+
+  .decide {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .has-shell {
+    display: block;
+    height: auto;
+  }
+
+  .shell {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .detail {
+    order: -1;
+    overflow: visible;
+    padding: var(--space-4) var(--space-4) var(--space-6);
+  }
+
+  .list {
+    overflow: visible;
+    border-top: 1px solid var(--color-border);
+    border-right: 0;
+  }
+}
+
 /* Touch screens: every control has a target of at least 44 × 44 px, and form
    fields use 16 px text, so that a phone does not zoom in (UX-DR7). Radio
    buttons and checkboxes, the switch among them, are smaller than that, so
@@ -407,12 +666,14 @@ input[type="password"] {
   select,
   textarea,
   .standalone-link,
+  .product-table a,
   .header-nav a {
     min-width: 44px;
     min-height: 44px;
   }
 
   .standalone-link,
+  .product-table a,
   .header-nav a {
     display: inline-flex;
     align-items: center;

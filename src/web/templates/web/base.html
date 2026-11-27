@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="{% static 'web/app.css' %}">
   {% if app_header %}<script src="{% static 'web/app.js' %}" defer></script>{% endif %}
 </head>
-<body>
+<body{% block body_attrs %}{% endblock %}>
+  {% block skip_link %}{% endblock %}
   <header class="app-header">
     <span class="wordmark">Prognose</span>
     {% if app_header %}

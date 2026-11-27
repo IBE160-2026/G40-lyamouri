@@ -1,0 +1,45 @@
+{% extends "web/base.html" %}
+{% load prognose %}
+{# The product screen (FR-11, FR-19, FR-25; UX-DR6, UX-DR7, UX-DR10, UX-DR22, UX-DR24, UX-DR44). The list comes first in the HTML and the product second, on a narrow screen too, where CSS shows the product first. Every text of a result comes from explanation/ and is only placed here (AD-4). #}
+{% block title %}{{ product.name }} – Prognose{% endblock %}
+{% block body_attrs %} class="has-shell"{% endblock %}
+{% block skip_link %}<a class="skip-link" href="#valgt-produkt">Gå til produktet</a>{% endblock %}
+{% block main %}
+  <div class="shell">
+    <nav class="list" aria-label="Produkter">
+      <h2>Produktoversikt</h2>
+      {% include "web/_product_list.html" %}
+    </nav>
+    <main class="detail" id="valgt-produkt" aria-label="Valgt produkt" tabindex="0">
+      <div class="product-head">
+        <div class="product-title">
+          <h1>{{ product.name }}</h1>
+          {% include "web/_trust_label.html" with large=True %}
+        </div>
+        <p class="product-meta">Varenr. {{ product.product_number }} · Lagerbeholdning {{ product.stock_on_hand|whole_number }} · Uker dekning {{ result.weeks_of_cover|weeks_of_cover }}</p>
+      </div>
+      <div class="decide">
+        <section class="panel" aria-labelledby="t-order">
+          <h2 id="t-order">Hva bør du bestille?</h2>
+          <p class="big"><b class="quantity{% if not result.suggested_order_quantity %} quantity-ink{% endif %}">{{ decision.quantity }}</b><span>{{ decision.caption }}</span></p>
+          {% if decision.note %}<p>{{ decision.note }}</p>{% endif %}
+        </section>
+        <section class="panel" aria-labelledby="t-trust">
+          <h2 id="t-trust">Kan du stole på prognosen?</h2>
+          <p class="trust-label">{% include "web/_trust_label.html" with large=True %}</p>
+          <p>{{ reason }}</p>
+          {% if warnings %}
+          <ul class="warnings">
+            {% for warning in warnings %}
+            <li class="warning warning-{{ warning.kind }}">
+              <svg class="icon icon-{{ warning.shape }}" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">{% if warning.shape == "square-outline" %}<rect x="2" y="2" width="12" height="12"/>{% elif warning.shape == "triangle" %}<path d="M8 1.5 15 14.5H1z"/>{% else %}<circle cx="8" cy="8" r="6.5"/><path d="M8 4.5v4.5M8 11v1.5"/>{% endif %}</svg>
+              <span>{{ warning.text }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </section>
+      </div>
+    </main>
+  </div>
+{% endblock %}

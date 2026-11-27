@@ -65,8 +65,23 @@ def test_the_product_list_shows_the_stock_through_the_whole_number_filter():
     """AD-3, FR-2: the stock on hand of the product list is printed by the filter,
     so Story 2.8 and later lists keep one format. An integer prints the same either
     way, so the template source is what the test reads."""
-    source = (TEMPLATES / "web" / "products.html").read_text(encoding="utf-8")
+    source = (TEMPLATES / "web" / "_product_list.html").read_text(encoding="utf-8")
 
     assert "{% load prognose %}" in source
     assert re.search(r"\{\{\s*product\.stock_on_hand\|whole_number\s*\}\}", source)
     assert not re.search(r"\{\{\s*product\.stock_on_hand\s*\}\}", source)
+
+
+@pytest.mark.parametrize(
+    ("name", "function"),
+    [
+        ("weeks_of_cover", display.weeks_of_cover),
+        ("suggested_quantity", display.suggested_quantity),
+    ],
+)
+@pytest.mark.parametrize("value", [None, 0, 0.349, 11, 14.333333333333334])
+def test_the_missing_value_filters_give_what_display_gives(name, function, value):
+    """AD-3, FR-24, E23: the filters of the product screen are `forecasting/display.py`,
+    and a missing value reaches the page as «–»."""
+    assert render("{{ value|" + name + " }}", value=value) == function(value)
+    assert render("{{ value|" + name + " }}", value=None) == "–"

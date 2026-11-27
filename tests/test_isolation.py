@@ -8,21 +8,19 @@ of a company's data, so that the test checks it for both companies (AD-7).
 import ast
 import inspect
 import re
-from io import StringIO
 from pathlib import Path
 
 import pytest
-from django.core.management import call_command
 from django.test import Client
 
 from web import queries
-from web.models import Product
+from web.models import CompanySettings, Product
 
 SRC = Path(__file__).resolve().parents[1] / "src"
-# Every route that shows company data, with its method (AD-7). No route takes
-# another company's product yet; the product page (Story 2.7) adds one, and a
-# lookup there must give the same 404 page as an unknown address.
-ROUTES = [("get", "/produkter/")]
+# Every route that shows company data, with its method (AD-7). A route that takes
+# a product number gives the same 404 page for another company's product as for an
+# unknown address (test_product_screen.py). Both companies have a product 10001.
+ROUTES = [("get", "/produkter/"), ("get", "/produkter/10001/")]
 # What each company's pages may show, and the other's may never show.
 OWN = {
     0: [
@@ -110,7 +108,7 @@ def test_a_shared_product_number_shows_each_companys_own_product(two_companies):
         content = client.get("/produkter/").content.decode()
 
         assert re.search(
-            rf"<td>10001</td>\s*<td>{name}</td>\s*<td class=\"number\">{stock}</td>",
+            rf"<td>10001</td>\s*<td><a [^>]*>{name}</a></td>\s*<td class=\"number\">{stock}</td>",
             content,
         )
 
@@ -153,6 +151,24 @@ def test_queries_return_only_the_given_companys_rows(two_companies):
         "Rive fra B",
     }
     assert Product.objects.count() == 5
+
+
+def test_the_sales_week_and_settings_queries_return_only_the_given_companys_rows(
+    two_companies,
+):
+    """AD-7: the sales weeks come only from the company's own products (3 weeks each),
+    and a company without a settings row gets none, never another company's."""
+    a, b = two_companies
+    CompanySettings.objects.create(company=b.company, window=7)
+
+    rows = list(queries.sales_weeks_for_company(a.company))
+
+    assert {product_id for product_id, _, _ in rows} == {
+        p.id for p in Product.objects.filter(company=a.company)
+    }
+    assert len(rows) == 9
+    assert queries.settings_for_company(a.company) is None
+    assert queries.settings_for_company(b.company).window == 7
 
 
 def test_every_query_function_takes_the_company_first():
@@ -234,13 +250,6 @@ def test_no_template_reads_company_data_through_a_related_manager():
 
     assert templates
     assert offenders == []
-
-
-@pytest.fixture
-def seeded(settings, tmp_path, db):
-    """The committed seed files in the database, as load_seed puts them there."""
-    settings.SECRET_KEY_FILE = tmp_path / ".secret_key"
-    call_command("load_seed", stdout=StringIO())
 
 
 def test_the_seed_companies_see_only_their_own_products(seeded):

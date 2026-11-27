@@ -5,7 +5,7 @@ reach another company's data. Only load_seed and the migrations touch the tables
 in other ways.
 """
 
-from web.models import Product, SalesWeek
+from web.models import CompanySettings, Product, SalesWeek
 
 
 def products_for_company(company):
@@ -23,4 +23,19 @@ def latest_data_week(company):
         .order_by("-iso_year", "-iso_week")
         .values_list("iso_year", "iso_week")
         .first()
+    )
+
+
+def settings_for_company(company):
+    """The company's settings row, or None when it has none (FR-20)."""
+    return CompanySettings.objects.filter(company=company).first()
+
+
+def sales_weeks_for_company(company):
+    """The (product id, units sold, stockout) of every sales week of the company's
+    products, by product and position, so one query serves every product (NFR-8)."""
+    return (
+        SalesWeek.objects.filter(product__company=company)
+        .order_by("product_id", "position")
+        .values_list("product_id", "units_sold", "stockout")
     )
