@@ -71,6 +71,8 @@ Innloggingen bruker en økt som ligger i databasen. Nøkkelen i `.secret_key` si
 
 Dette er bare for den manuelle testen av telefonvisningen (NFR-6), og trengs ikke for å bruke Prognose. Maskinen og telefonen må være på samme private nettverk som du stoler på: appen bruker vanlig HTTP, så passordet og øktinformasjonskapselen går ukryptert over nettverket. Testpassordene er offentlige og gjelder bare testdataene. Telefonen og maskinen får hver sin økt, siden adressen er en annen enn 127.0.0.1.
 
+`PROGNOSE_LAN_HOST` er maskinens egen IPv4-adresse på det private nettverket. Uten den godtar Prognose bare `127.0.0.1` og `localhost` (Djangos `ALLOWED_HOSTS`, AD-13). Variabelen legger til akkurat den ene adressen, og den må være satt når serveren starter. En adresse som ikke er privat (10.x.x.x, 172.16.x.x til 172.31.x.x eller 192.168.x.x), og `*`, avvises med en feilmelding. Åpner du `http://<adressen>:8000/` på telefonen uten at variabelen var satt ved oppstart, viser Django `DisallowedHost`. Stopp da serveren og start den på nytt som i steg 2. Adressen kan endre seg når maskinen kobler til nettverket på nytt, så sjekk den hver gang.
+
 1. Finn maskinens IPv4-adresse på det private nettverket, for eksempel `192.168.1.20`.
 2. Start appen i et nytt terminalvindu: `PROGNOSE_LAN_HOST=192.168.1.20 uv run python src/manage.py runserver --insecure 0.0.0.0:8000` (i PowerShell: `$env:PROGNOSE_LAN_HOST = "192.168.1.20"` og så `uv run python src/manage.py runserver --insecure 0.0.0.0:8000`). Feilsøkingsmodus er av, og databasen svarer fortsatt bare på 127.0.0.1.
 3. Åpne `http://192.168.1.20:8000/` i Safari på telefonen og logg inn som hver testbedrift.

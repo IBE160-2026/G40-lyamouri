@@ -1168,3 +1168,86 @@ Begge står i `deferred-work.md`.
 **Avvist.** 7 grupper, blant dem: flyttallsstøy i likhetsbryteren (like brøker av nøyaktige tall gir samme flyttall, og en toleranse gjør sorteringen ikke-transitiv), en `TypeError` for en dekning som mangler hos et «bestill snart»-produkt (kan ikke forekomme, fordi lageret ikke kan være negativt, og feilen ville vært høylytt), validering av nøkler og `adjustments=None`, en `dict` i den frosne oversikten, to nye påkrevde felter på `ProductResult` (bare `forecast_product` bygger den), negativ prognose i uke 1 og at dokumentene ikke var oppdatert før reviewen.
 
 **Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle sporede og usporede filer før og etter reviewen, og de var identiske. Mutasjonene på rettingene (23 i alt etter reviewen) ble kjørt av byggeøkta, ikke av granskerne, og alle ble fanget. Byggearbeidsflyten har bare tre granskerlag, så Claude startet Acceptance Auditor fra laget i `bmad-code-review` slik brukeren ba om.
+
+## 2026-11-27 – Produktsiden i hodeløs Chrome og i Safari (Story 2.7; FR-25, NFR-6, UX-DR7, UX-DR44)
+
+**Hvorfor.** Hver side en story legger til, skal sjekkes ved 320 px, 390 × 844 (iPhone 13) og 820 × 1180 (iPad), og story 2.7 skal vise mengden, tillitsmerket og varslene uten rulling ved 1366 × 768 (1366 × 640 px innhold) også for produktet med flest varselrader i seed-dataene (FR-25, NFR-6). Brukeren ba om at Claude kjører skjermtestene som kan kjøres uten Safari, og at Safari og den ekte telefonen står som brukerens tester.
+
+**Oppsett.**
+- Claude tegnet sidene til seks seed-produkter med Djangos testklient mot en testdatabase fylt med `load_seed` (dev-databasen ble ikke rørt) og lagret dem som statisk HTML med appens eget stilark: Strøsand 25 kg (10012), Snøskuffe aluminium (10040) og Impregnert planke (10025) hos Testbedrift A, og Solcellelykt (20018), Parasoll 2 m (20015) og Kompostbeholder (20009) hos Testbedrift B. De har to varselrader, én rad eller ingen prognose, og den lengste begrunnelsen.
+- Sidene ble målt i Chrome 120 i den gamle hodeløse modusen (`--headless=old`), fordi den nye modusen krasjet på denne Macen. En liten kontrollerende JavaScript-bit (bare i de lagrede kopiene, aldri i appen) leste sidebredden, plasseringen av panelene og de elementene som stikker utenfor skjermbredden. Claude leste også skjermbilder av 10012 ved 1366 (også etter rettingen under), 20018 ved 390 og 10040 ved 320.
+- Dette er en test i en nettlesermotor, ikke i Safari og ikke på en ekte telefon, og det er ikke den responsive visningen i Safari som NFR-6 og UX-DR7 nevner. De målingene hører brukeren til (se under).
+
+**Resultat i hodeløs Chrome.** 8 størrelser × 6 produkter = 48 målinger, ingen med sidelengs rulling og ingen med et element som stikker utenfor skjermbredden.
+
+| Størrelse | Oppsett | Det som ble målt |
+|---|---|---|
+| 1366 × 640 | to kolonner (392 px liste), panelene side om side | panelene er like høye, og tillitspanelet slutter høyest ved 431 px (Parasoll 2 m) av 640, så mengden, merket og begge radene er synlige uten rulling; listen ruller for seg |
+| 1180 × 820 og 901 × 900 | to kolonner (340 px liste), panelene over hverandre med beslutningen først | ingen sidelengs rulling; siden ruller ikke, bare kolonnene |
+| 900 × 900, 820 × 1180, 390 × 844, 360 × 800 og 320 × 640 | én kolonne: produktet, så listen | produktet kommer før listen på skjermen, ingen egen rulleramme, ingen sidelengs rulling; ved 390 × 844 slutter tillitspanelet ved 707 px av 844 |
+
+**En rettelse etter første skjermbilde.** Bildeteksten «Foreslått bestillingsmengde for neste uke, uke 46» sto under tallet 11 ved 1366 px, ikke ved siden av det på samme grunnlinje (UX-DR22). Etiketten fikk `flex: 1 1 14rem`, så den bryter innenfor raden når det er plass, og under tallet når det ikke er det (320 px).
+
+**Det som ikke er sjekket i hodeløs Chrome.** Rekkefølgen med Tab (hoppelenken først, så toppfeltet, listen og produktet), fokusringen på hoppelenken og på produktområdet, tastaturrulling og berøringsmål er bare testet i koden (HTML-rekkefølgen og CSS-reglene). Brukeren har bekreftet hoppelenken og fokusringen i Safari på Mac (se under). Tab-rekkefølgen etter hoppelenken, tastaturrulling og berøringsmål er ikke meldt.
+
+**Brukerens tester 27. november 2026: delvis bekreftet.** Resultatet står her slik brukeren meldte det i chatten. Claude kjørte ikke Safari og ikke telefonen selv.
+- **Safari på Mac:** produktene 10012, 10040 og 20015 er kontrollert. Mobilvisningen ved 390 og 320 px fungerer. Ved 820 × 1180 er 10012, 10040 og 20015 kontrollert og bekreftet (brukeren meldte det i en senere melding, uten flere detaljer). Hoppelenken «Gå til produktet» og fokusringen er bekreftet. Tilgangskontrollen mellom bedriftene gir riktig 404-side, og som Testbedrift B (1002) gir A-produktet 10012 den samme 404-siden.
+- **Ekte iPhone 13 i Safari over lokalnettet (NFR-6):** innloggingen som Testbedrift A virker. Produkt 10012 viser det samme som på Mac. Produkt 10040 viser merket «Lav» og ingen foreslått bestillingsmengde. Produkt 20015 (Testbedrift Bs produkt) gir riktig 404-side for A. Testen ble gjort via lokal Wi-Fi-deling med `PROGNOSE_LAN_HOST` (se hindringen under), og serveren er stoppet.
+
+**Ikke bekreftet, og derfor ikke ført som bestått.**
+- Safari-versjon, macOS-versjon og iOS-versjon: brukeren har ikke oppgitt dem.
+- Safari ved 1366 × 768: ikke meldt. At mengden, merket og radene er synlige uten rulling ved 1366 × 768, og tokolonneoppsettet ved 1366, er derfor bare målt i hodeløs Chrome (se over), ikke i Safari. Ved 390 × 844 meldte brukeren «390 px», så høyden 844 er ikke bekreftet.
+- Andre 404-kontroller på Mac enn B (1002) mot 10012: brukeren meldte bare at tilgangskontrollen ga riktig side, uten å si hvilke numre og innlogginger.
+- Innlogging som Testbedrift B på iPhonen: ikke meldt.
+- Tab-rekkefølgen og fokusringen på iPhonen: ikke meldt, og ikke relevant uten tastatur.
+- Berøringsmålene i produktlisten og lenkene på iPhonen er bare testet i koden (CSS-regelen), og brukeren meldte ikke noe om dem.
+
+**Testhindring under iPhone-testen: DisallowedHost.** Brukeren meldte i chatten at iPhonen fikk Djangos feil `DisallowedHost` for `172.20.10.x:8000`. Feilen betyr at serveren nådde Macen over lokalnettet, men at adressen ikke sto i `ALLOWED_HOSTS`. Claude undersøkte oppsettet og fant dette:
+- `src/prognose/settings.py` setter `ALLOWED_HOSTS` med `env.allowed_hosts(PROGNOSE_LAN_HOST)` (AD-13, NFR-6). Uten variabelen er listen bare `127.0.0.1` og `localhost`. Variabelen kan stå i terminalen eller i `.env`, og den må være satt når serveren starter.
+- Med variabelen godtar `src/prognose/env.py` bare én IPv4-adresse i et privat nettverk (10.0.0.0/8, 172.16.0.0/12 eller 192.168.0.0/16) og legger den til listen. Alt annet, for eksempel `*` eller en offentlig adresse, avvises med en feilmelding. `172.20.10.x` ligger i 172.16.0.0/12, så den godtas. Dette er samme mekanisme som README beskriver under «Test på en ekte telefon over lokalnettet».
+- Claude kontrollerte at innstillingene lastes med `PROGNOSE_LAN_HOST=172.20.10.x` og gir `['127.0.0.1', 'localhost', '172.20.10.x']` med `DEBUG` av. Claude startet ikke serveren og testet ikke på telefonen.
+
+**Midlertidig løsning uten kodeendring.** Stopp serveren som kjører, og start den på nytt med variabelen satt for den ene kommandoen:
+
+`PROGNOSE_LAN_HOST=172.20.10.x uv run python src/manage.py runserver --insecure 0.0.0.0:8000`, der `172.20.10.x` er Macens adresse (adressen er maskert i loggen)
+
+Deretter åpner iPhonen `http://172.20.10.x:8000/`. Variabelen gjelder bare for denne kommandoen og blir ikke lagret i noen fil. Adressen kan endre seg når Macen kobler til nettverket på nytt, og da må kommandoen bruke den nye adressen (`ifconfig | grep "inet "` viser den). Stopp serveren med Ctrl+C etter testen. Appen bruker vanlig HTTP, så testen bør gjøres på et nettverk brukeren stoler på, med bare de offentlige testpassordene. Ingen kode, innstilling eller `.env`-fil er endret, og `ALLOWED_HOSTS` er ikke utvidet.
+
+**Utfall.** Brukeren meldte etterpå at iPhone-testen ble gjennomført med `PROGNOSE_LAN_HOST` satt og at serveren er stoppet (se resultatet over). Claude vet ikke hvilken adresse eller kommando brukeren endte med, bare det brukeren meldte. README beskriver allerede stegene, men nevner ikke `DisallowedHost`-feilen, så en som starter uten variabelen får den uten å se hvorfor. Claude har ikke endret README, siden det ville være en dokumentasjonsendring som ikke er bestilt.
+
+## 2026-11-27 – Feil i KI-generert kode og tekst fra byggingen av story 2.7 (DR-9)
+
+**Hvordan det ble funnet.** Av testene, Ruff, mutasjonstestene og målingene i Chrome under byggingen av story 2.7 på grenen `story/2-7-show-what-to-order-and-whether-to-trust-it-on-the-product-screen` (baseline `0116aaf`). Claude bygde lasteren, produktsiden, tekstene og testene inline, uten subagent.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Feltet `products` på lasterens resultat ble flagget av skanningen som sier at ingenting utenfor `queries.py` bruker en relatert manager (navnet står i `MANAGER_NAMES`) | `test_no_view_or_form_uses_a_model_manager_for_company_data` | Feltet heter `product_list` | `a6a69e6` |
+| Testhjelperen regnet uker som `siste uke − antall + posisjon`, som gir negative ukenummer for 104 uker | `uv run pytest` (`IntegrityError` på kontrollen av ISO-uka) | Ukene regnes med `date.fromisocalendar` og `timedelta` | `a6a69e6` |
+| Testen av en visningsfunksjon forventet `TypeError` for `NaN`, men avrundingen gir `ValueError` | `uv run pytest` | Forventningen følger avrundingen (`TypeError` for tekst og bool, `ValueError` for `NaN`) | `a6a69e6` |
+| 404-testen brukte teksten «Siden finnes ikke.» som nøkkel i meldingskatalogen, men raden heter «Not found» | `uv run pytest` | Nøkkelen er «Not found» | `a6a69e6` |
+| Beslutningsteksten sto under tallet 11 i stedet for ved siden av, som UX-DR22 sier | skjermbilde i Chrome | `flex: 1 1 14rem` på etiketten | `a6a69e6` |
+| Fire mutasjoner overlevde: raden for gamle data som mønster, formen på raden for for lite data, formene på tillitsmerkene og innstillingsraden uten bedriftsfilter. Én traff ikke, fordi uttrykket står to ganger i `queries.py`, og én er en ekvivalent mutant (hoppelenken først inne i toppfeltet er fortsatt det første fokuserbare elementet) | mutasjonsskriptet | `test_each_warning_has_the_kind_and_shape_of_the_design`, `test_the_rows_draw_their_shapes`, `test_the_trust_label_draws_its_shape_beside_the_word`, `test_a_company_gets_its_own_settings_and_never_another_companys` og `test_the_sales_week_and_settings_queries_return_only_the_given_companys_rows`; mønsteret ble gjort entydig | `a6a69e6` |
+
+**Mutasjoner.** Koden ble brutt på 50 steder før reviewen og satt tilbake, og filene ble sammenlignet med hash før og etter: rekkefølgen og slaget på varselradene, formene, nullen i blått, manglende verdi som 0 og med bindestrek, null behandlet som uten prognose, feil uke i teksten og uten året, hver av de seks innstillingene som ikke leses, feil standard, en spørring inne i løkka, produkt uten uker, uker i feil rekkefølge, hvert av bedriftsfiltrene i `queries.py`, hoppelenken med feil mål, regionene og `h1`, `aria-current`, `never_cache`, bare GET, og fem CSS-regler for kolonnene, fargen på nullen og hoppelenken. Alle ble fanget etter rettingene, unntatt den ekvivalente mutanten. Skriptet kjørte med bytekode av og tømt `__pycache__` før hver mutasjon.
+
+## 2026-11-27 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 2.7 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige, skrivebeskyttede KI-granskere gikk gjennom arbeidstreet til story 2.7 mot `0116aaf`, før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor. Spesifikasjonen gikk bare til Edge Case Hunter og Acceptance Auditor. De ga 29 funn (Blind Hunter 11, Edge Case Hunter 11, Acceptance Auditor 7, og Verification Gap fant ingen hull), i 21 grupper.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Toppfeltet leste siste uke på nytt etter at lasteren hadde lest den (en spørring for mye), og testen låste antallet til 7 | BH-3, EC-6, AA-3, EC-8 | `header_context` tar uka fra lasteren, og testen krever like mange spørringer for 3 og 50 produkter og høyst 6 (målt: 6) | `a6a69e6` |
+| «Produktoversikt» var ikke merket som gjeldende side på produktsiden, som mockupens skjerm 2 gjør | AA-4 | Produktsiden gir `products`, og en test sjekker merket og uka | `a6a69e6` |
+| Listen og produktet hadde begge `tabindex="0"`, så to stopp uten noe å rulle opp til 900 px | BH-6, EC-7, AA-6 | Listen mistet den (den ruller gjennom lenkene), og produktet beholder den som mål for hoppelenken | `a6a69e6` |
+| Byggeøkta byttet ut alle forekomstene av en import, også en prøvekilde i skanningstesten for AD-7, så testen sjekket noe annet enn før | BH-11 | Prøvekilden er `from web.models import Product as P` igjen | `a6a69e6` |
+| Byggeøkta merket dokumentoppgaven i spesifikasjonen som gjort før dokumentene var skrevet | AA-1 | Avkrysningen er åpen til dokumentene er ført | rettet før første commit, så feilen står ikke i historikken |
+
+**Utsatt.** Én gruppe (EC-1): en innstillingsrad utenfor FR-20-områdene gir 500 på alle produktsider i bedriften. Ingenting i appen skriver en slik rad ennå, og story 3.1 bygger skjemaet som stopper den (`deferred-work.md`).
+
+**Avvist.** 14 grupper, blant dem: at hver side regner alle produktene og oversikten (AD-2 og beslutning 3 krever det), `StopIteration` fra oppslaget (resultatene og listen bygges av de samme produktene), at tillitsmerket står to ganger (UX-DR20 har det to steder), kontrasten som bare er sjekket etter tokennavn (parene er DESIGN.mds målte), pikselverdier uten token (DESIGN.md har ingen, og stilarket har dem fra før), en varenummer som ikke kan snus (`load_seed` krever 5 sifre), og en produktuke eldre enn bedriftens siste (AD-8).
+
+**Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle sporede og usporede filer før og etter reviewen, og de var identiske. Mutasjonene på rettingene (54 i alt etter reviewen, med de fire nye for toppfeltet og tabulatorstoppet) ble kjørt av byggeøkta, ikke av granskerne, og alle ble fanget unntatt den ekvivalente mutanten. Byggearbeidsflyten har bare tre granskerlag, så Claude startet Acceptance Auditor fra laget i `bmad-code-review` slik brukeren ba om.
