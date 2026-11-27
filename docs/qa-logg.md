@@ -1255,3 +1255,87 @@ Deretter åpner iPhonen `http://172.20.10.x:8000/`. Variabelen gjelder bare for 
 **Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashene av alle sporede og usporede filer før og etter reviewen, og de var identiske. Mutasjonene på rettingene (54 i alt etter reviewen, med de fire nye for toppfeltet og tabulatorstoppet) ble kjørt av byggeøkta, ikke av granskerne, og alle ble fanget unntatt den ekvivalente mutanten. Byggearbeidsflyten har bare tre granskerlag, så Claude startet Acceptance Auditor fra laget i `bmad-code-review` slik brukeren ba om.
 
 **Rettelse fra eksporten.** Sesjonseksporten (`.logs/mounia-03/sessions/2-7-2026-11-27.txt`) viser to avvik fra dokumentene, og begge er rettet. (1) Midt i økta, rett etter at granskerne var ferdige, sa Claude at «fire funn er triagert og rettet». Triagelogg og sluttrapport har 29 funn i 21 grupper med 6 rettet, og 6 er tallet som gjelder. (2) Dokumentene sa at «nivået brukeren ba om» ikke var bekreftet. Brukerens prompter i story 2.7 oppgir ikke noe nivå, bare at bekreftet modellbruk skal skilles fra ønskede innstillinger, og eksporten viser ikke noe nivå, så dokumentene sier nå at ingen ønsket verdi er oppgitt. Eksporten viser også at granskerne var underagenter av typen `general-purpose`, uten at modell eller nivå ble satt, og at økta ble komprimert midt i arbeidet, slik at eksporten viser sammendraget av byggefasen og ikke alle verktøykall.
+
+## 2026-11-27 – Produktlisten, innstillingslinjen og 2-sekundersmålet i hodeløs Chrome (Story 2.8; FR-24, NFR-6, NFR-8, UX-DR7, UX-DR15 til UX-DR18)
+
+**Hvorfor.** Hver side en story endrer, skal sjekkes ved 320 px, 390 × 844 og 820 × 1180 (NFR-6, UX-DR7), innstillingslinjen skal brytes i stedet for å bli kuttet, og oversikten skal åpnes på under 2 sekunder med 50 produkter på 104 uker (NFR-8). Brukeren ba om at målingen gjøres på en isolert testdatabase, uten å endre de vanlige dataene.
+
+**Oppsett.**
+- Claude tegnet seks sider med Djangos testklient mot pytests egen testdatabase fylt med `load_seed` (dev-databasen ble ikke rørt): oversikten og produktene 10012, 10040 og 10025 hos Testbedrift A, og oversikten og produkt 20015 hos Testbedrift B. Sidene ble lagret som statisk HTML med appens eget stilark og målt i Chrome 120 i den gamle hodeløse modusen (`--headless=old`). En liten kontrollerende JavaScript-bit, bare i de lagrede kopiene, leste sidebredden, plasseringen av linjen, listen og produktet, og de elementene som stikker utenfor skjermbredden. Claude leste også skjermbilder av 10012 ved 1366 og av oversikten ved 390.
+- NFR-8 ble målt på to måter. Med testklienten på pytests testdatabase: en bedrift med 50 produkter på 104 uker (noen med utsolgte uker), 12 forespørsler til oversikten og til en produktside, med spørringene talt. Over HTTP: en egen database `prognose_nfr8` ved siden av den vanlige i samme Docker-database, med `migrate` og samme 50 produkter, utviklingsserveren på port 8765 og `curl` med innlogging, 8 forespørsler til hver side. Claude telte radene i den vanlige databasen før og etter (2 bedrifter, 62 produkter og 5 016 uker begge ganger), og slettet `prognose_nfr8` etterpå.
+- Dette er en test i en nettlesermotor, ikke i Safari og ikke på en ekte telefon, og NFR-8-tallene er Claudes egne. Håndsjekken på brukerens maskin og Safari-testene hører brukeren til (se under).
+
+**Resultat i hodeløs Chrome.** 8 størrelser × 6 sider = 48 målinger, ingen med sidelengs rulling og ingen med et element som stikker utenfor skjermbredden.
+
+| Størrelse | Oppsett | Det som ble målt |
+|---|---|---|
+| 1366 × 640 | to kolonner (392 px liste), innstillingslinjen på én linje (38 px) | tillitspanelene slutter ved 405 px (10012), 403 (10025), 381 (10040) og 469 (20015) av 640, så mengden, merket og radene er synlige uten rulling også med linjen; oversikten er en kolonne på 640 px |
+| 1180 × 820 og 901 × 900 | to kolonner (340 px liste); linjen 38 px og 62 px | ingen sidelengs rulling |
+| 900 × 900, 820 × 1180 | én kolonne: produktet, så listen; linjen 62 og 63 px | listen følger produktet og har ingen egen rulleramme; oversikten er én kolonne |
+| 390 × 844, 360 × 800 og 320 × 640 | én kolonne; linjen brytes til 112 px (390) og 162 px (360 og 320) | linjen er ikke kuttet, ingen sidelengs rulling, og ingen element stikker utenfor skjermbredden |
+
+**NFR-8.**
+- Med 50 produkter på 104 uker bruker oversikten og en produktside 6 spørringer (innloggingens 2 og lasterens 4), som med 3 produkter.
+- Testklienten brukte en median på 26 ms for begge sidene (høyest 48 ms, 12 forespørsler hver), og siden er 26 og 27 kB.
+- Over HTTP mot utviklingsserveren brukte oversikten 32 til 43 ms og produktsiden 32 til 34 ms (8 forespørsler hver). Det er tid for serveren og lasteren, ikke for tegningen i nettleseren.
+- Det er langt under målet på 2 sekunder. Akseptkriteriet krever en håndsjekk på en vanlig laptop, og den er brukerens.
+
+**Det som ikke er sjekket i hodeløs Chrome.** Rekkefølgen med Tab (toppfeltet, innstillingslinjen, listen, produktet), fokusringen på kort og rader, tastaturrulling og berøringsmål er bare testet i koden (HTML-rekkefølgen og CSS-reglene).
+
+**Brukerens tester 27. november 2026: bestått for alle tre obligatoriske kontroller i story 2.8, med de manglene som står under «Ikke bekreftet».** Resultatet står her slik brukeren meldte det i chatten. Claude kjørte ikke Safari og ikke telefonen selv.
+- **Safari i responsiv visning (ikke en ekte enhet), 1366 × 768, 820 × 1180, 390 × 844 og 320 × 844, med Testbedrift A og B:** gruppering, produktkort, kompakte rader, tillitsmerker, innstillingslinjens linjebryting og plassering av produktlisten er kontrollert uten synlig sidelengs rulling.
+- **Ekte iPhone 13, Testbedrift A:** produktkortene for 10012 og 10040 og den kompakte raden for Malertape 25 mm åpnet riktig produktside ved trykk på kortflaten.
+- **NFR-8, isolert testdatabase med 50 produkter × 104 uker:** Safari viste 123 ms for `/produkter/` og 142 ms totalt. Testserveren er stoppet, og `prognose_nfr8` er slettet. Den vanlige databasen er uendret.
+- **Claudes kontroll etter meldingen (bare lesing):** databasene på serveren er `postgres` og `prognose`, `prognose` har 2 bedrifter, 62 produkter og 5 016 uker (som før), ingen `runserver` kjører, og arbeidstreet har de samme 28 endrede og nye filene som før testene.
+- **Til sammenligning** med Claudes egne målinger over (serveren og lasteren, 26 ms med testklienten og 32 til 43 ms over HTTP): brukerens 123 og 142 ms er målt i Safari og omfatter nettleseren. Begge er langt under målet på 2 sekunder. Hvilken Safari-måling tallene kommer fra (for eksempel fanen Nettverk), er ikke oppgitt.
+
+**Ikke bekreftet, og derfor ikke ført som bestått.**
+- Safari-versjon, macOS-versjon og iOS-versjon: brukeren har ikke oppgitt dem.
+- Hvilke produkter og hvilke sider (oversikten og/eller en produktside) som ble åpnet i Safari: brukeren meldte «Testbedrift A og B» og de fire størrelsene, men ikke produktnumrene.
+- Høyden ved 320 px: brukeren testet 320 × 844, mens målingene i hodeløs Chrome er 320 × 640. Akseptkriteriet sier bare «320 px».
+- Testbedrift B på iPhonen: ikke meldt.
+- Tab-rekkefølgen (toppfeltet, innstillingslinjen, listen, produktet), fokusringen på kort og rader og tastaturrulling: ikke meldt, og bare testet i koden.
+- Berøringsmålene er bare bekreftet ved at tre flater (to kort og én rad) åpnet riktig side på iPhonen. Brukeren meldte ikke at hele flaten er trykkbar for alle kort og rader.
+
+## 2026-11-27 – Feil i KI-generert kode og tekst fra byggingen av story 2.8 (DR-9)
+
+**Hvordan det ble funnet.** Av testene, Ruff, mutasjonstestene og målingene i Chrome under byggingen av story 2.8 på grenen `story/2-8-list-the-products-in-r-12-order` (baseline `aa9a900`). Claude bygde inline, uten subagent.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Stilarket hadde en linjehøyde som tall (`1.3`) og en `box-shadow` på den valgte raden, og begge er forbudt av designtestene (alt skal være tokens, og utseendet er flatt uten skygge) | `test_rules_take_colors_fonts_and_radii_only_from_the_tokens` og `test_look_is_flat_without_motion_letter_spacing_or_uppercase` | Linjehøyden er et token, og den valgte raden har en 2 px blå kant med en pikselmindre padding | `371715e` |
+| Rader med runde hjørner fikk `border-radius` med fire verdier, som testen om tokens avviser | samme test | Hjørnene settes hver for seg med `var(--radius-lg)` | `371715e` |
+| Mengden i kortet fikk klassen `quantity-ink`, som kolliderte med regexen til beslutningspanelet (`quantity([^"]*)`) og ga feil mengde på produktsiden | `test_a_product_with_an_order_shows_the_decision_and_the_trust` og flere | Klassen heter `qty-ink` | `371715e` |
+| To av testene Claude skrev, hadde påstander som ikke kunne feile: en `or` som gjorde listesammenligningen tom, og en sjekk av `confidence_label == "high"` (verdiene er «høy», «middels» og «lav») | Claudes egen gjennomgang før reviewen | Sammenligningen er skrevet om, og den tilfeldige sjekken er fjernet | `371715e` |
+| De gamle testene leste listen som `<td>`-celler, og regexen for lenkene fant ingenting i det nye markupet | `uv run pytest` | Testene leser kort og rader (`a.pcard`, `a.prow`) | `371715e` |
+| Første mutasjonskjøring etter reviewen ble startet med en ny test som allerede feilet, så hver mutasjon ville ha vist «fanget» uten å være det. `SIGINT` stoppet ikke løkka | Claude så at testen feilet og at kjøringen gikk videre | Kjøringen ble stoppet med `SIGTERM`, filen som var mutert ble gjenopprettet for hånd, hele testpakken var grønn før kjøringen ble gjentatt fra rent utgangspunkt | `371715e` |
+| Claude hadde antatt at `timeout` fantes i terminalen, og de første Chrome-kjøringene ga ingen målinger | tom utdata | Chrome kjøres uten `timeout` (macOS har ikke kommandoen) | `371715e` |
+
+**Mutasjoner.** Koden ble brutt på 41 steder før reviewen og satt tilbake, og alle ble fanget: gruppene og rekkefølgen, kort og rader byttet om, tom gruppe vist, valgt-markeringen borte, hele årsaken på kortet, enhetene ikke summert, innstillingene i lasteren byttet med standardene, og en spørring inne i løkka, entall og flertall, overskriftene, lastekommandoen, hver av de fire innstillingstekstene, `aria-current`, den stiplede klassen, dekningen og mengden uten filter, og tre CSS-regler (stiplet kant, linjen uten brytning og valgt kort over stiplet kant). Filene ble sammenlignet med hash før og etter.
+
+## 2026-11-27 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 2.8 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige, skrivebeskyttede KI-granskere gikk gjennom arbeidstreet til story 2.8 mot `aa9a900`, før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor, som underagenter av typen `general-purpose` med `model: "sonnet"` (et alias, ikke bekreftet som 5.5). De ga 30 funn (Blind Hunter 12, Edge Case Hunter 11, Acceptance Auditor 5, og Verification Gap fant ingen hull og to andre funn), i 23 grupper: 5 rettet, 1 avgjort av brukeren, 1 utsatt og 16 avvist.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Kortet uten prognose viste FR-8-årsaken to ganger, i rødt i stedet for prognosen og i en annen ordlyd etter merket. Akseptkriteriet sier ordrett «årsaken» for alle merker unntatt «høy», mens mockupen og spec-matrisen viser bare merket «Lav» | AA-3 | Brukeren valgte alternativ A (mockupen): `card_reason` gir ingen årsak uten prognose, og testene og spesifikasjonen er endret. Tillitspanelet på produktsiden beholder hele årsaken | `371715e` |
+| Testen av raden sjekket `"quantity" not in inner`, som aldri kan feile | BH-3 | Testen sjekker at mengden er `0` uten `qty-ink` | `371715e` |
+| Verdiene i innstillingslinjen sto som tilstøtende `<b>` uten mellomrom, så teksten løp sammen for verktøy som leser teksten | BH-8, EC-4 | Et linjeskift mellom verdiene, og en test som leser teksten uten tagger | `371715e` |
+| Produktsiden ga malen `selected`, som ikke lenger leses | BH-10 | Feltet er fjernet | `371715e` |
+| Docstringen sa 21 produkter, men testen sjekker de 26 uten varsel; to kommentarer var upresise | EC-8, AA-4, BH-12 | Teksten sier 26, og kommentarene er rettet | `371715e` |
+| Claudes første retting av EC-5 la et mellomrom mellom merket og årsaken, men malen for merket slutter allerede med linjeskift, så mutasjonen ble en ekvivalent mutant | mutasjonen «merket og årsaken limt sammen» overlevde | Mellomrommet er fjernet igjen, og testen og en omskrevet mutasjon mot malen for merket sikrer linjeskiftet | `371715e` |
+| Prompten til Acceptance Auditor hadde en plassholder i stedet for stien til diffen | Claude så det rett etter oppstarten | En melding til den samme agenten ga riktig sti før den rapporterte, og rapporten stemmer med diffen | ikke relevant (ingen filendring) |
+
+**Utsatt.** Én gruppe (BH-1): teksten for en bedrift uten produkter peker på `load_seed`, som stopper på en database som ikke er tom. Meldingskatalogen og kriteriet låser setningen, og ingenting i appen lager en slik bedrift ennå (`deferred-work.md`).
+
+**Avvist.** 16 grupper, blant dem: at den uavhengige kontrollen av seed-dataene er erstattet av en mot kjernen (restpunktet fra story 1.6 ba om det, og mønstertabellen kontrollerer dataformene fortsatt), piksel- og paddingverdier uten token (DESIGN.md har ingen, som i story 2.7), at hele kortet er én lenke (UX-DR17 krever det), at første gruppe har 24 px topp på produktsiden (som mockupen), en innstillingsrad med ukjent metode (kjernen stopper allerede, og story 3.1 validerer raden), at mengden i kortet er i blekk for 0 (et kort har bare mengder over 0 eller «–»), og at dokumentene ikke var skrevet (de følger reviewen).
+
+**Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet hashen av alle endrede og nye filer før og etter reviewen, og den var identisk. Blind Hunter og Verification Gap så aldri spesifikasjonen. Mutasjonene etter rettingene: 45 i siste kjøring, 43 fanget, én som ikke lenger passet koden og én ekvivalent mutant, og begge ble skrevet om mot den endrede koden og fanget.
+
+**Rettelse av en eldre feil.** Statustabellen nevnte testen `test_the_products_with_the_same_cover_are_sorted_by_the_product_number` for FR-24 fra story 2.6, men testen heter `test_the_products_with_the_same_cover_are_sorted_by_product_number`. Navnet er rettet da raden ble oppdatert.
+
