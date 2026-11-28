@@ -1,0 +1,1597 @@
+ ▐▛███▛█   Claude Code v2.1.312
+▝▜██████▀  Sonnet 5.5 · Claude Pro
+ ▝▝   ▝▝   <project-root>
+
+⚠ Your login expires in 2 days · run /login to renew
+
+❯ /clear                                                                        
+
+❯ Vi starter story 2.9. Kontroller først at lokal main er ren og synkronisert   
+  med origin/main. Les sprintstatus, Epic 2-konteksten og kravene til story     
+  2.9. Presenter kort hva storyen innebærer, eventuelle nødvendige valg og      
+  planen før du endrer filer. Ikke commit eller push uten godkjenning.          
+
+⏺ Jeg starter med å sjekke at lokal main er ren og synkronisert, og finner
+  sprintstatus og planleggingsfilene.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Main er ren og identisk med origin/main (9aec086, 0 foran/0 bak). Nå leser jeg
+  sprintstatus og epics.
+
+  Read 4 files, listed 1 directory (ctrl+o to expand)
+
+⏺ Nå ser jeg på koden som finnes, forrige storys spec og kravene (FR/UX-DR/E)
+  som 2.9 refererer til.
+
+  Searched for 1 pattern, read 3 files, listed 2 directories, ran 7 shell commands (ctrl+o to expand)
+
+⏺ Main er ren og identisk med origin/main (9aec086, 0 foran og 0 bak etter git 
+  fetch). Jeg har ikke endret noen filer.
+
+  Hva story 2.9 er
+
+  Sprintstatus har 2.1–2.8 som done og 2.9 som backlog. Epic 2 står som
+  in-progress, og 2.9 er neste story. Til nå viser produktsiden bare
+  beslutnings- og tillitspanelet. Story 2.9 legger til panelet «Slik er tallene
+  regnet ut», slik at sensor kan etterregne prognosen for hånd mot regnearket.
+  Det har fire deler i denne rekkefølgen:
+
+  1. Salgshistorikk, siste 12 uker. Panelet viser uke, solgt og et statusmerke
+     per flagget uke: «utsolgt», «uvanlig», «nytt nivå» eller «brukt». Har
+     historikken 12 uker eller færre, heter overskriften «alle ukene». En
+     setning under tabellen forklarer merkene.
+  2. Prognoseutregning. Glidende gjennomsnitt viser linjen (16 + 12 + 15) / 3 = 
+     14,3 og «Uker brukt: uke 43, 44 og 45.». Eksponentiell glatting viser siste
+     oppdatering, «Tallene er avrundet for visning.» og en tabell over alle
+     beregningsuker med salg og nivå i egen rulleramme. Begge viser alle uker
+     som er holdt utenfor i hele historikken, med årstall når listen når før de
+     siste 12 ukene.
+  3. Ukeprognoser og scenarioer. Tabellen har kolonnene «Uke 1 · uke 46» osv. og
+     radene Optimistisk, Normal og Pessimistisk. Under den står
+     scenariosetningen med faktisk prosent og merknaden om uke 2 og 3.
+  4. Utregning av bestillingsmengde. Linjen dekker E4, E6 (= −40,00 → … 0 
+     (lageret dekker behovet)) og E21, med avrundingsnotat og
+     tommelfingerregelsetningen under.
+
+  Et produkt uten prognose viser bare salgstabellen. Tabellene skal ha egne
+  rullerammer fra 320 px, uten sidelengs scroll på siden. Setningene kommer fra
+  explanation/ og tallene fra forecasting/display.py (AD-3, AD-4). Seksjonene
+  for sesong (FR-9) og bestillingsmengde per scenario (FR-13) er Should og ikke
+  med.
+
+  Det som er åpent fra tidligere stories og hører hjemme her
+
+  - Kolonneetiketten «Uke 1 · uke 46» skal lages i display.py (åpent punkt fra
+    2.3, 2.4 og 2.7).
+  - Merknaden om uke 2 og 3 og FR-35-linjene kommer her (åpent punkt fra 2.5).
+  - with_year for lister som når før siste 12 uker avgjøres av den som viser
+    listen.
+
+  Valg jeg trenger fra deg
+
+  1. Ordlyd for uvanlige uker som holdes utenfor. Meldingskatalogen har bare
+     eksempelet «Holdt utenfor: uke 38 og 39 (utsolgt).» og sier «[3] uker brukt
+     i beregningen». Mitt forslag er Holdt utenfor: uke 38 og 39 (utsolgt), uke
+     42 (uvanlig). med blandede årsaker i én setning, og «3 uker brukt i
+     beregningen» med entall «1 uke». Jeg legger det inn i katalogen i
+     EXPERIENCE.md med rad i endringsloggen, slik forrige story gjorde. Passer
+     det, eller vil du ha andre ord?
+  2. Hvor salgstallene kommer fra. ProductResult har ikke ukenes salg, og
+     lasteren kaster ukene etter beregningen. Mitt forslag er å legge sales
+     (salg per posisjon) og utsolgte uker til i ProductResult. Da kommer all
+     tekst fra resultatet (AD-4), og ingen test bygger ProductResult selv.
+     Alternativet er å sende ukene til explanation/ ved siden av resultatet.
+  3. Årstall per liste. Mitt forslag er at hele listen får årstall («uke
+     10/2025») hvis én av ukene ligger før de siste 12. Det er enklere å lese
+     enn årstall bare på enkeltuker.
+
+  Hvis du ikke svarer noe annet, bruker jeg disse tre forslagene.
+
+  Plan
+
+  1. Lage grenen
+     story/2-9-show-how-the-forecast-and-the-order-quantity-were-calculated fra
+     main, sette 2.9 til in-progress og skrive spec-filen i
+     _bmad-output/implementation-artifacts/. Spec-filen legger jeg frem for
+     godkjenning før koden.
+  2. Kjernen: utvide ProductResult (valg 2) og legge til kolonneetiketten i
+     display.py.
+  3. explanation/: ny modul worksheet.py med tabelltekster, statusmerker,
+     formellinjene for MA og ES, listene over uker som er holdt utenfor,
+     scenariotekstene og bestillingslinjen.
+  4. Visning: views.py bygger worksheet-konteksten, og ny mal _worksheet.html
+     legges inn i product.html under tillitspanelet. Kartet (2.10) kommer senere
+     mellom dem. CSS for tabeller, kalkulasjonsboks og statusmerker bruker
+     eksisterende tokens.
+  5. Tester:
+     - Mot regnearket: E1, E2, E3, E4, E6 og E21 leses via answer_key, og hver
+       test navngir sine E-n og FR-n.
+     - Kantfall: ES, uvanlige uker utenfor, historikk på 12 uker eller færre,
+       produkt uten prognose, årstall og entall.
+     - Tvers: to-konto-testen og spørringstallet med 50 produkter à 104 uker.
+     - Ruff og makemigrations --check.
+     - Innstillingene (ES, uvanlige uker utenfor) kan ikke endres i appen før
+       Epic 3. De testes derfor via en CompanySettings-rad i testdatabasen.
+  6. Håndsjekk i nettleser: 320 px, 390 × 844 og 820 × 1180. Du melder
+     resultatet i chat, jeg åpner siden med open -a Safari og rører ikke faner.
+  7. Dokumentasjon: statustabell.md, qa-logg.md, ki-styringslogg.md,
+     arbeidslogg.md, sprint-status.yaml (til review, så done etter merge),
+     deferred-work.md og issues.md.
+  8. BMAD Code Review med skrivebeskyttede subagenter. Byggingen og
+     selvgranskingen gjør jeg selv uten subagenter. Deretter kommer
+     sesjonsloggen, og først etter din godkjenning commit og push. Jeg trenger
+     ikke SSH, siden ingen workflow-filer berøres.
+
+  Skal jeg gå i gang med steg 1 med disse tre valgene, eller vil du endre noe
+  først?
+
+✻ Churned for 1m 16s · done 10:47 AM
+
+※ recap: Vi starter story 2.9, som skal vise hvordan prognosen og bestillingsmengden er regnet ut på produktsiden. Main er ren og synkronisert, og jeg har lagt frem planen og tre forslag uten å endre filer. Neste steg er at du godkjenner dem, så lager jeg grenen og spec-filen.
+
+❯ Jeg godkjenner alle tre forslagene og planen for story 2.9.Gjennomfør steg 1: 
+  Opprett grenen fra ren main, oppdater sprintstatus og skriv en samlet         
+  BMAD-spesifikasjon basert på kravene, regnearket og eksisterende              
+  arkitektur.Presenter spesifikasjonen og eventuelle nødvendige avklaringer før 
+  implementering. Ikke start kodingen, og ikke commit eller push uten           
+  godkjenning.Bruk SSH ved senere push, som i story 2.8.                        
+
+  Read 2 files, ran 7 shell commands (ctrl+o to expand)
+
+⏺ Jeg har lest alt jeg trenger, og skal nå opprette grenen, oppdatere
+  sprintstatus og skrive spesifikasjonen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/sprint-status.yaml)
+  ⎿  Added 1 line, removed 1 line
+      55    2-6-sort-the-products-by-what-needs-ordering-first: done
+      56    2-7-show-what-to-order-and-whether-to-trust-it-on-the-product
+          -sc: done
+      57    2-8-list-the-products-in-r-12-order: done
+      58 -  2-9-show-how-the-forecast-and-the-order-quantity-were-calcula
+         -ted: backlog                                                   
+      58 +  2-9-show-how-the-forecast-and-the-order-quantity-were-calcula
+         +ted: ready-for-dev                                             
+      59    2-10-show-the-sales-history-and-the-forecast-in-a-chart-also-
+          as-t: backlog
+      60    2-11-go-through-the-week-s-products-and-find-a-product-quickl
+          y: backlog
+      61    2-12-explain-each-forecast-in-plain-norwegian: backlog
+
+⏺ Update(_bmad-output/implementation-artifacts/sprint-status.yaml)
+  ⎿  Added 1 line, removed 1 line
+      29  # - Dev moves story to 'review', then runs code-review (fresh c
+          ontext, different LLM recommended)
+      30  # - Retrospective appends its action items to action_items; the
+           status view surfaces open ones
+      31  generated: 11-19-2026 20:56
+      32 -last_updated: 11-27-2026 20:40                                 
+      32 +last_updated: 11-28-2026 10:58                                 
+      33  project: G40-lyamouri
+      34  project_key: NOKEY
+      35  tracking_system: file-system
+
+⏺ Write(_bmad-output/implementation-artifacts/spec-2-9-show-how-the-forecast-and
+       -the-order-quantity-were-calculated.md)
+  ⎿  Wrote 95 lines to _bmad-output/implementation-artifacts/spec-2-9-show-
+     how-the-forecast-and-the-order-quantity-were-calculated.md
+       1 ---
+       2 title: 'Story 2.9: Show how the forecast and the order quantity 
+         were calculated'
+       3 type: 'feature'
+       4 created: '2026-11-28'
+       5 baseline_commit: '9aec086f3a2a8f9255a70b7a279c24e81de28413'
+       6 status: 'draft'
+       7 route: 'dispatch'
+       8 review_loop_iteration: 0
+       9 context: ['{project-root}/_bmad-output/implementation-artifacts/
+     … +87 lines (~9 KB) (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-2-9-show-how-the-forecast-an
+        d-the-order-quantity-were-calculated.md)
+  ⎿  Added 1 line, removed 1 line
+      33  
+      34  | Scenario | Input / State | Expected Output / Behavior | Error
+           Handling |
+      35  |----------|--------------|---------------------------|--------
+          --------|
+      36 -| E1 / E3 / E4 | 12, 15, 11, 14, 13, 16, 12, 15; MA 3; stock 5 
+         -| «(16 + 12 + 15) / 3 = 14,3», «Uker brukt: uke 6, 7 og 8» (as 
+         -numbered), scenarios 15,8 · 14,3 · 12,9, line «… = 10,77 → … 11
+         -» | N/A |                                                      
+      36 +| E1 / E3 / E4 | 12, 15, 11, 14, 13, 16, 12, 15; MA 3; stock 5 
+         +| «(16 + 12 + 15) / 3 = 14,3», «Uker brukt» names the ISO weeks
+         + of positions 6 to 8, scenarios 15,8 · 14,3 · 12,9, line «… = 1
+         +0,77 → … 11» | N/A |                                           
+      37  | E2 | same series, ES 0,3 | «0,3 × 15 + 0,7 × 13,3 = 13,8», le
+          vel table 12 … 13,8, rounding note | N/A |
+      38  | E6 / E21 | 100, 100, 100 stock 150 / 27, 27, 28 stock 30 | «=
+           −40,00 → … 0 (lageret dekker behovet)» / «= 0,07 → … 1» | N/A 
+          |
+      39  | E23 | 0, 0, 0 stock 0 | line ends «… 0» with no cover phrase 
+          | N/A |
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Steg 1 er gjort: grenen er opprettet, sprintstatus er oppdatert og
+  spesifikasjonen er skrevet. Jeg har ikke kodet, committet eller pushet noe.
+
+  Gjort
+
+  - Gren:
+    story/2-9-show-how-the-forecast-and-the-order-quantity-were-calculated,
+    laget fra ren main (9aec086).
+  - Sprintstatus: 2.9 er satt til ready-for-dev, og last_updated er oppdatert.
+    Epic 2 var allerede in-progress. Jeg valgte ready-for-dev fordi
+    spesifikasjonen finnes, men implementeringen ikke er startet. Byggeflyten
+    setter in-progress først når koden starter. Vil du ha in-progress nå, er det
+    en enkelt linje å bytte.
+  - Spesifikasjon: _bmad-output/implementation-artifacts/spec-2-9-show-how-the-f
+    orecast-and-the-order-quantity-were-calculated.md har status draft til du
+    godkjenner. Den er bygd på kravene (FR-7/10/12/15/16/35, UX-DR28–30 og 42),
+    regnearket og den eksisterende arkitekturen.
+  - Dine tre valg: de er ført inn i den frosne delen: sales og stockout_weeks på
+    ProductResult, ordlyden «Holdt utenfor: uke 38 og 39 (utsolgt), uke 42
+    (uvanlig).», og årstall på hele listen.
+  - Tester og regneark: I/O-matrisen dekker E1–E4, E6, E8, E9, E11 a, E15, E21
+    og E23, Strøsand 25 kg og kantfall. Forventede verdier leses fra
+    reference-examples.xlsx via answer_key.
+
+  Avklaringer jeg tok som standard og ber deg se over
+
+  Disse gjelder ordlyd som katalogen ikke fastsetter. De legges inn i
+  EXPERIENCE.md med rad i endringsloggen, og godkjenning av spesifikasjonen
+  dekker dem.
+
+  1. «(lageret dekker behovet)». Teksten settes på bestillingslinjen bare når
+     mengden er 0 og lageret er over 0. Det er samme regel som overstock-notatet
+     (FR-14). E23 (lager 0, prognose 0) får dermed ikke setningen, siden et
+     lager på 0 ikke kan dekke noe.
+  2. «[3] uker brukt i beregningen». Tallet er antall uker med merket «brukt».
+     Det er 3 for glidende gjennomsnitt med vindu 3 og alle beregningsukene for
+     eksponentiell glatting. Alternativet er det totale antallet beregningsuker,
+     som kan gi «4» mens formelen bruker 3.
+  3. Setningen under statustabellen. Mockupens setning generaliseres i samme
+     stil for eksponentiell glatting, entall, nytt nivå og innstillingen «holdes
+     utenfor».
+  4. Tom historikk. Et produkt uten salgsuker viser «Produktet har ingen
+     salgsuker.».
+  5. Eksponentiell glatting med én beregningsuke. Da finnes ingen oppdatering,
+     så linjen blir «startnivå» i stedet.
+  6. Merkene. En uke kan ha både «brukt» og «uvanlig» eller «nytt nivå».
+
+  Begrensning ved håndsjekken
+
+  Appen kan ikke endre innstillinger før Epic 3. Eksponentiell glatting og
+  «holdes utenfor» testes derfor automatisk, med en CompanySettings-rad i
+  testdatabasen. Håndsjekken i nettleseren dekker bare glidende gjennomsnitt.
+
+  Neste
+
+  Gi beskjed om spesifikasjonen kan godkjennes, eller hva som skal endres. Da
+  setter jeg status til ready-for-dev i spec-filen og starter steg 2. Senere
+  push går via SSH (git@github.com), som i story 2.8.
+
+✻ Brewed for 2m 2s · done 10:54 AM
+
+❯ Jeg godkjenner de seks avklaringene og spesifikasjonen for story 2.9 slik den 
+  er presentert.Sørg for at statusmerkene tydelig skiller mellom uvanlige uker  
+  som brukes, og uker som holdes utenfor beregningen.Sett spesifikasjonen til   
+  ready-for-dev og gjennomfør implementeringen og de planlagte automatiske      
+  testene. Følg BMAD-planen, oppdater relevant dokumentasjon og gjennomfør Code 
+  Review med fire skrivebeskyttede granskere.Stopp før manuell testing og       
+  presenter samlet status og eventuelle nødvendige valg. Ingen commit eller     
+  push uten godkjenning.                                                        
+
+  Searched for 1 pattern, read 1 file, ran 8 shell commands (ctrl+o to expand)
+
+⏺ Jeg har gjennomgått koden og testmønstrene, og nå oppdaterer jeg spec og
+  sprintstatus og begynner implementeringen i kjernen. · summary
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-2-9-show-how-the-forecast-an
+        d-the-order-quantity-were-calculated.md)
+  ⎿  Added 1 line, removed 1 line
+      21  
+      22  **Always:**
+      23  - Decisions by the user (2026-11-28): (1) `ProductResult` gets 
+          `sales` (units sold per position, 1 to N) and `stockout_weeks`;
+           the texts read only the result (AD-4). (2) A left-out unusual 
+          week reads «Holdt utenfor: uke 38 og 39 (utsolgt), uke 42 (uvan
+          lig).», stockout weeks first, each kind in time order; «[3] uke
+          r brukt i beregningen» («1 uke») is stated when the setting exc
+          ludes unusual weeks and one is excluded; N is the number of wee
+          ks tagged «brukt». These rows go into the Message Catalogue in 
+          `EXPERIENCE.md` with a change-log row. (3) A list that holds an
+          y week before the last 12 weeks writes every week with its year
+           («uke 10/2025 og 11/2025»); the first week of a new year alway
+          s carries it.
+      24 -- Tags (UX-DR30): «utsolgt» red hollow square, «uvanlig» amber 
+         -triangle, «nytt nivå» ink diamond, «brukt» turquoise without ic
+         -on; a week may have «brukt» beside «uvanlig» or «nytt nivå». «B
+         -rukt» = the last N calculation weeks for the moving average, ev
+         -ery calculation week for exponential smoothing. The sentence be
+         -low the table follows the mockup, with its other variants worde
+         -d in the same style (exponential smoothing, singular, level shi
+         -ft, setting «holdes utenfor»).                                 
+      24 +- Tags (UX-DR30): «utsolgt» red hollow square, «uvanlig» amber 
+         +solid triangle on amber-tint for an unusual week that is taken 
+         +into the calculation, «uvanlig, holdt utenfor» amber hollow tri
+         +angle with a dashed border on the surface for one that the sett
+         +ing leaves out (the user's instruction 2026-11-28: the two must
+         + be told apart by words and shape, never by colour alone), «nyt
+         +t nivå» ink diamond, «brukt» turquoise without icon; a week may
+         + have «brukt» beside «uvanlig» or «nytt nivå». «Brukt» = the la
+         +st N calculation weeks for the moving average, every calculatio
+         +n week for exponential smoothing. The sentence below the table 
+         +follows the mockup, with its other variants worded in the same 
+         +style (exponential smoothing, singular, level shift, setting «h
+         +oldes utenfor»).                                               
+      25  - Lines: moving average «Glidende gjennomsnitt, 3 uker: (16 + 1
+          2 + 15) / 3 = 14,3», then «Uker brukt: uke 43, 44 og 45.»; expo
+          nential smoothing «Eksponentiell glatting, faktor 0,3: 0,3 × 15
+           + 0,7 × 13,3 = 13,8» (the last update, from the previous level
+          ), «Tallene er avrundet for visning.» inside the box, and a tab
+          le of every calculation week with sales and level in its own sc
+          roll frame. Order line (E4, E6, E21): «Prognose 14,3 + sikkerhe
+          tsmargin 10 % (1,4) − lager 5 = 10,77 → foreslått bestillingsme
+          ngde 11»; «(lageret dekker behovet)» ends the line when the qua
+          ntity is 0 and the stock is above 0 (the FR-14 rule, so E23 has
+           none); the box holds the rounding note; the tommelfingerregel 
+          sentence always follows below. Scenario table: columns «Uke 1 ·
+           uke 46» from `display.py`, rows Optimistisk, **Normal**, Pessi
+          mistisk, the scenario sentence with the actual percentage, then
+           the FR-7 note as «Merknad: …».
+      26  - Every number through `display.py` («−» U+2212, decimal comma,
+           «10 %» with a no-break space); no `round()` or formatting else
+          where; the core imports nothing from `explanation/`. The loader
+          's query count stays fixed (NFR-8); a product of another compan
+          y gives the not-found page (FR-2).
+      27  - From 320 px: a table wider than the panel scrolls in its own 
+          frame, calculation lines wrap between terms and never inside a 
+          number, the page never scrolls sideways (NFR-6, UX-DR7). Headin
+          gs `h2` «Slik er tallene regnet ut», `h3` per subsection; table
+          s have `th scope`.
+
+⏺ Update(_bmad-output/implementation-artifacts/spec-2-9-show-how-the-forecast-an
+        d-the-order-quantity-were-calculated.md)
+  ⎿  Added 2 lines
+      78  
+      79  ## Spec Change Log
+      80  
+      81 +- 2026-11-28, the user's instruction when approving the spec (n
+         +ot a review finding): the status tags must clearly tell an unus
+         +ual week that is used from one that is held out. The tag rule i
+         +n the frozen block was amended with the user's approval: «uvanl
+         +ig» (taken into the calculation) and «uvanlig, holdt utenfor» (
+         +left out by the setting) differ in words, shape (solid or hollo
+         +w triangle) and border (solid or dashed). Known-bad state avoid
+         +ed: one «uvanlig» tag for both, leaving the reader to guess fro
+         +m the sentence below the table. KEEP: the mockup's «uvanlig» fo
+         +r an included week.                                            
+      82 +                                                               
+      83  ## Review Triage Log
+      84  
+      85  ## Design Notes
+
+⏺ Nå kjernen: ProductResult og display.py.
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Write(src/explanation/worksheet.py)
+  ⎿  Wrote 380 lines to src/explanation/worksheet.py
+       1 """The wording of the worksheet «Slik er tallene regnet ut» (AD-
+         4; FR-7, FR-10, FR-12, FR-15, FR-16, FR-35, UX-DR28 to UX-DR30, 
+         UX-DR42).
+       2 
+       3 The sentences follow the EXPERIENCE.md Message Catalogue word fo
+         r word, and the lines of
+       4 the calculation use the exact FR-12 and FR-35 formats. Every num
+         ber and every week label
+       5 is written through `forecasting/display.py` (AD-3), and a week's
+          ISO week comes from the
+     … +375 lines (ctrl+o to expand)
+
+  Searched for 1 pattern, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå CSS for panelet, tabellene, kalkulasjonsboksen og statusmerkene (inkludert
+  det tydelige skillet mellom «uvanlig» og «uvanlig, holdt utenfor»).
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Jeg retter CSS-token-testen og de tre eksisterende testene som nå endrer seg
+  av riktige grunner (nytt panel, nye ProductResult-felt), og skriver deretter
+  de nye testene.
+
+  Ran 6 shell commands (ctrl+o to expand)
+
+⏺ Jeg fjerner to grener som ikke kan nås (R-10 sjekker aldri de tre første
+  gyldige ukene, så det er alltid minst tre beregningsuker), og skriver deretter
+  testene.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Write(tests/test_worksheet.py)
+  ⎿  Wrote 510 lines to tests/test_worksheet.py
+      1 """The worksheet «Slik er tallene regnet ut» (Story 2.9).
+      2 
+      3 FR-7, FR-10, FR-12, FR-15, FR-16, FR-35, R-9, AD-3, AD-4, UX-DR28
+         to UX-DR30, UX-DR42.
+      4 The expected figures are read from the reference spreadsheet for 
+        every example that states
+      5 them, so no expected value is copied into the tests (AD-17); the 
+        sentences of the Message
+      6 Catalogue are written out, as the catalogue fixes them. The tests
+         use no database.
+     … +504 lines (ctrl+o to expand)
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Kjernen og forklaringsmodulen er testet (44 tester grønne). Nå skriver jeg
+  testene for display.py, ProductResult og selve siden, inkludert
+  to-konto-testen.
+
+  Searched for 1 pattern, read 1 file, ran 9 shell commands (ctrl+o to expand)
+
+⏺ Kjører hele testpakken og de tre kontrollkommandoene.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alt er grønt, med 1184 bestått og 1 hoppet over for Docker. Jeg kjører nå
+  mutasjonstestene og sjekker filene mot hash etterpå. · summary
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ 21 av 21 mutasjoner fanget, og filene er identiske etter gjenoppretting. Nå
+  meldingskatalogen i EXPERIENCE.md.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Kode og tester er ferdige. Nå dokumentasjonen: jeg leser hvordan story 2.8 ble
+  ført, så 2.9 følger samme mønster.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+⏺ Før dokumentene skriver jeg selve granskingen, slik at resultatet kan føres
+  inn. Jeg leser BMAD Code Review-skillen for de fire rollene.
+
+  Listed 2 directories, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Diffen er klar (12 filer, 79 kB), og treets fingeravtrykk er lagret. Jeg
+  starter de fire skrivebeskyttede granskerne samtidig.
+
+⏺ 4 background agents launched (↓ to manage)
+   ├ Blind Hunter review
+   ├ Edge Case Hunter review
+   ├ Verification Gap review
+   └ Acceptance Auditor review
+
+⏺ Jeg skrev feil sti til diff-filen i Verification Gap-granskerens prompt
+  (manglende bindestrek). Jeg laster SendMessage og retter det med en gang.
+  ⎿  Message queued for delivery to a411d673953fe9b4b at its next tool 
+     round. If it finishes first, it is resumed with the message and 
+     notifies again, so wait for that notification before resending.
+
+⏺ Rettelsen er sendt. De fire granskerne kjører nå, og jeg venter på at alle
+  melder før jeg leser noe av resultatet.
+
+✻ Worked for 15m 36s · done 11:13 AM
+
+› Message from general-purpose
+  Finding floor: the diff is 79,393 bytes, about 77.5 kB. N =
+  min(floor(sqrt(77.5) + 1), 10) = min(floor(9.80), 10) = 9. I found 12
+  findings, listed below.
+
+  - **Tag sentence can describe weeks the table does not show.** In
+  `_tag_sentence`, `if used:` writes «Brukt» viser de N ukene … from `used`,
+  which covers the whole history. The table only shows the last 12 weeks.
+  `test_the_weeks_used_may_reach_before_the_recent_period_and_then_have_years`
+  builds that case: used weeks 32, 33 and 34 of a 20-week history, none of them
+  in the 12 shown columns. The sentence then explains a «brukt» tag that is on
+  no column, which breaks the stated rule that a sentence names only the tags
+  the table shows. Nothing tests the tag sentence for that case, and the
+  catalogue does not say what to write.
+  - **Added Message Catalogue rows are malformed or in the wrong table.** In
+  EXPERIENCE.md the new «Status tag sentence», «Weeks left out» and «No sales
+  weeks» rows have four cells (name, where, text, source). They sit in the
+  component table next to rows with three cells. The table renders ragged, or
+  the source cell is dropped. These rows look like they belong in the Message
+  Catalogue table, which has the Source column. They are also sorted away from
+  the other catalogue texts that FR-25 checks.
+  - **Placeholder left in the change log.** The new log row for 2026-11-28 ends
+  with «hash følger (Story 2.9)». The earlier rows carry a real commit hash. The
+  placeholder is easy to forget once the story is merged.
+  - **Catalogue wording and code disagree on when «[3] uker brukt i
+  beregningen.» appears.** The catalogue says «With unusual weeks excluded and
+  at least one left out», which a stockout week alone could satisfy. The code
+  (`_calculation`, using `_excluded_unusual`) shows the count only when an
+  unusual week is actually excluded.
+  `test_stockout_weeks_are_listed_with_their_reason` asserts `used_count is
+  None` for a stockout-only case. The catalogue should say which reading is
+  intended.
+  - **The «Holdt utenfor» list is unbounded.** `_left_out` lists every stockout
+  and excluded unusual week of the whole history, up to 104 weeks, each with a
+  year once any week is older than 12 weeks. No cap, wrapping rule or «og N
+  flere» form is specified, and no test covers a long list. A product with many
+  stockouts gives one very long, year-heavy paragraph, which is hard to read on
+  a narrow screen (NFR-6). The «year on every week» rule makes this worse.
+  - **`display.week_list([])` returns «uke ».** The `len(items) < 2` branch with
+  `''.join(items)` silently produces a dangling word for an empty list. It also
+  hides the one-item and zero-item cases behind the same code path. It should
+  raise or be guarded, and the parametrized tests have no empty-list case.
+  - **The `used_weeks` docstring contradicts its code.** It says «None without a
+  forecast», but it returns `()`. `worksheet_texts` also computes `shown`
+  before the early return for an empty history, so the value is unused on that
+  path.
+  - **The wide sales table has no sticky first column.** The table has 13
+  columns and scrolls sideways inside `.tablewrap`. The row headers «Uke»,
+  «Solgt» and «Status» are not `position: sticky`. On a phone the user scrolls
+  away from the labels and sees only bare numbers and tags. NFR-6 is met only in
+  the sense that the page does not scroll.
+  - **Table and scroll-frame accessibility is thin.** The tables have no
+  `<caption>`, so only the surrounding region has a name. The levels frame uses
+  a literal `aria-label`, while the others use `aria-labelledby`. Each scroll
+  frame adds a tab stop (the existing test now expects two extra `div` tab
+  stops), and nothing says the frames are scrollable. No test checks that focus
+  on a frame is visible, and `.tablewrap` has no `:focus-visible` rule in the
+  CSS diff.
+  - **Colour and contrast of the new tags are not verified.** `.tag-shift` is
+  ink on canvas with a transparent border, so it is barely a tag.
+  `.tag-unusual-out` has a 1px dashed amber border on a surface background.
+  `.tag-used` is turquoise on turquoise-tint, and `.tag-unusual` is amber on
+  amber-tint. No contrast or non-text 3:1 check (WCAG 1.4.11) is recorded,
+  although the header focus-ring entry in the same file shows this project has
+  hit that problem before.
+  - **Weak or brittle tests.**
+    - `test_the_worksheet_of_the_mockups_product_equals_the_mockup` extracts the
+  mockup with regex and `split` on exact HTML strings, so any whitespace or
+  class change in the mockup breaks it.
+    - The docstring of `test_stockout_weeks_are_listed_with_their_reason` quotes
+  «uke 38 og 39», but the assertion expects «uke 42 og 43».
+    - `test_the_result_holds_the_sales_and_the_stockout_weeks_…` is duplicated
+  in `tests/test_forecast.py` and `tests/test_worksheet.py`.
+    - A positive hollow-triangle check matches a raw SVG attribute string
+  (`fill="none" stroke="currentColor" stroke-width="1.5"/></svg>uvanlig,
+  holdt`), so it fails on any markup tweak.
+  - **Missing coverage.**
+    - A week that is both a stockout and unusual or level-shift, and the tag
+  order for it.
+    - Exponential smoothing with unusual weeks excluded: does the levels table
+  skip them, and does the count appear?
+    - A narrow-viewport or overflow check for the calculation lines, so the
+  «wraps between terms, never inside a number» claim is not tested.
+    - An ISO year-boundary history longer than 12 weeks for the sales header
+  row.
+    - `week_at_position` assumes contiguous weeks with no gaps, and the
+  worksheet never tests that assumption.
+  - **The review input is incomplete.**
+  `_bmad-output/implementation-artifacts/sprint-status.yaml` and the new spec
+  file `spec-2-9-…md` are changed or untracked in git status but absent from the
+  diff. Their content, including acceptance criteria and any recorded
+  decisions, could not be checked against the implementation.
+
+⏺ Blind Hunter har levert rapporten sin (12 funn). Jeg venter på de tre andre
+  granskerne før jeg trierer noe.
+
+✻ Brewed for 1s · done 11:14 AM
+
+⏺ Agent "Blind Hunter review" finished · 1m 5s
+
+› Message from general-purpose
+  I read the diff (`<scratchpad>/
+  story-2-9.diff`) and checked it
+  against the repo. I changed nothing and ran no tests. I could not run the
+  spreadsheet reader because `openpyxl` isn't installed in my shell, so I did
+  not compute the history length of each case.
+
+  Most of the story is well pinned. The clean areas:
+  - The `ProductResult.sales` and `stockout_weeks` fields.
+  - The FR-35 formula lines.
+  - The "Holdt utenfor" list and its year rule.
+  - The tag kinds, words and shapes.
+  - The order line, including the E23 case.
+  - The scenario columns.
+  - The page-level mockup equality, the no-sales page and the per-company stock
+  check.
+
+  I found three gaps. They are all in code that tests exercise without observing
+  the changed output.
+
+  ### The tag sentence's filter to the 12 shown weeks is not pinned
+
+  - **Changed surface:** `src/explanation/worksheet.py`, `_tag_sentence` (diff
+  lines 933-972). It builds `stockouts`, `unusual` and `shifts` from `shown`,
+  the last 12 weeks, not from the whole history. The EXPERIENCE.md row "Status
+  tag sentence" says it "Explains the tags that are on the table".
+  - **Impacted consumer or site:** the `<p class="fine">{{ sheet.tag_sentence
+  }}</p>` line below the sales table in
+  `src/web/templates/web/_worksheet.html:1158` of the diff, on the product page.
+  - **Existing test evidence (Regression gap):** none of the tests I read cover
+  this.
+    - `tests/test_worksheet.py`,
+  `test_the_sentence_below_the_table_follows_the_mockup`, uses a 12-week
+  history. Every flagged week is inside `shown`.
+    - `test_the_sentence_has_a_variant_for_each_method_setting_and_number` uses
+  E2, E11 a, E8 (excluded) and E9 (included). I did not confirm their lengths,
+  but E7, for example, has 6 weeks. It asserts with `endswith` or equality, so
+  it would only notice a changed sentence if one of these cases had a flagged
+  week before the last 12.
+    - `test_a_sentence_names_only_the_tags_that_the_table_shows` is named for
+  this behaviour but uses `[10] * 5, stockouts=()`. There is nothing outside
+  `shown` to filter, so it passes with or without the filter.
+    - The only test with a flagged week outside `shown` is
+  `test_the_list_carries_the_year_on_every_week_...` (`sheet_of_units([10]*30,
+  stockouts=(3, 29))`). It asserts `calculation.left_out` only, not
+  `tag_sentence`.
+    - The page test for product 10012 asserts the sentence equals the mockup's.
+  The mockup page has no flagged week before the last 12 (it also asserts "Holdt
+  utenfor: uke 38 og 39 (utsolgt)." with no year).
+    - I grepped `tag_sentence` across `tests/` and `src/`. It is only asserted
+  in the cases above.
+  - **Missing verification:** a history longer than 12 weeks with a stockout,
+  unusual or level-shift week before the shown range. The test should assert
+  that the sentence does not mention that week.
+  - **Demonstration:** replace `shown` with `range(1, history_length + 1)` in
+  the three list comprehensions. For a product with a stockout at position 3 and
+  a 30-week history, the sentence would start with "Uke 18 er en utsolgt uke …"
+  about a week with no tag in the table, and the week would carry no year.
+  Every test above still passes.
+  - **Consequence:** the sentence below the table would explain tags the user
+  cannot see, in a form that breaks the UX-DR42 year rule.
+  - **Disposition:** `patch`. Add to `tests/test_worksheet.py` a case like
+  `sheet_of_units([10]*30, stockouts=(3, 29))` and assert that `tag_sentence`
+  mentions only "Uke 44", not week 18.
+
+  ### The exponential-smoothing levels table is untested with a history that
+  reaches before the recent period, and its scroll frame is not checked on the
+  page
+
+  - **Changed surface:** the `with_year` computation and the `LevelRow` week
+  labels in `_formula` (diff lines 1022-1032), and the second frame in
+  `_worksheet.html:1165` (`class="tablewrap tablewrap-levels" role="region"
+  aria-label="Beregningsukene med salg og nivå" tabindex="0"`).
+  - **Impacted consumer or site:** the levels table on the product page of a
+  company with the method set to exponential smoothing.
+  - **Existing test evidence (Regression gap):**
+    - The levels tests use only short histories:
+  `test_exponential_smoothing_shows_its_last_update...` (E2),
+  `..._skips_the_stockout_weeks_in_its_table` (E17) and the page test
+  `test_exponential_smoothing_shows_its_update_note_and_levels_on_the_page`. I
+  did not confirm those lengths, but they assert only the `.level` and `.units`
+  columns, or the "Solgt" and "Nivå" cells. None asserts the week column of
+  `LevelRow` or `th scope="row"`.
+    - The year-in-list tests
+  (`..._the_weeks_used_may_reach_before_the_recent_period_and_then_have_years`
+  and the others) use the moving-average default. They go through `_formula`'s
+  moving-average branch, not the levels branch.
+    - `test_every_table_of_the_worksheet_scrolls_in_its_own_named_frame` runs
+  only on the moving-average product 10012. It asserts `len(frames) ==
+  count("<table") == 2`, so the levels frame is never rendered in it.
+    - The skip-link test's expected focusables (`main`, `div`, `div`) are also
+  for the moving-average page. Its comment says the page has no levels table.
+  - **Missing verification:**
+    - (a) A smoothing case with more than 12 weeks and a stockout in the recent
+  weeks, asserting the week labels in `levels`.
+    - (b) The page-level `role="region"`, `tabindex="0"` and `aria-label` on the
+  levels frame.
+  - **Demonstration:**
+    - Change `with_year = _reaches_before_recent(result, used)` to `False` in
+  the smoothing branch. Level rows reaching before the last 12 weeks would then
+  show "32" and "33" instead of "32/2026" and "33/2026", and nothing fails.
+    - Delete `tabindex="0"` or the `aria-label` from the levels div. It scrolls
+  (`max-height: 18rem`) but is no longer reachable by keyboard (NFR-11), and no
+  test fails.
+  - **Consequence:** ambiguous week labels in the levels table, or a scroll
+  frame that keyboard users cannot reach, could ship undetected.
+  - **Disposition:** `patch`. Extend
+  `test_exponential_smoothing_shows_its_update_note_and_levels_on_the_page` to
+  assert the frame attributes on the `tablewrap-levels` div. Add a unit test in
+  `tests/test_worksheet.py` with `method=exponential_smoothing`, a history of
+  about 20 weeks and stockouts, asserting the `LevelRow.week` values.
+
+  ### The weeks-used list reaching before the recent period is only tested in
+  the moving-average branch
+
+  I folded this into the second finding above because it is the same code path.
+  It needs no separate patch.
+
+  ## Other findings
+
+  - `used_weeks`'s docstring (`src/explanation/worksheet.py`, diff line 906-907)
+  says it returns "None without a forecast". The code returns `()`. The
+  callers' `if used:` checks work with either.
+  - The page-test docstring for
+  `test_every_table_of_the_worksheet_scrolls_in_its_own_named_frame` claims it
+  covers "every table", but it runs only on the moving-average page (see above).
+  - I did not review the CSS, such as the `.tag-unusual-out` dashed border. It
+  is static presentation with no deterministic output.
+⏺ Verification Gap har også levert. Jeg venter fortsatt på Edge Case Hunter og
+  Acceptance Auditor før triagen.
+
+✻ Cooked for 1s · done 11:14 AM
+
+⏺ Agent "Verification Gap review" finished · 1m 10s
+
+› Message from general-purpose
+  ## Acceptance audit of Story 2.9 (diff vs spec, epics.md Story 2.9,
+  epic-2-context)
+
+  Nothing here was run. I read the diff and the spec and checked a few source
+  files. No file was changed.
+
+  Most of the spec and the Story 2.9 ACs are met:
+  - the panel and its four h3 sections;
+  - the E1, E2, E4, E6, E21 and E23 lines;
+  - the left-out lists and the year rule;
+  - the five tags, including the split between «uvanlig» and «uvanlig, holdt
+  utenfor»;
+  - the scenario table and the «Merknad: …» note;
+  - the no-forecast and no-sales cases;
+  - the scroll frames with `role="region"`, `tabindex` and a label;
+  - the CSS tokens, which all exist in `app.css`.
+
+  I found no clear violation of an AC. The findings below are deviations and
+  gaps.
+
+  - **«startnivå» line from the I/O matrix is not implemented.**
+    - Violates: the matrix row "One calculation week | ES, one week left |
+  «startnivå» line instead of an update".
+    - Evidence: `_formula` always builds the update with `result.levels[-2]`.
+  The word «startnivå» appears nowhere in the diff. A comment in `_formula` says
+  the case can't occur, because R-10 never checks the first three valid weeks.
+    - I think the argument holds. `classify_weeks` only marks a week unusual
+  after three earlier valid weeks, so a forecast always has at least 3
+  calculation weeks. The row is therefore dead code.
+    - But the spec was never renegotiated and no test covers the row. Either
+  record in the spec change log that the row is unreachable, or add a defensive
+  branch so an `IndexError` can't reach the page.
+
+  - **«Brukt» sentence and count use `len(used)`, not the number of weeks tagged
+  «brukt».**
+    - Violates: decision 2, "N is the number of weeks tagged «brukt»", and the
+  AC that the sentence explains the tags on the table.
+    - Evidence: `_tag_sentence` writes «Brukt» viser de {len(used)} ukene …
+  whenever `used` is non-empty. It ignores `shown`, which is the last 12 weeks.
+    -
+  `test_the_weeks_used_may_reach_before_the_recent_period_and_then_have_years`
+  builds that case: the weeks used lie before the shown window. The sentence
+  then names a «brukt» tag that is not on the table, and `used_count` can differ
+  from the tagged count.
+    - The sentence is also kept when none of the used weeks is shown.
+
+  - **Tag sentence claims weeks are "tatt med" in a calculation that does not
+  exist.**
+    - Violates: decision 2 and the AC "a product without a forecast shows only
+  the sales table". The no-forecast case is meant to carry no calculation
+  claims.
+    - Evidence: `worksheet_texts` calls `_tag_sentence` also when `base_forecast
+  is None`. `unusual_weeks` and `level_shift_weeks` can be non-empty without a
+  forecast, for example a window longer than the calculation weeks.
+    - The sentence then reads «… er tatt med, fordi innstillingen er «tas med»»
+  or «… er alltid tatt med i beregningen».
+    - The tests only cover 10040, E11 a and E11 b, none of which has an unusual
+  week.
+
+  - **Tests the spec says to extend are not changed.**
+    - Violates: the Code Map and Tasks entry for `tests/test_isolation.py` and
+  `tests/test_core_imports.py` ("extended").
+    - Evidence: neither file is in `git status` or the diff.
+    - The two-account test sits in `tests/test_product_screen.py`
+  (`test_the_worksheet_shows_each_companys_own_stock_for_a_shared_number`)
+  instead. `test_core_imports.py` may already scan the whole `explanation/`
+  package, but nothing in the diff shows that.
+
+  - **Required documents are missing from the diff.**
+    - Violates: the last Execution task and the Code Map "Documents" line
+  (DR-7): `docs/statustabell.md`, `qa-logg.md`, `ki-styringslogg.md`,
+  `arbeidslogg.md`, `deferred-work.md`, `.logs/mounia-03/issues.md`.
+    - Evidence: none of them is in `git status`. `sprint-status.yaml` is
+  modified but not in the diff, so I could not check that it was set to
+  `review`. The spec front matter still says `status: 'in-progress'`.
+    - This may just be work still to do.
+
+  - **EXPERIENCE.md change-log row has a placeholder in the "Commit" column.**
+    - Violates: the user's decision 2, which asks for a change-log row alongside
+  the catalogue rows.
+    - Evidence: the new row ends with `hash følger (Story 2.9)`. This is minor
+  and expected until the commit exists.
+    - The earlier rows have real hashes.
+
+  - **AC mutation list: "the margin on week 2" cannot make any test fail.**
+    - Violates: the AC "each [mutation] fails at least one test".
+    - Evidence: without seasonal adjustment, `week_forecasts` repeats week 1
+  three times. `_order` reads `week_forecasts[0]`, so a mutant using week 2
+  gives identical output.
+    - It is an equivalent mutant. The spec AC should not demand a test for it,
+  or it should be noted as unfalsifiable until Epic 5.
+
+  Relevant files:
+  - `<project-root>/src/explanation/worksheet.py` (the new
+  file in the diff; it holds `_tag_sentence`, `_formula` and `worksheet_texts`)
+  - `<project-root>/_bmad-output/implementation-artifacts/spe
+  c-2-9-show-how-the-forecast-and-the-order-quantity-were-calculated.md`
+
+⏺ Acceptance Auditor har levert. Edge Case Hunter gjenstår, så jeg venter på
+  den.
+
+✻ Cogitated for 1s · done 11:14 AM
+
+⏺ Agent "Acceptance Auditor review" finished · 1m 32s
+
+› Message from general-purpose
+  [
+  {"location":"src/explanation/worksheet.py:187-195","trigger_condition":"Weeks
+  used lie before the shown 12 weeks (stockouts in recent weeks), so no «brukt»
+  tag is on the table","guard_snippet":"shown_used = [p for p in used if p in
+  shown]; if shown_used: parts.append(...len(shown_used)...) (or name the weeks
+  used)","potential_consequence":"Sentence says «Brukt» viser de 3 ukene while
+  the table shows fewer or no «brukt» tags."},
+  {"location":"src/explanation/worksheet.py:375-376","trigger_condition":"Produc
+  t has sales weeks but no forecast (E11 a/b): tag sentence still says unusual
+  weeks are «tatt med» in the calculation","guard_snippet":"if
+  result.base_forecast is None: build the sentence without calculation wording,
+  or return tag_sentence None for the unusual and stockout
+  parts","potential_consequence":"Page claims weeks are taken into or held out
+  of a calculation that does not exist."},
+  {"location":"src/explanation/worksheet.py:269","trigger_condition":"Exponentia
+  l smoothing with only one calculation week left; result.levels has one
+  entry","guard_snippet":"prev = result.levels[-2] if len(result.levels) > 1
+  else None; write the «startnivå» line when prev is
+  None","potential_consequence":"IndexError gives a 500 page on the product
+  screen if R-10 ever allows one week."},
+  {"location":"src/explanation/worksheet.py:293","trigger_condition":"Count of
+  weeks used equals 1 (spec asks for «1 uke»)","guard_snippet":"n = len(used);
+  text = f\"{n} {'uke' if n == 1 else 'uker'} brukt i
+  beregningen.\"","potential_consequence":"Unreachable today, but the singular
+  wording the spec asks for is missing if the rules change."},
+  {"location":"src/explanation/worksheet.py:1-385 (week_at_position
+  calls)","trigger_condition":"Product has weeks but company latest_week is None
+  or a position falls before the calendar start","guard_snippet":"catch
+  ValueError/TypeError in worksheet_texts and render the sales table without
+  week labels, or assert latest_week is set when history_length >
+  0","potential_consequence":"week_at_position raises and the whole product page
+  returns 500 instead of degrading."},
+  {"location":"src/explanation/worksheet.py:904-912","trigger_condition":"Docstr
+  ing says used_weeks returns None without a forecast","guard_snippet":"Code
+  returns () when base_forecast is None; fix the docstring to say «an empty
+  tuple»","potential_consequence":"A caller who believes the docstring tests `is
+  None` and treats () as a forecast."},
+  {"location":"src/forecasting/display.py:63-72
+  (week_list)","trigger_condition":"week_list called with an empty list of
+  weeks","guard_snippet":"if not items: return ''  # or raise
+  ValueError","potential_consequence":"Returns the dangling text «uke » with no
+  number."},
+  {"location":"src/web/templates/web/_worksheet.html:1145-1148","trigger_conditi
+  on":"Product with no sales weeks: heading «Salgshistorikk, alle ukene» is
+  shown above «Produktet har ingen salgsuker.»","guard_snippet":"{% if not
+  sheet.no_sales %}<h3 id=\"s-sales\">...</h3>{% endif %} or make the sentence
+  carry the heading","potential_consequence":"Heading promises a table of all
+  weeks, then the panel says there are none."},
+  {"location":"src/web/static/web/app.css:191-201
+  (.calc)","trigger_condition":"Spec claim: «calculation lines wrap between
+  terms and never inside a number»; «lager 5» and «uke 43» use a normal
+  space","guard_snippet":"Code only sets overflow-wrap/word-break to normal; the
+  number and its label are separated by a plain space, so a wrap can fall
+  between «lager» and «5»","potential_consequence":"At 320 px a label can be
+  split from its number; the tests do not check
+  this.","kind":"claim","confidence":"low"},
+  {"location":"_bmad-output/implementation-artifacts/spec-2-9-...md Tasks
+  (tests/test_isolation.py,
+  tests/test_core_imports.py)","trigger_condition":"Spec claim:
+  test_isolation.py and test_core_imports.py are extended for the
+  worksheet","guard_snippet":"Neither file is in the diff, so no new isolation
+  or import-boundary test covers worksheet.py or the new product-page
+  worksheet","potential_consequence":"Company filter and the
+  no-explanation-import rule for the new module are
+  untested.","kind":"claim","confidence":"medium"},
+  {"location":"_bmad-output/implementation-artifacts/spec-2-9-...md I/O matrix
+  «One calculation week»","trigger_condition":"Spec claim: ES with one
+  calculation week left gives a «startnivå» line instead of an
+  update","guard_snippet":"_formula always writes the update line with
+  result.levels[-2]; no startnivå branch exists","potential_consequence":"A
+  reader of the matrix believes the case is handled; it is only unreachable by
+  R-10 and a code comment.","kind":"claim","confidence":"medium"},
+  {"location":"_bmad-output/implementation-artifacts/spec-2-9-...md Tasks
+  (documents) and EXPERIENCE.md change log","trigger_condition":"Spec claim:
+  documents and the catalogue change-log row are
+  done","guard_snippet":"Change-log row ends with the placeholder «hash følger
+  (Story 2.9)»; statustabell, qa-logg, ki-styringslogg, arbeidslogg,
+  deferred-work are not in the diff","potential_consequence":"The change-log row
+  points to no commit until it is filled
+  in.","kind":"claim","confidence":"low"},
+  {"location":"src/explanation/worksheet.py:183-195 (_tag_sentence) vs
+  EXPERIENCE.md row «Status tag sentence»","trigger_condition":"Claim: the
+  sentence explains the tags that are on the table","guard_snippet":"The «Brukt»
+  part is built from all `used` weeks, not only those in `shown`; the other
+  parts filter on `shown`","potential_consequence":"The catalogue claim holds
+  for stockout, unusual and level-shift parts but not for
+  «Brukt».","kind":"claim","confidence":"high"}
+  ]
+
+⏺ Alle fire granskere har levert. Først kontrollerer jeg at de holdt seg
+  skrivebeskyttet, og verifiserer funnene som må sjekkes mot kode og
+  tabellstruktur.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Agent "Edge Case Hunter review" finished · 1m 47s
+
+⏺ Reviewerne lot arbeidstreet være urørt, og kontrastene i merkene er allerede
+  godkjent. Jeg retter nå de funnene jeg har bekreftet er reelle. · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Nå testene som lukker hullene granskerne pekte på, og katalograderingen.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå katalogen: de tre nye radene hører hjemme i Message Catalogue-tabellen
+  (fire kolonner), ikke i komponenttabellen (tre kolonner).
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Fullstendig suite er grønn (1191). Jeg kjører mutasjoner mot de nye patchene
+  også.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Ni av ni patch-mutasjoner fanget. Nå dokumentasjonen: jeg ser først på
+  formatet i statustabellen.
+
+  Ran 5 shell commands (ctrl+o to expand)
+
+⏺ Før QA-loggen: akseptansekriteriet krever sjekk av bredder ned til 320 px. Jeg
+  måler det i hodeløs Chrome, som i story 2.8, så brukerens Safari-sjekk kan
+  starte på et målt grunnlag.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Målingene er ferdige: ingen sidelengs rulling på noen side ved noen bredde, og
+  ingen element utenfor rullerammene stikker ut. Nå leser jeg formatene for
+  KI-styringsloggen og arbeidsloggen.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Nå fører jeg spesifikasjonen: implementasjonsnotater, endringslogg og
+  triagelogg for alle 37 funn.
+
+  Ran 5 shell commands (ctrl+o to expand)
+
+⏺ Testtallet "92 nye" bygger på 1099 fra loggen for story 2.8. Jeg kontrollerer
+  baseline direkte mot 9aec086 i stedet for å stole på loggen.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Story 2.9 er bygd og testet, og BMAD Code Review er gjennomført. Jeg har ikke
+  committet eller pushet noe, og jeg har ikke startet de manuelle testene. Én
+  ting trenger svar fra deg (AA-1, se «Valg» under).
+
+  Hva som er gjort
+
+  - Status: Spesifikasjonen er in-review, og story 2.9 står som review i
+    sprintstatus. Alt ligger ucommittet på grenen
+    story/2-9-show-how-the-forecast-and-the-order-quantity-were-calculated.
+  - Kode: Panelet «Slik er tallene regnet ut» står under beslutnings- og
+    tillitspanelet og har fire deler:
+    - salgshistorikk med statusmerker
+    - prognoseutregning (glidende gjennomsnitt eller eksponentiell glatting,
+      uker brukt, uker holdt utenfor)
+    - scenarioer
+    - bestillingslinjen (E4, E6, E21)
+      Tekstene kommer fra den nye explanation/worksheet.py, tallene fra
+      display.py, og ProductResult har fått sales og stockout_weeks.
+  - Statusmerkene: «uvanlig» (tatt med i beregningen) er en tett amber trekant
+    på amber bakgrunn. «uvanlig, holdt utenfor» er en hul trekant med stiplet
+    kant og egne ord, så de skilles ikke bare på farge. Siden for Strøsand 25 kg
+    er lik mockupen, celle for celle.
+  - Tester: 1191 består og 1 hoppes over (Docker), mot 1099 og 1 på main (+92).
+    ruff check, ruff format --check og makemigrations --check er rene.
+  - Mutasjoner: 21 før reviewen og 7 etter rettingene, alle fanget. Filene ble
+    gjenopprettet og sammenlignet med hash.
+  - Hodeløs Chrome 120: 36 målinger (seks sider, seks bredder ned til 320 px).
+    Ingen side ruller sidelengs, og tabellene ruller i egne rammer. Dette er
+    ikke Safari og ikke en telefon.
+  - Dokumentasjon: spesifikasjonen, statustabellen, QA-loggen, KI-styringsloggen
+    (tilfelle 46), arbeidsloggen, meldingskatalogen i EXPERIENCE.md og
+    sprintstatus. Ingenting ble utsatt, så deferred-work.md er uendret.
+
+  Code Review
+
+  Granskerne var Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance
+  Auditor. De ga 37 funn i 22 grupper. De holdt seg skrivebeskyttet:
+  fingeravtrykket av arbeidstreet var identisk før og etter.
+
+  - 8 rettet. Det viktigste var at setningen under salgstabellen forklarte et
+    «brukt»-merke som ikke fantes i tabellen, og påsto en utregning for
+    produkter uten prognose. Tre nye katalograder sto i feil tabell, og tabellen
+    med nivåer manglet tester.
+  - 1 lagt fram for deg (AA-1).
+  - 13 avvist, med begrunnelse i triageloggen. Blant dem er kontrasten i
+    merkene, som jeg regnet ut til 5,19–14,33 (over 4,5).
+  - Jeg skrev feil sti til diffen i prompten til Verification Gap (manglende
+    bindestrek). Jeg rettet det med en melding før agenten rapporterte, og det
+    står i loggene.
+
+  Valg
+
+  AA-1. Matriseraden «One calculation week» («startnivå»-linje) og entallet «1
+  uke» har ingen kode. R-10 sjekker aldri de tre første gyldige ukene, så en
+  prognose har alltid minst tre beregningsuker, og glidende gjennomsnitt minst
+  to. Tilfellene kan ikke oppstå.
+  - A (nåværende kode): ingen død kode. Avviket er ført i spesifikasjonen.
+  - B: en forsvarsgren som testes med et ProductResult laget for hånd.
+
+  Jeg anbefaler A, siden grenen ikke kan nås og ikke kan testes uten kunstig
+  input.
+
+  Gjenstår
+
+  - Dine manuelle tester: Safari ved 1366 × 768, 820 × 1180, 390 × 844 og 320
+    px, og iPhone 13, for Strøsand 25 kg og testproduktene i begge bedrifter.
+    Utregningslinjene sammenlignes for hånd med regnearket. Melder du resultatet
+    og versjonene i chatten, fører jeg dem i QA-loggen.
+  - Kodehash: Før commit står den som «kommer etter commiten» i QA-loggen og
+    KI-styringsloggen, og som «hash følger» i endringsloggen i EXPERIENCE.md.
+    Jeg fyller den inn etter commiten.
+  - Sesjonsloggen (.logs/) skriver jeg ved avslutningen. Skillen committer
+    loggfilen lokalt, så jeg kjører den først når du sier fra.
+  - Commit og SSH-push: venter på godkjenning. Ingen workflow-filer er endret.
+
+✻ Crunched for 27m 52s · done 11:25 AM
+
+※ recap: Vi bygger story 2.9, arbeidsarket som viser hvordan prognose og bestilling er regnet ut. Det er ferdig implementert og gransket, men ucommittet. Neste steg er at du svarer på AA-1 (alternativ A anbefalt) og kjører de manuelle testene i Safari og på iPhone.
+
+❯ Jeg velger alternativ A for AA-1. Dokumenter beslutningen og begrunnelsen i   
+  spesifikasjonen, BMAD-triageloggen og relevant KI-dokumentasjon.Gjør klar     
+  appen for manuell testing i Safari med eksisterende testdata, og oppgi        
+  adressen. Ikke gjør de manuelle testene på mine vegne. Vent med commit, push  
+  og sesjonslogg til testene er gjennomført og dokumentert.                     
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Utviklingsdatabasen er intakt (2 bedrifter, 62 produkter, 5 016 uker,
+  standardinnstillinger). Jeg starter serveren i bakgrunnen.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Serveren svarer. Innloggingssiden ligger på /. Nå dokumenterer jeg
+  beslutningen om AA-1 i spesifikasjonen og loggene, så jeg finner først alle
+  steder som omtaler den som åpen.
+  Searched for 1 pattern, ran 2 shell commands (ctrl+o to expand)
+
+⏺ Beslutningen om AA-1 er dokumentert, og appen kjører klar for Safari-testen.
+  Jeg har ikke åpnet Safari, ikke gjort noen tester og ikke committet, pushet
+  eller kjørt sesjonsloggen.
+
+  Beslutningen: AA-1, alternativ A
+
+  Beslutningen og begrunnelsen står i:
+  - Spesifikasjonen: Spec Change Log, triageloggen (rad AA-1 og tellingen «1
+    avgjort av brukeren») og implementasjonsnotatene.
+  - Frosne delen av spesifikasjonen: Matriseraden «One calculation week» og
+    entallet «(«1 uke»)» i beslutning 2 er fjernet, med din beslutning som
+    grunn.
+  - QA-loggen, KI-styringsloggen (tilfelle 46) og arbeidsloggen.
+
+  Begrunnelsen er at tilfellene ikke kan oppstå under R-10. En forsvarsgren
+  kunne bare testes med et ProductResult laget for hånd. Ingen kode er endret.
+  Hele testpakken er fortsatt grønn (1191 bestått, 1 hoppet over).
+
+  Appen er klar
+
+  - Adresse: http://127.0.0.1:8000/. Innloggingen ligger på forsiden.
+  - Server: Utviklingsserveren kjører i bakgrunnen og svarer (200). Databasen er
+    den vanlige prognose med de eksisterende testdataene: 2 bedrifter, 62
+    produkter, 5 016 uker og standardinnstillinger. Jeg leste den bare, og
+    ingenting er endret.
+
+  ┌───────────────┬─────────────┬───────────────┐
+  │    Bedrift    │ Kundenummer │    Passord    │
+  ├───────────────┼─────────────┼───────────────┤
+  │ Testbedrift A │ 1001        │ testbedrift-a │
+  ├───────────────┼─────────────┼───────────────┤
+  │ Testbedrift B │ 1002        │ testbedrift-b │
+  └───────────────┴─────────────┴───────────────┘
+
+  Passordene er de offentlige testpassordene fra README.
+
+  Forslag til sider å åpne
+
+  Disse er sidene jeg målte i Chrome. Skriv /produkter/<nr>/ etter adressen.
+
+  ┌────────────────┬────────────────────────────────────────────────────────┐
+  │    Produkt     │                     Hva det viser                      │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ A: 10012       │ Mockup-produktet: uke 38 og 39 utsolgt, uke 42         │
+  │ Strøsand 25 kg │ uvanlig, uke 43 til 45 brukt, bestillingslinjen som    │
+  │                │ ender på 11                                            │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ A: 10025       │ E8: uvanlige uker som er tatt med                      │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ A: 10040       │ Uten prognose: bare salgstabellen                      │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ B: 20005       │ E15: nytt nivå og en uvanlig uke                       │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ B: 20002       │ E7: to utsolgte uker                                   │
+  └────────────────┴────────────────────────────────────────────────────────┘
+
+  Begrensninger og avklaringer
+
+  - Innstillinger: Appen kan ikke endre dem før Epic 3. I Safari ser du derfor
+    bare glidende gjennomsnitt med uvanlige uker «tatt med». Eksponentiell
+    glatting og «uvanlig, holdt utenfor» er bare testet automatisk og i hodeløs
+    Chrome.
+  - iPhone 13: Den trenger at serveren startes om med PROGNOSE_LAN_HOST og
+    0.0.0.0:8000 (README, avsnittet om telefon). Si fra når du vil teste på
+    telefonen, så starter jeg serveren om slik. Da stopper jeg den nåværende
+    først.
+  - Når du er ferdig: Si fra, så stopper jeg serveren.
+  - Sesjonslogger: Innlogging legger økter i utviklingsdatabasen. Det er
+    ufarlig, og --reset ville nullstille dem.
+
+  Meld resultatene, med Safari-, macOS- og iOS-versjon, i chatten, så fører jeg
+  dem i QA-loggen. Etter det venter jeg på godkjenning før kodehashen føres inn,
+  sesjonsloggen skrives og commit og SSH-push gjøres.
+
+✻ Brewed for 1m 50s · done 11:37 AM
+
+※ recap: Vi bygger story 2.9, arbeidsarket «Slik er tallene regnet ut», som nå er ferdig implementert, testet og gjennomgått, og serveren kjører på 127.0.0.1:8000. Neste steg er at du gjør Safari-testene og melder resultatet, så fører jeg dem før commit.
+
+❯ Safari-testene av de fem planlagte produktene er gjennomført. Gjør nå         
+  serveren klar for testing på iPhone 13 via samme Wi-Fi, som i story 2.8.      
+  Stopp den gamle serveren først, finn Mac-ens gjeldende lokale IP-adresse og   
+  start med PROGNOSE_LAN_HOST og 0.0.0.0:8000. Oppgi adressen til telefonen.    
+  Ikke endre testdata, commit eller push.                                       
+
+⏺ Stop Task
+  ⎿  uv run python src/manage.py runserver --insecure 127.0.0.1:8000 ·
+     stopped
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Den gamle serveren er stoppet, og port 8000 er fri. Mac-en har <lan-ip>
+  (privat adresse, en0). Starter serveren med PROGNOSE_LAN_HOST.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Serveren er klar for iPhone 13.
+
+  Adresse til telefonen: http://<lan-ip>:8000/
+
+  - Wi-Fi: iPhone og Mac må være på samme Wi-Fi. Jeg kunne ikke lese
+    nettverksnavnet fra macOS, så det må du bekrefte selv.
+  - Serveren: Den lytter på 0.0.0.0:8000 med PROGNOSE_LAN_HOST=<lan-ip>.
+    Mac-en svarer 200 på LAN-adressen, på 127.0.0.1 og på stilarket via
+    LAN-adressen. Den gamle serveren på 127.0.0.1 er stoppet.
+  - Innlogging: Samme som før: 1001 / testbedrift-a (A) og 1002 / testbedrift-b
+    (B).
+  - Produkter: Samme forslag som for Safari: A 10012, 10025 og 10040, og B 20005
+    og 20002. Skriv /produkter/<nr>/ etter adressen.
+  - Hvis IP-adressen endres: Viser telefonen DisallowedHost eller ikke finner
+    siden, har Mac-ens adresse endret seg (README advarer om det). Si fra, så
+    starter jeg serveren om med den nye.
+  - Testdata, kode og git: Jeg har ikke endret testdata, committet eller pushet.
+    Arbeidstreet har fortsatt de samme 18 endrede og nye filene.
+
+  Safari-testene fører jeg først i QA-loggen når du har meldt resultatene. Send
+  dem sammen med iPhone-resultatene, med Safari-, macOS- og iOS-versjon, hvilke
+  produkter og sider du åpnet, og om noe avvek. Jeg har ikke skrevet noe om
+  Safari-testene ennå, fordi jeg ikke har fått resultatene.
+
+  Når iPhone-testen er ferdig, stopper jeg serveren, og da er kodehashen,
+  sesjonsloggen og commit og SSH-push neste steg. Commit og push venter på din
+  godkjenning.
+
+✻ Brewed for 25s · done 11:58 AM
+
+※ recap: Vi avslutter story 2.9 (arbeidsarket for utregningen på produktsiden), og serveren venter nå på iPhone-testen på http://<lan-ip>:8000/. Neste: du melder Safari- og iPhone-resultatene, så fører jeg dem og ber om godkjenning til commit.
+
+❯ De manuelle testene for story 2.9 er gjennomført.                             
+                                                                                
+  Safari på Mac:-&#x54;estbedrift A, produkt 10012 (Strøsand): kontrollert ved  
+  1366 × 768, 820 × 1180, 390 × 844 og 320 × 844. Salgshistorikk, statusmerker, 
+  formel (16 + 12 + 15) / 3 = 14,3, scenarioer og bestillingsmengde 11          
+  stemmer. Tabellens egen vannrette rulling er kontrollert.                     
+                                                                                
+  - Produkt 10025: uvanlige uker 43 og 44 brukes. Prognose 41,0 og              
+  bestillingsmengde 0, med korrekt forklaring om lageret.                       
+  - Produkt 10040: bare salgshistorikk for uke 44 og 45; ingen prognose.        
+  - Testbedrift B, produkt 20005: nytt nivå, uvanlig uke 43, prognose 70,3 og   
+  bestillingsmengde 78.                                                         
+  - Produkt 20002: utsolgte uker 41 og 42 holdes utenfor; prognose 22,0 og      
+  bestillingsmengde 25.                                                         
+                                                                                
+  Ekte iPhone 13, iOS 27.0.1:                                                   
+  Alle de fem produktene er åpnet og kontrollert med skjermbilder.              
+  Beregningene, forklaringene og statusmerkene stemmer med Safari. For 10012 er 
+  vannrett rulling i salgstabellen bekreftet uten at hele siden flytter seg.    
+  Ingen synlige layoutfeil i områdene som ble kontrollert.Hent Safari- og       
+  macOS-versjonene automatisk hvis mulig. Oppgi tydelig dersom de ikke kan      
+  verifiseres.Før alle faktiske testresultater og begrensninger nøyaktig i      
+  QA-loggen og relevant dokumentasjon. Ikke registrer automatiske tester som    
+  manuelle eller påstå full regnearksammenligning utover beregningene vi har    
+  kontrollert.Stopp utviklingsserveren. Kontroller dokumentasjon,               
+  testresultater, reviewfunn og personvern. Presenter samlet status og forslag  
+  til commits før videre arbeid.Ingen commit eller push uten min godkjenning.   
+  Ikke start neste story.                                                       
+
+⏺ Stop Task
+  ⎿  PROGNOSE_LAN_HOST=<lan-ip> uv run python src/manage.py runserver
+     --insecure 0.0.0.0:8000 · stopped
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Serveren kjører ikke (ingen lyttende prosess). Jeg leser macOS 15.6.1 (build
+  24G90) og Safari 18.6 (build 20621.3.11.11.3) fra den installerte appen, og
+  fører testresultatene slik du meldte dem. · summary
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Funn: den parametriserte testen leser bare E1, E2 og E20 fra regnearket (bare
+  de har «base_forecast_shown»). Jeg hadde skrevet mer enn det i testdocstringen
+  og i dokumentene, så jeg retter det.
+
+  Searched for 1 pattern, ran 4 shell commands (ctrl+o to expand)
+
+⏺ Alt er kontrollert og dokumentert. Serveren er stoppet, og jeg har ikke
+  committet, pushet, kjørt sesjonsloggen eller startet story 2.10.
+
+  Status
+
+  - Branch:
+    story/2-9-show-how-the-forecast-and-the-order-quantity-were-calculated, fra
+    9aec086. Arbeidstreet har 18 endrede og nye filer, og ingenting er
+    committet.
+  - Server: stoppet. Ingen prosess lytter på port 8000.
+  - Testdata: uendret (2 bedrifter, 62 produkter, 5 016 uker,
+    standardinnstillinger).
+  - Tester: 1191 består og 1 hoppes over (Docker), mot 1099 og 1 på main (+92).
+    ruff check, ruff format --check og makemigrations --check er rene.
+  - Mutasjoner: 21 før reviewen og 7 etter, alle fanget.
+  - Review: 37 funn i 22 grupper, bekreftet mot triageloggen (alle ID-er er
+    med): 8 rettet, 1 avgjort av deg (AA-1, alternativ A), 0 utsatt og 13
+    avvist.
+  - Personvern: Jeg skannet de tilføyde linjene og nye filer etter stier,
+    brukernavn, e-post, IP-adresser, økt-ID-er og nøkler, og fant ingenting.
+    Telefonens nettverksadresse står ikke i dokumentene.
+
+  Manuelle tester
+
+  Resultatene du meldte står nøyaktig slik i QA-loggen, arbeidsloggen og
+  spesifikasjonen. Safari-versjonen leste jeg fra systemet, men den kan ikke
+  bevises som den som kjørte testene:
+  - macOS: 15.6.1 (build 24G90).
+  - Safari: 18.6 (build 20621.3.11.11.3), lest fra den installerte appen. Du
+    oppga ikke versjonen.
+  - iOS: 27.0.1 er din opplysning, og jeg kan ikke kontrollere den.
+
+  De manglene som ikke er meldt, står som «Ikke bekreftet» i QA-loggen:
+  - hvilken Safari-visning som ble brukt
+  - bredder for de fire andre produktene enn 10012
+  - rullingen av scenariotabellen
+  - Tab-rekkefølge og fokusring på rullerammene
+  - skjermbildene, som jeg ikke har sett
+
+  Eksponentiell glatting og merket «uvanlig, holdt utenfor» kan ikke prøves i
+  appen før Epic 3.
+
+  Automatiske og manuelle kontroller er holdt fra hverandre. Jeg har ikke
+  påstått at hvert tall på hver side er sammenlignet med regnearket.
+
+  Retting funnet i sluttkontrollen
+
+  Testdocstringen og to dokumenter sa at den parametriserte testen leser E7–E10
+  og E15–E20 fra regnearket. Det stemte ikke. Bare E1, E2 og E20 har en vist
+  grunnprognose der, og de andre dekkes via de 11 regeltestproduktene.
+  Docstringen, statustabellen og QA-loggen er rettet, og testene er uendret.
+
+  Forslag til commits
+
+  Samme rekkefølge som story 2.8, med meldinger på norsk:
+
+  1. Bygg story 2.9: arbeidsarket «Slik er tallene regnet ut» — src/ (display,
+     forecast, explanation/worksheet.py, view, mal og stilark), tests/ og
+     meldingskatalogen i EXPERIENCE.md. Endringsloggen får «hash følger» i denne
+     commiten.
+  2. Før inn spesifikasjonen og dokumentene for story 2.9 — spesifikasjonen,
+     sprint-status.yaml (review), statustabellen, QA-loggen, KI-styringsloggen
+     og arbeidsloggen. Her fyller jeg inn hashen fra commit 1 («kommer etter
+     commiten» og «hash følger»).
+  3. Logg: story 2.9 arbeidsarket «Slik er tallene regnet ut» — sesjonsloggen og
+     issues.md. Skillen committer dette lokalt, så jeg kjører den først etter
+     din godkjenning.
+
+  Alle commits får trailerlinjen Co-Authored-By: Claude Sonnet 5.5 
+  <noreply@anthropic.com>.
+
+  Etterpå: Etter godkjenning pusher jeg grenen via SSH (git@github.com), selv om
+  ingen workflow-filer er endret. Deretter lager jeg en PR som nevner story
+  2.9, FR-ene, hva som er testet og alle 37 funn med beslutning og commit, og
+  fletter først når CI og Windows er grønne.
+
+  Skal jeg gjøre commit 1 og 2 nå, eller vil du endre noe i forslaget først?
+
+✻ Sautéed for 2m 43s · done 12:22 PM
+
+※ recap: Vi bygger story 2.9, arbeidsarket som viser hvordan prognose og bestilling er regnet ut. Alt er bygd, testet, gjennomgått og manuelt kontrollert, men ikke committet. Neste steg er din godkjenning av de foreslåtte commitene, så pusher jeg via SSH.
+
+❯ Jeg godkjenner de tre commitene for story 2.9 i foreslått rekkefølge.Før      
+  kodehashen fra commit 1 korrekt inn i dokumentasjonen i commit 2. Fullfør     
+  sesjonsloggen og issues.md i commit 3. Kontroller at alle 37 BMAD-funn,       
+  AA-1-beslutningen, de faktiske testresultatene og personvernkontrollen er     
+  dokumentert.Vis kort hash, innhold og git-status for hver commit.Ingen push   
+  eller PR før min neste godkjenning. Ikke start story 2.10.                    
+
+⏺ Jeg gjør commit 1 først: kode, tester og meldingskatalogen.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Commit 1 er 019114c. Nå fører jeg hashen inn i dokumentene som skal med i
+  commit 2.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Commit 2 er f4485d7. Nå sesjonsloggen og issues.md for commit 3. Jeg laster
+  skillen.
+
+⏺ Skill(sesjonslogg)
+  ⎿  Successfully loaded skill
+
+⏺ Skillen sier: ny fil for nytt arbeid, issues.md oppdateres først, og commit
+  bare loggfila og issues.md. Jeg leser den siste loggfila som mal, issues.md og
+  tidspunktet.
+
+  Ran 4 shell commands (ctrl+o to expand)
+
+⏺ De tre commitene er laget lokalt. Ingenting er pushet, og det finnes ingen PR.
+  Story 2.10 er ikke startet.
+
+  Commitene på 
+  story/2-9-show-how-the-forecast-and-the-order-quantity-were-calculated
+
+  Alle tre har forfatter Mounia-03 (noreply-adressen) og trailerlinjen
+  Co-Authored-By: Claude Sonnet 5.5.
+
+  #: 1
+  Hash: 019114c
+  Innhold: Bygg story 2.9: kode, tester og meldingskatalogen i EXPERIENCE.md
+  Filer: 12 filer, +1 625 / −13: explanation/worksheet.py, _worksheet.html,
+  display.py, forecast.py, views.py, product.html, app.css, fire testfiler og
+  EXPERIENCE.md
+  ────────────────────────────────────────
+  #: 2
+  Hash: f4485d7
+  Innhold: Spesifikasjonen og dokumentene, med hash 019114c ført inn
+  Filer: 7 filer, +264 / −11: spesifikasjonen, sprint-status.yaml (review),
+  EXPERIENCE.md (hash i endringsloggen), arbeidsloggen, KI-styringsloggen,
+  QA-loggen og statustabellen
+  ────────────────────────────────────────
+  #: 3
+  Hash: 8ffa2af
+  Innhold: Sesjonslogg og issues.md
+  Filer: 2 filer, +46 / −5
+
+  git status er ren etter hver commit, og grenen er 3 foran origin/main.
+
+  - Hash: 019114c står i QA-loggen (16 rader), KI-styringsloggen og
+    endringsloggen i EXPERIENCE.md. Ingen «hash følger» eller «kommer etter
+    commiten» gjenstår for story 2.9. Det kodehashen ikke dekker, er
+    PR-nummeret, som føres etter PR-en.
+  - issues.md: Fem punkter fra story 2.3, 2.4, 2.5 og 2.7 er lukket
+    (kolonneetiketten «Uke 1 · uke 46», ukeetikettene og årsregelen,
+    horizon_weeks og notatet). Syv nye punkter er ført:
+    - story 2.10, 2.12, 5.1 og 6.1
+    - manuell prøving i Epic 3
+    - manglene i de manuelle testene
+    - sesjonseksporten og PR-nummeret
+
+  Kontrollert før commit
+
+  - BMAD-funn: Alle 37 ID-er står i triageloggen: Blind Hunter 13, Edge Case
+    Hunter 13, Verification Gap 2 og Acceptance Auditor 7. De er fordelt på 22
+    grupper: 8 rettet, 1 avgjort av deg, 0 utsatt og 13 avvist.
+  - AA-1: Alternativ A er ført i spesifikasjonen (Spec Change Log, frosne
+    matrise og triagelogg), QA-loggen, KI-styringsloggen, arbeidsloggen og
+    sesjonsloggen.
+  - Tester: 1191 består og 1 hoppes over (Docker), og ruff og makemigrations 
+    --check er rene. De manuelle testene står adskilt fra de automatiske, med
+    manglene under «Ikke bekreftet» i QA-loggen. Rettelsen jeg gjorde i
+    sluttkontrollen (testene leser bare E1, E2 og E20 fra regnearket) står i
+    dokumentene.
+  - Versjoner: macOS 15.6.1 og den installerte Safari 18.6 er lest av meg og er
+    ikke bevist som versjonen som kjørte testene. iOS 27.0.1 er din opplysning.
+  - Personvern: Skanning av de tilføyde linjene og de nye filene (kode,
+    dokumenter og loggfilene) fant ingen stier, brukernavn, e-postadresser,
+    IP-adresser, økt-ID-er eller nøkler. Telefonens nettverksadresse står ikke
+    noe sted i repoet.
+
+  Neste steg (på din godkjenning)
+
+  1. SSH-push av grenen (git@github.com). Ingen workflow-filer er endret, men
+     SSH er etablert rutine.
+  2. PR som nevner story 2.9, FR-ene, hva som er testet og alle 37 funn med
+     beslutning og commit.
+  3. Flett først når CI og Windows er grønne. Deretter en liten
+     dokumentasjons-PR med sprintstatus done, sesjonseksporten og CI-tallene.
+✻ Crunched for 2m 35s · done 12:30 PM
+
+❯ Før SSH-push: Bekreft kort hash og innhold for alle tre lokale commits, samt  
+  at arbeidstreet er rent og grenen er foran origin/main med kun disse          
+  commitene. Ingen nye tester eller endringer nødvendig. Vent på godkjenning    
+  til push.                                                                     
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Alt stemmer. Jeg har ikke kjørt noe nytt, ikke endret noe og ikke pushet. Jeg
+  har bare lest git-tilstanden.
+
+  Bekreftelse
+
+  - Gren:
+    story/2-9-show-how-the-forecast-and-the-order-quantity-were-calculated.
+  - Arbeidstre: rent, uten endrede eller uspora filer.
+  - Mot origin/main: 0 bak og 3 foran. origin/main står på 9aec086, og det er
+    også merge-base, så grenen går rett ut fra den. De tre commitene er de
+    eneste som ikke er på origin/main.
+  - Workflow-filer: ingen .github/-filer er endret. SSH er likevel rutinen, som
+    i story 2.8.
+
+  #: 1
+  Hash: 019114c
+  Melding: Bygg story 2.9: arbeidsarket «Slik er tallene regnet ut»
+  Filer: 12 filer, +1 625 / −13: worksheet.py (ny), _worksheet.html (ny),
+  display.py, forecast.py, views.py, product.html, app.css, fire testfiler
+  (test_worksheet.py ny) og EXPERIENCE.md
+  ────────────────────────────────────────
+  #: 2
+  Hash: f4485d7
+  Melding: Før inn spesifikasjonen og dokumentene for story 2.9
+  Filer: 7 filer, +264 / −11: spesifikasjonen (ny), sprint-status.yaml,
+  EXPERIENCE.md (bare hashen), arbeidslogg, KI-styringslogg, QA-logg og
+  statustabell
+  ────────────────────────────────────────
+  #: 3
+  Hash: 8ffa2af
+  Melding: Logg: story 2.9 arbeidsarket «Slik er tallene regnet ut»
+  Filer: 2 filer, +46 / −5: sesjonsloggen (ny) og issues.md
+
+  Alle tre har forfatter Mounia-03 med noreply-adressen. Rekkefølgen er den du
+  godkjente.
+
+  Jeg venter på godkjenning før SSH-push, PR og fletting.
+
+✻ Baked for 9s · done 12:33 PM
+
+❯ Jeg godkjenner SSH-push og PR                                                 
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ SSH-tilgangen fungerer. Jeg pusher grenen via SSH-adressen (uten å endre
+  remoten) og sjekker at hodet på remote stemmer.
+
+  Pushed to story/2-9-show-how-the-forecast-and-the-order-quantity-were-calculated (ctrl+o to expand)
+
+⏺ Remote-hodet er 8ffa2af, identisk med lokal HEAD. Nå lager jeg PR-en med
+  beskrivelse og en kommentar som har alle 37 funn.
+
+  Created PR #50, commented on PR #50 (ctrl+o to expand)
+
+⏺ PR #50 er laget, og kommentaren med alle 37 funn er lagt ut. Begge CI-jobbene
+  kjører. Jeg venter på resultatet.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+⏺ Grenen er pushet via SSH, og PR #50 er laget. Begge CI-kontrollene er grønne
+  på siste commit. Jeg har ikke fløyet noe inn, og story 2.10 er ikke startet.
+
+  Resultat
+
+  - Push: 8ffa2af ligger på origin (via SSH, uten å endre remoten), og
+    remote-hodet er likt lokal HEAD.
+  - PR: #50 mot main, med MERGEABLE-status. Beskrivelsen nevner story 2.9,
+    FR-ene, det som er testet og det som ikke er meldt i de manuelle testene.
+  - Kommentar: alle 37 funn i 22 grupper, hver med beslutning og commit. Åtte er
+    rettet (019114c), AA-1 er avgjort av deg (alternativ A), og 13 er avvist
+    uten kodeendring.
+  - CI: begge jobbene passerte på 8ffa2af.
+    - Tests and Ruff, kjøring nr. 94: 1192 tester består. Det er de 1191 lokale
+      og Docker-sjekken, som kjører i CI, som i story 2.8.
+    - Windows-kjøring nr. 24: bestått.
+  - Arbeidstre: rent.
+
+  Neste steg
+
+  Jeg flettet ikke, siden du ba om push og PR. Jeg foreslår å flette på samme
+  måte som PR #47:
+  - git merge --no-ff lokalt, uten squash eller rebase, med noreply-adressen som
+    forfatter og SSH-push av main.
+  - Deretter bekrefter jeg grønn CI på main og at lokal main er ren og
+    synkronisert.
+
+  Etter fletting kommer en liten dokumentasjons-PR med:
+  - story 2.9 som done i sprintstatus
+  - PR #50, flettehashen og CI-tallene (kjøring nr. 94 og Windows nr. 24 er
+    allerede kjent)
+  - din maskerte sesjonseksport, når du har kjørt /export
+
+  Skal jeg flette PR #50 nå?
+
+✻ Worked for 1m 57s · done 12:37 PM
+
+❯ Jeg godkjenner fletting av PR #50 med --no-ff, slik du foreslår.Kontroller    
+  deretter grønn CI på main og at lokal main er ren og synkronisert med         
+  origin/main.Oppdater dokumentasjonen med faktisk flettehash, CI-resultater og 
+  sprintstatus done. Forbered den siste dokumentasjons-PR-en, men vent med den  
+  til sesjonseksporten er gjennomført og maskert.Ingen ekstra PR-er for samme   
+  dokumentasjon. Ikke start story 2.10.                                         
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ Flettingen er laget lokalt (0fb5391, foreldre 9aec086 og 8ffa2af, innholdet
+  identisk med PR-hodet). Pusher main via SSH.
+
+  Pushed to main (ctrl+o to expand)
+
+⏺ PR #50 står som flettet (0fb5391). Nå CI på main.
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ CI på main er grønn (kjøring nr. 95, 0fb5391) med 1192 tester, og lokal main
+  er identisk med origin/main. Nå forbereder jeg dokumentasjonsendringene på en
+  egen gren uten å committe dem. · summary
+
+  Ran 2 shell commands (ctrl+o to expand)
+
+⏺ Jeg rettet en feil i f4485d7 der last_updated sto på 13:05 i stedet for 12:41,
+  og fører den i QA- og KI-styringsloggen. · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+⏺ PR #50 er flettet, CI på main er grønn, og dokumentasjonen er klargjort. Den
+  siste dokumentasjons-PR-en venter på sesjonseksporten. Story 2.10 er ikke
+  startet, og jeg har ikke committet noe av dokumentasjonen.
+
+  Fletting og kontroll
+
+  - Fletting: PR #50 er flettet med --no-ff som 0fb5391, med foreldre 9aec086 og
+    8ffa2af. Innholdet er identisk med PR-hodet, og GitHub viser PR-en som
+    flettet 28. november kl. 12.40. main er pushet via SSH, og grenen
+    story/2-9-… er beholdt.
+  - CI: På grenen passerte kjøring nr. 94 (1192 tester) og Windows nr. 24 på
+    8ffa2af. På main passerte kjøring nr. 95 på 0fb5391 med 1192 tester.
+    Windows-jobben kjører bare for PR-er, som i story 2.8.
+  - Lokal tilstand: main er ren og identisk med origin/main (0 foran, 0 bak).
+
+  Dokumentasjon på docs/session-export-story-2-9
+
+  Endringene ligger uncommittet på en ny gren fra main. De er skannet for stier,
+  brukernavn, e-postadresser, IP-adresser og nøkler uten treff.
+  - sprint-status.yaml: story 2.9 er done. Epic 2 er fortsatt in-progress.
+  - Spesifikasjonen: status done, med PR #50, flettehashen og CI-kjøringene i
+    notatene.
+  - Arbeidsloggen: push, PR, kommentaren med 37 funn, CI nr. 94, Windows nr. 24,
+    flettingen og CI nr. 95, og story-statusen.
+  - KI-styringsloggen: tilfelle 46 viser PR #50 og 0fb5391.
+  - Sesjonsloggen og issues.md: sesjonsloggen har den faktiske PR- og
+    flettestatusen. issues.md har en merknad om at PR-nummeret og CI-kjøringene
+    er ført, og at eksporten gjenstår.
+
+  Feil jeg fant og rettet: Tidspunktet 13:05 i last_updated i sprint-status.yaml
+  (commit f4485d7) var ikke lest fra klokka. Klokka var rundt 12.30, så det lå
+  i fremtiden. Det er samme type feil som i en tidligere story. Jeg har rettet
+  det til 12:41, som klokka viste da filen ble endret, og ført feilen i
+  QA-loggen og KI-styringsloggen.
+
+  Det som gjenstår
+
+  1. Du kjører /export til .logs/mounia-03/sessions/2-9-2026-11-28.txt.
+  2. Jeg maskerer eksporten, gjør personvernkontroll før og etter, og
+     sammenligner den med dokumentene.
+  3. Jeg legger eksporten og dokumentasjonen i én commit og én PR (ingen ekstra
+     PR-er), og pusher via SSH etter din godkjenning.
+
+  Jeg fletter ikke den PR-en uten ny godkjenning.
+
+✻ Churned for 2m 14s · done 12:41 PM
