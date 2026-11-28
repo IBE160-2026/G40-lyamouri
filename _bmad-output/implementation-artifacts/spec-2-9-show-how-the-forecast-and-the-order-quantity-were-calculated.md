@@ -3,7 +3,7 @@ title: 'Story 2.9: Show how the forecast and the order quantity were calculated'
 type: 'feature'
 created: '2026-11-28'
 baseline_commit: '9aec086f3a2a8f9255a70b7a279c24e81de28413'
-status: 'in-review'
+status: 'done'
 route: 'dispatch'
 review_loop_iteration: 0
 context: ['{project-root}/_bmad-output/implementation-artifacts/epic-2-context.md']
@@ -83,7 +83,7 @@ context: ['{project-root}/_bmad-output/implementation-artifacts/epic-2-context.m
 - Layout in headless Chrome 120 (old mode), six saved pages (Strøsand 25 kg, 10040 without a forecast, E8, and E15 and E7 of Testbedrift B, and Strøsand with exponential smoothing and unusual weeks left out) at 1366 × 640, 1180 × 820, 901 × 900, 820 × 1180, 390 × 844 and 320 × 640: 36 measurements, the page never scrolls sideways and no element outside a scroll frame is wider than the screen. At 320 px the sales table (up to 705 px) and the scenario table (418 px) scroll inside their frames of 246 px; the calculation lines wrap (77 and 141 px high). The table of levels with 104 weeks scrolls in its own frame. This is not Safari and not a phone; the hand checks are the user's.
 - Process: four reviewers as `general-purpose` subagents with `model: "sonnet"` (an alias, not confirmed to be 5.5), launched together. The Verification Gap reviewer's prompt had a wrong diff path (a missing hyphen, Claude's mistake), corrected by a message before it reported. The reviewers changed nothing: the hash of the whole tree was identical before and after. The Blind Hunter and the Verification Gap reviewer never saw the spec.
 - Manual checks, reported by the user in chat on 2026-11-28 (details and gaps in `docs/qa-logg.md`): Safari on the Mac for Strøsand 25 kg (10012) at 1366 × 768, 820 × 1180, 390 × 844 and 320 × 844, and for 10025, 10040, 20005 and 20002, with the worksheet, tags, formula, scenarios and order quantity agreeing and the table's own horizontal scroll checked; the real iPhone 13 (iOS 27.0.1, as the user gave it) for all five products, with the horizontal scroll of 10012's sales table confirmed. Claude read macOS 15.6.1 and the installed Safari 18.6 from the system; the Safari version that ran the checks was not given. Gaps: the Safari view type, the widths for the other four products, the scenario table's scroll, the Tab order and focus rings of the frames, and the iPhone screenshots (not seen by Claude). Exponential smoothing and the left-out tag cannot be tried in the app before Epic 3.
-- Committed with the user's approval on 2026-11-28: the code, the tests and the catalogue in `019114c`; the spec and the documents in the next commit, and the session log in the last. Not done yet: the push and the pull request (awaiting the user's approval).
+- Committed with the user's approval on 2026-11-28: the code, the tests and the catalogue in `019114c`; the spec and the documents in the next commit, and the session log in the last. Pushed over SSH with the user's approval and merged as PR #50 on 2026-11-28 (merge commit `0fb5391`, parents `9aec086` and `8ffa2af`); CI run #94 on the branch and Windows run #24 passed, and CI run #95 on `main` passed with 1192 tests (the Docker check runs in CI). The session export is masked and kept in `.logs/mounia-03/sessions/2-9-2026-11-28.txt`.
 
 ## Spec Change Log
 
