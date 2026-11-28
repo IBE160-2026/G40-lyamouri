@@ -1340,3 +1340,87 @@ Deretter åpner iPhonen `http://172.20.10.x:8000/`. Variabelen gjelder bare for 
 **Rettelse av en eldre feil.** Statustabellen nevnte testen `test_the_products_with_the_same_cover_are_sorted_by_the_product_number` for FR-24 fra story 2.6, men testen heter `test_the_products_with_the_same_cover_are_sorted_by_product_number`. Navnet er rettet da raden ble oppdatert.
 
 **Rettelse fra eksporten.** Sesjonseksporten (`.logs/mounia-03/sessions/2-8-2026-11-27.txt`) viser fem avvik mellom det som ble sagt i chatten og det som står i dokumentene. Dokumentene er riktige, og avvikene er ført her. (1) Mens mutasjonskjøringen pågikk, sa Claude «8 av 42 var fanget», men settet hadde 41 mutasjoner, som dokumentene sier. (2) Etter reviewen sa Claude at «seks ting» var rettet og listet sju endringer, men triagen har 5 rettede grupper, og én av endringene (mellomrommet mellom merket og årsaken, EC-5) ble senere tatt tilbake fordi malen for merket allerede slutter med linjeskift. (3) Claude sa at granskerne ble startet som «blokkerende kall», men eksporten viser «4 background agents launched»: verktøyet startet dem i bakgrunnen, og Claude ventet på meldingene deres før noe ble triagert, mens arbeidsflyten ber om synkrone kall. Resultatet er det samme, og dokumentene sier bare at de ble startet samtidig. (4) Toppteksten i eksporten viser «Sonnet 5.5», som bekrefter modellen, og ingen nivå; nivået «High» fra prompten er fortsatt ønsket og ikke bekreftet. (5) Økta ble komprimert omtrent ti ganger (markert «· summary»), og verktøykallene vises sammenslåtte, så eksporten har ikke alle verktøykall, for eksempel promptene til granskerne. Rapportene fra alle fire granskerne står derimot fullt ut i eksporten (Blind Hunter 12 funn, Edge Case Hunter 11, Verification Gap ingen hull og to andre funn, og Acceptance Auditor 5, i alt 30), og tallene stemmer med triage-loggen i spesifikasjonen og kommentaren på PR #47.
+
+## 2026-11-28 – Arbeidsarket «Slik er tallene regnet ut» i hodeløs Chrome (Story 2.9; FR-7, FR-10, FR-12, FR-35, NFR-6, UX-DR7, UX-DR28 til UX-DR30)
+
+**Hvorfor.** Hver side en story endrer, skal sjekkes ved 320 px, 390 × 844 og 820 × 1180 (NFR-6, UX-DR7). Arbeidsarket har tabeller som er bredere enn panelet, og utregningslinjer som skal brytes mellom ledd og aldri inne i et tall.
+
+**Oppsett.** Claude tegnet seks sider med Djangos testklient mot pytests egen testdatabase fylt med `load_seed` (dev-databasen ble ikke rørt): Strøsand 25 kg (10012), 10040 uten prognose og produkt 10025 (E8) hos Testbedrift A, og 20002 (E7) og 20005 (E15) hos Testbedrift B, og i tillegg 10012 med eksponentiell glatting og «uvanlige uker holdt utenfor» (innstillingene ble satt på testdatabasen, fordi appen ikke kan endre dem før Epic 3). Sidene ble lagret som statisk HTML med appens eget stilark og målt i Chrome 120 i den gamle hodeløse modusen (`--headless=old`). Et lite skript som bare ligger i arbeidsmappen for midlertidige filer, målte `scrollWidth`, hvert element utenfor rullerammene, rullerammenes bredde og høyden på utregningslinjene.
+
+**Resultat.** 6 sider × 6 størrelser = 36 målinger (1366 × 640, 1180 × 820, 901 × 900, 820 × 1180, 390 × 844 og 320 × 640). Ingen side rullet sidelengs (`scrollWidth` lik skjermbredden), og ingen element utenfor en rulleramme stakk ut.
+
+| Størrelse | Det som ble målt |
+|---|---|
+| 1366, 1180 og 820 | Begge tabellene passer i panelet (rammer på 884, 750 og 746 px); utregningslinjene er 36 og 80 px høye |
+| 901 | Salgstabellen for 10012 (705 px) ruller i sin ramme på 471 px |
+| 390 | Salgstabellen (inntil 705 px) og scenariotabellen (418 px) ruller i rammer på 316 px; linjene brytes (57 til 121 px) |
+| 320 | Rammene er 246 px, tabellene ruller i dem, og linjene brytes (77 til 141 px); arbeidsarket er 1 094 til 1 139 px høyt for produktene med prognose og 209 px for 10040 |
+| ES med uvanlige uker utenfor, 1366 | Salgstabellen er 962 px (merket «uvanlig, holdt utenfor» er bredt) i en ramme på 884 px og ruller; tabellen med nivåer ruller i en egen ramme med høyde høyst 18 rem |
+
+**Det som ikke er sjekket i hodeløs Chrome.** Safari, en ekte telefon, Tab-rekkefølgen og fokusringen på rullerammene (bare testet i koden: rolle, `tabindex` og navn), og at et tall aldri brytes midt i (CSS-en bruker vanlig brytning og tallene har ingen mellomrom, men det er ikke målt linje for linje).
+
+**Brukerens tester 28. november 2026: gjennomført for de fem planlagte produktene, med de manglene som står under «Ikke bekreftet».** Resultatet står her slik brukeren meldte det i chatten. Claude kjørte ikke Safari og ikke telefonen selv, og har ikke sett skjermbildene.
+- **Safari på Mac, Testbedrift A, produkt 10012 (Strøsand 25 kg):** kontrollert ved 1366 × 768, 820 × 1180, 390 × 844 og 320 × 844. Salgshistorikk, statusmerker, formelen (16 + 12 + 15) / 3 = 14,3, scenarioene og bestillingsmengden 11 stemmer. Tabellens egen vannrette rulling er kontrollert.
+- **Produkt 10025:** de uvanlige ukene 43 og 44 brukes; prognose 41,0 og bestillingsmengde 0, med riktig forklaring om lageret.
+- **Produkt 10040:** bare salgshistorikken for uke 44 og 45, ingen prognose.
+- **Testbedrift B, produkt 20005:** nytt nivå, uvanlig uke 43, prognose 70,3 og bestillingsmengde 78.
+- **Produkt 20002:** de utsolgte ukene 41 og 42 holdes utenfor; prognose 22,0 og bestillingsmengde 25.
+- **Ekte iPhone 13, iOS 27.0.1 (som brukeren oppga):** alle fem produktene er åpnet og kontrollert med skjermbilder. Beregningene, forklaringene og statusmerkene stemmer med Safari. For 10012 er vannrett rulling i salgstabellen bekreftet uten at hele siden flytter seg. Ingen synlige layoutfeil i områdene som ble kontrollert.
+- **Versjoner, lest av Claude fra Mac-en etter testene:** macOS 15.6.1 (build 24G90) og Safari 18.6 (build 20621.3.11.11.3), lest fra den installerte appen (`sw_vers` og `Info.plist` i `Safari.app`). Brukeren oppga ikke Safari-versjonen, så den er installert versjon og ikke bevist som den som kjørte testene. iOS-versjonen er brukerens egen opplysning, og Claude kan ikke kontrollere den. Safari-versjonen på iPhonen er ikke oppgitt.
+- **Det automatiske og det manuelle er holdt fra hverandre.** Regnearket sammenlignes av testene (`tests/test_worksheet.py` og `tests/test_product_screen.py`) for E1 til E4, E5, E6, E21 og E23 (linjer, scenarioer og bestillinger), E2 og E17 (nivåene), E1, E2 og E20 (den viste grunnprognosen på linjen, de tre tilfellene som har en i regnearket) og grunnprognosen og bestillingsmengden til de 11 regeltestproduktene (E1, E7 til E10, E15, E16, E18 a og b og E19 og Strøsand 25 kg), og statusraden til Strøsand 25 kg sammenlignes med mockupen. Brukerens kontroll er en visuell kontroll av de fem produktene i Safari og på telefonen, og er ikke ført som en fullstendig sammenligning av hvert tall på hver side med regnearket.
+
+**Ikke bekreftet, og derfor ikke ført som bestått.**
+- Hvilken Safari-visning som ble brukt (et vanlig vindu eller responsiv visning); i story 2.8 var det responsiv visning, og her er det ikke oppgitt.
+- Bredder utenom 1366 × 768, 820 × 1180, 390 × 844 og 320 × 844 er bare meldt for produkt 10012; for de fire andre produktene er ikke bredden i Safari oppgitt.
+- Scenariotabellens egen rulling ved 390 og 320 px, og rullingen av tabellene på telefonen utenom salgstabellen til 10012: ikke meldt.
+- Tab-rekkefølgen og fokusringen på rullerammene (tastaturet): ikke meldt, og bare testet i koden (rolle, `tabindex` og navn).
+- Skjermbildene fra iPhonen er ikke lagt ved dokumentene og ikke sett av Claude.
+- Eksponentiell glatting, merket «uvanlig, holdt utenfor», tabellen med nivåer og lange lister over utelatte uker: kan ikke prøves i appen før Epic 3 og er bare sjekket av de automatiske testene og i hodeløs Chrome.
+- At tall aldri brytes midt i på en linje: ikke meldt, og bare dekket av CSS-regelen og de automatiske målingene.
+
+## 2026-11-28 – Feil i KI-generert kode og tekst fra byggingen av story 2.9 (DR-9)
+
+**Hvordan det ble funnet.** Av testene, Ruff, mutasjonstestene og målingene i Chrome under byggingen av story 2.9 på grenen `story/2-9-show-how-the-forecast-and-the-order-quantity-were-calculated` (baseline `9aec086`). Claude bygde inline, uten subagent.
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Stilarket hadde `font-weight: 700` og `400` som tall, som designtestene avviser (alt skal være tokens) | `test_rules_take_colors_fonts_and_radii_only_from_the_tokens` | `var(--font-subsection-title-weight)` og `var(--font-body-weight)` | `019114c` |
+| Testhjelperen samlet mellomrom med `str.split()`, som gjør et hardt mellomrom (U+00A0) til et vanlig, så «10 %» ikke kunne kontrolleres | tester som feilet på «10 %» | `squash()` beholder det harde mellomrommet, og testene som sammenligner med mockupen bruker bevisst vanlig normalisering | `019114c` |
+| To forventede verdier i testene var regnet feil av Claude: uke 52 i stedet for uke 53 i 2026 (2026 har 53 ISO-uker), og feil uker brukt i en historikk på 20 uker | de to testene | forventningene er rettet, ikke koden | `019114c` |
+| Claude gjettet produktnummeret til E15 (20009, som er E19) i en sidetest | testen som ikke fant «nytt nivå» | 20005, hentet fra `RULE_PRODUCTS` | `019114c` |
+| Testen av mockupens arbeidsark hadde en `or` som gjorde sammenligningen av statusraden tom (som i story 2.8) | Claudes egen gjennomgang | sammenligningen er skrevet om til lik (hele tabellen, celle for celle, mot mockupen) | `019114c` |
+| Testen av overskriftene leste også gruppeoverskriftene i produktlisten, så den feilet på `h3` | testen | `Screen` leser bare arbeidsarket | `019114c` |
+| Claude skrev en gren for eksponentiell glatting med én beregningsuke og et entall «1 uke», selv om R-10 gjør begge umulige (de tre første gyldige ukene sjekkes aldri) | Claudes egen gjennomgang, og senere Acceptance Auditor (AA-1) | grenene er fjernet, en kommentar forklarer hvorfor, og brukeren valgte alternativ A 28. november 2026, så matriseraden og entallet er tatt ut av spesifikasjonen | `019114c` |
+| `sed -i` uten tom streng feilet på macOS da Claude satte statusene, og kjeden stoppet uten å endre filen | meldingen fra `sed` | kommandoen ble kjørt på nytt med `-i ''` | ikke relevant (ingen filendring) |
+| Tre eksisterende tester måtte endres av gode grunner: panelets overskrift, de to nye tabulatorstoppene for rullerammene, og testen av at utsolgte ukers salg aldri brukes (resultatet har nå `sales`, som viser dem) | `uv run pytest` | testene sier nå hva som er nytt, og sammenligner resten av resultatet | `019114c` |
+
+**Mutasjoner før reviewen.** 21 steder i koden ble brutt og satt tilbake, og alle ble fanget: en utsolgt uke regnet som brukt, siste oppdatering på feil nivå, marginlinjen med scenarioprosenten, «(lageret dekker behovet)» uten vilkår, årsregelen borte, et tall rundet utenfor `display.py`, «uvanlig» og «uvanlig, holdt utenfor» med samme merke, glidende gjennomsnitt som bruker alle beregningsukene, utsolgte og uvanlige uker byttet i listen, normalraden uten uthevet, optimistisk og pessimistisk byttet, uvanlige uker som alltid holdt utenfor, «Merknad:» borte, første uke i et nytt år uten år, nivåtabellen med salg i stedet for nivå, salgstabellen én uke for kort, rullerammen uten tabulatorstopp, formen i merket borte, avrundingsnotatet borte i bestillingsboksen, selskapsfilteret borte, og en spørring i produktløkka. Filene ble sammenlignet med hash før og etter og var identiske.
+
+## 2026-11-28 – Feil i KI-generert kode og tekst fra BMAD Code Review av story 2.9 (DR-9)
+
+**Hvordan det ble funnet.** Fire uavhengige, skrivebeskyttede KI-granskere gikk gjennom arbeidstreet til story 2.9 mot `9aec086`, før noe var committet: Blind Hunter, Edge Case Hunter, Verification Gap og Acceptance Auditor, som underagenter av typen `general-purpose` med `model: "sonnet"` (et alias, ikke bekreftet som 5.5). De ga 37 funn i 22 grupper (Blind Hunter 13, Edge Case Hunter 13, Verification Gap 2 hull og 2 andre funn, Acceptance Auditor 7). Resultatet: 8 grupper rettet, 1 avgjort av brukeren (AA-1, alternativ A), ingen utsatt og 13 avvist (se «Review Triage Log» i spesifikasjonen).
+
+**Feilene som ble rettet.**
+
+| Feil | Funnet av | Retting | Commit |
+|---|---|---|---|
+| Setningen under salgstabellen forklarte «brukt» ut fra alle ukene som er brukt, også når ingen av dem står i tabellen (de siste ukene er utsolgte), og ingen test hadde en flagget uke før de viste 12 ukene | BH-1, VG-1, AA-2, EC-1, EC-13 | «Brukt» står bare når en brukt uke er i tabellen, og testene dekker en utsolgt uke før de viste ukene og ingen brukt uke i tabellen | `019114c` |
+| Uten prognose sa setningen at uvanlige uker er «tatt med» og at nytt nivå er «alltid tatt med i beregningen», om en utregning som ikke finnes | EC-2, AA-3 | Uten prognose nevnes ikke utregningen; katalogen og to tester er oppdatert | `019114c` |
+| `week_list([])` ga «uke » uten tall | BH-6, EC-7 | `ValueError`, med en test | `019114c` |
+| Docstringen til `used_weeks` sa «None», men koden gir `()`, og `shown` ble regnet ut før den tidlige returen | BH-7, EC-6 | docstringen er rettet og `shown` er flyttet | `019114c` |
+| Tre nye rader med fire celler sto i komponenttabellen (tre celler) i `EXPERIENCE.md`, ikke i meldingskatalogen | BH-2 | radene er flyttet til meldingskatalogen, og én heter «Weeks left out (text)» fordi det finnes en rad med navnet i visningsreglene | `019114c` |
+| Katalogen sa «at least one left out», men koden krever en uvanlig uke | BH-4 | «at least one unusual week left out» | `019114c` |
+| En testbeskrivelse nevnte uke 38 og 39 mens testen sjekker 42 og 43, og en test sto både i `test_forecast.py` og i `test_worksheet.py` | BH-11 | beskrivelsen er rettet og dubletten fjernet | `019114c` |
+| Tabellen med nivåer og rammen på siden var ikke testet med en lang historikk, og testen av rammene kjørte bare på en side med glidende gjennomsnitt | VG-2 | tester for årsregelen i tabellen, for eksponentiell glatting med uvanlige uker utenfor, og for rammens rolle, tabulatorstopp og navn på en side med eksponentiell glatting | `019114c` |
+| Prompten til Verification Gap hadde en skrivefeil i stien til diffen (en skråstrek i stedet for en bindestrek) | Claude så det rett etter oppstarten | En melding til den samme agenten ga riktig sti før den rapporterte, og rapporten stemmer med diffen | ikke relevant (ingen filendring) |
+
+**Avgjort av brukeren (28. november 2026): alternativ A.** AA-1 og tre like funn (EC-3, EC-4, EC-11): matriseraden «One calculation week» (en «startnivå»-linje) og entallet «1 uke» har ingen kode, fordi R-10 gjør tilfellene umulige (minst tre beregningsuker, og minst to med glidende gjennomsnitt). Brukeren valgte å la det være: ingen død kode, en kommentar i `_formula` som nevner R-10, og raden og entallet er tatt ut av den frosne delen av spesifikasjonen og ført i Spec Change Log. Begrunnelsen er at tilfellene ikke kan oppstå, og at en gren for dem bare kunne testes med et `ProductResult` laget for hånd, som ingen mulig inndata gir. Alternativ B (en forsvarsgren med en slik test) ble avvist. Ingen kode er endret av beslutningen.
+
+**Utsatt.** Ingen.
+
+**Avvist.** 13 grupper, blant dem: at en kombinasjon ikke kan forekomme (en utsolgt uke er aldri uvanlig), at listen over utelatte uker ikke har tak (kriteriet krever hver uke), at tabellen ikke har en fast første kolonne (UX-DR28 og mockupen har ingen), kontrasten i merkene (regnet ut til 5,19 til 14,33, over 4,5), at en linje kan brytes mellom «lager» og «5» (kriteriet krever bare at et tall aldri brytes), at `test_isolation.py` og `test_core_imports.py` ikke er endret (de dekker allerede siden og alle filene i `explanation/`), at dokumentene og kodehashen mangler (de føres etter reviewen), og mutanten «marginen på uke 2», som er ekvivalent så lenge ukene gjentar uke 1.
+
+**Merknad om prosessen.** Granskerne leste og rapporterte bare. Claude sammenlignet fingeravtrykket av alle endrede og nye filer før og etter reviewen, og det var identisk. Blind Hunter og Verification Gap så aldri spesifikasjonen. Mutasjonene på rettingene: 7 i en egen kjøring, alle fanget (brukt-setning for uker utenfor tabellen, uker utenfor tabellen i setningen, påstand om utregning uten prognose, nytt nivå uten prognose, tom ukeliste tillatt, årsregelen i nivåtabellen borte, og rullerammen uten tabulatorstopp). Byggearbeidsflyten har bare tre granskerlag, så Claude startet Acceptance Auditor fra `bmad-code-review` etter brukerens ønske.
+
