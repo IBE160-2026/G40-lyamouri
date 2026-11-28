@@ -72,3 +72,35 @@ def week_label(iso_year, iso_week, with_year=False):
 def axis_week_label(iso_year, iso_week):
     """A week on a chart axis, the week number only: «46», and «1/2027» in a new year."""
     return f"{iso_week}/{iso_year}" if iso_week == 1 else str(iso_week)
+
+
+def factor(value):
+    """A smoothing factor, or its complement, with its one decimal: «0,3»."""
+    return one_decimal(value)
+
+
+def week_item(iso_year, iso_week, with_year=False):
+    """A week inside a list or a table, without the word «uke»: «46», «10/2025».
+
+    The year follows when the list reaches before the recent period, and on the first
+    week of a new year, which always carries it (UX-DR42)."""
+    return f"{iso_week}/{iso_year}" if with_year or iso_week == 1 else str(iso_week)
+
+
+def week_list(weeks, with_year=False):
+    """Weeks as one phrase: «uke 38», «uke 38 og 39», «uke 43, 44 og 45».
+
+    `weeks` are ISO years and weeks in time order. `with_year` is decided by the list as
+    a whole, so that every week of a list that reaches before the recent period carries
+    its year: «uke 10/2025 og 11/2025»."""
+    items = [week_item(year, week, with_year) for year, week in weeks]
+    if not items:
+        raise ValueError("a list of weeks needs at least one week")
+    if len(items) == 1:
+        return f"uke {items[0]}"
+    return f"uke {', '.join(items[:-1])} og {items[-1]}"
+
+
+def horizon_column_label(number, iso_year, iso_week):
+    """The column of horizon week `number` (1 to 3) of the scenario table: «Uke 1 · uke 46»."""
+    return f"Uke {number} \u00b7 {week_label(iso_year, iso_week)}"

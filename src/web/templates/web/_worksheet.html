@@ -1,0 +1,62 @@
+{# The worksheet «Slik er tallene regnet ut» (FR-7, FR-10, FR-12, FR-35; UX-DR28 to UX-DR30). Every text and number comes ready from explanation/worksheet.py and is only placed here (AD-4). Needs sheet. #}
+<section class="panel sheet" aria-labelledby="t-sheet">
+  <h2 id="t-sheet">Slik er tallene regnet ut</h2>
+  <h3 id="s-sales">{{ sheet.sales_heading }}</h3>
+  {% if sheet.no_sales %}
+  <p>{{ sheet.no_sales }}</p>
+  {% else %}
+  <div class="tablewrap" role="region" aria-labelledby="s-sales" tabindex="0">
+    <table class="weeks">
+      <thead><tr><th scope="col">Uke</th>{% for column in sheet.sales %}<th scope="col">{{ column.week }}</th>{% endfor %}</tr></thead>
+      <tbody>
+        <tr><th scope="row">Solgt</th>{% for column in sheet.sales %}<td>{{ column.units }}</td>{% endfor %}</tr>
+        <tr><th scope="row">Status</th>{% for column in sheet.sales %}<td>{% if column.tags %}<span class="tags">{% for tag in column.tags %}<span class="tag tag-{{ tag.kind }}">{% if tag.shape %}<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">{% if tag.shape == "square-outline" %}<rect x="1" y="1" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.5"/>{% elif tag.shape == "triangle" %}<path d="M5 1 9.5 9H.5z" fill="currentColor"/>{% elif tag.shape == "triangle-outline" %}<path d="M5 1.8 8.8 8.5H1.2z" fill="none" stroke="currentColor" stroke-width="1.5"/>{% else %}<path d="M5 .5 9.5 5 5 9.5.5 5z" fill="currentColor"/>{% endif %}</svg>{% endif %}{{ tag.text }}</span>{% endfor %}</span>{% endif %}</td>{% endfor %}</tr>
+      </tbody>
+    </table>
+  </div>
+  {% if sheet.tag_sentence %}<p class="fine">{{ sheet.tag_sentence }}</p>{% endif %}
+  {% endif %}
+  {% with calculation=sheet.calculation %}
+  {% if calculation %}
+  <h3 id="s-calc">Prognoseutregning</h3>
+  <p class="calc">{{ calculation.formula }}{% if calculation.rounding_note %}<span>{{ calculation.rounding_note }}</span>{% endif %}</p>
+  {% if calculation.levels %}
+  <div class="tablewrap tablewrap-levels" role="region" aria-label="Beregningsukene med salg og nivå" tabindex="0">
+    <table class="levels">
+      <thead><tr><th scope="col">Uke</th><th scope="col">Solgt</th><th scope="col">Nivå</th></tr></thead>
+      <tbody>
+        {% for row in calculation.levels %}<tr><th scope="row">{{ row.week }}</th><td>{{ row.units }}</td><td>{{ row.level }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+  {% if calculation.used %}<p>{{ calculation.used }}</p>{% endif %}
+  {% if calculation.left_out %}<p>{{ calculation.left_out }}</p>{% endif %}
+  {% if calculation.used_count %}<p>{{ calculation.used_count }}</p>{% endif %}
+  {% endif %}
+  {% endwith %}
+  {% with scenarios=sheet.scenarios %}
+  {% if scenarios %}
+  <h3 id="s-scen">Ukeprognoser og scenarioer</h3>
+  <div class="tablewrap" role="region" aria-labelledby="s-scen" tabindex="0">
+    <table class="scen">
+      <thead><tr><th scope="col">Scenario</th>{% for column in scenarios.columns %}<th scope="col">{{ column }}</th>{% endfor %}</tr></thead>
+      <tbody>
+        {% for row in scenarios.rows %}<tr{% if row.normal %} class="normal"{% endif %}><th scope="row">{{ row.label }}</th>{% for value in row.values %}<td>{{ value }}</td>{% endfor %}</tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="fine">{{ scenarios.text }}</p>
+  {% if scenarios.note %}<p class="fine">{{ scenarios.note }}</p>{% endif %}
+  {% endif %}
+  {% endwith %}
+  {% with order=sheet.order %}
+  {% if order %}
+  <h3 id="s-order">Utregning av bestillingsmengde</h3>
+  <p class="calc">{{ order.line }}<span>{{ order.rounding_note }}</span></p>
+  <p class="fine">{{ order.margin_note }}</p>
+  {% endif %}
+  {% endwith %}
+</section>

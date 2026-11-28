@@ -23,7 +23,7 @@ from test_error_pages import assert_error_page
 
 from forecasting import trust
 from web import views
-from web.models import Company, Product
+from web.models import Company, CompanySettings, Product
 
 TAGS_ONLY = re.compile(r"<[^>]+>")
 FOCUSABLE = ("a", "button", "input", "select", "textarea")
@@ -161,6 +161,7 @@ def test_the_two_panels_have_their_headings_and_one_page_title(seed_pages):
         "Produktoversikt 30 produkter",
         "Hva bør du bestille?",
         "Kan du stole på prognosen?",
+        "Slik er tallene regnet ut",
     ]
 
 
@@ -430,8 +431,14 @@ def test_the_skip_link_is_first_and_the_list_comes_before_the_product(two_compan
         "Valgt produkt",
     ]
     assert html.index('aria-label="Produkter"') < html.index('id="valgt-produkt"')
-    # The list scrolls with its links, and the product region can be focused to scroll.
-    assert [f for f in screen.focusable if f[1] == "0"] == [("main", "0")]
+    # The list scrolls with its links, and the product region can be focused to scroll;
+    # so can each scroll frame of the worksheet inside it (Story 2.9): here the sales table
+    # and the scenario table, because the moving average has no table of levels.
+    assert [f for f in screen.focusable if f[1] == "0"] == [
+        ("main", "0"),
+        ("div", "0"),
+        ("div", "0"),
+    ]
 
 
 def test_the_header_marks_the_product_overview_and_shows_the_latest_week(two_companies):
@@ -521,3 +528,274 @@ def test_the_page_makes_the_same_number_of_queries_for_50_products_of_104_weeks(
         counts.append(count_queries(logged_in(company), "/produkter/10001/"))
 
     assert counts[0] == counts[1] <= 6
+
+
+# The worksheet «Slik er tallene regnet ut» (Story 2.9).
+# FR-7, FR-10, FR-12, FR-15, FR-16, FR-35, NFR-6, NFR-11, AD-4, UX-DR7, UX-DR28 to UX-DR30.
+
+
+def squash(markup):
+    """The text of some markup with its spaces squashed to one; a no-break space stays."""
+    return re.sub(r"[ \t\r\n]+", " ", TAGS_ONLY.sub(" ", markup)).strip()
+
+
+def sheet_html(html):
+    """The worksheet panel of a product page."""
+    return html.split('<section class="panel sheet"')[1].split("</section>")[0]
+
+
+def sheet_lines(html, css_class):
+    """The text of each paragraph with the class, such as «calc» or «fine»."""
+    return [
+        " ".join(TAGS_ONLY.sub(" ", match).split())
+        for match in re.findall(
+            rf'<p class="{css_class}">(.*?)</p>', sheet_html(html), re.DOTALL
+        )
+    ]
+
+
+def sheet_cells(html, table):
+    """The text of the cells of each row of a table of the worksheet."""
+    body = re.search(
+        rf'<table class="{table}">(.*?)</table>', sheet_html(html), re.DOTALL
+    )
+    return [
+        [
+            " ".join(TAGS_ONLY.sub(" ", cell).split())
+            for cell in re.findall(r"<t[hd][^>]*>(.*?)</t[hd]>", row, re.DOTALL)
+        ]
+        for row in re.findall(r"<tr[^>]*>(.*?)</tr>", body[1], re.DOTALL)
+    ]
+
+
+def mockup_sheet():
+    """The worksheet of the approved mockup, which the page of Strøsand 25 kg must equal
+    where EXPERIENCE.md words the lines in the same way (UX-DR28)."""
+    html = answer_key.MOCKUP.read_text(encoding="utf-8")
+    return html.split('<section class="panel" aria-labelledby="t-sheet">')[1].split(
+        "</section>"
+    )[0]
+
+
+def test_the_worksheet_of_the_mockups_product_equals_the_mockup(seed_pages):
+    """UX-DR28 (E1, E3, E4): the sales table, the tags, the sentence below it, the two
+    calculation lines and the scenario values of Strøsand 25 kg are the mockup's."""
+    page = seed_pages("A", "10012")
+    mock = mockup_sheet()
+    mock_weeks = mock.split('<table class="weeks">')[1].split("</table>")[0]
+    mock_rows = [
+        [
+            " ".join(TAGS_ONLY.sub(" ", cell).split())
+            for cell in re.findall(r"<t[hd][^>]*>(.*?)</t[hd]>", row, re.DOTALL)
+        ]
+        for row in re.findall(r"<tr>(.*?)</tr>", mock_weeks, re.DOTALL)
+    ]
+    rows = sheet_cells(page, "weeks")
+
+    # The week header, the units sold and the status row are the mockup's, tag by tag.
+    assert rows == mock_rows
+    assert rows[0] == ["Uke", *[str(week) for week in range(34, 46)]]
+    assert rows[1][1:] == [str(w.units_sold) for w in answer_key.mockup_recent_weeks()]
+    assert rows[2][0] == "Status"
+    assert rows[2][5:7] == ["utsolgt", "utsolgt"]
+    assert rows[2][9] == "uvanlig"
+    assert (
+        sheet_lines(page, "fine")[0]
+        == re.search(r'<p class="fine">(«Brukt».*?)</p>', mock)[1]
+    )
+    calc = sheet_lines(page, "calc")
+    mock_calc = [
+        " ".join(TAGS_ONLY.sub(" ", c).split())
+        for c in re.findall(r'<p class="calc">(.*?)</p>', mock, re.DOTALL)
+    ]
+    assert calc == mock_calc
+    assert [row[1:] for row in sheet_cells(page, "scen")[1:]] == [
+        ["15,8", "15,8", "15,8"],
+        ["14,3", "14,3", "14,3"],
+        ["12,9", "12,9", "12,9"],
+    ]
+    assert sheet_cells(page, "scen")[0] == [
+        "Scenario",
+        "Uke 1 · uke 46",
+        "Uke 2 · uke 47",
+        "Uke 3 · uke 48",
+    ]
+
+
+def test_the_worksheet_has_its_subsections_in_order_and_the_catalogue_sentences(
+    seed_pages,
+):
+    """UX-DR28, FR-12: the h3 headings in order, the left-out line, and the two fixed
+    sentences below the scenarios and the order line."""
+    page = seed_pages("A", "10012")
+    screen = Screen(sheet_html(page))
+
+    assert [text for tag, text in screen.headings if tag == "h3"] == [
+        "Salgshistorikk, siste 12 uker",
+        "Prognoseutregning",
+        "Ukeprognoser og scenarioer",
+        "Utregning av bestillingsmengde",
+    ]
+    body = squash(sheet_html(page))
+    assert "Uker brukt: uke 43, 44 og 45." in body
+    assert "Holdt utenfor: uke 38 og 39 (utsolgt)." in body
+    assert (
+        "Scenarioene viser hva som skjer hvis salget blir 10 % høyere eller "
+        "lavere. De er ikke sannsynligheter." in body
+    )
+    assert (
+        "Merknad: Uke 2 og 3 viser samme tall som uke 1 fordi metoden ikke tar "
+        "hensyn til trend eller sesong." in body
+    )
+    assert (
+        "Sikkerhetsmarginen er en enkel tommelfingerregel. Leveringstid og varer som "
+        "allerede er bestilt, er ikke tatt med." in body
+    )
+    assert body.count("Tallene er avrundet for visning.") == 1
+
+
+@pytest.mark.parametrize(
+    ("key", "file_name", "side", "number"), RULE_PRODUCTS, ids=lambda v: str(v)
+)
+def test_every_rule_test_product_shows_the_forecast_and_the_quantity_of_the_spreadsheet(
+    seed_pages, key, file_name, side, number
+):
+    """FR-12, FR-35, SM-1: the base forecast on the calculation line and the suggested
+    quantity at the end of the order line are the spreadsheet's, for the 11 products."""
+    expected = next(row for row in reader.products() if row["product"] == key)
+    page = seed_pages(side, number)
+    calc = sheet_lines(page, "calc")
+
+    forecast = f"{expected['base_forecast']:.1f}".replace(".", ",")
+    assert calc[0].startswith("Glidende gjennomsnitt, 3 uker: (")
+    assert calc[0].endswith(f"= {forecast}")
+    assert (
+        f"foreslått bestillingsmengde {expected['suggested_order_quantity']}" in calc[1]
+    )
+    assert calc[1].startswith(f"Prognose {forecast} + sikkerhetsmargin 10 % (")
+
+
+def test_the_unusual_weeks_of_the_spreadsheet_have_the_tag_of_a_week_taken_in(
+    seed_pages,
+):
+    """FR-16 (E15): with the default setting an unusual week is «uvanlig», never
+    «uvanlig, holdt utenfor», and a level shift is «nytt nivå»."""
+    page = seed_pages("B", "20005")  # E15
+    html = sheet_html(page)
+
+    assert re.search(r'class="tag tag-unusual"', html)
+    assert "tag-unusual-out" not in html
+    assert re.search(r'class="tag tag-shift"', html)
+
+
+def test_a_product_without_a_forecast_has_only_the_sales_table(seed_pages):
+    """FR-8, UX-DR10 (10040): the sales table and its sentence, and no calculation, no
+    scenarios and no order line."""
+    page = seed_pages("A", "10040")
+    screen = Screen(sheet_html(page))
+
+    assert [text for tag, text in screen.headings if tag == "h3"] == [
+        "Salgshistorikk, alle ukene"
+    ]
+    assert 'class="calc"' not in sheet_html(page)
+    assert 'class="scen"' not in sheet_html(page)
+    assert "Utregning av bestillingsmengde" not in page
+
+
+def test_a_product_without_sales_weeks_has_no_table(two_companies):
+    """FR-8: the sentence in place of the table, and nothing to calculate."""
+    a, _ = two_companies
+    Product.objects.create(
+        company=a.company, product_number="10009", name="Uten uker", stock_on_hand=3
+    )
+
+    html = open_product(a.company, "10009")
+
+    assert "Produktet har ingen salgsuker." in sheet_html(html)
+    assert 'class="weeks"' not in sheet_html(html)
+    assert 'class="calc"' not in sheet_html(html)
+
+
+def test_every_table_of_the_worksheet_scrolls_in_its_own_named_frame(seed_pages):
+    """NFR-6, NFR-11, UX-DR7: each table sits in a region with a name that the keyboard
+    can reach, so a table wider than the panel scrolls inside it and not the page."""
+    html = sheet_html(seed_pages("A", "10012"))
+
+    frames = re.findall(r'<div class="tablewrap[^"]*"([^>]*)>', html)
+    assert len(frames) == html.count("<table") == 2
+    for attributes in frames:
+        assert 'role="region"' in attributes
+        assert 'tabindex="0"' in attributes
+        assert "aria-label" in attributes
+
+
+def test_exponential_smoothing_shows_its_update_note_and_levels_on_the_page(db):
+    """FR-35, R-9 (E2): the setting of the company changes the calculation: the last
+    update, the note inside the box and a table of every calculation week."""
+    row = next(r for r in reader.cases() if r["case"] == "E2")
+    company = Company.objects.create(customer_number="9002", name="E2-bedrift")
+    CompanySettings.objects.create(company=company, method="exponential_smoothing")
+    add_product(company, "10001", [w.units_sold for w in row["sales"]], stock=0)
+
+    html = open_product(company, "10001")
+
+    assert sheet_lines(html, "calc")[0] == (
+        "Eksponentiell glatting, faktor 0,3: 0,3 × 15 + 0,7 × 13,3 = 13,8 "
+        "Tallene er avrundet for visning."
+    )
+    levels = sheet_cells(html, "levels")
+    assert levels[0] == ["Uke", "Solgt", "Nivå"]
+    assert [r[2] for r in levels[1:]] == [
+        f"{x:.1f}".replace(".", ",") for x in row["levels"]
+    ]
+    assert "Uker brukt" not in sheet_html(html)
+    assert Screen(html).headings.count(("h3", "Prognoseutregning")) == 1
+    # The table of levels has a frame of its own that the keyboard reaches and a screen
+    # reader names (NFR-11, UX-DR7).
+    frame = re.search(
+        r'<div class="tablewrap tablewrap-levels"([^>]*)>', sheet_html(html)
+    )
+    assert 'role="region"' in frame[1] and 'tabindex="0"' in frame[1]
+    assert 'aria-label="Beregningsukene med salg og nivå"' in frame[1]
+
+
+def test_unusual_weeks_left_out_are_told_apart_from_those_taken_in_on_the_page(db):
+    """FR-16, NFR-7, UX-DR30 (E8): the tags differ in words, in shape and in class, and
+    the weeks left out are listed with the number of weeks used."""
+    row = next(r for r in reader.cases() if r["case"] == "E8 (excluded)")
+    units = [w.units_sold for w in row["sales"]]
+    pages = {}
+    for included in (True, False):
+        company = Company.objects.create(customer_number=f"90{included:d}3", name="E8")
+        CompanySettings.objects.create(company=company, unusual_weeks_included=included)
+        add_product(company, "10001", units, stock=50)
+        pages[included] = sheet_html(open_product(company, "10001"))
+
+    taken, left_out = pages[True], pages[False]
+    assert 'tag tag-unusual"' in taken and "tag-unusual-out" not in taken
+    assert "uvanlig, holdt utenfor" not in taken
+    assert 'tag tag-unusual-out"' in left_out and 'tag tag-unusual"' not in left_out
+    assert left_out.count("uvanlig, holdt utenfor") == 2
+    # The hollow and the solid triangle are different drawings.
+    assert (
+        'fill="none" stroke="currentColor" stroke-width="1.5"/></svg>uvanlig, holdt'
+        in left_out
+    )
+    assert "Holdt utenfor: uke 43 og 44 (uvanlig)." in " ".join(
+        TAGS_ONLY.sub(" ", left_out).split()
+    )
+    assert "3 uker brukt i beregningen." in left_out
+    assert "uker brukt i beregningen" not in taken
+
+
+def test_the_worksheet_shows_each_companys_own_stock_for_a_shared_number(two_companies):
+    """FR-2, AD-7: both companies have a product 10001, and each worksheet is built from
+    the company's own stock on hand and the other's never appears."""
+    a, b = two_companies
+
+    page_a = sheet_html(open_product(a.company, "10001"))
+    page_b = sheet_html(open_product(b.company, "10001"))
+
+    assert "lager 7371 =" in squash(page_a)
+    assert "lager 8481 =" in squash(page_b)
+    assert "8481" not in page_a and "7371" not in page_b
