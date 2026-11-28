@@ -1,0 +1,34 @@
+# Story 2.9: arbeidsarket «Slik er tallene regnet ut»
+
+## 2026-11-28 kl. 12:29 — Mounia-03
+
+### Oppgave
+Starte BMAD story 2.9 («Show how the forecast and the order quantity were calculated»): kontrollere at lokal `main` var ren og synkronisert, lese sprintstatus, Epic 2-konteksten og kravene, legge fram storyen, valg og plan før filer ble endret, bygge og teste arbeidsarket på produktsiden, gjennomføre BMAD Code Review med fire skrivebeskyttede granskere, forberede appen for brukerens manuelle tester i Safari og på iPhone 13 (uten at Claude gjorde dem), og dokumentere alt. Brukeren ba at merkene tydelig skiller en uvanlig uke som brukes fra en som holdes utenfor, og at ingenting ble committet, pushet eller logget før de manuelle testene var gjennomført og dokumentert.
+
+### Plan
+- Spesifikasjon: [spec-2-9-…](../../_bmad-output/implementation-artifacts/spec-2-9-show-how-the-forecast-and-the-order-quantity-were-calculated.md). Brukeren godkjente tre forslag (kolonnene `sales` og `stockout_weeks` på `ProductResult`, ordlyden for uker holdt utenfor, årstall på hele listen) og seks avklaringer, og senere alternativ A for AA-1 (ingen forsvarsgren for tilfeller R-10 gjør umulige).
+- Bygge inline (underagenter bare til de fire granskerne): `explanation/worksheet.py`, display-hjelpere, mal og stilark, tester mot regnearket, katalograder i `EXPERIENCE.md`.
+- Mutasjonstest før og etter review, skjermmålinger i hodeløs Chrome, BMAD Code Review, triage, dokumentasjon, brukerens manuelle tester, samlet status og tre commiter etter godkjenning.
+
+### Resultat
+- Gren `story/2-9-show-how-the-forecast-and-the-order-quantity-were-calculated` fra `9aec086`. Etter brukerens godkjenning av tre commiter i foreslått rekkefølge: koden, testene og meldingskatalogen i `019114c`, spesifikasjonen og dokumentene i `f4485d7`, og denne loggen med `issues.md` i den tredje. Ingen push og ingen PR ennå (venter på brukerens godkjenning; SSH som i story 2.8).
+- Nytt: `explanation/worksheet.py`, `web/_worksheet.html`, `tests/test_worksheet.py` (51 tester). Endret: `sales` og `stockout_weeks` på `ProductResult`, `horizon_column_label`, `week_item`, `week_list` og `factor` i `display.py`, `web/views.py`, `product.html`, `app.css`, meldingskatalogen og endringsloggen i `EXPERIENCE.md`, og testene av produktsiden, resultatet og display.
+- Merkene «uvanlig» (tatt med) og «uvanlig, holdt utenfor» skiller seg på ord, form (tett eller hul trekant) og kantlinje (hel eller stiplet). Kontrastene i merkene er regnet ut til 5,19 til 14,33.
+- Tester lokalt: 1191 består og 1 hoppes over (Docker), mot 1099 og 1 på `main` (+92). `ruff check`, `ruff format --check` og `makemigrations --check` er rene. Forventede verdier leses fra regnearket; statusraden til Strøsand 25 kg sammenlignes med mockupen.
+- Mutasjoner: 21 før reviewen og 7 etter rettingene, alle fanget, og filene ble sammenlignet med hash.
+- Skjermmåling i hodeløs Chrome 120 (gammel modus): 6 sider × 6 størrelser, ingen sidelengs rulling, tabellene ruller i egne rammer.
+- BMAD Code Review (4 granskere som `general-purpose` underagenter med `model: "sonnet"`, skrivebeskyttet, fingeravtrykket av arbeidstreet identisk før og etter): 37 funn i 22 grupper (Blind Hunter 13, Edge Case Hunter 13, Verification Gap 2, Acceptance Auditor 7), 8 rettet, 1 avgjort av brukeren (AA-1, alternativ A), ingen utsatt og 13 avvist. Prompten til Verification Gap hadde en skrivefeil i stien til diffen og ble rettet med en melding før agenten rapporterte.
+- Brukerens tester 28. november, meldt i chatten og ført nøyaktig i QA-loggen: Safari på Mac for Strøsand 25 kg (10012) ved 1366 × 768, 820 × 1180, 390 × 844 og 320 × 844 og for 10025, 10040, 20005 og 20002, og ekte iPhone 13 (iOS 27.0.1, oppgitt av brukeren) for alle fem produktene. Claude leste macOS 15.6.1 og den installerte Safari 18.6 fra systemet (ikke bevist som versjonen som kjørte testene).
+- Claude startet utviklingsserveren for Safari-testen og flyttet den til nettverksadressen for telefonen; begge ganger uten å endre testdataene, og serveren er stoppet. Nettverksadressen er ikke ført i dokumentene.
+- Sluttkontroll før commit: en overdrevet påstand om hvilke regnearkstilfeller testen leser (E7–E10 og E15–E20 i stedet for E1, E2 og E20) ble rettet i testdocstringen, statustabellen og QA-loggen; skanning av de tilføyde linjene etter stier, brukernavn, e-postadresser, IP-adresser, økt-ID-er og nøkler uten treff; alle 37 funn-ID-ene står i triage-loggen.
+- Modell: Sonnet 5.5 (`claude-sonnet-5-5`) bekreftet for byggingen; granskerne kjørte med aliaset `sonnet`, ikke bekreftet som 5.5.
+- Dokumentert: spesifikasjonen (`in-review`, med notater, endringslogg og triage-logg), statustabellen (FR-7, FR-10 og FR-12 bygd, FR-35 delvis bygd, og FR-15, FR-16, FR-17 og FR-25), QA-loggen, KI-styringsloggen (tilfelle 46), arbeidsloggen og `sprint-status.yaml` (story 2.9 `review`). `deferred-work.md` er uendret, fordi ingenting ble utsatt. `issues.md`: fem punkter fra tidligere stories er lukket.
+
+### Åpne punkter
+- Story 2.10: grafen skal settes inn mellom beslutnings- og tillitspanelene og arbeidsarket (UX-DR10). Stilregelen `.decide + .sheet` i `app.css` gjelder bare når arbeidsarket kommer rett etter panelene og må tilpasses. Forklaringen og markørene i grafen må bruke de samme ordene og formene som merkene i arbeidsarket («uvanlig» og «uvanlig, holdt utenfor»).
+- Story 2.12: forklaringspanelet skal bruke de samme ordene som arbeidsarket om uker holdt utenfor og uker brukt.
+- Story 5.1: sesongindeksene og de justerte verdiene i arbeidsarket (FR-35, FR-9), og FR-9-merknaden i stedet for FR-7-merknaden i scenariodelen (UX-DR28).
+- Story 6.1: kolonnen «Bestillingsmengde» i scenariotabellen (FR-13, Should).
+- Epic 3: prøv eksponentiell glatting, merket «uvanlig, holdt utenfor» og tabellen med nivåer manuelt i nettleseren når innstillingene kan endres. De er bare sjekket av de automatiske testene og i hodeløs Chrome.
+- Manglene i brukerens tester av story 2.9 (QA-loggen, «Ikke bekreftet»): Safari-visningen (vindu eller responsiv visning), bredder for de fire andre produktene enn 10012, rulling av scenariotabellen, Tab-rekkefølgen og fokusringen på rullerammene, skjermbildene fra iPhonen, og Safari-versjonen som kjørte testene.
+- Sesjonseksporten av story 2.9 (`/export`, kjøres av brukeren; Claude maskerer og fører den inn i en siste dokumentasjons-PR), og PR-nummeret og CI-kjøringene i KI-styringsloggen og arbeidsloggen.

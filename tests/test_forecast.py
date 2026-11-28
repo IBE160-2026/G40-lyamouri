@@ -286,7 +286,9 @@ def test_the_units_of_a_stockout_week_are_never_used():
             0,
             settings,
         )
-        assert a == b
+        # The units of the stockout week are shown in the worksheet, so `sales` differs.
+        assert a.sales[2] == 0 and b.sales[2] == 900
+        assert dataclasses.replace(a, sales=b.sales) == b
 
 
 def test_the_weeks_are_read_once_and_never_changed():
@@ -390,3 +392,23 @@ def test_the_forecast_settings_start_at_the_fr_20_defaults():
     assert settings.window == defaults.WINDOW.default
     assert settings.smoothing_factor == defaults.SMOOTHING_FACTOR.default
     assert settings.unusual_weeks_included is defaults.DEFAULT_UNUSUAL_WEEKS_INCLUDED
+
+
+def test_the_result_holds_the_sales_and_the_stockout_weeks_of_every_week():
+    """FR-15 (E7, E16): the sales of the whole history, also in stockout weeks, and the
+    positions of every stockout week, which the worksheet shows (Story 2.9)."""
+    for case in ("E7", "E16 (included)", "E19 (included)"):
+        row = next(r for r in reader.cases() if r["case"] == case)
+        result = core.forecast_product(core_weeks(row["sales"]), 0, ForecastSettings())
+        assert result.sales == tuple(week.units_sold for week in row["sales"]), case
+        assert result.stockout_weeks == tuple(
+            number for number, week in enumerate(row["sales"], 1) if week.stockout
+        ), case
+        assert result.history_length == len(result.sales)
+
+
+def test_a_history_without_weeks_has_no_sales_and_no_stockout_weeks():
+    """FR-8: an empty history gives empty tuples, not None."""
+    result = core.forecast_product([], 0, ForecastSettings())
+
+    assert result.sales == () and result.stockout_weeks == ()

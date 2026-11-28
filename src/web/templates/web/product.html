@@ -1,6 +1,6 @@
 {% extends "web/base.html" %}
 {% load prognose %}
-{# The product screen (FR-11, FR-19, FR-25; UX-DR6, UX-DR7, UX-DR10, UX-DR22, UX-DR24, UX-DR44). The list comes first in the HTML and the product second, on a narrow screen too, where CSS shows the product first. Every text of a result comes from explanation/ and is only placed here (AD-4). #}
+{# The product screen (FR-11, FR-19, FR-25, FR-35; UX-DR6, UX-DR7, UX-DR10, UX-DR22, UX-DR24, UX-DR28, UX-DR44). The list comes first in the HTML and the product second, on a narrow screen too, where CSS shows the product first. Every text of a result comes from explanation/ and is only placed here (AD-4). #}
 {% block title %}{{ product.name }} – Prognose{% endblock %}
 {% block body_attrs %} class="has-shell"{% endblock %}
 {% block skip_link %}<a class="skip-link" href="#valgt-produkt">Gå til produktet</a>{% endblock %}
@@ -40,6 +40,7 @@
           {% endif %}
         </section>
       </div>
+      {% include "web/_worksheet.html" %}
     </main>
   </div>
 {% endblock %}

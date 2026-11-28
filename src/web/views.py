@@ -15,7 +15,7 @@ from django.views.decorators.http import (
     require_safe,
 )
 
-from explanation import decision, product_list, settings_bar
+from explanation import decision, product_list, settings_bar, worksheet
 from explanation import trust as trust_texts
 from forecasting import display, trust
 from web import company_data
@@ -173,7 +173,7 @@ def product_overview(request):
 @never_cache
 @require_safe
 def product_screen(request, product_number):
-    """The product screen at /produkter/<varenummer>/ (FR-2, FR-11, FR-19, FR-25).
+    """The product screen at /produkter/<varenummer>/ (FR-2, FR-11, FR-19, FR-25, FR-35).
 
     A product number that the company does not have, another company's included, gives
     the page of an unknown address (AD-7).
@@ -195,6 +195,7 @@ def product_screen(request, product_number):
             "label": label_context(result),
             "reason": trust_texts.confidence_reason(result),
             "decision": decision.decision_texts(result, iso_year, iso_week),
+            "sheet": worksheet.worksheet_texts(result, iso_year, iso_week),
             "warnings": [
                 {
                     "text": warning.text,

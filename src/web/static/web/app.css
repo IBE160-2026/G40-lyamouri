@@ -826,6 +826,143 @@ input[type="password"] {
   stroke-width: 2;
 }
 
+/* The worksheet «Slik er tallene regnet ut» (UX-DR28 to UX-DR30). A table wider than the
+   panel scrolls inside its own frame, and a calculation line wraps between its terms, never
+   inside a number (UX-DR7, NFR-6). */
+
+.decide + .sheet {
+  margin-top: var(--space-4);
+}
+
+.sheet h3 {
+  margin: var(--space-7) 0 var(--space-2);
+}
+
+.sheet h2 + h3 {
+  margin-top: var(--space-4);
+}
+
+.sheet .tablewrap {
+  overflow-x: auto;
+}
+
+.sheet .tablewrap-levels {
+  max-height: 18rem;
+  overflow-y: auto;
+}
+
+.sheet table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-body-sm-size);
+}
+
+.sheet th,
+.sheet td {
+  padding: 6px var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.sheet th {
+  font-weight: var(--font-label-weight);
+}
+
+.sheet thead th {
+  border-bottom: 1px solid var(--color-ink);
+  color: var(--color-muted);
+  font-size: var(--font-meta-size);
+}
+
+.sheet thead th:first-child,
+.sheet th[scope="row"] {
+  text-align: left;
+}
+
+.scen tr.normal th,
+.scen tr.normal td {
+  font-weight: var(--font-subsection-title-weight);
+}
+
+.calc {
+  margin: var(--space-2) 0;
+  padding: var(--space-2) 10px;
+  background: var(--color-sunken);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-formula-family);
+  font-size: var(--font-formula-size);
+  line-height: var(--font-formula-line-height);
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.calc span {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+  font-family: var(--font-meta-family);
+  font-size: var(--font-meta-size);
+}
+
+.fine {
+  color: var(--color-muted);
+  font-size: var(--font-meta-size);
+}
+
+/* Status tags (UX-DR30, NFR-7): the word is text and the shape is beside it. An unusual
+   week that is taken into the calculation is a solid triangle on amber-tint; one that the
+   setting leaves out is a hollow triangle with a dashed border, so the two differ in words,
+   shape and border, never by colour alone. */
+
+.tags {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 1px 6px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-meta-size);
+  font-weight: var(--font-body-weight);
+}
+
+.tag svg {
+  flex: none;
+}
+
+.tag-out {
+  background: var(--color-red-tint);
+  color: var(--color-red);
+}
+
+.tag-unusual {
+  background: var(--color-amber-tint);
+  color: var(--color-amber);
+}
+
+.tag-unusual-out {
+  background: var(--color-surface);
+  border: 1px dashed var(--color-amber);
+  color: var(--color-amber);
+}
+
+.tag-shift {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+}
+
+.tag-used {
+  background: var(--color-turquoise-tint);
+  color: var(--color-turquoise);
+}
+
 @media (max-width: 1180px) {
   .shell {
     grid-template-columns: var(--space-list-width-narrow) minmax(0, 1fr);

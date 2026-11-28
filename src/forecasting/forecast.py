@@ -73,6 +73,9 @@ class ProductResult:
     when the suggested order quantity is above 0 (R-12), and False without a forecast.
 
     `history_length` is the number of weeks in the sales history, stockout weeks included.
+    `sales` has the units sold at every position, 1 to `history_length`, also in the
+    stockout weeks, and `stockout_weeks` the positions of every stockout week (the
+    product screen's worksheet shows both).
     `warnings` are the active warnings of R-15 in its order and `notes` the notes, as codes
     (`forecasting/trust.py`); `confidence_label` is the label of R-16 and
     `confidence_condition` the condition that decided it. The `recent_` fields are the
@@ -99,6 +102,8 @@ class ProductResult:
     weeks_of_cover: float | None
     order_soon: bool
     history_length: int
+    sales: tuple[int, ...]
+    stockout_weeks: tuple[int, ...]
     warnings: tuple[str, ...]
     notes: tuple[str, ...]
     confidence_label: str
@@ -247,10 +252,10 @@ def forecast_product(weeks, stock_on_hand, settings):
             weeks_of_cover = stock_on_hand / week_1
 
     history_length = len(weeks)
-    recent_stockout_weeks = recent_only(
-        (position for position, week in enumerate(weeks, start=1) if week.stockout),
-        history_length,
+    stockout_weeks = tuple(
+        position for position, week in enumerate(weeks, start=1) if week.stockout
     )
+    recent_stockout_weeks = recent_only(stockout_weeks, history_length)
     recent_unusual_weeks = recent_only(classification.unusual, history_length)
     recent_level_shift_weeks = recent_only(classification.level_shift, history_length)
     since_latest_valid = weeks_since_latest_valid(classification.valid, history_length)
@@ -285,6 +290,8 @@ def forecast_product(weeks, stock_on_hand, settings):
         order_soon=suggested_order_quantity is not None
         and suggested_order_quantity > 0,
         history_length=history_length,
+        sales=tuple(week.units_sold for week in weeks),
+        stockout_weeks=stockout_weeks,
         warnings=warnings,
         # R-15: without seasonal adjustment (Epic 5) weeks 2 and 3 repeat week 1.
         notes=() if week_forecasts is None else (WEEKS_REPEAT_WEEK_1,),

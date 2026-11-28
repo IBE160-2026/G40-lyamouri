@@ -1,5 +1,7 @@
 """The week label of the app header (Story 1.8) and the number formats and week labels (Story 2.3; AD-3, NFR-5, UX-DR14, UX-DR42)."""
 
+from decimal import Decimal
+
 import pytest
 
 from forecasting import display
@@ -124,3 +126,65 @@ def test_a_missing_value_function_refuses_what_is_not_a_number(function, value, 
     wrong value never prints as «–»."""
     with pytest.raises(error, match="cannot round"):
         function(value)
+
+
+# The worksheet (Story 2.9; FR-7, FR-35, UX-DR42).
+
+
+@pytest.mark.parametrize(
+    ("number", "iso_year", "iso_week", "expected"),
+    [
+        (1, 2026, 46, "Uke 1 · uke 46"),
+        (2, 2026, 47, "Uke 2 · uke 47"),
+        (3, 2027, 1, "Uke 3 · uke 1/2027"),
+    ],
+)
+def test_a_horizon_column_names_its_week_with_the_year_at_new_year(
+    number, iso_year, iso_week, expected
+):
+    """UX-DR42: «Uke 1 · uke 46», with a middle dot (U+00B7) and the year on week 1."""
+    assert display.horizon_column_label(number, iso_year, iso_week) == expected
+    assert "·" in expected
+
+
+@pytest.mark.parametrize(
+    ("weeks", "with_year", "expected"),
+    [
+        ([(2026, 38)], False, "uke 38"),
+        ([(2026, 38), (2026, 39)], False, "uke 38 og 39"),
+        ([(2026, 43), (2026, 44), (2026, 45)], False, "uke 43, 44 og 45"),
+        ([(2025, 10), (2025, 11)], True, "uke 10/2025 og 11/2025"),
+        ([(2026, 53), (2027, 1)], False, "uke 53 og 1/2027"),
+        ([(2026, 40)], True, "uke 40/2026"),
+    ],
+)
+def test_a_list_of_weeks_is_one_phrase_with_the_year_decided_by_the_list(
+    weeks, with_year, expected
+):
+    """UX-DR42, FR-15: «uke 38 og 39», the year on every week of a list that reaches before
+    the recent period, and on the first week of a new year always."""
+    assert display.week_list(weeks, with_year) == expected
+
+
+@pytest.mark.parametrize(
+    ("iso_year", "iso_week", "with_year", "expected"),
+    [
+        (2026, 46, False, "46"),
+        (2026, 46, True, "46/2026"),
+        (2027, 1, False, "1/2027"),
+    ],
+)
+def test_a_week_in_a_table_has_no_word_and_the_year_only_when_asked(
+    iso_year, iso_week, with_year, expected
+):
+    """UX-DR42: the cell of a table is «46», «46/2026» or «1/2027»."""
+    assert display.week_item(iso_year, iso_week, with_year) == expected
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [(0.3, "0,3"), (1 - 0.3, "0,7"), (1 - 0.9, "0,1"), (Decimal("0.5"), "0,5")],
+)
+def test_a_smoothing_factor_and_its_complement_have_one_decimal(value, expected):
+    """FR-6, R-9: 1 − 0.9 is 0,1, not 0,09999999999999998."""
+    assert display.factor(value) == expected
